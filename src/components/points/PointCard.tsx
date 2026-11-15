@@ -84,7 +84,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onEdit(point)}
             disabled={disabled || !point.permissions.canEdit}
-            sx={{ ...BUTTON_STYLES.containedHover, m: '5px' }}
+            sx={{ ...BUTTON_STYLES.primary, m: '5px' }}
           >
             EDIT POINT
           </Button>
@@ -92,7 +92,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onDelete(point)}
             disabled={disabled || !point.permissions.canDelete}
-            sx={{ ...BUTTON_STYLES.dangerHover, m: '5px' }}
+            sx={{ ...BUTTON_STYLES.danger, m: '5px' }}
           >
             DELETE POINT
           </Button>
