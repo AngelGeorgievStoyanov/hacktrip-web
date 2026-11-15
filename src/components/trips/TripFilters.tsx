@@ -85,6 +85,9 @@ const SELECT_BOX_SX = {
   width: { xs: '100%', sm: 'auto' },
 } as const;
 
+const FILTER_LABEL_SX = { color: 'white' } as const;
+const FILTER_SELECT_SX = { color: 'white' } as const;
+
 /**
  * Trip list filters. Legacy applied a filter as soon as a select changed or the search was
  * submitted, then re-rendered the list, so the controls push the new query into the URL and
@@ -150,7 +153,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
         >
           <Box sx={SELECT_BOX_SX}>
             <FormControl fullWidth>
-              <InputLabel id="trips-group-label" sx={{ color: 'white' }}>
+              <InputLabel id="trips-group-label" sx={FILTER_LABEL_SX}>
                 TYPE OF GROUP
               </InputLabel>
               <Select
@@ -158,7 +161,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 label="TYPE OF GROUP"
                 value={group ?? ''}
                 onChange={handleGroupChange}
-                sx={{ color: 'white' }}
+                sx={FILTER_SELECT_SX}
               >
                 <MenuItem value="">ALL</MenuItem>
                 {groupChoices.map((choice) => (
@@ -172,7 +175,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
 
           <Box sx={SELECT_BOX_SX}>
             <FormControl fullWidth>
-              <InputLabel id="trips-transport-label" sx={{ color: 'white' }}>
+              <InputLabel id="trips-transport-label" sx={FILTER_LABEL_SX}>
                 TYPE OF TRANSPORT
               </InputLabel>
               <Select
@@ -180,7 +183,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 label="TYPE OF TRANSPORT"
                 value={transport ?? ''}
                 onChange={handleTransportChange}
-                sx={{ color: 'white' }}
+                sx={FILTER_SELECT_SX}
               >
                 <MenuItem value="">ALL</MenuItem>
                 {transportChoices.map((choice) => (
@@ -194,7 +197,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
 
           <Box sx={SELECT_BOX_SX}>
             <FormControl fullWidth>
-              <InputLabel id="trips-sort-label" sx={{ color: 'white' }}>
+              <InputLabel id="trips-sort-label" sx={FILTER_LABEL_SX}>
                 SORT
               </InputLabel>
               <Select
@@ -202,7 +205,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 label="SORT"
                 value={sort ?? TRIP_SORT_OPTIONS.newest}
                 onChange={handleSortChange}
-                sx={{ color: 'white' }}
+                sx={FILTER_SELECT_SX}
               >
                 <MenuItem value={TRIP_SORT_OPTIONS.newest}>Newest</MenuItem>
                 <MenuItem value={TRIP_SORT_OPTIONS.oldest}>Oldest</MenuItem>
