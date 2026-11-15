@@ -216,7 +216,7 @@ export function RegisterForm() {
           variant="contained"
           disabled={isFormLocked || !isValid || !captchaToken}
           startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={BUTTON_STYLES.containedHover}
+          sx={BUTTON_STYLES.primary}
         >
           Register
         </Button>
