@@ -15,7 +15,7 @@ import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
 import { CARD_BORDER, CARD_SHADOW, COLORS } from '@/constants/ui';
-import { pageBackgroundStyle } from '@/styles/presets/layouts';
+import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
 import type { TripGroupResponse } from '@/types';
 
 interface TripDetailsViewProps {
@@ -23,9 +23,7 @@ interface TripDetailsViewProps {
   initialDayNumber: number;
 }
 
-const SHELL_PADDING =
-  typeof pageBackgroundStyle.padding === 'string' ? pageBackgroundStyle.padding : '30px';
-const SHELL_BLEED = `-${SHELL_PADDING}`;
+const SHELL_BLEED = `-${PAGE_CONTENT_PADDING}`;
 
 /**
  * Trip Details view owns the active day in client state.
@@ -116,7 +114,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           position: 'sticky',
           top: 0,
           zIndex: 'appBar',
-          width: `calc(100% + ${SHELL_PADDING} + ${SHELL_PADDING})`,
+          width: `calc(100% + ${PAGE_CONTENT_PADDING} + ${PAGE_CONTENT_PADDING})`,
           marginLeft: SHELL_BLEED,
           marginRight: SHELL_BLEED,
           marginTop: SHELL_BLEED,
