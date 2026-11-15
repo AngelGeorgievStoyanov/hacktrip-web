@@ -2,8 +2,6 @@
 
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { COLORS } from '@/constants/ui/colors';
-import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import {
   Button,
   Dialog,
@@ -47,16 +45,7 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
   return (
     <ConfirmDialogContext.Provider value={value}>
       {children}
-      <Dialog
-        open={open}
-        onClose={() => handleClose(false)}
-        PaperProps={{
-          sx: {
-            backgroundColor: COLORS.dialogBackground,
-            ...CARD_SURFACE_SX,
-          },
-        }}
-      >
+      <Dialog open={open} onClose={() => handleClose(false)}>
         <DialogTitle>{title || 'Confirm'}</DialogTitle>
         <DialogContent>
           <DialogContentText>{message}</DialogContentText>
