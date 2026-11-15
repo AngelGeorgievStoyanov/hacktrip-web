@@ -2,6 +2,7 @@
 export const UI_SHAPE = {
   borderRadius: 4,
   squareRadius: 0,
+  mapAddressInputRadius: 5,
 } as const;
 
 /** Legacy card/panel border (width/style; color falls back to text color). */
