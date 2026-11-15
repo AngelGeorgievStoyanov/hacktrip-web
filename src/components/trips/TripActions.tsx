@@ -14,7 +14,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 const LEGACY_BUTTON_SX = {
-  ...BUTTON_STYLES.containedHover,
+  ...BUTTON_STYLES.primary,
   padding: '10px',
   width: '100%',
   minHeight: '48px',
