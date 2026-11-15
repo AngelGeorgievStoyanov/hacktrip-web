@@ -21,7 +21,7 @@ const secondary = {
   },
 } as const;
 
-const back = {
+const legacySecondaryBack = {
   backgroundColor: UI_COLORS.action.secondaryBackground,
   color: 'black',
   '&:hover': {
@@ -42,7 +42,7 @@ export const BUTTON_STYLES = {
   primary,
   danger,
   secondary,
-  back,
+  back: secondary,
   secondaryLightText,
 
   /** @deprecated Use primary. */
@@ -50,5 +50,5 @@ export const BUTTON_STYLES = {
   /** @deprecated Use danger. */
   dangerHover: danger,
   /** @deprecated Use back. */
-  secondaryBack: back,
+  secondaryBack: legacySecondaryBack,
 } as const;
