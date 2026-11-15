@@ -6,8 +6,6 @@ import { SocialObjectPlaceholder } from '@/components/placeholders';
 import { PointActions } from '@/components/points/PointActions';
 import { CommentsToggle } from '@/components/comments/CommentsToggle';
 import { ExpandableText } from '@/components/common/ExpandableText';
-import { COLORS } from '@/constants/ui/colors';
-import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
 
@@ -17,8 +15,6 @@ interface PointSectionProps {
   togglePointComments: (target: CommentTarget) => void;
 }
 
-// Legacy `TripDetailsPointCard` skin: card with centered content, translucent
-// background, and the legacy border/shadow treatment.
 const POINT_CARD_STYLE = {
   display: 'flex',
   flexDirection: 'column',
@@ -26,8 +22,6 @@ const POINT_CARD_STYLE = {
   maxWidth: '500px',
   margin: '20px auto',
   padding: '25px 0px 0px 0px',
-  backgroundColor: COLORS.cardBackground,
-  ...CARD_SURFACE_SX,
 } as const;
 
 export function PointSection({
