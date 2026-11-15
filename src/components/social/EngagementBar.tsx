@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { UI_COLORS, UI_SHADOWS } from '@/constants/ui';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 import AddCommentIcon from '@mui/icons-material/AddComment';
@@ -104,14 +105,14 @@ export function EngagementBar({
               right: 8,
               zIndex: 2,
               p: 0.35,
-              border: '1px solid rgba(255,255,255,0.22)',
+              border: `1px solid ${UI_COLORS.surface.socialOverlayBorder}`,
               borderRadius: 3,
-              backgroundColor: 'rgba(24, 31, 26, 0.82)',
-              boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
+              backgroundColor: UI_COLORS.surface.socialOverlay,
+              boxShadow: UI_SHADOWS.socialOverlay,
               backdropFilter: 'blur(8px)',
               WebkitBackdropFilter: 'blur(8px)',
               '& .MuiIconButton-root': { color: 'common.white', p: size === 'small' ? 0.5 : 0.65 },
-              '& .MuiIconButton-root:hover': { backgroundColor: 'rgba(255,255,255,0.16)' },
+              '& .MuiIconButton-root:hover': { backgroundColor: UI_COLORS.surface.socialOverlayHover },
               '& .MuiBadge-badge': {
                 fontSize: size === 'small' ? '0.65rem' : undefined,
                 height: size === 'small' ? 14 : undefined,
