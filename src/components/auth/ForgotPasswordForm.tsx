@@ -13,7 +13,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { FORGOT_PASSWORD_SUCCESS_MESSAGE } from '@/constants/notifications';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { FORM_PANEL_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 
 const SECONDARY_BUTTON_SX = { ...BUTTON_STYLES.secondary, margin: '5px' } as const;
@@ -56,17 +56,7 @@ export function ForgotPasswordForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          ...FORM_PANEL_SX,
-          padding: '30px',
-          maxWidth: '700px',
-          width: '100%',
-          boxSizing: 'border-box',
-          marginX: 'auto',
-        }}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
           FORGOT PASSWORD
