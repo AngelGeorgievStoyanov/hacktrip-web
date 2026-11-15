@@ -20,6 +20,7 @@ import {
 } from '@/lib/maps';
 import { getPointNameFromMapAddress } from '@/lib/pointName';
 import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface PointLocationPickerProps {
   latitude: string;
@@ -157,7 +158,7 @@ export function PointLocationPicker({
             width: { xs: '100%', sm: 'auto' },
             minHeight: 40,
             m: 0,
-            '&:hover': { backgroundColor: '#4daf30' },
+            ...BUTTON_STYLES.containedHover,
           }}
           containerSx={{
             width: { xs: '100%', sm: 'auto' },
@@ -171,11 +172,7 @@ export function PointLocationPicker({
           type="button"
           variant="contained"
           onClick={handleClearLocation}
-          sx={{
-            backgroundColor: 'rgb(194, 194, 224)',
-            color: 'black',
-            '&:hover': { color: 'rgb(248 245 245)' },
-          }}
+          sx={BUTTON_STYLES.secondary}
         >
           Remove Marker
         </Button>
