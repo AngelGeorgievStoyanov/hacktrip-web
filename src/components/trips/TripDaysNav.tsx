@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { AppBar, Box, Pagination, PaginationItem } from '@mui/material';
 import type { PaginationRenderItemParams } from '@mui/material/Pagination';
 import { buildTripUrl } from '@/lib/tripUrl';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 interface TripDaysNavProps {
   tripGroupId: number;
@@ -20,13 +21,13 @@ interface TripDaysNavProps {
 
 const PAGE_ITEM_SX = {
   margin: '3px',
-  color: 'white',
+  color: UI_COLORS.text.inverse,
   '&.Mui-selected': {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    color: 'white',
+    backgroundColor: UI_COLORS.action.navigationSelectedBackground,
+    color: UI_COLORS.text.inverse,
   },
   '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: UI_COLORS.action.navigationHoverBackground,
   },
 } as const;
 
