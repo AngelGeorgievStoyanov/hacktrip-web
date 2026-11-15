@@ -6,7 +6,7 @@ import { AppImage } from './AppImage';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
-import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/ui';
+import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import type { ImageDto } from '@/types';
 
 interface ImageLightboxProps {
