@@ -12,7 +12,7 @@ import { resendVerificationSchema } from '@/validations/auth';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { RESEND_VERIFICATION_SUCCESS_MESSAGE } from '@/constants/notifications';
-import { COLORS, CARD_SHADOW, CARD_BORDER } from '@/constants/ui';
+import { AUTH_FORM_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 
 const SECONDARY_BUTTON_SX = {
@@ -60,20 +60,7 @@ export function ResendVerificationForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          backgroundColor: COLORS.formPanelBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          borderRadius: '0px',
-          padding: '30px',
-          maxWidth: '700px',
-          width: '100%',
-          boxSizing: 'border-box',
-          marginX: 'auto',
-        }}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
           RESEND VERIFICATION EMAIL
