@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
+import { socialErrorTextStyle } from '@/styles/presets/typography';
 import { isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
@@ -195,17 +196,17 @@ export function TripGroupSocialActions({
         </IconButton>
       </Tooltip>
       {isAuthenticated && likeMutation.error ? (
-        <span role="alert" style={{ color: 'red', fontSize: '0.75rem' }}>
+        <span role="alert" style={socialErrorTextStyle}>
           {getGenericErrorMessage(likeMutation.error)}
         </span>
       ) : null}
       {isAuthenticated && favoriteMutation.error ? (
-        <span role="alert" style={{ color: 'red', fontSize: '0.75rem' }}>
+        <span role="alert" style={socialErrorTextStyle}>
           {getGenericErrorMessage(favoriteMutation.error)}
         </span>
       ) : null}
       {isAuthenticated && reportActions.error ? (
-        <span role="alert" style={{ color: 'red', fontSize: '0.75rem' }}>
+        <span role="alert" style={socialErrorTextStyle}>
           {reportActions.error}
         </span>
       ) : null}
