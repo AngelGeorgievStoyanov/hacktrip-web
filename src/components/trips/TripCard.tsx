@@ -97,6 +97,12 @@ const CARD_CONTENT_SX = {
   '&:last-child': { pb: 1 },
 } as const;
 
+const CARD_TEXT_PADDING_SX = { padding: '0px 15px' } as const;
+
+const SOCIAL_COUNT_ROW_SX = { display: 'flex', alignItems: 'center', gap: 1 } as const;
+
+const PAGINATION_SX = { marginTop: 2 } as const;
+
 const DESCRIPTION_SX = {
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
@@ -177,7 +183,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
     return (
       <Card sx={[cardStyle, { height: isMobile ? 'fit-content' : 'auto', maxHeight: '500px' }]}>
         <Box sx={{ ...HEAD_BLOCK_SX, height: isMobile ? 'auto' : '-webkit-fill-available' }}>
-          <Typography gutterBottom variant="h5" sx={{ padding: '0px 15px' }}>
+          <Typography gutterBottom variant="h5" sx={CARD_TEXT_PADDING_SX}>
             No trip on {dayNumber} day
           </Typography>
         </Box>
@@ -190,7 +196,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
               page={Math.max(selectedPage, 1)}
               onChange={handleDayChange}
               renderItem={renderPaginationItem}
-              sx={{ marginTop: 2 }}
+              sx={PAGINATION_SX}
             />
           ) : null}
         </CardContent>
@@ -214,11 +220,11 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
       ]}
     >
       <Box sx={HEAD_BLOCK_SX}>
-        <Typography gutterBottom variant="h5" sx={{ padding: '0px 15px', textAlign: 'center' }}>
+        <Typography gutterBottom variant="h5" sx={[CARD_TEXT_PADDING_SX, { textAlign: 'center' }]}>
           Title: {title}
         </Typography>
         {description ? (
-          <Typography variant="body2" sx={[DESCRIPTION_SX, { padding: '0px 15px' }]}>
+          <Typography variant="body2" sx={[DESCRIPTION_SX, CARD_TEXT_PADDING_SX]}>
             Description: {description}
           </Typography>
         ) : null}
@@ -275,7 +281,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
       )}
 
       <Box aria-label="Trip and day likes" sx={SOCIAL_COUNTS_SX}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={SOCIAL_COUNT_ROW_SX}>
           <Typography component="span" variant="body2">
             Trip:
           </Typography>
