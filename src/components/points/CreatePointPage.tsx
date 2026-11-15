@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Alert, Box, CircularProgress, Paper } from '@mui/material';
+import { Alert, Box, Card, CircularProgress } from '@mui/material';
 import { tripApi } from '@/api/trips';
 import { pointApi } from '@/api/points';
 import { PointForm } from '@/components/points/PointForm';
@@ -231,8 +231,7 @@ export function CreatePointPage() {
             }
           />
 
-          <Paper
-            variant="outlined"
+          <Card
             sx={{
               mt: 2.5,
               p: { xs: 2, sm: '30px' },
@@ -240,10 +239,6 @@ export function CreatePointPage() {
               maxWidth: 600,
               minWidth: 0,
               boxSizing: 'border-box',
-              backgroundColor: '#eee7e79e',
-              border: '1px solid black',
-              borderRadius: 0,
-              boxShadow: '3px 2px 5px black',
               '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
             }}
           >
@@ -262,7 +257,7 @@ export function CreatePointPage() {
               onBack={handleBack}
               onDone={() => void handlePointSaved()}
             />
-          </Paper>
+          </Card>
         </Box>
       </Box>
     </Box>
