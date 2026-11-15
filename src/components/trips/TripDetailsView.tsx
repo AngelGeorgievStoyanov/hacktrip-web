@@ -9,6 +9,7 @@ import { PointsSection } from '@/components/trips/PointsSection';
 import { DayImagesGallery } from '@/components/trips/DayImagesGallery';
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import { Box } from '@mui/material';
+import styles from './TripDetailsView.module.css';
 import { buildTripUrl } from '@/lib/tripUrl';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
@@ -156,11 +157,11 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
         </Box>
       </Box>
 
-      <Box className="trip-details-page-layout">
+      <Box className={styles.tripDetailsPageLayout}>
         {/* First row: trip information and images. Container queries stack all sections
             when the available content width cannot comfortably fit both rows. */}
-        <Box className="trip-details-primary-row">
-          <Box className="trip-details-info">
+        <Box className={styles.tripDetailsPrimaryRow}>
+          <Box className={styles.tripDetailsInfo}>
             <TripDetails
               tripGroup={group}
               day={day}
@@ -175,7 +176,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
             />
           </Box>
 
-          <Box className="trip-details-images">
+          <Box className={styles.tripDetailsImages}>
             <DayImagesGallery
               key={day.dayNumber}
               day={day}
@@ -188,7 +189,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
         {/* Trip Group and day/image comments stay after the first row. */}
         {tripGroupCommentsOpen ? (
-          <Box className="trip-details-trip-group-comments">
+          <Box className={styles.tripDetailsTripGroupComments}>
             <CommentsSection
               target={{ type: 'tripGroup', tripGroupId: group.id }}
               initialCommentsCount={group.social.comments.count}
@@ -198,7 +199,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
         ) : null}
 
         {tripCommentTarget ? (
-          <Box className="trip-details-day-comments">
+          <Box className={styles.tripDetailsDayComments}>
             <CommentsSection
               target={tripCommentTarget}
               initialCommentsCount={commentCountForTarget(tripCommentTarget)}
@@ -208,8 +209,8 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
         ) : null}
 
         {/* Second row: map and selected point details. */}
-        <Box className="trip-details-map-row">
-          <Box className="trip-details-map">
+        <Box className={styles.tripDetailsMapRow}>
+          <Box className={styles.tripDetailsMap}>
             <TripMapSection
               key={`day-map-${day.id}`}
               points={day.points}
@@ -225,7 +226,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           </Box>
 
           {day.points.length > 0 ? (
-            <Box className="trip-details-point-info">
+            <Box className={styles.tripDetailsPointInfo}>
               <PointsSection
                 points={day.points}
                 selectedPointIndex={selectedPointIndex}
@@ -238,7 +239,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
         {/* Point comments remain at the bottom, after the point information. */}
         {pointCommentTarget ? (
-          <Box className="trip-details-point-comments">
+          <Box className={styles.tripDetailsPointComments}>
             <CommentsSection
               target={pointCommentTarget}
               initialCommentsCount={commentCountForTarget(pointCommentTarget)}
