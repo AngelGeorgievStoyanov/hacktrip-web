@@ -20,7 +20,7 @@ import { adminApi } from '@/api/admin';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
