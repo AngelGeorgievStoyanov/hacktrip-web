@@ -8,6 +8,7 @@ import { CommentsToggle } from '@/components/comments/CommentsToggle';
 import { ExpandableText } from '@/components/common/ExpandableText';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
+import { CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
 
 interface PointSectionProps {
   point: TripPoint;
@@ -41,7 +42,7 @@ export function PointSection({
     <section aria-label="Trip points">
       <Card sx={POINT_CARD_STYLE}>
         <CardContent sx={{ width: '100%', boxSizing: 'border-box' }}>
-          <Typography variant="h5" component="div" sx={POINT_NAME_STYLE}>
+          <Typography variant="h5" component="div" sx={[CARD_TEXT_INSET_SX, POINT_NAME_STYLE]}>
             Point name: {point.name}
           </Typography>
 
@@ -90,7 +91,6 @@ export function PointSection({
 
 const POINT_NAME_STYLE = {
   margin: '0 0 0.35em',
-  padding: '0px 15px',
   fontSize: '1.5rem',
   fontWeight: 500,
 } as const;
