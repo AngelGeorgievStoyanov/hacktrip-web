@@ -7,5 +7,5 @@ export const headingTextStyle: CSSProperties = {
   fontFamily: TYPOGRAPHY.fontFamily,
   color: UI_COLORS.text.inverse,
   opacity: 1,
-  textShadow: `3px 3px 3px ${COLORS.headingShadow}`,
+  textShadow: `3px 3px 3px ${UI_COLORS.decorative.headingShadow}`,
 };
