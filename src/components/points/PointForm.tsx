@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { pointApi } from '@/api/points';
 import ImageUploadField from '@/components/images/ImageUploadField';
+import { BackButton } from '@/components/common/BackButton';
 import { AddressAutocomplete } from '@/components/maps/AddressAutocomplete';
 import { useGoogleMapsLoader } from '@/hooks/useGoogleMapsLoader';
 import { zodResolver } from '@/lib/zodResolver';
@@ -348,9 +349,8 @@ export function PointForm({
             ADD NEXT DAY TRIP
           </Button>
         ) : null}
-        <Button
+        <BackButton
           type="button"
-          variant="contained"
           onClick={() => {
             if (!isEdit) {
               setCreatedPointId(null);
@@ -363,13 +363,10 @@ export function PointForm({
             else onBack();
           }}
           disabled={submitting}
-          sx={{
-            ...stackedActionButtonSx,
-            ...BUTTON_STYLES.secondaryBack,
-          }}
+          sx={stackedActionButtonSx}
         >
           BACK
-        </Button>
+        </BackButton>
       </Box>
     </Box>
   );
