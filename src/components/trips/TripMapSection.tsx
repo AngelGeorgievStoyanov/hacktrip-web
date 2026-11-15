@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
+  Card,
   MobileStepper,
   useMediaQuery,
   useTheme,
@@ -18,7 +19,6 @@ import {
   MAP_TRIP_WIDTH,
 } from '@/constants/maps';
 import { BREAKPOINTS, maxWidthQuery, mediaDown } from '@/constants/ui';
-import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import type { TripPoint } from '@/types';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -108,13 +108,12 @@ export function TripMapSection({
   }, [isSmallScreen, selectedPointIndex]);
 
   return (
-    <Box
+    <Card
       sx={{
         boxSizing: 'content-box',
         height: 'fit-content',
         width: '100%',
         maxWidth: 600,
-        ...CARD_SURFACE_SX,
         [mediaDown(BREAKPOINTS.smallPhone)]: {
           display: 'flex',
           flexDirection: 'column',
@@ -184,6 +183,6 @@ export function TripMapSection({
         onMarkerSelect={showingPointMarkers ? handleMarkerSelect : undefined}
         renderInfoWindow={showingPointMarkers ? (marker) => marker.title : undefined}
       />
-    </Box>
+    </Card>
   );
 }
