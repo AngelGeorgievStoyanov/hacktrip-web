@@ -12,6 +12,7 @@ import {
   MAP_POINT_PICKER_ZOOM,
 } from '@/constants/maps';
 import { formatCoordinate, type MapPosition } from '@/lib/maps';
+import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
 
 interface TripLocationPickerProps {
   latitude: string;
@@ -113,21 +114,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
         label="Search field"
         size="medium"
         buttonVariant="contained"
-        inputSx={{
-          backgroundColor: '#f2f1e58f',
-          borderRadius: '5px',
-          m: 0,
-          '& .MuiInputBase-root': { color: '#222' },
-          '& .MuiInputLabel-root': { color: '#333' },
-          '& .MuiInputLabel-root.Mui-focused': { color: 'primary.main' },
-          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(0, 0, 0, 0.35)' },
-          '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'rgba(0, 0, 0, 0.7)',
-          },
-          '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'primary.main',
-          },
-        }}
+        inputSx={{ ...MAP_ADDRESS_INPUT_SX, m: 0 }}
         buttonSx={{
           m: 0,
           minHeight: 56,
