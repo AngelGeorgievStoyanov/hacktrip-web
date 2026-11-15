@@ -8,4 +8,4 @@ export * from './typography';
 export * from './z-index';
 
 /** Legacy style constants kept temporarily for existing imports. */
-export { CARD_BORDER, CARD_SHADOW } from './styles';
+export { CARD_BORDER } from './styles';
