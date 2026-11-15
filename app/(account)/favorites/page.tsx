@@ -5,8 +5,7 @@ import { Alert, Box, CircularProgress, Container, Typography } from '@mui/materi
 import { tripApi } from '@/api/trips';
 import { TripList } from '@/components/trips/TripList';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_EMPTY_STATE_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_HEADING_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_PAGE_SX } from '@/styles/presets/layouts';
-import { headingTextStyle } from '@/styles/presets/typography';
+import { ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_EMPTY_STATE_SX, ACCOUNT_TRIPS_HEADING_SX, ACCOUNT_TRIPS_PAGE_SX } from '@/styles/presets/layouts';
 
 export default function FavoritesPage() {
   const { data, isLoading, error } = useQuery({
