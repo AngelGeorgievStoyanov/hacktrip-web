@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -27,6 +26,7 @@ import { adminUserUpdateSchema } from '@/validations/admin';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { AdminUserProfileImage } from '@/components/admin/AdminUserProfileImage';
+import { BackButton } from '@/components/common/BackButton';
 import { hasRole } from '@/constants/roles';
 import type { AuthUserDto, Role, UserStatus } from '@/types';
 
@@ -325,14 +325,13 @@ export function AdminUserForm({ userId }: { userId: string }) {
         </Button>
       </Box>
 
-      <Button
-        variant="outlined"
+      <BackButton
         startIcon={<ArrowBackRoundedIcon />}
         onClick={() => router.push('/admin/users')}
         sx={{ alignSelf: 'flex-start', mt: 1 }}
       >
         Back
-      </Button>
+      </BackButton>
     </Box>
   );
 }
