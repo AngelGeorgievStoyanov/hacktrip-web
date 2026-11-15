@@ -33,7 +33,7 @@ import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialCon
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import { commentCardStyle } from '@/styles/presets/cards';
-import { commentListStyle } from '@/styles/presets/layouts';
+import { commentListStyle, SOCIAL_ACTIONS_SX } from '@/styles/presets/layouts';
 import { commentsPanelStyle } from '@/styles/presets/panels';
 import { useNotification } from '@/components/common/NotificationProvider';
 
@@ -315,13 +315,7 @@ export function CommentsSection({
 
                   {isAuthenticated && hasCommentActions ? (
                     <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        marginTop: '10px',
-                      }}
+                      sx={{ ...SOCIAL_ACTIONS_SX, marginTop: '10px' }}
                     >
                       {canLike ? (
                         <LikeButton
