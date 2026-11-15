@@ -23,9 +23,6 @@ export const theme = createTheme({
         ':root': {
           '--ht-color-brand': COLORS.brand,
           '--ht-color-page-background': COLORS.pageBackground,
-          '--ht-color-card-background': COLORS.cardBackground,
-          '--ht-color-comment-card-background': COLORS.commentCardBackground,
-          '--ht-color-form-panel-background': COLORS.formPanelBackground,
           '--ht-color-button-hover': COLORS.buttonHover,
           '--ht-color-danger-hover': COLORS.dangerHover,
           '--ht-color-secondary-button-background': COLORS.secondaryButtonBackground,
@@ -36,7 +33,6 @@ export const theme = createTheme({
           '--ht-color-legal-link': COLORS.legalLink,
           '--ht-color-legal-border': COLORS.legalBorder,
           '--ht-color-legal-back-background': COLORS.legalBackBackground,
-          '--ht-color-dialog-background': COLORS.dialogBackground,
           '--ht-color-heading-shadow': COLORS.headingShadow,
         },
       },
