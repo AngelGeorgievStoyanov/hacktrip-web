@@ -1,0 +1,13 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+}
