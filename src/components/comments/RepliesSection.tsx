@@ -29,7 +29,7 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { CommentDto, SocialConfigTargetKey } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { SOCIAL_ACTIONS_SX } from '@/styles/presets/layouts';
+import { SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
 
 interface RepliesSectionProps {
   commentId: number;
