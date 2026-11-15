@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { COLORS } from '@/constants/ui/colors';
 import { UI_SHAPE } from '@/constants/ui/shape';
-import { TYPOGRAPHY } from './typography';
+import { themeTypography } from './typography';
 
 /**
  * Central MUI theme configuration.
@@ -14,7 +14,7 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: TYPOGRAPHY.fontFamily,
+    ...themeTypography,
   },
   shape: {
     borderRadius: UI_SHAPE.borderRadius,
