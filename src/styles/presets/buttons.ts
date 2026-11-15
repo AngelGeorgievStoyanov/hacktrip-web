@@ -2,7 +2,7 @@ import { UI_COLORS } from '@/constants/ui/colors';
 
 /**
  * Reusable MUI sx fragments for recurring button treatments.
- * New call sites should use semantic names; legacy aliases remain during migration.
+ * Use semantic names so recurring button treatments stay explicit.
  */
 const primary = {
   '&:hover': { backgroundColor: UI_COLORS.brand.primaryHover },
@@ -21,15 +21,6 @@ const secondary = {
   },
 } as const;
 
-const legacySecondaryBack = {
-  backgroundColor: UI_COLORS.action.secondaryBackground,
-  color: 'black',
-  '&:hover': {
-    backgroundColor: UI_COLORS.action.secondaryHoverBackground,
-    color: 'black',
-  },
-} as const;
-
 const secondaryLightText = {
   ...secondary,
   '&:hover': {
@@ -45,10 +36,4 @@ export const BUTTON_STYLES = {
   back: secondary,
   secondaryLightText,
 
-  /** @deprecated Use primary. */
-  containedHover: primary,
-  /** @deprecated Use danger. */
-  dangerHover: danger,
-  /** @deprecated Use back. */
-  secondaryBack: legacySecondaryBack,
 } as const;
