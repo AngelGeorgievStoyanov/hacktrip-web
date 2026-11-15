@@ -39,7 +39,6 @@ export const theme = createTheme({
           '--ht-color-legal-link': UI_COLORS.legal.link,
           '--ht-color-legal-back-background': UI_COLORS.legal.backBackground,
           '--ht-color-decorative-heading-shadow': UI_COLORS.decorative.headingShadow,
-
         },
       },
     },
