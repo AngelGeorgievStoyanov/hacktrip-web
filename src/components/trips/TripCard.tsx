@@ -292,7 +292,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             </Typography>
           ) : null}
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={SOCIAL_COUNT_ROW_SX}>
           <Typography component="span" variant="body2">
             Day:
           </Typography>
@@ -323,7 +323,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             page={selectedPage}
             onChange={handleDayChange}
             renderItem={renderPaginationItem}
-            sx={{ marginTop: 2 }}
+            sx={PAGINATION_SX}
           />
         ) : null}
       </CardContent>
