@@ -20,7 +20,7 @@ import { getAuthErrorMessage } from '@/lib/errors';
 import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { FORM_PANEL_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
@@ -82,17 +82,7 @@ export function LoginForm() {
         component="form"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          ...FORM_PANEL_SX,
-          padding: '30px',
-          maxWidth: '700px',
-          width: '100%',
-          boxSizing: 'border-box',
-          marginX: 'auto',
-        }}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="div" sx={{ margin: '10px auto', textAlign: 'center' }}>
           LOGIN
