@@ -32,6 +32,7 @@ import { AddIcon, RemoveIcon, RemoveImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
 import { LEGACY_PANEL_SX } from '@/styles/presets/panels';
+import { UI_COLORS } from '@/constants/ui/colors';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
 
@@ -525,7 +526,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                   width: '100%',
                   aspectRatio: '1 / 1',
                   overflow: 'hidden',
-                  border: '1px solid rgba(0, 0, 0, 0.2)',
+                  border: `1px solid ${UI_COLORS.border.subtle}`,
                   p: 0.5,
                 }}
               >
@@ -547,8 +548,8 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                         position: 'absolute',
                         top: 4,
                         right: 4,
-                        backgroundColor: 'rgba(255, 255, 255, 0.82)',
-                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.96)' },
+                        backgroundColor: UI_COLORS.action.tripImageControlBackground,
+                        '&:hover': { backgroundColor: UI_COLORS.action.tripImageControlBackgroundHover },
                       }}
                     >
                       {deletingImageId === image.id ? (
