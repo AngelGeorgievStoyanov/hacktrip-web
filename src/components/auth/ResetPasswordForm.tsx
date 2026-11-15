@@ -99,7 +99,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={FORM_SX}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
           RESET PASSWORD
