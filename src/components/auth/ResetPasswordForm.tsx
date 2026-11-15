@@ -10,7 +10,7 @@ import { authApi } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { resetPasswordSchema } from '@/validations/auth';
-import { COLORS, CARD_SHADOW, CARD_BORDER } from '@/constants/ui';
+import { AUTH_FORM_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
@@ -23,21 +23,6 @@ interface ResetPasswordFormProps {
 interface ResetFormValues {
   password: string;
 }
-
-const FORM_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 2,
-  backgroundColor: COLORS.formPanelBackground,
-  boxShadow: CARD_SHADOW,
-  border: CARD_BORDER,
-  borderRadius: '0px',
-  padding: '30px',
-  maxWidth: '700px',
-  width: '100%',
-  boxSizing: 'border-box',
-  marginX: 'auto',
-} as const;
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const router = useRouter();
@@ -92,7 +77,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   if (success) {
     return (
       <WelcomeHeading>
-        <Box component="section" sx={FORM_SX}>
+        <Box component="section" sx={AUTH_FORM_SX}>
           <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
             RESET PASSWORD
           </Typography>
