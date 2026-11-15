@@ -8,7 +8,7 @@ import { buildTripSeoContent } from '@/seo/modules/trip/buildContent';
 import { buildTripSeoMetadata } from '@/seo/modules/trip/buildMetadata';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { getTrip, isNotFoundError } from '@/lib/serverApi';
-import { pageBackgroundStyle } from '@/constants/ui';
+import { pageBackgroundStyle } from '@/styles/presets/layouts';
 import { positiveIdParam } from '@/validations';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
 
