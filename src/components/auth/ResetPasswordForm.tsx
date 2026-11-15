@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { BackButton } from '@/components/common/BackButton';
 import { authApi } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
@@ -128,9 +129,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           Reset password
         </Button>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Button component={Link} href="/login" disabled={submitting} variant="contained">
+          <BackButton component={Link} href="/login" disabled={submitting}>
             Back to login
-          </Button>
+          </BackButton>
         </Box>
       </Box>
     </WelcomeHeading>
