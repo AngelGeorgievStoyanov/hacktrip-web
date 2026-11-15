@@ -1,0 +1,88 @@
+/* Terms and privacy — legacy light-blue document surface with readable long-form text. */
+.legalPage {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px 16px 48px;
+  background: var(--ht-color-page-background);
+  color: var(--ht-color-text-dark);
+}
+
+.legalPageContent {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1000px;
+  padding: clamp(18px, 4vw, 42px);
+  background: var(--ht-color-page-background);
+  overflow-wrap: anywhere;
+}
+
+.legalPageContent h1,
+.legalPageContent h2 {
+  text-align: center;
+}
+
+.legalPageContent h1 {
+  margin: 8px 0 28px;
+}
+.legalPageContent h2 {
+  margin: 34px 0 14px;
+  scroll-margin-top: 90px;
+}
+.legalPageContent h3 {
+  margin: 26px 0 10px;
+  scroll-margin-top: 90px;
+}
+.legalPageContent p,
+.legalPageContent li {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.legalPageIntroNav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 36px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.legalPageToc {
+  margin: 28px 0;
+  padding: 18px 24px;
+  border: 1px solid var(--ht-color-legal-border);
+  border-radius: 6px;
+}
+
+.legalPageToc h3 {
+  margin-top: 0;
+}
+.legalPageToc a,
+.legalPageIntroNav a {
+  color: var(--ht-color-legal-link);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legalPageContact {
+  margin-top: 36px;
+}
+.legalPageBack {
+  display: inline-block;
+  margin-top: 18px;
+  padding: 10px 24px;
+  border-radius: 4px;
+  background: var(--ht-color-legal-back-background);
+  color: var(--ht-color-text-dark);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.legalPageBack:hover {
+  color: var(--ht-color-text-light);
+}
