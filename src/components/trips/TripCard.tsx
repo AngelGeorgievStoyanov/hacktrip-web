@@ -22,11 +22,11 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import {
   BREAKPOINTS,
-  BUTTON_STYLES,
   LIGHTBOX_SWIPE_THRESHOLD_PX,
-  cardStyle,
   maxWidthQuery,
 } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { cardStyle } from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse } from '@/types';
 
