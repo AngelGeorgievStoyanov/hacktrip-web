@@ -5,7 +5,9 @@ import { UI_SHADOWS } from '@/constants/ui/shadows';
 
 /** Shared border, shadow and corner treatment for card surfaces. */
 export const CARD_SURFACE_SX = {
-  ...CARD_SURFACE_SX,
+  boxShadow: UI_SHADOWS.card,
+  border: CARD_BORDER,
+  borderRadius: UI_SHAPE.squareRadius,
 } as const;
 
 /** Shared card treatments used by components with the same visual role. */
@@ -20,9 +22,7 @@ export const cardStyle: CSSProperties = {
   width: '-webkit-fill-available',
   padding: '25px 0px 0px 0px',
   backgroundColor: COLORS.cardBackground,
-  boxShadow: UI_SHADOWS.card,
-  border: CARD_BORDER,
-  borderRadius: UI_SHAPE.squareRadius,
+  ...CARD_SURFACE_SX,
 };
 
 export const commentCardStyle: CSSProperties = {
@@ -33,7 +33,5 @@ export const commentCardStyle: CSSProperties = {
   height: 'fit-content',
   padding: '30px',
   backgroundColor: COLORS.commentCardBackground,
-  boxShadow: UI_SHADOWS.card,
-  border: CARD_BORDER,
-  borderRadius: UI_SHAPE.squareRadius,
+  ...CARD_SURFACE_SX,
 };
