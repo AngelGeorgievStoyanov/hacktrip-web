@@ -13,6 +13,7 @@ import {
 } from '@/constants/maps';
 import { formatCoordinate, type MapPosition } from '@/lib/maps';
 import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface TripLocationPickerProps {
   latitude: string;
@@ -124,7 +125,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
             color: '#fff',
             opacity: 1,
           },
-          ':hover': { background: '#4daf30' },
+          ...BUTTON_STYLES.containedHover,
         }}
         containerSx={{ width: '100%' }}
         direction={{ xs: 'column', sm: 'row' }}
@@ -134,11 +135,9 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
             variant="contained"
             onClick={handleClearMarker}
             sx={{
+              ...BUTTON_STYLES.secondary,
               minHeight: 56,
-              backgroundColor: 'rgb(194 194 224)',
-              color: 'black',
               whiteSpace: 'nowrap',
-              ':hover': { color: 'rgb(248 245 245)' },
             }}
           >
             Remove Marker
