@@ -11,6 +11,7 @@ import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { resetPasswordSchema } from '@/validations/auth';
 import { AUTH_FORM_SX } from '@/styles/presets/forms';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
@@ -122,7 +123,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           variant="contained"
           disabled={submitting || !isValid}
           startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={{ ':hover': { backgroundColor: '#4daf30' } }}
+          sx={BUTTON_STYLES.containedHover}
         >
           Reset password
         </Button>
