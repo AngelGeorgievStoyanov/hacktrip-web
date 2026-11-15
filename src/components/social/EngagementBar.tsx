@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { UI_COLORS, UI_SHADOWS } from '@/constants/ui';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
 import AddCommentIcon from '@mui/icons-material/AddComment';
@@ -16,6 +15,7 @@ import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialCon
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
+import { UI_COLORS, UI_SHADOWS } from '@/constants/ui';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
