@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { buildTripsUrl } from '@/lib/tripUrl';
 import type { TripSort } from '@/constants/trips';
+import styles from './TripPagination.module.css';
 
 interface TripPaginationProps {
   page: number;
@@ -25,11 +26,8 @@ export function TripPagination({
   if (pages.length <= 1) return null;
 
   return (
-    <nav
-      aria-label="Trip list pages"
-      style={{ display: 'flex', justifyContent: 'center', margin: 20 }}
-    >
-      <ul style={{ display: 'flex', alignItems: 'center', gap: 12, listStyle: 'none', padding: 0 }}>
+    <nav aria-label="Trip list pages" className={styles.pagination}>
+      <ul className={styles.list}>
         {page > 1 ? (
           <li>
             <Link href={buildTripsUrl({ search, group, transport, sort, page: page - 1 })}>
