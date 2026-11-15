@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { COLORS, TYPOGRAPHY } from '@/constants/ui';
+import { TYPOGRAPHY } from '@/constants/ui';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 const COPYRIGHT_START = 2022;
 
@@ -52,12 +53,12 @@ export function Footer() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: COLORS.brand,
-        color: 'white',
+        backgroundColor: UI_COLORS.brand.primary,
+        color: UI_COLORS.text.inverse,
         padding: '0 20px',
       }}
     >
-      <h4 style={{ fontFamily: TYPOGRAPHY.fontFamily, color: COLORS.textLight, opacity: 1 }}>
+      <h4 style={{ fontFamily: TYPOGRAPHY.fontFamily, color: UI_COLORS.text.inverse, opacity: 1 }}>
         {'Copyright © '} {COPYRIGHT_START} - {new Date().getFullYear()}{' '}
         {'"HACK-TRIP" by Angel Stoyanov.  All rights reserved.'}
       </h4>
