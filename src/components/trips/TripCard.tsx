@@ -22,9 +22,9 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import {
   BREAKPOINTS,
-  LIGHTBOX_SWIPE_THRESHOLD_PX,
   maxWidthQuery,
 } from '@/constants/ui';
+import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { cardStyle } from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
