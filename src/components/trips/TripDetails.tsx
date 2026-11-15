@@ -4,6 +4,7 @@ import { useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import {
   Typography,
+  Card,
   CardContent,
   CardActions,
   Collapse,
@@ -19,7 +20,6 @@ import { EngagementBar } from '@/components/social/EngagementBar';
 import { FavoriteButton } from '@/components/social/FavoriteButton';
 import type { CommentTarget } from '@/api/comments';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { infoPanelStyle } from '@/styles/presets/panels';
 import { useAuth } from '@/hooks/useAuth';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
@@ -79,7 +79,16 @@ export function TripDetails({
   const handleExpandClick = () => setExpanded(!expanded);
 
   return (
-    <div style={infoPanelStyle}>
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minWidth: '320px',
+        maxWidth: '450px',
+        margin: '20px',
+        padding: '25px',
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
@@ -237,6 +246,6 @@ export function TripDetails({
           actionsJustify="space-around"
         />
       </Box>
-    </div>
+    </Card>
   );
 }
