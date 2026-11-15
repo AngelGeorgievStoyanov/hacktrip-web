@@ -13,6 +13,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
 import { RemoveProfileImageIcon } from '@/constants/icons';
+import { UI_SHADOWS } from '@/constants/ui/shadows';
 
 const ACCEPT_TYPES = (ACCEPTED_IMAGE_MIME_TYPES as readonly string[]).join(',');
 
@@ -117,7 +118,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
               border: '1px solid',
               borderRadius: '50%',
               overflow: 'hidden',
-              boxShadow: '3px 2px 5px black',
+              boxShadow: UI_SHADOWS.card,
               cursor: 'pointer',
               background: 'transparent',
             }}
