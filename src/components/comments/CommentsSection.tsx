@@ -7,6 +7,7 @@ import {
   Avatar,
   Badge,
   Box,
+  Card,
   CircularProgress,
   IconButton,
   TextField,
@@ -32,10 +33,24 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
-import { commentCardStyle } from '@/styles/presets/cards';
 import { commentListStyle, SOCIAL_ACTIONS_SX } from '@/styles/presets/layouts';
-import { commentsPanelStyle } from '@/styles/presets/panels';
 import { useNotification } from '@/components/common/NotificationProvider';
+
+const COMMENTS_PANEL_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '20px 0',
+  padding: '25px',
+} as const;
+
+const COMMENT_CARD_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  width: '100%',
+  height: 'fit-content',
+  padding: '30px',
+} as const;
 
 function commentKey(target: CommentTarget, viewerCacheKey: string): unknown[] {
   switch (target.type) {
@@ -185,7 +200,7 @@ export function CommentsSection({
   }
 
   return (
-    <section aria-label="Comments" style={commentsPanelStyle}>
+    <Card component="section" aria-label="Comments" sx={COMMENTS_PANEL_SX}>
       <Typography
         variant="h5"
         component="h2"
@@ -235,7 +250,7 @@ export function CommentsSection({
           const hasCommentActions = canLike || canFavorite || canReport || canEdit || canDelete;
 
           return (
-            <li key={commentItem.id} style={commentCardStyle}>
+            <Card component="li" key={commentItem.id} sx={COMMENT_CARD_SX}>
               {isAuthenticated && editingId === commentItem.id && canEdit ? (
                 <Box
                   component="form"
@@ -426,7 +441,7 @@ export function CommentsSection({
                   parentTargetType={targetKey}
                 />
               ) : null}
-            </li>
+            </Card>
           );
         })}
       </ul>
@@ -488,6 +503,6 @@ export function CommentsSection({
           Log in to comment.
         </Typography>
       ) : null}
-    </section>
+    </Card>
   );
 }
