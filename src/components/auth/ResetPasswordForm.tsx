@@ -124,7 +124,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           variant="contained"
           disabled={submitting || !isValid}
           startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={BUTTON_STYLES.containedHover}
+          sx={BUTTON_STYLES.primary}
         >
           Reset password
         </Button>
