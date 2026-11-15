@@ -5,7 +5,7 @@ import { Alert, Box, CircularProgress, Container, Typography } from '@mui/materi
 import { tripApi } from '@/api/trips';
 import { TripList } from '@/components/trips/TripList';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { headingTextStyle } from '@/constants/ui';
+import { headingTextStyle } from '@/styles/presets/typography';
 
 /**
  * Transparent full-width container. The backend background image is loaded once globally
