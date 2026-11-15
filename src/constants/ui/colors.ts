@@ -20,6 +20,9 @@ export const UI_COLORS = {
     socialOverlayBorder: 'rgba(255,255,255,0.22)',
     socialOverlayHover: 'rgba(255,255,255,0.16)',
   },
+  border: {
+    subtle: 'rgba(0, 0, 0, 0.2)',
+  },
   text: {
     inverse: '#fff',
     primary: '#17212b',
@@ -31,6 +34,8 @@ export const UI_COLORS = {
     secondaryHoverBackground: 'rgb(170 170 210)',
     imageControlBackground: '#ffffffaa',
     imageControlBackgroundHover: '#ffffff',
+    tripImageControlBackground: 'rgba(255, 255, 255, 0.82)',
+    tripImageControlBackgroundHover: 'rgba(255, 255, 255, 0.96)',
   },
   legal: {
     link: '#174f7a',
