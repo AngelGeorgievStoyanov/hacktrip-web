@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { UI_COLORS } from '@/constants/ui/colors';
 import { useRouter, useParams } from 'next/navigation';
 import { Alert, Box, Card, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import { pointApi } from '@/api/points';
@@ -233,8 +234,8 @@ export function EditPointPage() {
                           top: 4,
                           left: 4,
                           zIndex: 1,
-                          backgroundColor: '#ffffffaa',
-                          '&:hover': { backgroundColor: '#ffffff' },
+                          backgroundColor: UI_COLORS.action.imageControlBackground,
+                          '&:hover': { backgroundColor: UI_COLORS.action.imageControlBackgroundHover },
                         }}
                       >
                         <RemoveImageIcon />
