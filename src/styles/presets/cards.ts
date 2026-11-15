@@ -4,10 +4,10 @@ import { CARD_BORDER, UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 
 /**
- * Surface treatment for non-MUI panel elements.
+ * Surface treatment for legacy comment bubbles.
  * MUI Card and Dialog surfaces are owned by the central theme.
  */
-export const CARD_SURFACE_SX = {
+export const COMMENT_SURFACE_SX = {
   boxShadow: UI_SHADOWS.card,
   border: CARD_BORDER,
   borderRadius: UI_SHAPE.squareRadius,
