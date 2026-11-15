@@ -18,6 +18,8 @@ interface FavoriteButtonProps {
   initialFavorites: number;
   /** Icon button size. `'medium'` elsewhere, `'small'` for image overlays. */
   size?: 'small' | 'medium';
+  /** Prevents interaction when the current user is not allowed to favorite. */
+  disabled?: boolean;
 }
 
 export function FavoriteButton({
@@ -26,6 +28,7 @@ export function FavoriteButton({
   initialFavorited,
   initialFavorites,
   size = 'medium',
+  disabled = false,
 }: FavoriteButtonProps) {
   const notification = useNotification();
   const [favorited, setFavorited] = useState(initialFavorited);
@@ -61,7 +64,7 @@ export function FavoriteButton({
         <span>
           <IconButton
             onClick={() => mutation.mutate()}
-            disabled={mutation.isPending}
+            disabled={disabled || mutation.isPending}
             aria-label={
               favorited ? `Remove from favorites (${count})` : `Add to favorites (${count})`
             }
