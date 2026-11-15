@@ -25,6 +25,7 @@ import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { BackButton } from '@/components/common/BackButton';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
   const normalize = (value: string) => value.toLowerCase().replace(/[\\s_-]/g, '');
@@ -613,14 +614,9 @@ export function TripForm() {
           >
             Add point's for the trip
           </Button>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={() => router.back()}
-            sx={BUTTON_STYLES.containedHover}
-          >
+          <BackButton type="button" onClick={() => router.back()}>
             Back
-          </Button>
+          </BackButton>
         </Box>
       </Card>
     </>
