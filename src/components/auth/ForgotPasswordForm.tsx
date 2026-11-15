@@ -12,7 +12,8 @@ import { forgotPasswordSchema } from '@/validations/auth';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { FORGOT_PASSWORD_SUCCESS_MESSAGE } from '@/constants/notifications';
-import { BUTTON_STYLES, FORM_PANEL_SX } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { FORM_PANEL_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 
 const SECONDARY_BUTTON_SX = { ...BUTTON_STYLES.secondary, margin: '5px' } as const;
