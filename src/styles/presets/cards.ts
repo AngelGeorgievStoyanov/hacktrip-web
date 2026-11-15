@@ -3,6 +3,11 @@ import { COLORS } from '@/constants/ui/colors';
 import { CARD_BORDER, UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 
+/** Shared border, shadow and corner treatment for card surfaces. */
+export const CARD_SURFACE_SX = {
+  ...CARD_SURFACE_SX,
+} as const;
+
 /** Shared card treatments used by components with the same visual role. */
 export const cardStyle: CSSProperties = {
   display: 'flex',
