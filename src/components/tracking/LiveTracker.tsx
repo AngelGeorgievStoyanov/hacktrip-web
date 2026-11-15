@@ -7,9 +7,11 @@ import { useGoogleMapsLoader } from '@/hooks/useGoogleMapsLoader';
 import { useLiveTracking } from '@/hooks/useLiveTracking';
 import { MAP_CONTAINER_HEIGHT, MAP_DEFAULT_CENTER, MAP_TRACKING_ZOOM } from '@/constants/maps';
 import { formatDistance, formatDuration } from '@/lib/tracking';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 const TRACKING_SURFACE_SX = {
-  border: '1px solid #e0e0e0',
+  border: 1,
+  borderColor: 'divider',
   borderRadius: 1,
 } as const;
 
@@ -75,7 +77,7 @@ export function LiveTracker() {
               <PolylineF
                 path={path}
                 options={{
-                  strokeColor: '#1976d2',
+                  strokeColor: UI_COLORS.brand.primary,
                   strokeOpacity: 0.9,
                   strokeWeight: 4,
                   geodesic: true,
