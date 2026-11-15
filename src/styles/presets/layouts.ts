@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
 
-/** Shared layout presets retained while consumers migrate to local styles. */
+/** Shared layout presets used where the same page/list layout is required. */
 export const pageBackgroundStyle: CSSProperties = {
   boxSizing: 'border-box',
   padding: PAGE_CONTENT_PADDING,
