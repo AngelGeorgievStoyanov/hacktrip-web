@@ -1,12 +1,12 @@
 import type { Theme } from '@mui/material/styles';
-import { getSurfaceStyles } from '@/theme/components/surface';
+import { PANEL_SX } from './panels';
 
-/** Shared surface treatment for form panels, resolved from the active MUI theme. */
-export const FORM_PANEL_SX = (theme: Theme) => getSurfaceStyles(theme);
+/** Backward-compatible form-panel preset. */
+export const FORM_PANEL_SX = PANEL_SX;
 
 /** Shared layout and surface treatment for standalone authentication forms. */
 export const AUTH_FORM_SX = (theme: Theme) => ({
-  ...FORM_PANEL_SX(theme),
+  ...PANEL_SX(theme),
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
