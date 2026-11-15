@@ -14,7 +14,7 @@ import { buildTripUrl } from '@/lib/tripUrl';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
-import { COLORS } from '@/constants/ui';
+import { UI_COLORS } from '@/constants/ui/colors';
 import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
 import type { TripGroupResponse } from '@/types';
 
@@ -139,7 +139,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
             border: 1,
             borderColor: 'divider',
             borderRadius: 2.5,
-            backgroundColor: COLORS.stickySocialBackground,
+            backgroundColor: UI_COLORS.surface.stickySocial,
             boxShadow: 1,
             backdropFilter: 'blur(10px)',
             WebkitBackdropFilter: 'blur(10px)',
