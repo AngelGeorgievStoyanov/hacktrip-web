@@ -1,9 +1,17 @@
-/** Central application color tokens. Preserve existing values during the architecture migration. */
+/** Central application color tokens. Existing values are preserved during migration. */
 export const COLORS = {
   /** Legacy page fallback background behind the random background image. */
   pageBackground: '#cfe8fc',
-  /** Legacy AppBar/Footer brand blue. */
+  /** Primary brand blue used by the AppBar, footer and primary actions. */
   brand: '#1976d2',
+  /** Legacy translucent card/panel surface; migrate usages to semantic surfaces. */
+  cardBackground: '#eee7e79e',
+  /** Legacy translucent comment-card surface. */
+  commentCardBackground: '#eee7e7cc',
+  /** Legacy authentication form surface. */
+  formPanelBackground: '#e5e3e3d9',
+  /** Legacy dialog surface. */
+  dialogBackground: '#eee7e7',
   /** Translucent background for the trip sticky social-actions surface. */
   stickySocialBackground: '#eee7e79e',
   /** Shared legacy contained-button hover color. */
