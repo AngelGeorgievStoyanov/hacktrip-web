@@ -1,4 +1,6 @@
-/** Central MUI typography tokens. Keep the existing font stack until font loading is audited. */
-export const TYPOGRAPHY = {
-  fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+import { TYPOGRAPHY } from '@/constants/ui/typography';
+
+/** MUI typography defaults derived from the shared application font tokens. */
+export const themeTypography = {
+  fontFamily: TYPOGRAPHY.fontFamily,
 } as const;
