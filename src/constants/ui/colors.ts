@@ -19,6 +19,9 @@ export const UI_COLORS = {
     socialOverlay: 'rgba(24, 31, 26, 0.82)',
     socialOverlayBorder: 'rgba(255,255,255,0.22)',
     socialOverlayHover: 'rgba(255,255,255,0.16)',
+    imageLightbox: 'rgba(17, 17, 17, 0.96)',
+    imageControl: 'rgba(0, 0, 0, 0.45)',
+    imageControlHover: 'rgba(0, 0, 0, 0.7)',
   },
   border: {
     subtle: 'rgba(0, 0, 0, 0.2)',
@@ -36,6 +39,7 @@ export const UI_COLORS = {
     imageControlBackgroundHover: '#ffffff',
     tripImageControlBackground: 'rgba(255, 255, 255, 0.82)',
     tripImageControlBackgroundHover: 'rgba(255, 255, 255, 0.96)',
+    contrastBackground: '#000',
     navigationSelectedBackground: 'rgba(255, 255, 255, 0.2)',
     navigationHoverBackground: 'rgba(255, 255, 255, 0.1)',
   },
