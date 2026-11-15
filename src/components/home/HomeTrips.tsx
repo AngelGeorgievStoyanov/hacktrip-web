@@ -1,5 +1,5 @@
 import { TripList } from '@/components/trips/TripList';
-import { headingTextStyle } from '@/constants/ui';
+import { headingTextStyle } from '@/styles/presets/typography';
 import type { TripGroupResponse } from '@/types';
 
 const HEADING_STYLE = {
