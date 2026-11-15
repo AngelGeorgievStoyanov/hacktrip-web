@@ -14,6 +14,7 @@ import {
 import { formatCoordinate, type MapPosition } from '@/lib/maps';
 import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 interface TripLocationPickerProps {
   latitude: string;
@@ -97,7 +98,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
               position: 'absolute',
               bottom: 8,
               left: 8,
-              bgcolor: 'rgba(255, 255, 255, 0.92)',
+              bgcolor: UI_COLORS.map.pickerHintBackground,
               px: 1,
               py: 0.5,
             }}
@@ -122,7 +123,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
           backgroundColor: 'primary.main',
           '&.Mui-disabled': {
             backgroundColor: 'primary.main',
-            color: '#fff',
+            color: UI_COLORS.text.inverse,
             opacity: 1,
           },
           ...BUTTON_STYLES.containedHover,
