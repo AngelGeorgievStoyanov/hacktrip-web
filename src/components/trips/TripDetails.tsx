@@ -83,38 +83,22 @@ export function TripDetails({
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          justifyContent: 'space-between',
           alignItems: 'flex-start',
-          gap: 1,
           mb: 1,
         }}
       >
-        <Typography
-          variant="h5"
-          component="div"
-          style={{ ...NAME_STYLE, flex: 1, minWidth: 0 }}
-        >
+        <Typography variant="h5" component="div" style={NAME_STYLE}>
           TRIP NAME : {day.title ?? tripGroup.days[0]?.title ?? 'Trip'}
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flex: '0 0 40px',
-            width: 40,
-            height: 40,
-          }}
-          aria-hidden={!isAuthenticated || !canFavorite}
-        >
-          {isAuthenticated && canFavorite ? (
-            <FavoriteButton
-              targetType="trip"
-              targetId={day.id}
-              initialFavorited={day.social.favoritedByMe ?? false}
-              initialFavorites={day.social.favorites ?? 0}
-            />
-          ) : null}
-        </Box>
+        {isAuthenticated && canFavorite ? (
+          <FavoriteButton
+            targetType="trip"
+            targetId={day.id}
+            initialFavorited={day.social.favoritedByMe ?? false}
+            initialFavorites={day.social.favorites ?? 0}
+          />
+        ) : null}
       </Box>
 
       {day.price != null ? (
