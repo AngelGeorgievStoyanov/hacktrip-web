@@ -32,7 +32,9 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
-import { commentCardStyle, commentListStyle, commentsPanelStyle } from '@/constants/ui';
+import { commentCardStyle } from '@/styles/presets/cards';
+import { commentListStyle } from '@/styles/presets/layouts';
+import { commentsPanelStyle } from '@/styles/presets/panels';
 import { useNotification } from '@/components/common/NotificationProvider';
 
 function commentKey(target: CommentTarget, viewerCacheKey: string): unknown[] {
