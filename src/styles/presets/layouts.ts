@@ -25,3 +25,12 @@ export const commentListStyle: CSSProperties = {
   padding: 0,
   margin: 0,
 };
+
+
+/** Shared spacing and alignment for admin list pagination controls. */
+export const ADMIN_PAGINATION_SX = {
+  display: 'flex',
+  gap: 1,
+  alignItems: 'center',
+  mt: 1,
+} as const;
