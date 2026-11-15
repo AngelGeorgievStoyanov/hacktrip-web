@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { COMMENT_LIMIT_MAX, PAGE_MAX } from '@/constants/ui';
+import { COMMENT_LIMIT_MAX } from '@/constants/comments';
+import { PAGE_MAX } from '@/constants/pagination';
 import { optionalInt, trimmedString } from '../shared';
 
 export const commentBodySchema = z
