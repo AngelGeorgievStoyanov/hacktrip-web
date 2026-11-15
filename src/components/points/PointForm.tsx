@@ -45,7 +45,7 @@ const formSchema = pointFormSchema;
 const legacyButtonSx = {
   width: '32ch',
   m: 1,
-  ...BUTTON_STYLES.containedHover,
+  ...BUTTON_STYLES.primary,
 };
 
 const stackedActionButtonSx = {
@@ -281,7 +281,7 @@ export function PointForm({
           onClick={() => void handleFindInMap()}
           disabled={findingLocation || !isLoaded || !watch('name').trim()}
           startIcon={findingLocation ? <CircularProgress size={16} /> : undefined}
-          sx={{ m: 1, ...BUTTON_STYLES.containedHover }}
+          sx={{ m: 1, ...BUTTON_STYLES.primary }}
         >
           FIND IN MAP
         </Button>
