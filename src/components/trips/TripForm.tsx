@@ -24,7 +24,8 @@ import ImageUploadField from '@/components/images/ImageUploadField';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES, CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
   const normalize = (value: string) => value.toLowerCase().replace(/[\\s_-]/g, '');
