@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Box, Button, ButtonGroup, CircularProgress, TextField, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CircularProgress, TextField, Typography } from '@mui/material';
 import { AddIcon, RemoveIcon } from '@/constants/icons';
 import { tripApi, type TripWriteInput } from '@/api/trips';
 import type { TripGroupResponse } from '@/types';
@@ -24,8 +24,6 @@ import ImageUploadField from '@/components/images/ImageUploadField';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { COLORS } from '@/constants/ui/colors';
-import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
@@ -336,7 +334,7 @@ export function TripForm() {
           }}
         />
       </Box>
-      <Box
+      <Card
         component="form"
         onSubmit={handleSubmit((values) => onSubmit(values, 'add-trip'))}
         sx={{
@@ -350,8 +348,6 @@ export function TripForm() {
           minWidth: 0,
           p: { xs: 2, sm: '30px' },
           mb: '5px',
-          backgroundColor: COLORS.cardBackground,
-          ...CARD_SURFACE_SX,
           gap: 1,
           '& .MuiFormControl-root': {
             m: '4px',
@@ -626,7 +622,7 @@ export function TripForm() {
             Back
           </Button>
         </Box>
-      </Box>
+      </Card>
     </>
   );
 }
