@@ -35,5 +35,5 @@ export const commentCardStyle: CSSProperties = {
   height: 'fit-content',
   padding: '30px',
   backgroundColor: COLORS.commentCardBackground,
-  ...CARD_SURFACE_SX,
+  ...COMMENT_SURFACE_SX,
 };
