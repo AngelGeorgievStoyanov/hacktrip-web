@@ -32,6 +32,12 @@ import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 
+const IMAGE_PAGINATION_ROW_SX = {
+  display: 'flex',
+  gap: 1,
+  alignItems: 'center',
+} as const;
+
 function stringList(items: string[], empty: string) {
   if (items.length === 0) {
     return (
@@ -62,7 +68,7 @@ function CloudImages() {
       {data ? (
         <Box>
           <List dense>{stringList(data.items, 'No cloud images.')}</List>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box sx={IMAGE_PAGINATION_ROW_SX}>
             <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </Button>
@@ -93,7 +99,7 @@ function DatabaseImages() {
         <Box>
           <List dense>{stringList(data.items, 'No database images.')}</List>
           {pagination && (pagination.totalPages ?? 0) > 1 ? (
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <Box sx={IMAGE_PAGINATION_ROW_SX}>
               <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
                 Previous
               </Button>
@@ -132,7 +138,7 @@ function OrphanImages() {
           <List dense>{stringList(data.cloudOnly, 'None.')}</List>
           <Typography variant="h6">Database only ({data.databaseOnly.length})</Typography>
           <List dense>{stringList(data.databaseOnly, 'None.')}</List>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+          <Box sx={IMAGE_PAGINATION_ROW_SX}>
             <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </Button>
