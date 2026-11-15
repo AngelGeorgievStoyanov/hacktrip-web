@@ -4,12 +4,8 @@ export const COLORS = {
   pageBackground: '#cfe8fc',
   /** Legacy AppBar/Footer brand blue. */
   brand: '#1976d2',
-  /** Legacy translucent card/panel background. */
-  cardBackground: '#eee7e79e',
-  /** Legacy translucent comment card background. */
-  commentCardBackground: '#eee7e7cc',
-  /** Legacy form panel background. */
-  formPanelBackground: '#e5e3e3d9',
+  /** Translucent background for the trip sticky social-actions surface. */
+  stickySocialBackground: '#eee7e79e',
   /** Shared legacy contained-button hover color. */
   buttonHover: '#4daf30',
   /** Legacy destructive-action hover color. */
@@ -23,7 +19,6 @@ export const COLORS = {
   legalLink: '#174f7a',
   legalBorder: 'rgb(23 33 43 / 22%)',
   legalBackBackground: 'rgb(194 194 224)',
-  dialogBackground: '#eee7e7',
   headingShadow: 'rgb(10 10 10)',
   /** Shared address autocomplete input surface and text colors. */
   mapAddressInputBackground: '#f2f1e58f',
