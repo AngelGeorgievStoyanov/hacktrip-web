@@ -1,23 +1,4 @@
 /*
- * Legacy trip-details content row: information panel beside the map on desktop, stacked
- * with the map above the information panel below 900px (`column-reverse`).
- */
-.tripDetailsLayout {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-@media (max-width: 900px) {
-  .tripDetailsLayout {
-    flex-direction: column-reverse;
-  }
-}
-
-/*
  * Trip Details responsive layout.
  * Keep trip info/images on row one and map/selected point on row two while
  * both rows fit. When the available content width is insufficient, stack the
