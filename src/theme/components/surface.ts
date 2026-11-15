@@ -1,5 +1,5 @@
 import type { Theme } from '@mui/material/styles';
-import { UI_ELEVATION } from '@/constants/ui/shadows';
+import { getThemeShadow } from '@/theme/shadows';
 
 /** One shared visual contract for elevated application surfaces. */
 export function getSurfaceStyles(theme: Theme) {
@@ -7,6 +7,6 @@ export function getSurfaceStyles(theme: Theme) {
     backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadius,
-    boxShadow: theme.shadows[UI_ELEVATION.surface],
+    boxShadow: getThemeShadow(theme, 'surface'),
   };
 }
