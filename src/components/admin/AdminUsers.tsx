@@ -88,15 +88,11 @@ export function AdminUsers() {
               return (
                 <Card
                   key={u.id}
-                  variant="outlined"
                   sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     minWidth: 0,
                     p: 1,
-                    borderRadius: 0,
-                    bgcolor: 'action.hover',
-                    boxShadow: 2,
                     '& .MuiTypography-root': { overflowWrap: 'anywhere' },
                   }}
                 >
