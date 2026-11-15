@@ -588,7 +588,7 @@ export function TripForm() {
             variant="contained"
             disabled={submitting || isLoadingExistingTrip || !isValid || isDayNumberOccupied}
             startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={BUTTON_STYLES.containedHover}
+            sx={BUTTON_STYLES.primary}
           >
             Add trip
           </Button>
@@ -599,7 +599,7 @@ export function TripForm() {
             onClick={() => {
               void handleSubmit((values) => onSubmit(values, 'add-next-day'))();
             }}
-            sx={BUTTON_STYLES.containedHover}
+            sx={BUTTON_STYLES.primary}
           >
             Add next day trip
           </Button>
