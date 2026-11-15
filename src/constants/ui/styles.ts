@@ -9,6 +9,3 @@ export { TYPOGRAPHY } from './typography';
 
 /** Legacy card and panel border retained until those consumers are migrated. */
 export const CARD_BORDER = 'solid 1px';
-
-/** Legacy card and panel shadow retained until those consumers are migrated. */
-export const CARD_SHADOW = '3px 2px 5px black';
