@@ -1,8 +1,8 @@
-import { COLORS } from '@/constants/ui/colors';
+import { UI_COLORS } from '@/constants/ui/colors';
 
-/** MUI palette derived from the shared application color tokens. */
+/** MUI palette derived from the semantic application color tokens. */
 export const themePalette = {
   primary: {
-    main: COLORS.brand,
+    main: UI_COLORS.brand.primary,
   },
 } as const;
