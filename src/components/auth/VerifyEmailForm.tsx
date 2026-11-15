@@ -12,7 +12,9 @@ import {
   AUTH_SUCCESS_REDIRECT_DELAY_MS,
   LOGIN_EMAIL_VERIFIED_MESSAGE,
 } from '@/constants/notifications';
-import { COLORS, CARD_SHADOW, CARD_BORDER } from '@/constants/ui';
+import { COLORS } from '@/constants/ui/colors';
+import { CARD_SURFACE_SX } from '@/styles/presets/cards';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 export function VerifyEmailForm({ token }: { token?: string }) {
   const router = useRouter();
@@ -73,8 +75,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
           mx: 'auto',
           p: { xs: 3, sm: 4 },
           backgroundColor: COLORS.formPanelBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
+          ...CARD_SURFACE_SX,
           color: 'text.primary',
           textAlign: 'center',
         }}
@@ -89,7 +90,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
             <Button
               variant="contained"
               onClick={() => router.replace('/login')}
-              sx={{ ':hover': { backgroundColor: '#4daf30' } }}
+              sx={BUTTON_STYLES.containedHover}
             >
               Go to login
             </Button>
