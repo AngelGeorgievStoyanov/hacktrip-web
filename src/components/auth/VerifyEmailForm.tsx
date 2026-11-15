@@ -86,7 +86,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
             <Button
               variant="contained"
               onClick={() => router.replace('/login')}
-              sx={BUTTON_STYLES.containedHover}
+              sx={BUTTON_STYLES.primary}
             >
               Go to login
             </Button>
