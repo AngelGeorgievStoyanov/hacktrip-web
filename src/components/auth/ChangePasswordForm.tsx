@@ -136,7 +136,7 @@ export function ChangePasswordForm({ expanded }: ChangePasswordFormProps) {
             variant="contained"
             disabled={submitting || !isValid}
             startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={{ alignSelf: 'flex-start', m: '2px', ...BUTTON_STYLES.containedHover }}
+            sx={{ alignSelf: 'flex-start', m: '2px', ...BUTTON_STYLES.primary }}
           >
             Save password
           </Button>
