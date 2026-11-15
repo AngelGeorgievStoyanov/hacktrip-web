@@ -15,7 +15,7 @@ import { MAX_IMAGES_PER_ENTITY } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { truncatePointName } from '@/lib/pointName';
 import type { SocialImageDto, TripGroupResponse, TripPoint } from '@/types';
-import { BUTTON_STYLES } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface PointFormProps {
   tripGroupId: number;
