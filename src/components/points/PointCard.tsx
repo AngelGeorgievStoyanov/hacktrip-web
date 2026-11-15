@@ -1,7 +1,8 @@
 'use client';
 
 import { Box, Button, Card, IconButton, Typography } from '@mui/material';
-import { BUTTON_STYLES, CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { GoogleMapView } from '@/components/maps/GoogleMapView';
 import { ArrowCircleDownIcon, ArrowCircleUpIcon } from '@/constants/icons';
 import type { TripPoint } from '@/types';
