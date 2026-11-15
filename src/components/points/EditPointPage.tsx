@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { UI_COLORS } from '@/constants/ui/colors';
 import { useRouter, useParams } from 'next/navigation';
 import { Alert, Box, Card, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import { pointApi } from '@/api/points';
@@ -13,6 +12,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { PointLocationPicker } from '@/components/maps/PointLocationPicker';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { SocialImageDto, TripPoint } from '@/types';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 export function EditPointPage() {
   const router = useRouter();
