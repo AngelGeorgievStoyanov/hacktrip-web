@@ -16,25 +16,19 @@ import {
   type TripSort,
 } from '@/constants/trips';
 import { PAGE_MAX } from '@/constants/pagination';
-import { pageBackgroundStyle } from '@/styles/presets/layouts';
+import { CENTERED_PAGE_MAIN_STYLE } from '@/styles/presets/layouts';
+import { headingTextStyle } from '@/styles/presets/typography';
 
 interface TripsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-const MAIN_STYLE: CSSProperties = {
-  ...pageBackgroundStyle,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
 
 const INTRO_STYLE: CSSProperties = {
   maxWidth: 900,
   margin: '0 20px 24px',
   textAlign: 'center',
-  color: '#fff',
-  textShadow: '3px 3px 3px rgb(10,10,10)',
+  ...headingTextStyle,
   lineHeight: 1.6,
 };
 
@@ -123,7 +117,7 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
     return (
       <>
         {filters}
-        <main style={MAIN_STYLE}>
+        <main style={CENTERED_PAGE_MAIN_STYLE}>
           {intro}
           <TripList trips={trips} />
           <TripPagination

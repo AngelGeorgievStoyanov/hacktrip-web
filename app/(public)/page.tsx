@@ -5,7 +5,7 @@ import { HomeTrips } from '@/components/home/HomeTrips';
 import { tripApi } from '@/api/trips';
 import type { TripGroupResponse } from '@/types';
 import { buildSeoMetadata } from '@/seo';
-import { pageBackgroundStyle } from '@/styles/presets/layouts';
+import { CENTERED_PAGE_MAIN_STYLE } from '@/styles/presets/layouts';
 
 export const revalidate = 300;
 
@@ -16,12 +16,6 @@ export const metadata: Metadata = buildSeoMetadata({
   canonicalPath: '/',
 });
 
-const MAIN_STYLE: CSSProperties = {
-  ...pageBackgroundStyle,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
 
 export default async function HomePage() {
   let topTrips: TripGroupResponse[] = [];
@@ -32,7 +26,7 @@ export default async function HomePage() {
   }
 
   return (
-    <main style={MAIN_STYLE}>
+    <main style={CENTERED_PAGE_MAIN_STYLE}>
       <HomeHero>
         <HomeTrips trips={topTrips} />
       </HomeHero>

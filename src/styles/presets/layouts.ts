@@ -59,3 +59,11 @@ export const ACCOUNT_TRIPS_EMPTY_STATE_SX = {
   gap: 3,
   py: { xs: 6, md: 10 },
 } as const;
+
+/** Shared centered page shell used by the home and public trip pages. */
+export const CENTERED_PAGE_MAIN_STYLE: CSSProperties = {
+  ...pageBackgroundStyle,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+};

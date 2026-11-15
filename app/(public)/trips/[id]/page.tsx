@@ -8,7 +8,7 @@ import { buildTripSeoContent } from '@/seo/modules/trip/buildContent';
 import { buildTripSeoMetadata } from '@/seo/modules/trip/buildMetadata';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { getTrip, isNotFoundError } from '@/lib/serverApi';
-import { pageBackgroundStyle } from '@/styles/presets/layouts';
+import { CENTERED_PAGE_MAIN_STYLE } from '@/styles/presets/layouts';
 import { positiveIdParam } from '@/validations';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
 
@@ -17,12 +17,6 @@ interface TripPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-const MAIN_STYLE: CSSProperties = {
-  ...pageBackgroundStyle,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
 
 function parseId(value: string): number | null {
   const parsed = positiveIdParam.safeParse(value);
@@ -90,7 +84,7 @@ export default async function TripPage({ params, searchParams }: TripPageProps) 
   const image = tripRepresentativeImage(trip);
 
   return (
-    <main style={MAIN_STYLE}>
+    <main style={CENTERED_PAGE_MAIN_STYLE}>
       {/* One trip-group response; day switching uses the already-loaded group. */}
       <TripDetailsView trip={trip} initialDayNumber={day.dayNumber} />
 
