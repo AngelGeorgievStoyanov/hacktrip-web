@@ -26,7 +26,7 @@ import {
 } from '@/constants/ui';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { cardStyle } from '@/styles/presets/cards';
+import { cardStyle, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse } from '@/types';
 
@@ -96,8 +96,6 @@ const CARD_CONTENT_SX = {
   py: 1,
   '&:last-child': { pb: 1 },
 } as const;
-
-const CARD_TEXT_PADDING_SX = { padding: '0px 15px' } as const;
 
 const SOCIAL_COUNT_ROW_SX = { display: 'flex', alignItems: 'center', gap: 1 } as const;
 
@@ -183,7 +181,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
     return (
       <Card sx={[cardStyle, { height: isMobile ? 'fit-content' : 'auto', maxHeight: '500px' }]}>
         <Box sx={{ ...HEAD_BLOCK_SX, height: isMobile ? 'auto' : '-webkit-fill-available' }}>
-          <Typography gutterBottom variant="h5" sx={CARD_TEXT_PADDING_SX}>
+          <Typography gutterBottom variant="h5" sx={CARD_TEXT_INSET_SX}>
             No trip on {dayNumber} day
           </Typography>
         </Box>
@@ -220,11 +218,11 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
       ]}
     >
       <Box sx={HEAD_BLOCK_SX}>
-        <Typography gutterBottom variant="h5" sx={[CARD_TEXT_PADDING_SX, { textAlign: 'center' }]}>
+        <Typography gutterBottom variant="h5" sx={[CARD_TEXT_INSET_SX, { textAlign: 'center' }]}>
           Title: {title}
         </Typography>
         {description ? (
-          <Typography variant="body2" sx={[DESCRIPTION_SX, CARD_TEXT_PADDING_SX]}>
+          <Typography variant="body2" sx={[DESCRIPTION_SX, CARD_TEXT_INSET_SX]}>
             Description: {description}
           </Typography>
         ) : null}
