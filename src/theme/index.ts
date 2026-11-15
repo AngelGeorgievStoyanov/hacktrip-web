@@ -33,6 +33,7 @@ export const theme = createTheme({
           '--ht-color-surface-card': UI_COLORS.surface.card,
           '--ht-color-text-primary': UI_COLORS.text.primary,
           '--ht-color-text-inverse': UI_COLORS.text.inverse,
+          '--ht-color-action-contrast-background': UI_COLORS.action.contrastBackground,
           '--ht-color-action-danger-hover': UI_COLORS.action.dangerHover,
           '--ht-color-border-legal': UI_COLORS.legal.border,
 
