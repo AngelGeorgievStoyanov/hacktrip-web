@@ -6,3 +6,6 @@ export * from './sizes';
 export * from './spacing';
 export * from './typography';
 export * from './z-index';
+
+/** Legacy style constants kept temporarily for existing imports. */
+export { CARD_BORDER, CARD_SHADOW } from './styles';
