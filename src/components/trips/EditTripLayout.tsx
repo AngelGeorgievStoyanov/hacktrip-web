@@ -33,6 +33,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
 import { CARD_BORDER, COLORS, UI_SHAPE } from '@/constants/ui';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { BackButton } from '@/components/common/BackButton';
 
 interface EditTripLayoutProps {
   trip: TripGroupResponse;
@@ -488,14 +489,9 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
           >
             EDIT YOUR TRIP
           </Button>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={() => router.back()}
-            sx={BUTTON_STYLES.secondary}
-          >
+          <BackButton type="button" onClick={() => router.back()}>
             BACK
-          </Button>
+          </BackButton>
         </Box>
       </Box>
 
