@@ -24,7 +24,8 @@ import ImageUploadField from '@/components/images/ImageUploadField';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { COLORS } from '@/constants/ui/colors';
+import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
@@ -350,9 +351,7 @@ export function TripForm() {
           p: { xs: 2, sm: '30px' },
           mb: '5px',
           backgroundColor: COLORS.cardBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          borderRadius: UI_SHAPE.squareRadius,
+          ...CARD_SURFACE_SX,
           gap: 1,
           '& .MuiFormControl-root': {
             m: '4px',
