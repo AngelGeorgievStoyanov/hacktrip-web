@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 /** Shared alignment for like, favorite, report and moderation action groups. */
 export const SOCIAL_ACTIONS_SX = {
@@ -10,6 +11,6 @@ export const SOCIAL_ACTIONS_SX = {
 
 /** Shared compact inline error text for social actions. */
 export const socialErrorTextStyle: CSSProperties = {
-  color: 'red',
+  color: UI_COLORS.action.danger,
   fontSize: '0.75rem',
 };
