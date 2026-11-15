@@ -3,11 +3,12 @@ import {
   DAY_NUMBER_MAX,
   TRIP_DESCRIPTION_MAX_LENGTH,
   TRIP_GROUP_MAX_LENGTH,
+  TRIP_LIMIT_MAX,
   TRIP_SEARCH_MAX_LENGTH,
   TRIP_TITLE_MAX_LENGTH,
   TRIP_TRANSPORT_MAX_LENGTH,
 } from '@/constants/trips';
-import { PAGE_MAX, TRIP_LIMIT_MAX } from '@/constants/ui';
+import { PAGE_MAX } from '@/constants/pagination';
 import {
   idList,
   optionalInt,
