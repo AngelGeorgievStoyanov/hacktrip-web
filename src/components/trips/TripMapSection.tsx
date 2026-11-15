@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Box,
   Button,
-  CircularProgress,
   MobileStepper,
   useMediaQuery,
   useTheme,
@@ -42,8 +41,6 @@ export function TripMapSection({
   const selectedPoint = selectedPointIndex >= 0 ? points[selectedPointIndex] : undefined;
   const focusPointId = selectedPoint && toMapPosition(selectedPoint) ? selectedPoint.id : null;
   const stepperRef = useRef<HTMLDivElement | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const [shouldLoadMap, setShouldLoadMap] = useState(false);
   const previousPointIndex = useRef(selectedPointIndex);
   const isSmallScreen = useMediaQuery(maxWidthQuery(BREAKPOINTS.tripDetails));
   const [selectedMarker, setSelectedMarker] = useState<GoogleMapMarker | null>(null);
@@ -75,29 +72,6 @@ export function TripMapSection({
     ? navigablePointIndexes.length > 0
     : currentNavigableIndex < navigablePointIndexes.length - 1;
   const hasPrev = !isOverview;
-
-  useEffect(() => {
-    const container = mapContainerRef.current;
-    if (!container) return;
-
-    if (!('IntersectionObserver' in window)) {
-      setShouldLoadMap(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoadMap(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '400px 0px' },
-    );
-
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (isOverview) setSelectedMarker(null);
@@ -134,7 +108,6 @@ export function TripMapSection({
 
   return (
     <Box
-      ref={mapContainerRef}
       sx={{
         boxSizing: 'content-box',
         height: 'fit-content',
@@ -195,8 +168,7 @@ export function TripMapSection({
           }
         />
       ) : null}
-      {shouldLoadMap ? (
-        <GoogleMapView
+      <GoogleMapView
           markers={mapMarkers}
           path={showingPointMarkers ? path : []}
           center={showingPointMarkers ? MAP_DEFAULT_CENTER : (dayPosition ?? MAP_DEFAULT_CENTER)}
@@ -212,20 +184,6 @@ export function TripMapSection({
           onMarkerSelect={showingPointMarkers ? handleMarkerSelect : undefined}
           renderInfoWindow={showingPointMarkers ? (marker) => marker.title : undefined}
         />
-      ) : (
-        <Box
-          sx={{
-            display: 'grid',
-            placeItems: 'center',
-            width: '100%',
-            maxWidth: MAP_TRIP_WIDTH,
-            height: MAP_TRIP_HEIGHT,
-          }}
-          aria-label="Map loading area"
-        >
-          <CircularProgress size={28} />
-        </Box>
-      )}
     </Box>
   );
 }
