@@ -8,12 +8,14 @@ import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { buildSeoMetadata } from '@/seo';
 import {
   TRIP_GROUP_MAX_LENGTH,
+  TRIP_LIMIT_DEFAULT,
+  TRIP_LIMIT_MAX,
+  TRIP_PAGE_DEFAULT,
   TRIP_SEARCH_MAX_LENGTH,
   TRIP_TRANSPORT_MAX_LENGTH,
   type TripSort,
 } from '@/constants/trips';
 import { PAGE_MAX } from '@/constants/pagination';
-import { TRIP_LIMIT_DEFAULT, TRIP_LIMIT_MAX, TRIP_PAGE_DEFAULT } from '@/constants/trips';
 import { pageBackgroundStyle } from '@/styles/presets/layouts';
 
 interface TripsPageProps {
