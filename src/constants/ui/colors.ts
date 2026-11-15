@@ -19,6 +19,7 @@ export const UI_COLORS = {
     socialOverlay: 'rgba(24, 31, 26, 0.82)',
     socialOverlayBorder: 'rgba(255,255,255,0.22)',
     socialOverlayHover: 'rgba(255,255,255,0.16)',
+    socialPlaceholder: '#e7f0f2',
     imageLightbox: 'rgba(17, 17, 17, 0.96)',
     imageControl: 'rgba(0, 0, 0, 0.45)',
     imageControlHover: 'rgba(0, 0, 0, 0.7)',
@@ -51,6 +52,7 @@ export const UI_COLORS = {
   },
   decorative: {
     headingShadow: 'rgb(10 10 10)',
+    socialPlaceholderOverlay: 'linear-gradient(transparent, rgba(15, 35, 45, 0.72))',
   },
   map: {
     addressBackground: '#f2f1e58f',

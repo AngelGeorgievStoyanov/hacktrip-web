@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import Image from 'next/image';
+import { UI_COLORS } from '@/constants/ui/colors';
 import { SOCIAL_OBJECT_PLACEHOLDERS } from './socialObjectPlaceholderAssets';
 
 /**
@@ -27,7 +28,7 @@ export function SocialObjectPlaceholder() {
         width: '100%',
         height: '100%',
         overflow: 'hidden',
-        bgcolor: '#e7f0f2',
+        bgcolor: UI_COLORS.surface.socialPlaceholder,
       }}
     >
       {imageSrc ? (
@@ -59,9 +60,9 @@ export function SocialObjectPlaceholder() {
           gap: 0.25,
           px: 2,
           py: 1.25,
-          color: '#fff',
+          color: UI_COLORS.text.inverse,
           textAlign: 'center',
-          background: 'linear-gradient(transparent, rgba(15, 35, 45, 0.72))',
+          background: UI_COLORS.decorative.socialPlaceholderOverlay,
         }}
       >
         <Typography component="span" sx={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.3 }}>
