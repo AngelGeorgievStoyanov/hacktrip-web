@@ -14,7 +14,8 @@ import { buildTripUrl } from '@/lib/tripUrl';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
-import { CARD_BORDER, CARD_SHADOW, COLORS, pageBackgroundStyle } from '@/constants/ui';
+import { CARD_BORDER, CARD_SHADOW, COLORS } from '@/constants/ui';
+import { pageBackgroundStyle } from '@/styles/presets/layouts';
 import type { TripGroupResponse } from '@/types';
 
 interface TripDetailsViewProps {
