@@ -1,9 +1,10 @@
 import type { CSSProperties } from 'react';
+import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
 
 /** Shared layout presets retained while consumers migrate to local styles. */
 export const pageBackgroundStyle: CSSProperties = {
   boxSizing: 'border-box',
-  padding: '30px',
+  padding: PAGE_CONTENT_PADDING,
 };
 
 export const cardListStyle: CSSProperties = {
