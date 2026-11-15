@@ -8,6 +8,7 @@ import { themeTypography } from './typography';
 import { buttonOverrides } from './components/button';
 import { cardOverrides } from './components/card';
 import { dialogOverrides } from './components/dialog';
+import { textFieldOverrides } from './components/text-field';
 
 /**
  * Central MUI theme configuration.
@@ -65,5 +66,6 @@ export const theme = createTheme({
     MuiButton: buttonOverrides,
     MuiCard: cardOverrides,
     MuiDialog: dialogOverrides,
+    MuiTextField: textFieldOverrides,
   },
 });
