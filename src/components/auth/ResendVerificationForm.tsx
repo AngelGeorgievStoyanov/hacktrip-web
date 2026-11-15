@@ -13,6 +13,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { RESEND_VERIFICATION_SUCCESS_MESSAGE } from '@/constants/notifications';
 import { AUTH_FORM_SX } from '@/styles/presets/forms';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 
 const SECONDARY_BUTTON_SX = {
@@ -87,7 +88,7 @@ export function ResendVerificationForm() {
           variant="contained"
           disabled={submitting || !captchaToken}
           startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={{ ':hover': { backgroundColor: '#4daf30' } }}
+          sx={BUTTON_STYLES.containedHover}
         >
           Resend verification email
         </Button>
