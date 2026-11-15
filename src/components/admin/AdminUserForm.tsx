@@ -22,7 +22,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { zodResolver } from '@/lib/zodResolver';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_MAX } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_MAX } from '@/constants/admin';
 import { adminUserUpdateSchema } from '@/validations/admin';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
