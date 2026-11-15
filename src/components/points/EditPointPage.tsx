@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Alert, Box, CircularProgress, IconButton, Paper, Tooltip } from '@mui/material';
+import { Alert, Box, Card, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import { pointApi } from '@/api/points';
 import { PointForm } from '@/components/points/PointForm';
 import { AppImage } from '@/components/images/AppImage';
@@ -148,18 +148,13 @@ export function EditPointPage() {
           gap: 2.5,
         }}
       >
-        <Paper
-          variant="outlined"
+        <Card
           sx={{
             p: { xs: 2, sm: '30px' },
             width: '100%',
             maxWidth: 600,
             minWidth: 0,
             boxSizing: 'border-box',
-            backgroundColor: '#eee7e79e',
-            border: '1px solid black',
-            borderRadius: 0,
-            boxShadow: '3px 2px 5px black',
             '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
             '@media (max-width:1020px)': { order: 2 },
           }}
@@ -182,7 +177,7 @@ export function EditPointPage() {
             onBack={() => router.back()}
             onDone={() => router.back()}
           />
-        </Paper>
+        </Card>
 
         <Box
           sx={{
