@@ -21,6 +21,14 @@ const LEGACY_BUTTON_SX = {
   boxSizing: 'border-box',
 };
 
+const DANGER_ACTION_BUTTON_SX = {
+  ...BUTTON_STYLES.danger,
+  padding: '10px',
+  width: '100%',
+  minHeight: '48px',
+  boxSizing: 'border-box',
+};
+
 const ACTION_BUTTON_BOX_SX = {
   display: 'contents',
 };
@@ -129,13 +137,7 @@ export function TripActions({
                 })
               }
               disabled={deleteDayMutation.isPending}
-              sx={{
-                ':hover': { background: '#ef0a0a' },
-                padding: '10px',
-                width: '100%',
-                minHeight: '48px',
-                boxSizing: 'border-box',
-              }}
+              sx={DANGER_ACTION_BUTTON_SX}
             >
               DELETE DAY {selectedDay?.dayNumber}
             </Button>
@@ -153,13 +155,7 @@ export function TripActions({
               })
             }
             disabled={deleteMutation.isPending}
-            sx={{
-              ':hover': { background: '#ef0a0a' },
-              padding: '10px',
-              width: '100%',
-              minHeight: '48px',
-              boxSizing: 'border-box',
-            }}
+            sx={DANGER_ACTION_BUTTON_SX}
           >
             DELETE TRIP
           </Button>
