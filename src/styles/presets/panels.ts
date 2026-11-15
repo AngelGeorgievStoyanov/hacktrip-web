@@ -3,20 +3,6 @@ import { COLORS } from '@/constants/ui/colors';
 import { CARD_BORDER, UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 
-/** Shared panel treatments used by components with the same visual role. */
-export const infoPanelStyle: CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  minWidth: '320px',
-  maxWidth: '450px',
-  margin: '20px',
-  padding: '25px',
-  backgroundColor: COLORS.cardBackground,
-  boxShadow: UI_SHADOWS.card,
-  border: CARD_BORDER,
-  borderRadius: UI_SHAPE.squareRadius,
-};
-
 export const commentsPanelStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
