@@ -36,6 +36,8 @@ export const UI_COLORS = {
     imageControlBackgroundHover: '#ffffff',
     tripImageControlBackground: 'rgba(255, 255, 255, 0.82)',
     tripImageControlBackgroundHover: 'rgba(255, 255, 255, 0.96)',
+    navigationSelectedBackground: 'rgba(255, 255, 255, 0.2)',
+    navigationHoverBackground: 'rgba(255, 255, 255, 0.1)',
   },
   legal: {
     link: '#174f7a',
