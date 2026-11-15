@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, type CSSProperties } from 'react';
-import Link from 'next/link';
 import {
   Typography,
   Card,
@@ -11,15 +10,15 @@ import {
   IconButton,
   Tooltip,
   Box,
-  Button,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import { TripActions } from './TripActions';
 import { EngagementBar } from '@/components/social/EngagementBar';
 import { FavoriteButton } from '@/components/social/FavoriteButton';
+import { BackButton } from '@/components/common/BackButton';
+import Link from 'next/link';
 import type { CommentTarget } from '@/api/comments';
-import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { useAuth } from '@/hooks/useAuth';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
@@ -215,22 +214,13 @@ export function TripDetails({
           section="management"
           onDayDeleted={onDayDeleted}
         />
-        <Link
+        <BackButton
+          component={Link}
           href="/trips"
-          style={{ textDecoration: 'none', color: 'inherit', display: 'flex', width: '100%' }}
+          sx={{ padding: '10px', width: '100%', minHeight: '48px' }}
         >
-          <Button
-            variant="contained"
-            sx={{
-              ...BUTTON_STYLES.containedHover,
-              padding: '10px',
-              width: '100%',
-              minHeight: '48px',
-            }}
-          >
-            BACK
-          </Button>
-        </Link>
+          BACK
+        </BackButton>
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%', mt: 1 }}>
