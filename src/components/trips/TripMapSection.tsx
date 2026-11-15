@@ -17,7 +17,8 @@ import {
   MAP_TRIP_OPTIONS,
   MAP_TRIP_WIDTH,
 } from '@/constants/maps';
-import { BREAKPOINTS, CARD_BORDER, CARD_SHADOW, maxWidthQuery, mediaDown } from '@/constants/ui';
+import { BREAKPOINTS, maxWidthQuery, mediaDown } from '@/constants/ui';
+import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import type { TripPoint } from '@/types';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
@@ -113,8 +114,7 @@ export function TripMapSection({
         height: 'fit-content',
         width: '100%',
         maxWidth: 600,
-        border: CARD_BORDER,
-        boxShadow: CARD_SHADOW,
+        ...CARD_SURFACE_SX,
         [mediaDown(BREAKPOINTS.smallPhone)]: {
           display: 'flex',
           flexDirection: 'column',
