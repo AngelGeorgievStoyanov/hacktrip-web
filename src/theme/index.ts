@@ -4,6 +4,8 @@ import { themePalette } from './palette';
 import { themeShape } from './shape';
 import { themeTypography } from './typography';
 import { buttonOverrides } from './components/button';
+import { cardOverrides } from './components/card';
+import { dialogOverrides } from './components/dialog';
 
 /**
  * Central MUI theme configuration.
@@ -40,5 +42,7 @@ export const theme = createTheme({
       },
     },
     MuiButton: buttonOverrides,
+    MuiCard: cardOverrides,
+    MuiDialog: dialogOverrides,
   },
 });
