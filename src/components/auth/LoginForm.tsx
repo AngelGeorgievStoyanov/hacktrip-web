@@ -20,7 +20,7 @@ import { getAuthErrorMessage } from '@/lib/errors';
 import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { AUTH_FORM_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
@@ -84,7 +84,7 @@ export function LoginForm() {
         onSubmit={handleSubmit(onSubmit)}
         sx={AUTH_FORM_SX}
       >
-        <Typography variant="h5" component="div" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           LOGIN
         </Typography>
         <TextField
