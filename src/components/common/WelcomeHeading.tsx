@@ -3,7 +3,8 @@
 import { useRef, type CSSProperties, type ReactNode } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import { ScrambleHeading, type ScrambleHeadingHandle } from '@/components/common/ScrambleHeading';
-import { BREAKPOINTS, headingTextStyle, minWidthQuery } from '@/constants/ui';
+import { BREAKPOINTS, minWidthQuery } from '@/constants/ui';
+import { headingTextStyle } from '@/styles/presets/typography';
 
 const HEADING_STYLE: CSSProperties = {
   margin: '2px',
