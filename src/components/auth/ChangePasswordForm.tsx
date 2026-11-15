@@ -13,7 +13,7 @@ import { changePasswordSchema } from '@/validations/auth';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 const changePasswordFormSchema = changePasswordSchema
   .extend({
