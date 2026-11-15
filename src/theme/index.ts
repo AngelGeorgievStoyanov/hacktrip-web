@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { COLORS } from '@/constants/ui/colors';
+import { UI_SPACING } from '@/constants/ui/spacing';
+import { UI_Z_INDEX } from '@/constants/ui/z-index';
 import { themePalette } from './palette';
 import { themeShape } from './shape';
 import { themeTypography } from './typography';
@@ -17,6 +19,8 @@ export const theme = createTheme({
     ...themeTypography,
   },
   shape: themeShape,
+  spacing: UI_SPACING.unit,
+  zIndex: UI_Z_INDEX,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
