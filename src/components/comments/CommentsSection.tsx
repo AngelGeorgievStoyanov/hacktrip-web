@@ -33,7 +33,8 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
-import { commentListStyle, SOCIAL_ACTIONS_SX } from '@/styles/presets/layouts';
+import { commentListStyle } from '@/styles/presets/layouts';
+import { SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
 import { useNotification } from '@/components/common/NotificationProvider';
 
 const COMMENTS_PANEL_SX = {
