@@ -50,9 +50,7 @@ export function PointCard({
           my: '10px',
           p: '15px 0',
           backgroundColor: COLORS.formPanelBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          borderRadius: UI_SHAPE.squareRadius,
+          ...CARD_SURFACE_SX,
         }}
       >
         <Typography gutterBottom component="h6" sx={{ px: '10px' }}>
