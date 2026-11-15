@@ -6,7 +6,7 @@ import { useReportActions } from '@/hooks/useReportActions';
 import { Alert, Button, IconButton, Tooltip } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { socialErrorTextStyle } from '@/styles/presets/typography';
+import { socialErrorTextStyle } from '@/styles/presets/social';
 import ReportIcon from '@mui/icons-material/Report';
 import ReportOffIcon from '@mui/icons-material/ReportOff';
 import type { ReportTargetTypeInput } from '@/types';
