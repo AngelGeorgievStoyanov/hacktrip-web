@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import styles from './LegalPage.module.css';
 import { buildSeoMetadata } from '@/seo';
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -249,10 +250,10 @@ const privacySections = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="legal-page">
-      <article className="legal-page__content">
+    <main className={styles.legalPage}>
+      <article className={styles.legalPageContent}>
         <h1>Welcome to Hack Trip</h1>
-        <nav aria-label="Legal document sections" className="legal-page__intro-nav">
+        <nav aria-label="Legal document sections" className={styles.legalPageIntroNav}>
           <a href="#terms-of-use">Terms of use</a>
           <span>and</span>
           <a href="#privacy-policy">Privacy policy</a>
@@ -269,7 +270,7 @@ export default function PrivacyPolicyPage() {
             acknowledge that you have read, understood, and agree to be bound by this Agreement. If
             you do not agree, you must not access or use the Website and Services.
           </p>
-          <div className="legal-page__toc">
+          <div className={styles.legalPageToc}>
             <h3>Table of contents</h3>
             <ol>
               {terms.map((section) => (
@@ -318,11 +319,11 @@ export default function PrivacyPolicyPage() {
           ))}
         </section>
 
-        <p className="legal-page__contact">
+        <p className={styles.legalPageContact}>
           Questions or concerns? Contact us at{' '}
           <a href="mailto:www.hack.trip@gmail.com">www.hack.trip@gmail.com</a>.
         </p>
-        <a className="legal-page__back" href="/">
+        <a className={styles.legalPageBack} href="/">
           Back to Hack Trip
         </a>
       </article>
