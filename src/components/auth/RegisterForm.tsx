@@ -20,7 +20,7 @@ import { zodResolver } from '@/lib/zodResolver';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { registerSchema } from '@/validations/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { AUTH_FORM_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { Captcha } from '@/components/auth/Captcha';
 import { PasswordField } from '@/components/common/PasswordField';
@@ -128,7 +128,7 @@ export function RegisterForm() {
         onSubmit={handleSubmit(onSubmit)}
         sx={AUTH_FORM_SX}
       >
-        <Typography variant="h5" component="div" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           REGISTER
         </Typography>
         <TextField
