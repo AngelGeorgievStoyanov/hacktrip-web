@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
-import { headingTextStyle } from '@/constants/ui';
+import { headingTextStyle } from '@/styles/presets/typography';
 
 interface HomeHeroProps {
   /** Server-rendered trips list and share controls. */
