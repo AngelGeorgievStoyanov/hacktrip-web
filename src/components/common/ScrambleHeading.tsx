@@ -9,7 +9,7 @@ import {
   type CSSProperties,
   type Ref,
 } from 'react';
-import { headingTextStyle } from '@/constants/ui';
+import { headingTextStyle } from '@/styles/presets/typography';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const SCRAMBLE_INTERVAL_MS = 30;
