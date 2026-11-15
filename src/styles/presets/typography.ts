@@ -8,3 +8,9 @@ export const headingTextStyle: CSSProperties = {
   opacity: 1,
   textShadow: `3px 3px 3px ${COLORS.headingShadow}`,
 };
+
+/** Shared compact inline error text for social actions. */
+export const socialErrorTextStyle: CSSProperties = {
+  color: 'red',
+  fontSize: '0.75rem',
+};
