@@ -36,6 +36,9 @@ export const theme = createTheme({
           '--ht-color-action-contrast-background': UI_COLORS.action.contrastBackground,
           '--ht-color-action-danger-hover': UI_COLORS.action.dangerHover,
           '--ht-color-border-legal': UI_COLORS.legal.border,
+          '--ht-color-legal-link': UI_COLORS.legal.link,
+          '--ht-color-legal-back-background': UI_COLORS.legal.backBackground,
+          '--ht-color-decorative-heading-shadow': UI_COLORS.decorative.headingShadow,
 
           /* Legacy variables remain until every old consumer is migrated. */
           '--ht-color-brand': COLORS.brand,
