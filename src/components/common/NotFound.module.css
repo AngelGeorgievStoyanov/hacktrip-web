@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--ht-color-text-inverse);
   text-align: center;
   gap: 0.5rem;
 }
@@ -20,8 +20,8 @@
 }
 
 .homeButton {
-  color: #fff;
-  background: #000;
+  color: var(--ht-color-text-inverse);
+  background: var(--ht-color-action-contrast-background);
   padding: 10px 30px;
   margin: 25px;
   cursor: pointer;
