@@ -21,6 +21,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { AppImage } from '@/components/images/AppImage';
@@ -205,7 +206,7 @@ export function AdminUsers() {
         onClose={() => setPreview(null)}
       />
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 2 }}>
+        <Box sx={{ ...ADMIN_PAGINATION_SX, mt: 2 }}>
           <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
             Previous
           </Button>
