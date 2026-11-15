@@ -82,7 +82,7 @@ export function ForgotPasswordForm() {
           variant="contained"
           disabled={submitting || !captchaToken}
           startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={BUTTON_STYLES.containedHover}
+          sx={BUTTON_STYLES.primary}
         >
           Send reset link
         </Button>
