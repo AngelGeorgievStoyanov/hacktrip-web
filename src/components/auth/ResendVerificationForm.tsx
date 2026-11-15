@@ -15,13 +15,7 @@ import { RESEND_VERIFICATION_SUCCESS_MESSAGE } from '@/constants/notifications';
 import { AUTH_FORM_SX } from '@/styles/presets/forms';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
-
-const SECONDARY_BUTTON_SX = {
-  ':hover': { color: 'rgb(248 245 245)' },
-  margin: '5px',
-  backgroundColor: 'rgb(194 194 224)',
-  color: 'black',
-} as const;
+import { BackButton } from '@/components/common/BackButton';
 
 export function ResendVerificationForm() {
   const notification = useNotification();
@@ -93,15 +87,9 @@ export function ResendVerificationForm() {
           Resend verification email
         </Button>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Button
-            component={Link}
-            href="/login"
-            disabled={submitting}
-            variant="contained"
-            sx={SECONDARY_BUTTON_SX}
-          >
+          <BackButton component={Link} href="/login" disabled={submitting} sx={{ m: '5px' }}>
             Back to login
-          </Button>
+          </BackButton>
         </Box>
       </Box>
     </WelcomeHeading>
