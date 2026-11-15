@@ -5,36 +5,8 @@ import { Alert, Box, CircularProgress, Container, Typography } from '@mui/materi
 import { tripApi } from '@/api/trips';
 import { TripList } from '@/components/trips/TripList';
 import { getGenericErrorMessage } from '@/lib/errors';
+import { ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_EMPTY_STATE_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_HEADING_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_PAGE_SX } from '@/styles/presets/layouts';
 import { headingTextStyle } from '@/styles/presets/typography';
-
-/**
- * Transparent full-width container. The backend background image is loaded once globally
- * (`BackgroundProvider`) and painted as a fixed cover/center layer, so the page must not
- * paint its own background or any opaque color that would cover it.
- */
-const PAGE_SX = { width: '100%' } as const;
-
-const CONTENT_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  py: { xs: 3, md: 5 },
-} as const;
-
-const HEADING_SX = {
-  textAlign: 'center',
-  mb: { xs: 2, md: 3 },
-  ...headingTextStyle,
-} as const;
-
-const EMPTY_STATE_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  textAlign: 'center',
-  gap: 3,
-  py: { xs: 6, md: 10 },
-} as const;
 
 export default function FavoritesPage() {
   const { data, isLoading, error } = useQuery({

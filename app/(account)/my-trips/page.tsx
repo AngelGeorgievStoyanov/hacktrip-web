@@ -6,44 +6,8 @@ import { Alert, Box, Button, CircularProgress, Container, Typography } from '@mu
 import { tripApi } from '@/api/trips';
 import { TripList } from '@/components/trips/TripList';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { headingTextStyle } from '@/styles/presets/typography';
-
-/**
- * Transparent full-width container. The backend background image is loaded once globally
- * (`BackgroundProvider`) and painted as a fixed cover/center layer, so the page must not
- * paint its own background or any opaque color that would cover it.
- */
-const PAGE_SX = { width: '100%' } as const;
-
-const CONTENT_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  py: { xs: 3, md: 5 },
-} as const;
-
-const HEADING_SX = {
-  textAlign: 'center',
-  mb: { xs: 2, md: 3 },
-  ...headingTextStyle,
-} as const;
-
-const EMPTY_STATE_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  textAlign: 'center',
-  gap: 3,
-  py: { xs: 6, md: 10 },
-} as const;
-
-/** Legacy empty-state CTA: near-black button that inverts to white on hover. */
-const CREATE_TRIP_BUTTON_SX = {
-  backgroundColor: '#0e0d0d',
-  color: '#f3eeee',
-  px: 4,
-  ':hover': { backgroundColor: '#f3eeee', color: '#0e0d0d' },
-} as const;
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_EMPTY_STATE_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_HEADING_SX, ACCOUNT_TRIPS_ACCOUNT_TRIPS_PAGE_SX } from '@/styles/presets/layouts';
 
 export default function MyTripsPage() {
   const { data, isLoading, error } = useQuery({
@@ -75,7 +39,7 @@ export default function MyTripsPage() {
               component={Link}
               href="/trips/create"
               variant="contained"
-              sx={CREATE_TRIP_BUTTON_SX}
+              sx={BUTTON_STYLES.createTrip}
             >
               CLICK HERE AN ADD YOUR FIRST TRIP
             </Button>

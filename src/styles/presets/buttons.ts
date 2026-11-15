@@ -21,6 +21,16 @@ const secondary = {
   },
 } as const;
 
+const createTrip = {
+  backgroundColor: UI_COLORS.action.createTripBackground,
+  color: UI_COLORS.action.createTripText,
+  px: 4,
+  '&:hover': {
+    backgroundColor: UI_COLORS.action.createTripHoverBackground,
+    color: UI_COLORS.action.createTripHoverText,
+  },
+} as const;
+
 const secondaryLightText = {
   ...secondary,
   '&:hover': {
@@ -35,4 +45,5 @@ export const BUTTON_STYLES = {
   secondary,
   back: secondary,
   secondaryLightText,
+  createTrip,
 } as const;
