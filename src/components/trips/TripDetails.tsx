@@ -23,6 +23,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
+import { CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
 
 interface TripDetailsProps {
   tripGroup: TripGroupResponse;
@@ -154,7 +155,7 @@ export function TripDetails({
             <Typography
               variant="subtitle1"
               component="div"
-              style={{ ...LINE_STYLE, padding: '0px 15px', marginTop: '10px' }}
+              sx={{ ...LINE_STYLE, ...CARD_TEXT_INSET_SX, marginTop: '10px' }}
             >
               Description: {day.description}
             </Typography>

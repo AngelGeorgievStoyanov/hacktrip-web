@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
 import { HomeHero } from '@/components/home';
 import { HomeTrips } from '@/components/home/HomeTrips';
 import { tripApi } from '@/api/trips';
@@ -15,7 +14,6 @@ export const metadata: Metadata = buildSeoMetadata({
     'Discover destinations, interesting places and real experiences shared by travelers. Explore photos, find inspiration and share your own discoveries with HackTrip.',
   canonicalPath: '/',
 });
-
 
 export default async function HomePage() {
   let topTrips: TripGroupResponse[] = [];

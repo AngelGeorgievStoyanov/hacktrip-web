@@ -20,6 +20,7 @@ import { useSelectChoices } from '@/hooks/useSelects';
 import { BREAKPOINTS, mediaDown } from '@/constants/ui';
 import { TRIP_SORT_OPTIONS, type TripSort } from '@/constants/trips';
 import { buildTripsUrl, type TripsQueryParams } from '@/lib/tripUrl';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 interface TripFiltersProps {
   search?: string;
@@ -85,8 +86,8 @@ const SELECT_BOX_SX = {
   width: { xs: '100%', sm: 'auto' },
 } as const;
 
-const FILTER_LABEL_SX = { color: 'white' } as const;
-const FILTER_SELECT_SX = { color: 'white' } as const;
+const FILTER_LABEL_SX = { color: UI_COLORS.text.inverse } as const;
+const FILTER_SELECT_SX = { color: UI_COLORS.text.inverse } as const;
 
 /**
  * Trip list filters. Legacy applied a filter as soon as a select changed or the search was
