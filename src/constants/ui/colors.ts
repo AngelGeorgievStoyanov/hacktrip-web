@@ -25,4 +25,10 @@ export const COLORS = {
   legalBackBackground: 'rgb(194 194 224)',
   dialogBackground: '#eee7e7',
   headingShadow: 'rgb(10 10 10)',
+  /** Shared address autocomplete input surface and text colors. */
+  mapAddressInputBackground: '#f2f1e58f',
+  mapAddressInputText: '#222',
+  mapAddressInputLabel: '#333',
+  mapAddressInputBorder: 'rgba(0, 0, 0, 0.35)',
+  mapAddressInputBorderHover: 'rgba(0, 0, 0, 0.7)',
 } as const;
