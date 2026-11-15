@@ -15,3 +15,6 @@ export const cardStyle: CSSProperties = {
   width: '-webkit-fill-available',
   padding: '25px 0px 0px 0px',
 };
+
+/** Consistent horizontal inset for text inside trip and point cards. */
+export const CARD_TEXT_INSET_SX = { padding: '0px 15px' } as const;
