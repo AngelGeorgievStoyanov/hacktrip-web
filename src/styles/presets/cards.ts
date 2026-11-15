@@ -3,7 +3,7 @@ import { COLORS } from '@/constants/ui/colors';
 import { CARD_BORDER, UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 
-/** Shared card treatments retained while consumers migrate to local styles. */
+/** Shared card treatments used by components with the same visual role. */
 export const cardStyle: CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
