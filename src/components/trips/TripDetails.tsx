@@ -91,13 +91,14 @@ export function TripDetails({
         <Typography variant="h5" component="div" style={NAME_STYLE}>
           TRIP NAME : {day.title ?? tripGroup.days[0]?.title ?? 'Trip'}
         </Typography>
-        <FavoriteButton
-          targetType="trip"
-          targetId={day.id}
-          initialFavorited={day.social.favoritedByMe ?? false}
-          initialFavorites={day.social.favorites ?? 0}
-          disabled={!isAuthenticated || !canFavorite}
-        />
+        {isAuthenticated && canFavorite ? (
+          <FavoriteButton
+            targetType="trip"
+            targetId={day.id}
+            initialFavorited={day.social.favoritedByMe ?? false}
+            initialFavorites={day.social.favorites ?? 0}
+          />
+        ) : null}
       </Box>
 
       {day.price != null ? (
