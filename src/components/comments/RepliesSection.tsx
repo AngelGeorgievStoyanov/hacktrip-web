@@ -29,6 +29,7 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { CommentDto, SocialConfigTargetKey } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { SOCIAL_ACTIONS_SX } from '@/styles/presets/layouts';
 
 interface RepliesSectionProps {
   commentId: number;
@@ -193,7 +194,7 @@ export function RepliesSection({
           </Typography>
         )}
         {authenticated && hasReplyActions ? (
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap', mt: 1 }}>
+          <Box sx={{ ...SOCIAL_ACTIONS_SX, mt: 1 }}>
             {canLike ? (
               <LikeButton
                 targetType="comment"
