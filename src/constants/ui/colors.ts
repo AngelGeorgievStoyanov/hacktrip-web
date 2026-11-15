@@ -53,6 +53,7 @@ export const UI_COLORS = {
     addressLabel: '#333',
     addressBorder: 'rgba(0, 0, 0, 0.35)',
     addressBorderHover: 'rgba(0, 0, 0, 0.7)',
+    pickerHintBackground: 'rgba(255, 255, 255, 0.92)',
   },
 } as const;
 
