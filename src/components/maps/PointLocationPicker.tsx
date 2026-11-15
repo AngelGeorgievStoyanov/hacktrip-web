@@ -19,6 +19,7 @@ import {
   type MapPosition,
 } from '@/lib/maps';
 import { getPointNameFromMapAddress } from '@/lib/pointName';
+import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
 
 interface PointLocationPickerProps {
   latitude: string;
@@ -148,12 +149,7 @@ export function PointLocationPicker({
           onChange={setAddress}
           onLocationSelect={handleAddressSelected}
           label="Search field"
-          inputSx={{
-            backgroundColor: '#f2f1e58f',
-            borderRadius: '5px',
-            width: '100%',
-            minWidth: 0,
-          }}
+          inputSx={{ ...MAP_ADDRESS_INPUT_SX, width: '100%', minWidth: 0 }}
           size="small"
           buttonVariant="contained"
           direction={{ xs: 'column', sm: 'row' }}
