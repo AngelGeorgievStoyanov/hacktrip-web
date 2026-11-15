@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Box } from '@mui/material';
 import { NOINDEX } from '@/constants/seo';
 import { ProfileForm } from '@/components/auth/ProfileForm';
+import { LEGACY_PANEL_SX } from '@/styles/presets/panels';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -32,10 +33,7 @@ export default function ProfilePage() {
           maxWidth: 600,
           height: 'fit-content',
           p: { xs: 2, sm: '30px' },
-          backgroundColor: '#eee7e79e',
-          boxShadow: '3px 2px 5px black',
-          border: 'solid 1px',
-          borderRadius: 0,
+          ...LEGACY_PANEL_SX,
         }}
       >
         <ProfileForm />
