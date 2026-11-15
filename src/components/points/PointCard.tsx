@@ -57,7 +57,7 @@ export function PointCard({
         <Typography gutterBottom component="h1" sx={[POINT_CARD_TEXT_SX, { overflowWrap: 'anywhere' }]}>
           NAME: {point.name}
         </Typography>
-        <Typography gutterBottom component="p" sx={{ px: '10px', overflowWrap: 'anywhere' }}>
+        <Typography gutterBottom component="p" sx={[POINT_CARD_TEXT_SX, { overflowWrap: 'anywhere' }]}>
           DESCRIPTION : {point.description ?? ''}
         </Typography>
 
