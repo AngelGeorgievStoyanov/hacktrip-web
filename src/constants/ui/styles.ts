@@ -3,6 +3,5 @@
  * New code should import tokens from constants/ui and shared MUI presets from styles/presets.
  */
 export { COLORS } from './colors';
-export { CARD_BORDER, UI_SHAPE } from './shape';
-export { CARD_SHADOW, UI_SHADOWS } from './shadows';
+export { UI_SHAPE } from './shape';
 export { TYPOGRAPHY } from './typography';
