@@ -12,4 +12,5 @@ export const UI_ELEVATION = {
 /** Legacy CSS shadow retained for components not yet migrated to theme elevation. */
 export const UI_SHADOWS = {
   card: '3px 2px 5px black',
+  socialOverlay: '0 4px 14px rgba(0,0,0,0.3)',
 } as const;
