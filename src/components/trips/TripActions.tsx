@@ -11,9 +11,10 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import type { TripGroupResponse } from '@/types';
 import { tripGroupKeys } from '@/hooks/useTripGroup';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 const LEGACY_BUTTON_SX = {
-  ':hover': { background: '#4daf30' },
+  ...BUTTON_STYLES.containedHover,
   padding: '10px',
   width: '100%',
   minHeight: '48px',
