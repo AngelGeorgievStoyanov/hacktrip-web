@@ -17,8 +17,8 @@ import {
   TRIP_LIMIT_DEFAULT,
   TRIP_LIMIT_MAX,
   TRIP_PAGE_DEFAULT,
-  pageBackgroundStyle,
 } from '@/constants/ui';
+import { pageBackgroundStyle } from '@/styles/presets/layouts';
 
 interface TripsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
