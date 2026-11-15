@@ -8,6 +8,11 @@ import { useLiveTracking } from '@/hooks/useLiveTracking';
 import { MAP_CONTAINER_HEIGHT, MAP_DEFAULT_CENTER, MAP_TRACKING_ZOOM } from '@/constants/maps';
 import { formatDistance, formatDuration } from '@/lib/tracking';
 
+const TRACKING_SURFACE_SX = {
+  border: '1px solid #e0e0e0',
+  borderRadius: 1,
+} as const;
+
 export function LiveTracker() {
   const { isLoaded } = useGoogleMapsLoader();
   const { points, current, tracking, error, distanceMeters, elapsedSeconds, start, stop, reset } =
@@ -49,8 +54,7 @@ export function LiveTracker() {
         sx={{
           width: '100%',
           height: MAP_CONTAINER_HEIGHT,
-          border: '1px solid #e0e0e0',
-          borderRadius: 1,
+          ...TRACKING_SURFACE_SX,
           overflow: 'hidden',
         }}
       >
@@ -121,7 +125,7 @@ export function LiveTracker() {
           <Box
             key={stat.label}
             component="div"
-            sx={{ border: '1px solid #e0e0e0', borderRadius: 1, p: 1 }}
+            sx={{ ...TRACKING_SURFACE_SX, p: 1 }}
           >
             <Typography component="dt" variant="caption" color="text.secondary">
               {stat.label}
