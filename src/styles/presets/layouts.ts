@@ -34,3 +34,11 @@ export const ADMIN_PAGINATION_SX = {
   alignItems: 'center',
   mt: 1,
 } as const;
+
+/** Shared alignment for like, favorite, report and moderation action groups. */
+export const SOCIAL_ACTIONS_SX = {
+  display: 'flex',
+  gap: 1,
+  alignItems: 'center',
+  flexWrap: 'wrap',
+} as const;
