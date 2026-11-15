@@ -1,0 +1,10 @@
+.emptyTitle {
+  margin: 2px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.emptyText {
+  margin: 2px;
+  font-size: 1rem;
+}
