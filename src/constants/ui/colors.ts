@@ -16,6 +16,9 @@ export const UI_COLORS = {
     formPanel: '#e5e3e3d9',
     dialog: '#eee7e7',
     stickySocial: '#eee7e79e',
+    socialOverlay: 'rgba(24, 31, 26, 0.82)',
+    socialOverlayBorder: 'rgba(255,255,255,0.22)',
+    socialOverlayHover: 'rgba(255,255,255,0.16)',
   },
   text: {
     inverse: '#fff',
@@ -26,6 +29,8 @@ export const UI_COLORS = {
     secondaryBackground: 'rgb(194 194 224)',
     secondaryHoverText: 'rgb(248 245 245)',
     secondaryHoverBackground: 'rgb(170 170 210)',
+    imageControlBackground: '#ffffffaa',
+    imageControlBackgroundHover: '#ffffff',
   },
   legal: {
     link: '#174f7a',
