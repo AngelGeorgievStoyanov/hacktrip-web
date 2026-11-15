@@ -1,10 +1,11 @@
 import { createTheme } from '@mui/material/styles';
-import { COLORS, TYPOGRAPHY, UI_SHAPE } from '@/constants/ui';
+import { COLORS } from '@/constants/ui/colors';
+import { UI_SHAPE } from '@/constants/ui/shape';
+import { TYPOGRAPHY } from './typography';
 
 /**
  * Central MUI theme configuration.
- * Typography matches MUI's previous defaults; shape keeps the existing 4px MUI radius.
- * Existing page-specific styles continue to own their intentional square card treatment.
+ * Shared MUI defaults belong here; page and component layout remain locally scoped.
  */
 export const theme = createTheme({
   palette: {
