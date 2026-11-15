@@ -13,7 +13,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { updateProfileSchema } from '@/validations/auth';
 import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 export function ProfileForm() {
   const { user, updateUser } = useAuth();
