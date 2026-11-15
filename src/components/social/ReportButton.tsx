@@ -6,6 +6,7 @@ import { useReportActions } from '@/hooks/useReportActions';
 import { Alert, Button, IconButton, Tooltip } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
+import { socialErrorTextStyle } from '@/styles/presets/typography';
 import ReportIcon from '@mui/icons-material/Report';
 import ReportOffIcon from '@mui/icons-material/ReportOff';
 import type { ReportTargetTypeInput } from '@/types';
@@ -121,7 +122,7 @@ export function ReportButton({
         </>
       ) : null}
       {isAuthenticated && error && !open ? (
-        <span role="alert" style={{ color: 'red', fontSize: '0.75rem' }}>
+        <span role="alert" style={socialErrorTextStyle}>
           {error}
         </span>
       ) : null}
