@@ -26,19 +26,10 @@ export const commentListStyle: CSSProperties = {
   margin: 0,
 };
 
-
 /** Shared spacing and alignment for admin list pagination controls. */
 export const ADMIN_PAGINATION_SX = {
   display: 'flex',
   gap: 1,
   alignItems: 'center',
   mt: 1,
-} as const;
-
-/** Shared alignment for like, favorite, report and moderation action groups. */
-export const SOCIAL_ACTIONS_SX = {
-  display: 'flex',
-  gap: 1,
-  alignItems: 'center',
-  flexWrap: 'wrap',
 } as const;
