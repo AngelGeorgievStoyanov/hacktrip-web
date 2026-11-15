@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { IMAGE_PRESETS } from '@/constants/images/presets';
 import { buildSeoMetadata } from '@/seo';
+import styles from './AboutPage.module.css';
 
 const ABOUT_IMAGE = IMAGE_PRESETS.aboutIllustration;
 
@@ -26,9 +27,9 @@ const imageStyle = {
 
 export default function AboutPage() {
   return (
-    <main className="about-page">
+    <main className={styles.aboutPage}>
       <WelcomeHeading>
-        <article className="about-page__content">
+        <article className={styles.aboutPageContent}>
           <h2>Discover More. Plan Better. Share Every Journey.</h2>
           <p>
             HackTrip is a travel planning and sharing platform where you can create your own trips,
@@ -81,7 +82,7 @@ export default function AboutPage() {
             </p>
           </section>
 
-          <div className="about-page__image-row">
+          <div className={styles.aboutPageImageRow}>
             <Image
               src="https://storage.googleapis.com/hack-trip/hack-trip-points1.0.png"
               alt="Travel points displayed on a HackTrip map"
@@ -108,7 +109,7 @@ export default function AboutPage() {
             </p>
           </section>
 
-          <div className="about-page__image-row">
+          <div className={styles.aboutPageImageRow}>
             <Image
               src="https://storage.googleapis.com/hack-trip/hack-trip-points2.0.png"
               alt="A route planned with selected HackTrip locations"
