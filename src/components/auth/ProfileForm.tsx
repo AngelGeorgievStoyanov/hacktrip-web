@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { ProfileImage, ProfileImageUpload } from '@/components/auth/ProfileImage';
+import { BackButton } from '@/components/common/BackButton';
 import { useAuth } from '@/hooks/useAuth';
 import { authApi } from '@/api/auth';
 import type { UpdateProfileInput } from '@/api/auth';
@@ -126,9 +127,7 @@ export function ProfileForm() {
           >
             EDIT PROFILE
           </Button>
-          <Button variant="contained" onClick={() => router.back()} sx={BUTTON_STYLES.secondary}>
-            BACK
-          </Button>
+          <BackButton onClick={() => router.back()}>BACK</BackButton>
           <Button
             variant="contained"
             onClick={() => setPasswordExpanded((current) => !current)}
