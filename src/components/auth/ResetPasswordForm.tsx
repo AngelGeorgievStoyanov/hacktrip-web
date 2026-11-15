@@ -11,7 +11,7 @@ import { authApi } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { resetPasswordSchema } from '@/validations/auth';
-import { AUTH_FORM_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { PasswordField } from '@/components/common/PasswordField';
@@ -80,7 +80,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     return (
       <WelcomeHeading>
         <Box component="section" sx={AUTH_FORM_SX}>
-          <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
+          <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
             RESET PASSWORD
           </Typography>
           <Typography variant="body1" textAlign="center">
@@ -103,7 +103,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         onSubmit={handleSubmit(onSubmit)}
         sx={AUTH_FORM_SX}
       >
-        <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
           RESET PASSWORD
         </Typography>
         <PasswordField
