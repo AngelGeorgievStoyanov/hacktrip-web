@@ -14,6 +14,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
 import { RemoveProfileImageIcon } from '@/constants/icons';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 const ACCEPT_TYPES = (ACCEPTED_IMAGE_MIME_TYPES as readonly string[]).join(',');
 
@@ -101,7 +102,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
               zIndex: 1,
             }}
           >
-            <RemoveProfileImageIcon sx={{ backgroundColor: 'white', borderRadius: '50%' }} />
+            <RemoveProfileImageIcon sx={{ backgroundColor: UI_COLORS.text.inverse, borderRadius: '50%' }} />
           </Box>
         </Tooltip>
         <Tooltip title="View profile image" arrow>
@@ -144,7 +145,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
             minHeight: '50vh',
             maxHeight: '90vh',
             p: 2,
-            backgroundColor: 'black',
+            backgroundColor: UI_COLORS.surface.imageLightbox,
           }}
         >
           <IconButton
@@ -155,8 +156,8 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
               top: 8,
               right: 8,
               zIndex: 2,
-              color: 'white',
-              backgroundColor: 'rgba(0,0,0,0.45)',
+              color: UI_COLORS.text.inverse,
+              backgroundColor: UI_COLORS.surface.imageControl,
             }}
           >
             <CloseIcon />
