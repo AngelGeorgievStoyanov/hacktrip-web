@@ -46,7 +46,7 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          fontFamily: TYPOGRAPHY.fontFamily,
+          fontFamily: themeTypography.fontFamily,
         },
       },
     },
