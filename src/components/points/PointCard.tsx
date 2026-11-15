@@ -1,8 +1,6 @@
 'use client';
 
 import { Box, Button, Card, IconButton, Typography } from '@mui/material';
-import { COLORS } from '@/constants/ui/colors';
-import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { GoogleMapView } from '@/components/maps/GoogleMapView';
 import { ArrowCircleDownIcon, ArrowCircleUpIcon } from '@/constants/icons';
@@ -49,8 +47,6 @@ export function PointCard({
           maxWidth: 300,
           my: '10px',
           p: '15px 0',
-          backgroundColor: COLORS.formPanelBackground,
-          ...CARD_SURFACE_SX,
         }}
       >
         <Typography gutterBottom component="h6" sx={{ px: '10px' }}>
