@@ -8,6 +8,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import type { ImageDto } from '@/types';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 interface ImageLightboxProps {
   images: readonly ImageDto[];
@@ -18,9 +19,9 @@ interface ImageLightboxProps {
 }
 
 const controlSx = {
-  color: '#fff',
-  bgcolor: 'rgba(0, 0, 0, 0.45)',
-  '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.7)' },
+  color: UI_COLORS.text.inverse,
+  bgcolor: UI_COLORS.surface.imageControl,
+  '&:hover': { bgcolor: UI_COLORS.surface.imageControlHover },
 };
 
 export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: ImageLightboxProps) {
@@ -50,7 +51,7 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
       open={current !== undefined}
       onClose={onClose}
       fullScreen
-      slotProps={{ paper: { sx: { bgcolor: 'rgba(17, 17, 17, 0.96)' } } }}
+      slotProps={{ paper: { sx: { bgcolor: UI_COLORS.surface.imageLightbox } } }}
     >
       <Box
         sx={{ position: 'relative', width: '100%', height: '100%' }}
@@ -86,7 +87,7 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
                 top: 18,
                 left: '50%',
                 transform: 'translateX(-50%)',
-                color: '#fff',
+                color: UI_COLORS.text.inverse,
                 zIndex: 2,
               }}
             >
