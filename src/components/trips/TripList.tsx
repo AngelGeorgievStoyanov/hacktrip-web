@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { TripCard } from './TripCard';
-import { cardListStyle, headingTextStyle } from '@/constants/ui';
+import { cardListStyle } from '@/styles/presets/layouts';
+import { headingTextStyle } from '@/styles/presets/typography';
 import type { TripGroupResponse } from '@/types';
 
 const EMPTY_TITLE_STYLE: CSSProperties = {
