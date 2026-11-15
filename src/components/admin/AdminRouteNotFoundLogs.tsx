@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { adminApi } from '@/api/admin';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import type { RouteNotFoundLogDto } from '@/types/admin';
 
