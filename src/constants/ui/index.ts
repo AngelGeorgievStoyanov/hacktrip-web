@@ -1,4 +1,5 @@
 export * from './breakpoints';
+export * from './spacing';
 export * from './styles';
 
 export const PAGE_MAX = 10000;
