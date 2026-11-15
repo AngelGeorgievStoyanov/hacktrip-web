@@ -31,6 +31,7 @@ export const UI_COLORS = {
     primary: '#17212b',
   },
   action: {
+    danger: 'red',
     dangerHover: '#ef0a0a',
     secondaryBackground: 'rgb(194 194 224)',
     secondaryHoverText: 'rgb(248 245 245)',
