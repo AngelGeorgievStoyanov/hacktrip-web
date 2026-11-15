@@ -28,8 +28,10 @@ import {
 } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { adminApi } from '@/api/admin';
+import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 
 function stringList(items: string[], empty: string) {
   if (items.length === 0) {
@@ -341,7 +343,7 @@ function MissingThumbnails() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 2 }}>
+          <Box sx={{ ...ADMIN_PAGINATION_SX, mt: 2 }}>
             <Button
               disabled={page <= 1 || isFetching}
               onClick={() => setPage((value) => value - 1)}
