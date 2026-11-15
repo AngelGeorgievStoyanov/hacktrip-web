@@ -14,7 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { socialErrorTextStyle } from '@/styles/presets/typography';
+import { socialErrorTextStyle } from '@/styles/presets/social';
 import { isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
