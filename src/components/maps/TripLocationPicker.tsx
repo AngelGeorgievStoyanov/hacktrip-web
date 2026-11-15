@@ -126,7 +126,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
             color: UI_COLORS.text.inverse,
             opacity: 1,
           },
-          ...BUTTON_STYLES.containedHover,
+          ...BUTTON_STYLES.primary,
         }}
         containerSx={{ width: '100%' }}
         direction={{ xs: 'column', sm: 'row' }}
