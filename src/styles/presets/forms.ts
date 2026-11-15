@@ -4,6 +4,12 @@ import { PANEL_SX } from './panels';
 /** Backward-compatible form-panel preset. */
 export const FORM_PANEL_SX = PANEL_SX;
 
+/** Shared heading treatment for standalone authentication forms. */
+export const AUTH_FORM_TITLE_SX = {
+  margin: '10px auto',
+  textAlign: 'center',
+} as const;
+
 /** Shared layout and surface treatment for standalone authentication forms. */
 export const AUTH_FORM_SX = (theme: Theme) => ({
   ...PANEL_SX(theme),
