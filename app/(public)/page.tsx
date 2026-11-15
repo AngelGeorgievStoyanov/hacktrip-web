@@ -5,7 +5,7 @@ import { HomeTrips } from '@/components/home/HomeTrips';
 import { tripApi } from '@/api/trips';
 import type { TripGroupResponse } from '@/types';
 import { buildSeoMetadata } from '@/seo';
-import { pageBackgroundStyle } from '@/constants/ui';
+import { pageBackgroundStyle } from '@/styles/presets/layouts';
 
 export const revalidate = 300;
 
