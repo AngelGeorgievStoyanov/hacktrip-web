@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { COLORS } from '@/constants/ui';
+import { COLORS, TYPOGRAPHY } from '@/constants/ui';
 
 const COPYRIGHT_START = 2022;
 
