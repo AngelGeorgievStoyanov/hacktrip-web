@@ -6,7 +6,8 @@ import { SocialObjectPlaceholder } from '@/components/placeholders';
 import { PointActions } from '@/components/points/PointActions';
 import { CommentsToggle } from '@/components/comments/CommentsToggle';
 import { ExpandableText } from '@/components/common/ExpandableText';
-import { CARD_BORDER, CARD_SHADOW, COLORS } from '@/constants/ui';
+import { COLORS } from '@/constants/ui/colors';
+import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
 
@@ -26,9 +27,7 @@ const POINT_CARD_STYLE = {
   margin: '20px auto',
   padding: '25px 0px 0px 0px',
   backgroundColor: COLORS.cardBackground,
-  boxShadow: CARD_SHADOW,
-  border: CARD_BORDER,
-  borderRadius: '0px',
+  ...CARD_SURFACE_SX,
 } as const;
 
 export function PointSection({
