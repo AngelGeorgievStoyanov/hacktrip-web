@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, Card, CircularProgress, Typography } from '@mui/material';
 import { authApi } from '@/api/auth';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { publishTabEvent } from '@/lib/tabSync';
@@ -12,8 +12,6 @@ import {
   AUTH_SUCCESS_REDIRECT_DELAY_MS,
   LOGIN_EMAIL_VERIFIED_MESSAGE,
 } from '@/constants/notifications';
-import { COLORS } from '@/constants/ui/colors';
-import { CARD_SURFACE_SX } from '@/styles/presets/cards';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 export function VerifyEmailForm({ token }: { token?: string }) {
@@ -63,7 +61,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
 
   return (
     <WelcomeHeading>
-      <Box
+      <Card
         sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -74,8 +72,6 @@ export function VerifyEmailForm({ token }: { token?: string }) {
           boxSizing: 'border-box',
           mx: 'auto',
           p: { xs: 3, sm: 4 },
-          backgroundColor: COLORS.formPanelBackground,
-          ...CARD_SURFACE_SX,
           color: 'text.primary',
           textAlign: 'center',
         }}
@@ -96,7 +92,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
             </Button>
           </>
         ) : null}
-      </Box>
+      </Card>
     </WelcomeHeading>
   );
 }
