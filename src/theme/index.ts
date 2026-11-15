@@ -1,24 +1,20 @@
 import { createTheme } from '@mui/material/styles';
 import { COLORS } from '@/constants/ui/colors';
-import { UI_SHAPE } from '@/constants/ui/shape';
+import { themePalette } from './palette';
+import { themeShape } from './shape';
 import { themeTypography } from './typography';
+import { buttonOverrides } from './components/button';
 
 /**
  * Central MUI theme configuration.
  * Shared MUI defaults belong here; page and component layout remain locally scoped.
  */
 export const theme = createTheme({
-  palette: {
-    primary: {
-      main: COLORS.brand,
-    },
-  },
+  palette: themePalette,
   typography: {
     ...themeTypography,
   },
-  shape: {
-    borderRadius: UI_SHAPE.borderRadius,
-  },
+  shape: themeShape,
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -43,12 +39,6 @@ export const theme = createTheme({
         },
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          fontFamily: themeTypography.fontFamily,
-        },
-      },
-    },
+    MuiButton: buttonOverrides,
   },
 });
