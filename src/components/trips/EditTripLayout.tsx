@@ -31,6 +31,8 @@ import { DAY_NUMBER_MAX } from '@/constants/trips';
 import { AddIcon, RemoveIcon, RemoveImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
+import { CARD_BORDER, COLORS, UI_SHAPE } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface EditTripLayoutProps {
   trip: TripGroupResponse;
@@ -275,10 +277,10 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
           flex: '0 1 520px',
           minWidth: 0,
           height: 'fit-content',
-          backgroundColor: '#eee7e79e',
+          backgroundColor: COLORS.cardBackground,
           boxShadow: '3px 2px 5px black',
-          border: '1px solid',
-          borderRadius: 0,
+          border: CARD_BORDER,
+          borderRadius: UI_SHAPE.squareRadius,
           '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
           '& .MuiButton-root': { m: 1 },
         }}
@@ -482,7 +484,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               !selectedDay || submitting || !isValid || (!isDirty && newImages.length === 0)
             }
             startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={{ ':hover': { background: '#4daf30' } }}
+            sx={BUTTON_STYLES.containedHover}
           >
             EDIT YOUR TRIP
           </Button>
@@ -490,11 +492,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
             type="button"
             variant="contained"
             onClick={() => router.back()}
-            sx={{
-              background: 'rgb(194 194 224)',
-              color: 'black',
-              ':hover': { color: 'rgb(248 245 245)', background: 'rgb(194 194 224)' },
-            }}
+            sx={BUTTON_STYLES.secondary}
           >
             BACK
           </Button>
