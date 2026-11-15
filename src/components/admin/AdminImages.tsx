@@ -31,7 +31,6 @@ import { adminApi } from '@/api/admin';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
-import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 
 function stringList(items: string[], empty: string) {
   if (items.length === 0) {
