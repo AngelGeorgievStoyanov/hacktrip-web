@@ -1,37 +1,75 @@
-/** Central application color tokens. Existing values are preserved during migration. */
+/**
+ * Semantic application color tokens.
+ * Values intentionally preserve the current blue/white visual identity.
+ * Components should consume semantic roles; COLORS below remains a compatibility
+ * layer while existing call sites are migrated incrementally.
+ */
+export const UI_COLORS = {
+  brand: {
+    primary: '#1976d2',
+    primaryHover: '#4daf30',
+  },
+  surface: {
+    page: '#cfe8fc',
+    card: '#eee7e79e',
+    commentCard: '#eee7e7cc',
+    formPanel: '#e5e3e3d9',
+    dialog: '#eee7e7',
+    stickySocial: '#eee7e79e',
+  },
+  text: {
+    inverse: '#fff',
+    primary: '#17212b',
+  },
+  action: {
+    dangerHover: '#ef0a0a',
+    secondaryBackground: 'rgb(194 194 224)',
+    secondaryHoverText: 'rgb(248 245 245)',
+    secondaryHoverBackground: 'rgb(170 170 210)',
+  },
+  legal: {
+    link: '#174f7a',
+    border: 'rgb(23 33 43 / 22%)',
+    backBackground: 'rgb(194 194 224)',
+  },
+  decorative: {
+    headingShadow: 'rgb(10 10 10)',
+  },
+  map: {
+    addressBackground: '#f2f1e58f',
+    addressText: '#222',
+    addressLabel: '#333',
+    addressBorder: 'rgba(0, 0, 0, 0.35)',
+    addressBorderHover: 'rgba(0, 0, 0, 0.7)',
+  },
+} as const;
+
+/**
+ * Backward-compatible names for existing components.
+ * Do not add new consumers of this flat legacy object.
+ */
 export const COLORS = {
-  /** Legacy page fallback background behind the random background image. */
-  pageBackground: '#cfe8fc',
-  /** Primary brand blue used by the AppBar, footer and primary actions. */
-  brand: '#1976d2',
-  /** Legacy translucent card/panel surface; migrate usages to semantic surfaces. */
-  cardBackground: '#eee7e79e',
-  /** Legacy translucent comment-card surface. */
-  commentCardBackground: '#eee7e7cc',
-  /** Legacy authentication form surface. */
-  formPanelBackground: '#e5e3e3d9',
-  /** Legacy dialog surface. */
-  dialogBackground: '#eee7e7',
-  /** Translucent background for the trip sticky social-actions surface. */
-  stickySocialBackground: '#eee7e79e',
-  /** Shared legacy contained-button hover color. */
-  buttonHover: '#4daf30',
-  /** Legacy destructive-action hover color. */
-  dangerHover: '#ef0a0a',
-  /** Legacy secondary button surface and hover text colors. */
-  secondaryButtonBackground: 'rgb(194 194 224)',
-  secondaryButtonHoverText: 'rgb(248 245 245)',
-  secondaryButtonHoverBackground: 'rgb(170 170 210)',
-  textLight: '#fff',
-  textDark: '#17212b',
-  legalLink: '#174f7a',
-  legalBorder: 'rgb(23 33 43 / 22%)',
-  legalBackBackground: 'rgb(194 194 224)',
-  headingShadow: 'rgb(10 10 10)',
-  /** Shared address autocomplete input surface and text colors. */
-  mapAddressInputBackground: '#f2f1e58f',
-  mapAddressInputText: '#222',
-  mapAddressInputLabel: '#333',
-  mapAddressInputBorder: 'rgba(0, 0, 0, 0.35)',
-  mapAddressInputBorderHover: 'rgba(0, 0, 0, 0.7)',
+  pageBackground: UI_COLORS.surface.page,
+  brand: UI_COLORS.brand.primary,
+  cardBackground: UI_COLORS.surface.card,
+  commentCardBackground: UI_COLORS.surface.commentCard,
+  formPanelBackground: UI_COLORS.surface.formPanel,
+  dialogBackground: UI_COLORS.surface.dialog,
+  stickySocialBackground: UI_COLORS.surface.stickySocial,
+  buttonHover: UI_COLORS.brand.primaryHover,
+  dangerHover: UI_COLORS.action.dangerHover,
+  secondaryButtonBackground: UI_COLORS.action.secondaryBackground,
+  secondaryButtonHoverText: UI_COLORS.action.secondaryHoverText,
+  secondaryButtonHoverBackground: UI_COLORS.action.secondaryHoverBackground,
+  textLight: UI_COLORS.text.inverse,
+  textDark: UI_COLORS.text.primary,
+  legalLink: UI_COLORS.legal.link,
+  legalBorder: UI_COLORS.legal.border,
+  legalBackBackground: UI_COLORS.legal.backBackground,
+  headingShadow: UI_COLORS.decorative.headingShadow,
+  mapAddressInputBackground: UI_COLORS.map.addressBackground,
+  mapAddressInputText: UI_COLORS.map.addressText,
+  mapAddressInputLabel: UI_COLORS.map.addressLabel,
+  mapAddressInputBorder: UI_COLORS.map.addressBorder,
+  mapAddressInputBorderHover: UI_COLORS.map.addressBorderHover,
 } as const;
