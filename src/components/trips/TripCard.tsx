@@ -304,7 +304,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           component={Link}
           href={detailsHref}
           variant="contained"
-          sx={{ ...BUTTON_STYLES.containedHover, padding: '10px 50px' }}
+          sx={{ ...BUTTON_STYLES.primary, padding: '10px 50px' }}
         >
           DETAILS
         </Button>
