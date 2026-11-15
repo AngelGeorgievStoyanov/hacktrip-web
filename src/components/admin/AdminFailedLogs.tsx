@@ -21,6 +21,7 @@ import { adminApi } from '@/api/admin';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -138,7 +139,7 @@ export function AdminFailedLogs() {
         </TableContainer>
       ) : null}
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 1 }}>
+        <Box sx={ADMIN_PAGINATION_SX}>
           <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
             Previous
           </Button>
