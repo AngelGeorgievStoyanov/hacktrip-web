@@ -123,7 +123,7 @@ export function ProfileForm() {
             variant="contained"
             disabled={submitting || ((!isDirty || !isValid) && !selectedImage)}
             startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={BUTTON_STYLES.containedHover}
+            sx={BUTTON_STYLES.primary}
           >
             EDIT PROFILE
           </Button>
