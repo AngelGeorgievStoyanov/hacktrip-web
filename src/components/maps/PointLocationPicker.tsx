@@ -158,7 +158,7 @@ export function PointLocationPicker({
             width: { xs: '100%', sm: 'auto' },
             minHeight: 40,
             m: 0,
-            ...BUTTON_STYLES.containedHover,
+            ...BUTTON_STYLES.primary,
           }}
           containerSx={{
             width: { xs: '100%', sm: 'auto' },
