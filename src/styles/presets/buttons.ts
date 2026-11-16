@@ -45,22 +45,24 @@ const secondaryLightText = {
   },
 } as const;
 
-/** Shared full-width action sizing for trip navigation and management actions. */
-const tripAction = {
-  ...primary,
+/** Shared dimensions for full-width actions in the trip details action stack. */
+export const TRIP_ACTION_BUTTON_LAYOUT_SX = {
   padding: '10px',
   width: '100%',
   minHeight: '48px',
   boxSizing: 'border-box',
 } as const;
 
-/** Shared danger treatment and sizing for destructive trip actions. */
+/** Shared primary action treatment for trip navigation and management. */
+const tripAction = {
+  ...primary,
+  ...TRIP_ACTION_BUTTON_LAYOUT_SX,
+} as const;
+
+/** Shared danger treatment for destructive trip actions. */
 const tripActionDanger = {
   ...danger,
-  padding: '10px',
-  width: '100%',
-  minHeight: '48px',
-  boxSizing: 'border-box',
+  ...TRIP_ACTION_BUTTON_LAYOUT_SX,
 } as const;
 
 export const BUTTON_STYLES = {
