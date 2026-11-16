@@ -38,7 +38,6 @@ export const theme = createTheme({
           '--ht-button-text-transform': themeTypography.button.textTransform,
           '--ht-color-primary-hover': UI_COLORS.brand.primaryHover,
           '--ht-color-surface-page': UI_COLORS.surface.page,
-          '--ht-color-surface-card': UI_COLORS.surface.card,
           '--ht-color-text-primary': UI_COLORS.text.primary,
           '--ht-color-text-inverse': UI_COLORS.text.inverse,
           '--ht-color-action-contrast-background': UI_COLORS.action.contrastBackground,
