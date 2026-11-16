@@ -9,6 +9,9 @@ export const UI_COLORS = {
     primaryHover: '#4daf30',
   },
   surface: {
+    /** MUI canvas and paper defaults, explicit so theme behavior is token-owned. */
+    canvas: '#fff',
+    paper: '#fff',
     page: '#cfe8fc',
     card: '#eee7e79e',
     stickySocial: '#eee7e79e',
@@ -21,15 +24,22 @@ export const UI_COLORS = {
     imageControlHover: 'rgba(0, 0, 0, 0.7)',
   },
   border: {
+    /** MUI divider default, kept distinct from the stronger legacy panel border. */
+    divider: 'rgba(0, 0, 0, 0.12)',
     subtle: 'rgba(0, 0, 0, 0.2)',
     strong: '#000',
   },
   text: {
+    /** MUI secondary text default. */
+    secondary: 'rgba(0, 0, 0, 0.6)',
     inverse: '#fff',
     primary: '#17212b',
     onSecondary: '#000',
   },
   action: {
+    /** MUI interaction-state defaults, explicitly owned by semantic tokens. */
+    hover: 'rgba(0, 0, 0, 0.04)',
+    selected: 'rgba(0, 0, 0, 0.08)',
     danger: 'red',
     dangerHover: '#ef0a0a',
     secondaryBackground: 'rgb(194 194 224)',
