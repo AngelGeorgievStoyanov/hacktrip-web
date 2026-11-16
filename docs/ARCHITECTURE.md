@@ -2310,6 +2310,15 @@ All CSS files currently present in the repository were inspected: AboutPage, Leg
 - About's 820px layout threshold is page-specific. The 600px rules in other modules should be compared with `BREAKPOINTS.smallPhone` before changing; CSS Modules cannot directly import TypeScript constants.
 - LegalPage and NotFound already use semantic CSS variables for their shared colors. Their remaining padding, border radius and image/layout values are currently local page geometry, not evidence for global tokens.
 
+### Additional component and route coverage
+
+- The admin list screens reuse `ADMIN_PAGINATION_SX`; AdminUserForm and AdminUserProfileImage reuse `COLUMN_STACK_SX`. Their remaining grid/card dimensions are screen-specific and should stay local unless another screen proves the same layout contract.
+- Auth forms beyond the initial three (ResendVerificationForm and ResetPasswordForm) also use the shared auth form presets. VerifyEmailForm has a different confirmation layout and should not be forced into the standalone form panel.
+- Both PointLocationPicker and TripLocationPicker consume `MAP_ADDRESS_INPUT_SX`. Keep that preset map-specific; the surrounding picker and responsive control geometry differs.
+- Account trip/favorites pages use shared page/heading/empty-state presets. The account, admin, auth and public route-group layouts still contain a small number of inline structural wrappers; their 2rem/30px gutters are not interchangeable without checking the intended route width and legacy rendering.
+- ImageLightbox keeps its repeated control treatment local to the lightbox, while image upload field borders and radii remain upload-specific. The tracking surface is local to LiveTracker. These are not yet cross-feature patterns.
+- The reviewed public pages use CSS Modules or shared centered-page presets; the remaining inline styles in About and Trips are page content/layout composition rather than duplicate theme definitions.
+
 ### Remaining migration candidates
 
 - Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
