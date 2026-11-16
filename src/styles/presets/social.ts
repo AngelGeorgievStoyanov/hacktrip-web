@@ -42,3 +42,20 @@ export const SOCIAL_OVERLAY_SX = {
   '& .MuiIconButton-root': { color: 'common.white' },
   '& .MuiIconButton-root:hover': { backgroundColor: UI_COLORS.surface.socialOverlayHover },
 } as const;
+
+/** Shared sticky social-action surface used below trip-day navigation. */
+export const STICKY_SOCIAL_SX = {
+  display: 'inline-flex',
+  maxWidth: 'calc(100% - 32px)',
+  ml: { xs: 2, sm: 3 },
+  mt: 1,
+  px: 0.75,
+  py: 0.5,
+  border: 1,
+  borderColor: 'divider',
+  borderRadius: 2.5,
+  backgroundColor: UI_COLORS.surface.stickySocial,
+  boxShadow: 1,
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
+} as const;
