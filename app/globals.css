@@ -43,11 +43,11 @@ code {
   background-color: var(--ht-color-primary);
   color: var(--ht-color-text-inverse);
   font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.02857em;
-  line-height: 1.75;
-  text-transform: uppercase;
+  font-size: var(--ht-button-font-size);
+  font-weight: var(--ht-button-font-weight);
+  letter-spacing: var(--ht-button-letter-spacing);
+  line-height: var(--ht-button-line-height);
+  text-transform: var(--ht-button-text-transform);
   text-decoration: none;
   cursor: pointer;
   transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
