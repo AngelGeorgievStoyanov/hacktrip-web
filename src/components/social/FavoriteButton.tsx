@@ -10,6 +10,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { SocialTargetTypeInput } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { SOCIAL_BADGE_COMPACT_STYLE } from '@/styles/presets/social';
 
 interface FavoriteButtonProps {
   targetType: SocialTargetTypeInput;
@@ -76,15 +77,7 @@ export function FavoriteButton({
               color="error"
               sx={
                 size === 'small'
-                  ? {
-                      '& .MuiBadge-badge': {
-                        fontSize: '0.65rem',
-                        height: 14,
-                        minWidth: 14,
-                        padding: '0 3px',
-                        lineHeight: 1,
-                      },
-                    }
+                  ? { '& .MuiBadge-badge': SOCIAL_BADGE_COMPACT_STYLE }
                   : undefined
               }
             >
