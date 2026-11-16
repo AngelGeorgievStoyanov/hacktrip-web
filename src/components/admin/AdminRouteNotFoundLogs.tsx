@@ -20,7 +20,7 @@ import {
 import { adminApi } from '@/api/admin';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
-import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import type { RouteNotFoundLogDto } from '@/types/admin';
 
 function formatDate(value: string | null): string {
@@ -99,7 +99,7 @@ export function AdminRouteNotFoundLogs() {
       {error ? <Alert severity="error">{getGenericErrorMessage(error)}</Alert> : null}
       {isLoading ? <CircularProgress /> : null}
       {data ? (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} variant="outlined" sx={ADMIN_TABLE_CONTAINER_SX}>
           <Table size="small">
             <TableHead>
               <TableRow>
