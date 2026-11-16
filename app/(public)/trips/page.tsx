@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
 import { tripApi, type TripListQuery } from '@/api/trips';
 import { TripFilters } from '@/components/trips/TripFilters';
 import { TripList } from '@/components/trips/TripList';
@@ -17,20 +16,14 @@ import {
 } from '@/constants/trips';
 import { PAGE_MAX } from '@/constants/pagination';
 import { CENTERED_PAGE_MAIN_STYLE } from '@/styles/presets/layouts';
-import { headingTextStyle } from '@/styles/presets/typography';
+import { HOME_INTRO_STYLE } from '@/styles/presets/typography';
 
 interface TripsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 
-const INTRO_STYLE: CSSProperties = {
-  maxWidth: 900,
-  margin: '0 20px 24px',
-  textAlign: 'center',
-  ...headingTextStyle,
-  lineHeight: 1.6,
-};
+const INTRO_STYLE = { ...HOME_INTRO_STYLE, maxWidth: 900 };
 
 function first(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
