@@ -15,6 +15,7 @@ import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
+import { ACCOUNT_FORM_FIELDS_SX } from '@/styles/presets/forms';
 
 const changePasswordFormSchema = changePasswordSchema
   .extend({
@@ -94,14 +95,7 @@ export function ChangePasswordForm({ expanded }: ChangePasswordFormProps) {
       noValidate
       aria-busy={submitting}
       onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1.5,
-        width: '100%',
-        mt: 2,
-        '& .MuiTextField-root': { width: 'calc(100% - 10px)', mx: '5px' },
-      }}
+      sx={{ ...ACCOUNT_FORM_FIELDS_SX, mt: 2 }}
     >
       {expanded ? (
         <>
