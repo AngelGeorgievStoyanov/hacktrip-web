@@ -16,6 +16,7 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { isModeratorUser } from '@/constants/roles';
 import { BREAKPOINTS, mediaDown, maxWidthQuery } from '@/constants/ui';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -27,7 +28,7 @@ interface NavLink {
 /** Legacy per-item spacing for the navigation buttons. */
 const NAV_BUTTON_SX = { margin: '2px', padding: '2px', boxSizing: 'content-box' } as const;
 
-const MENU_ICON_SX = { fontSize: 32 } as const;
+const MENU_ICON_SX = { fontSize: UI_SIZES.iconLarge } as const;
 
 /**
  * Client Component because it reads the auth session to show login/account controls;
@@ -163,7 +164,7 @@ export function Header() {
             display: 'flex',
             justifyContent: 'space-between',
             paddingBottom: '20px',
-            [mediaDown(760)]: {
+            [mediaDown(BREAKPOINTS.headerCompact)]: {
               display: 'flex',
               flexDirection: 'row',
               flexWrap: 'wrap',
