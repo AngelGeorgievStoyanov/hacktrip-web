@@ -2431,7 +2431,7 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 
 - The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. The declaration review has now covered all 36 App Router TSX files in addition to the feature components and the CSS/token/theme/preset layers.
 - Confirmed reusable candidates remain deliberately small: account-profile field inset, Point/EditTrip nested control inset, trip-action sizing, three AppImage cover-fill consumers, shared home heading/intro treatment, a route-content gutter candidate distinct from the 30px page gutter, and existing shared presets. The reviewed local compositions listed above remain local; no new global token family is justified by this pass.
-- Stage 1 remains open. The remaining work is the final file-by-file reconciliation of each `sx`/`style`/`className` expression against token/preset ownership, plus verification of all token/preset consumers and legacy exceptions. No migration should start merely because a matching value appears in multiple files.
+- The declaration inventory and component/route reviews are reconciled into the ownership categories recorded in the Stage 1 closure below. The remaining items are implementation/migration work for later stages, not unfinished discovery. No migration should start merely because a matching value appears in multiple files.
 
 ### Trip, point, navigation and utility component audit
 
@@ -2508,11 +2508,53 @@ All 36 `app/**/*.tsx` files were fetched and checked for styling entry points. T
 
 ### Remaining migration candidates
 
-- Retain the ProfileForm/ChangePasswordForm field inset as a Stage 3 extraction candidate after the audit is closed. Keep their heading, profile-only disabled field, action rows and ChangePasswordForm top margin separate.
+- `ProfileForm` now consumes `ACCOUNT_FORM_FIELDS_SX`; `ChangePasswordForm` still contains the same field-stack declarations and is the remaining Stage 3 migration consumer. Keep its `mt: 2`, heading/content, action row and profile-only disabled field separate.
 - Retain the 2rem route-content gutter as a candidate for explicit central ownership. It is 32px and must not silently replace the 30px public page gutter or the 30px Point form padding.
-- The declaration-level review has covered the major component and route surfaces. The remaining Stage 1 task is a final reconciliation checklist across every path in the 63 `sx=`, 36 `style=` and five `className=` source inventories: classify each occurrence as shared token/preset, feature-local composition, dynamic component API/pass-through, or legacy pending visual verification.
-- Verify all imports and consumers of `BUTTON_STYLES`, panel/surface presets, layout/form/map/social presets, UI tokens and emitted CSS variables. Confirm that no legacy constant is orphaned or removed while consumers remain, and that no token/preset duplicates a property already owned by the MUI theme.
+- The declaration-level review has reconciled the 63 `sx=`, 36 `style=` and five `className=` source-file inventories, the single MUI `styled()` consumer, all eight CSS files and all 36 App Router TSX files. Ownership is classified as shared token, reusable preset, theme-owned MUI default, feature-local composition, dynamic component API/pass-through, or legacy pending visual verification.
+- The consumer review covers `BUTTON_STYLES`, panel/surface, layout/form/map/social/typography presets, UI tokens, MUI theme overrides and CSS variables. Legacy constants with documented consumers remain in place; no destructive cleanup is part of Stage 1.
 - Keep the trip-action sizing, Point/EditTrip nested field inset and AppImage cover-fill as small Stage 3 candidates. Do not extract them until the final consumer map and visual verification requirements are recorded.
+
+### Stage 1 closure — final ownership reconciliation
+
+Stage 1 is complete as an audit and architecture-definition phase. The source inventories and targeted declaration reviews have been reconciled; the remaining items below are implementation candidates for Stages 2–5, not reasons to reopen discovery.
+
+#### Ownership rules established
+
+| Style concern | Owner | Rule |
+|---|---|---|
+| Brand and semantic colors | `src/constants/ui/colors.ts` | Components consume semantic roles; preserve the current blue/white values until the separate brand redesign. |
+| Shared typeface and typography scales | `src/constants/ui/typography.ts` and `src/theme/typography.ts` | Shared typography belongs to tokens/theme; page-specific editorial typography remains local when intentional. |
+| Shared spacing and dimensions | `src/constants/ui/spacing.ts`, `sizes.ts`, `breakpoints.ts` | Promote only established cross-feature values; preserve legacy thresholds and distinguish 30px, 32px and component-specific gutters. |
+| Shape, elevation and layering | `shape.ts`, `shadows.ts`, `z-index.ts`, `src/theme/` | MUI surface defaults are theme-owned; special overlays and feature-specific geometry remain distinct. |
+| Repeated composed UI patterns | `src/styles/presets/` | Presets own repeated combinations, not every isolated style object or feature-specific composition. |
+| MUI component defaults | `src/theme/components/` | Theme owns shared MUI component defaults/surfaces; caller `sx` owns feature layout and semantic variants. |
+| Local layout and responsive composition | Component styles and CSS Modules | Keep grids, image geometry, sticky layouts, map dimensions, feature-specific breakpoints and interaction positioning local. |
+| Dynamic sizing and pass-through props | Component API | Caller-provided values such as map `maxWidth`/`height` and forwarded image `className`/`style` are APIs, not duplicate tokens. |
+| Legacy styles awaiting visual comparison | Existing legacy constants/presets | Keep until all consumers are migrated and visual parity is verified. |
+
+#### Confirmed shared patterns and remaining consumers
+
+- Auth standalone forms already share the auth presets. `ProfileForm` uses `ACCOUNT_FORM_FIELDS_SX`; `ChangePasswordForm` is the remaining matching field-stack consumer to migrate in a later implementation pass.
+- Point create/edit page wrappers use `POINT_FORM_PANEL_SX`; the inner `PointForm` field-control inset is a matching extraction candidate, but its form gap, width constraints and responsive action layout must remain independent.
+- Admin pagination, account trips pages, map address inputs, social action groups, trip-card text inset and shared typography are already represented by presets.
+- Trip-action sizing, AppImage cover-fill, shared home heading/intro treatment and the 32px route-content gutter remain narrowly scoped extraction candidates. Their semantic variants and existing 30px page gutter must be preserved.
+- `LEGACY_PANEL_SX`, `CARD_BORDER`, `UI_SHADOWS.card` and related legacy surface values must not be removed until their remaining consumers are migrated and visually checked.
+- CSS Modules are limited to the eight inventoried files. They own page/component geometry; the About page's Space Mono editorial headings, legal-page typography/spacing, trip-detail container query, image-gallery geometry and NotFound composition remain intentionally local.
+- `app/globals.css` remains minimal. Its `.ht-button` rules are required by server-rendered trip markup and must not be removed while those consumers exist.
+
+#### CSS variable reconciliation
+
+The emitted variables used by current plain CSS/CSS Module consumers are the button variables, primary/primary-hover, inverse and primary text, page surface, contrast action background, danger hover, legal border/link/back surface, and decorative heading shadow. The theme currently also emits canvas/paper/divider/secondary/action-state variables that have no consumer in the eight CSS files; Stage 2 may remove or retain them only after checking for non-CSS consumers. Do not add a CSS variable for every token automatically.
+
+#### Known boundary decisions
+
+- The app's exact legacy `BREAKPOINTS` and MUI's default breakpoint scale are currently separate. Stage 2 must decide ownership/mapping without changing observed thresholds.
+- `UI_SPACING` values are MUI spacing multipliers based on an 8px unit, not pixel values.
+- Semantic MUI palette roles beyond primary/background/text/divider/action are not fully token-owned yet; this is a Stage 2 implementation gap, not an audit discovery gap.
+- Typography currently centralizes the font family and Button settings; heading/body variant scales remain a Stage 2 implementation gap.
+- Runtime CSS variables are generated through the single root ThemeProvider/CssBaseline. Only variables with actual CSS consumers should be part of the final contract.
+
+**Exit criterion met:** every inventoried style surface has an explicit ownership rule or a named migration/visual-verification exception. No current visual values were changed during this audit.
 
 The next safe migration is to continue from the verified shared-pattern inventory above. Do not remove legacy styles, change visual tokens or redesign the blue/white identity as part of this migration.
 ## 11.4 Reusable UI patterns
