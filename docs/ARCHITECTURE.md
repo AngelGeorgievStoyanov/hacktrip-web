@@ -2265,7 +2265,7 @@ src/components/
 - Reusable combinations of styles belong in `src/styles/presets/`. Presets compose tokens and theme values; they must not become a second source of raw design-token values.
 - MUI component surface defaults belong in the theme. Component `sx` should focus on layout, composition or state-dependent differences.
 - CSS Modules are appropriate for complex component-local layout and responsive rules. Keep unique geometry local; do not force one-off rules into global CSS or a generic preset.
-- `app/globals.css` stays minimal: document reset, app shell, and CSS-only behavior needed by server-rendered markup. Shared colors used by global CSS are exposed as semantic CSS variables by the MUI theme.
+- `app/globals.css` stays minimal: document reset, app shell, and CSS-only behavior needed by server-rendered markup. Shared colors, shape and button geometry/typography used by global CSS are exposed as CSS variables by the MUI theme.
 - Use `BREAKPOINTS` and media helpers for JavaScript/MUI responsive styles. CSS Modules retain local media/container queries where CSS cannot consume TypeScript tokens; keep those thresholds documented and aligned where they share the same semantic breakpoint.
 - Extract a shared pattern only when call sites have the same visual meaning. Similar-looking styles with different semantics may remain separate.
 - Centralization must preserve existing visual behavior; it is not an unrequested redesign.
