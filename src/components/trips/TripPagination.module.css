@@ -7,7 +7,7 @@
 .list {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--ht-spacing-sm);
   list-style: none;
   padding: 0;
 }
