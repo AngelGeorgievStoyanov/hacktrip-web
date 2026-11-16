@@ -9,7 +9,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: var(--ht-spacing-lg);
   width: 100%;
   max-width: 1200px;
   min-width: 0;
@@ -21,7 +21,7 @@
   display: grid;
   align-items: start;
   justify-content: center;
-  gap: 24px;
+  gap: var(--ht-spacing-lg);
   width: 100%;
   min-width: 0;
 }
@@ -87,11 +87,11 @@
 
 @media (max-width: 600px) {
   .tripDetailsPageLayout {
-    gap: 16px;
+    gap: var(--ht-spacing-md);
   }
 
   .tripDetailsPrimaryRow,
   .tripDetailsMapRow {
-    gap: 16px;
+    gap: var(--ht-spacing-md);
   }
 }
