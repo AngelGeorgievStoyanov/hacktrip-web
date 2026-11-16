@@ -76,7 +76,7 @@
   display: inline-block;
   margin-top: 18px;
   padding: 10px 24px;
-  border-radius: 4px;
+  border-radius: var(--ht-shape-border-radius);
   background: var(--ht-color-legal-back-background);
   color: var(--ht-color-text-primary);
   text-decoration: none;
