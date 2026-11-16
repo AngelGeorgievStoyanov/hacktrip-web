@@ -20,6 +20,7 @@ import {
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { DeleteAllImagesIcon, RemoveImageIcon } from '@/constants/icons';
 import { MAX_IMAGES_PER_ENTITY, MAX_UPLOAD_BYTES } from '@/constants/images';
+import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import CustomFileUploadButton from '@/components/CustomFileUploadButton';
 
@@ -239,7 +240,7 @@ export default function ImageUploadField({
             gap: 1,
             maxHeight: 200,
             overflowY: 'auto',
-            border: '1px solid black',
+            border: `1px solid ${UI_COLORS.border.strong}`,
             borderRadius: '5px',
             p: '6px',
             m: '6px',

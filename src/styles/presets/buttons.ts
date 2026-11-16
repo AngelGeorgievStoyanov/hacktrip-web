@@ -15,7 +15,7 @@ const danger = {
 
 const secondary = {
   backgroundColor: UI_COLORS.action.secondaryBackground,
-  color: 'black',
+  color: UI_COLORS.text.onSecondary,
   '&:hover': {
     backgroundColor: UI_COLORS.action.secondaryBackground,
     color: UI_COLORS.action.secondaryHoverText,

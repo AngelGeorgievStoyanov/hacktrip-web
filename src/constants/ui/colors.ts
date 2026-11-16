@@ -23,10 +23,12 @@ export const UI_COLORS = {
   },
   border: {
     subtle: 'rgba(0, 0, 0, 0.2)',
+    strong: '#000',
   },
   text: {
     inverse: '#fff',
     primary: '#17212b',
+    onSecondary: '#000',
   },
   action: {
     danger: 'red',
