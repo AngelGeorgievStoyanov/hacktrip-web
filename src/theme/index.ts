@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { UI_COLORS } from '@/constants/ui/colors';
+import { MUI_BREAKPOINTS } from '@/constants/ui/breakpoints';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { UI_Z_INDEX } from '@/constants/ui/z-index';
@@ -19,6 +20,9 @@ export const theme = createTheme({
   palette: themePalette,
   typography: {
     ...themeTypography,
+  },
+  breakpoints: {
+    values: MUI_BREAKPOINTS,
   },
   shape: themeShape,
   spacing: UI_SPACING.unit,
