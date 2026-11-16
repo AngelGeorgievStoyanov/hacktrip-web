@@ -1,8 +1,7 @@
 /**
  * Semantic application color tokens.
  * Values intentionally preserve the current blue/white visual identity.
- * Components should consume semantic roles; COLORS below remains only as a
- * compatibility mapping for older imports and must not be used by new code.
+ * Components should consume semantic roles from UI_COLORS; do not add flat aliases.
  */
 export const UI_COLORS = {
   brand: {
