@@ -21,7 +21,7 @@ import { adminApi } from '@/api/admin';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
-import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -105,7 +105,7 @@ export function AdminFailedLogs() {
       ) : null}
       {isLoading ? <CircularProgress /> : null}
       {data ? (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} variant="outlined" sx={ADMIN_TABLE_CONTAINER_SX}>
           <Table size="small">
             <TableHead>
               <TableRow>
