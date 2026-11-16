@@ -164,7 +164,7 @@ export function TripDetails({
               <Typography
                 variant="subtitle1"
                 component="div"
-                style={{ ...LINE_STYLE, padding: '0px 15px', marginTop: '10px' }}
+                sx={{ ...LINE_STYLE, ...CARD_TEXT_INSET_SX, marginTop: '10px' }}
               >
                 Description: {day.description.slice(0, 150)}...
               </Typography>
