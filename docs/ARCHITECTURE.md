@@ -2671,3 +2671,10 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Replaced the disabled profile-email input's hardcoded black text-fill value with the semantic `UI_COLORS.text.primary` token. The disabled cursor and label treatment remain local to that field.
 - Confirmed that ProfileForm and ChangePasswordForm already share `ACCOUNT_FORM_FIELDS_SX`, standalone auth forms use `AUTH_FORM_SX`, and the map location pickers consume `MAP_ADDRESS_INPUT_SX` plus shared button presets.
 - Stage 5 remains in progress; this is a targeted migration, not a claim that every feature area has been migrated. No functional behavior or API contract was changed.
+
+
+### Additional Stage 5 migration — social overlay preset
+
+- Extracted the image/map social-control overlay shell into `SOCIAL_OVERLAY_SX` in `src/styles/presets/social.ts`. The preset owns its positioning, translucent surface, border, radius, shadow, blur and hover treatment.
+- `EngagementBar` now composes that shared preset with only its size-dependent icon padding and compact badge metrics. Social behavior, event handling and inline presentation are unchanged.
+- The circular ProfileImage control remains a specialized circular control, not a Card surface; its unique geometry and overlay behavior are intentionally not forced into the shared Card contract.
