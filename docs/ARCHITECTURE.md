@@ -2334,7 +2334,7 @@ This is a broad source inventory, but it is not yet a completed semantic classif
 The deeper form review confirmed two related but distinct repeated field-inset patterns:
 
 - ProfileForm and ChangePasswordForm were re-opened declaration-by-declaration. Both use the same vertical stack (`gap: 1.5`, `width: 100%`) and the exact same TextField inset (`width: calc(100% - 10px)`, `mx: 5px`). This is now a confirmed small composable account-profile field-layout candidate, not an auth-panel candidate. ProfileForm additionally owns `alignItems: stretch`, a profile heading, disabled-email rendering and its three-action row; ChangePasswordForm additionally owns `mt: 2` and its submit action. Those differences must remain caller-owned if the common field layout is extracted.
-- PointForm and EditTripLayout both apply `m: 0.5` and `width: calc(100% - 10px)` to nested `.MuiFormControl-root` elements. `POINT_FORM_PANEL_SX` currently contains this rule for CreatePointPage/EditPointPage wrappers, while PointForm repeats it on its own form and EditTripLayout repeats it on its editing form. The rule is a confirmed field-inset candidate, but do not blindly spread the full `POINT_FORM_PANEL_SX` into either form: its panel padding, max width and wrapper sizing have different ownership.
+- The nested `.MuiFormControl-root` inset (`m: 0.5`, `width: calc(100% - 10px)`) is centralized as `FORM_CONTROL_INSET_SX` and reused by `POINT_FORM_PANEL_SX`, PointForm and EditTripLayout. The shared inset is extracted independently so panel padding, max width and wrapper sizing remain owned by their respective components.
 - TripForm is demonstrably a different contract: its Card uses `m: 4px`, `width: 100%`, its own 620px card width, 30px desktop/16px mobile padding, 600px responsive override and distinct action group. Do not merge its form-control rule with the Point/EditTrip inset pattern.
 - TripDetails and PointSection share CARD_TEXT_INSET_SX in their text content, but retain different card and image geometry. Do not merge their full layouts.
 - The width: 100%; height: 100%; object-fit: cover inline image style appears in admin user cards, admin profile-image management and profile-image display. It is a candidate for a shared image-fit style only if the rendered element/container contract is confirmed to be identical; the full-screen profile image deliberately uses contain and must remain distinct.
@@ -2608,3 +2608,10 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - The profile page and trip-edit form previously spread `LEGACY_PANEL_SX`, which carried its own background, black shadow, border and square radius. Both now consume `PANEL_SX(theme)` and therefore share the same theme-owned surface contract as MUI Cards and Dialog paper.
 - The obsolete `LEGACY_PANEL_SX` preset and its local token imports have been removed. The profile form and trip-edit form retain their own padding, spacing, width and responsive layout; only the visual surface is shared.
 - `UI_SHADOWS.card` remains in use for the circular profile-image control and is not treated as a card/panel surface token. It must not be removed as part of this panel migration.
+
+
+### Additional Stage 3 migration — shared form-control inset
+
+- Extracted `FORM_CONTROL_INSET_SX` into `src/styles/presets/forms.ts`.
+- Reused it in `POINT_FORM_PANEL_SX`, `PointForm` and `EditTripLayout`, removing three copies of the same nested control spacing/width rule without coupling the forms' outer layout.
+- Stage 3 remains in progress; component/preset coverage and remaining legacy values still need systematic review before closure.
