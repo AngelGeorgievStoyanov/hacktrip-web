@@ -16,6 +16,7 @@ import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
 import { UI_COLORS, UI_SHADOWS } from '@/constants/ui';
+import { SOCIAL_BADGE_COMPACT_STYLE } from '@/styles/presets/social';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
@@ -114,11 +115,7 @@ export function EngagementBar({
               '& .MuiIconButton-root': { color: 'common.white', p: size === 'small' ? 0.5 : 0.65 },
               '& .MuiIconButton-root:hover': { backgroundColor: UI_COLORS.surface.socialOverlayHover },
               '& .MuiBadge-badge': {
-                fontSize: size === 'small' ? '0.65rem' : undefined,
-                height: size === 'small' ? 14 : undefined,
-                minWidth: size === 'small' ? 14 : undefined,
-                padding: size === 'small' ? '0 3px' : undefined,
-                lineHeight: size === 'small' ? 1 : undefined,
+                ...(size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : {}),
               },
             }
           : { display: 'flex', flexDirection: 'column', gap: '0.25rem', margin: '0.25rem 0' }
