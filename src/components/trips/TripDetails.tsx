@@ -28,6 +28,7 @@ import {
   CARD_TEXT_BLOCK_STYLE,
   CARD_TEXT_INSET_SX,
 } from '@/styles/presets/cards';
+import { TRIP_ACTION_BUTTON_LAYOUT_SX } from '@/styles/presets/buttons';
 
 interface TripDetailsProps {
   tripGroup: TripGroupResponse;
@@ -222,7 +223,7 @@ export function TripDetails({
         <BackButton
           component={Link}
           href="/trips"
-          sx={{ padding: '10px', width: '100%', minHeight: '48px' }}
+          sx={TRIP_ACTION_BUTTON_LAYOUT_SX}
         >
           BACK
         </BackButton>
