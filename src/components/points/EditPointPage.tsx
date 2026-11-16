@@ -13,6 +13,7 @@ import { PointLocationPicker } from '@/components/maps/PointLocationPicker';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { SocialImageDto, TripPoint } from '@/types';
 import { UI_COLORS } from '@/constants/ui/colors';
+import { POINT_FORM_PANEL_SX } from '@/styles/presets/forms';
 
 export function EditPointPage() {
   const router = useRouter();
@@ -151,12 +152,7 @@ export function EditPointPage() {
       >
         <Card
           sx={{
-            p: { xs: 2, sm: '30px' },
-            width: '100%',
-            maxWidth: 600,
-            minWidth: 0,
-            boxSizing: 'border-box',
-            '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
+            ...POINT_FORM_PANEL_SX,
             '@media (max-width:1020px)': { order: 2 },
           }}
         >
