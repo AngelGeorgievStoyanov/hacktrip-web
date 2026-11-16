@@ -12,6 +12,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse, TripPoint } from '@/types';
+import { UI_SIZES } from '@/constants/ui/sizes';
 
 export function CreatePointPage() {
   const router = useRouter();
@@ -181,7 +182,7 @@ export function CreatePointPage() {
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 1440, mx: 'auto', px: { xs: 1, sm: 2 }, py: 2 }}>
+    <Box sx={{ width: '100%', maxWidth: UI_SIZES.contentMaxWidth, mx: 'auto', px: { xs: 1, sm: 2 }, py: 2 }}>
       {error ? (
         <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
           {error}

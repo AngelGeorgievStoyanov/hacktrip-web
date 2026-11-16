@@ -20,6 +20,7 @@ import { getAuthErrorMessage } from '@/lib/errors';
 import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { useNotification } from '@/components/common/NotificationProvider';
@@ -132,7 +133,7 @@ export function LoginForm() {
           type="submit"
           variant="contained"
           disabled={submitting || !captchaToken}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
           sx={BUTTON_STYLES.primary}
         >
           Login

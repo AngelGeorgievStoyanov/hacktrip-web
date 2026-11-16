@@ -20,6 +20,7 @@ import { zodResolver } from '@/lib/zodResolver';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { registerSchema } from '@/validations/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { Captcha } from '@/components/auth/Captcha';
@@ -215,7 +216,7 @@ export function RegisterForm() {
           type="submit"
           variant="contained"
           disabled={isFormLocked || !isValid || !captchaToken}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
           sx={BUTTON_STYLES.primary}
         >
           Register

@@ -25,6 +25,7 @@ import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { BackButton } from '@/components/common/BackButton';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
@@ -409,7 +410,7 @@ export function TripForm() {
               '& .MuiButton-root': {
                 minWidth: 40,
                 width: 40,
-                height: 36,
+                height: UI_SIZES.compactControlHeight,
                 p: 0,
                 m: 0,
                 '&:hover': { backgroundColor: 'primary.dark' },
@@ -587,7 +588,7 @@ export function TripForm() {
             type="submit"
             variant="contained"
             disabled={submitting || isLoadingExistingTrip || !isValid || isDayNumberOccupied}
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
             sx={BUTTON_STYLES.primary}
           >
             Add trip

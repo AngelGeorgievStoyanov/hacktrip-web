@@ -20,6 +20,7 @@ import {
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { DeleteAllImagesIcon, RemoveImageIcon } from '@/constants/icons';
 import { MAX_IMAGES_PER_ENTITY, MAX_UPLOAD_BYTES } from '@/constants/images';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import CustomFileUploadButton from '@/components/CustomFileUploadButton';
 
 const MAX_COMPRESSED_FILE_SIZE = 2 * 1024 * 1024;
@@ -212,7 +213,7 @@ export default function ImageUploadField({
           disabled={processing}
         />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {processing ? <CircularProgress size={18} aria-label="Processing images" /> : null}
+          {processing ? <CircularProgress size={UI_SIZES.smallIndicator} aria-label="Processing images" /> : null}
           <Typography variant="body2" sx={{ mr: 1 }}>
             {existingCount + files.length}/{maxImages} uploaded images
           </Typography>

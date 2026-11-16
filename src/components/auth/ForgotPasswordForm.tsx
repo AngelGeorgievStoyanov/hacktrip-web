@@ -13,6 +13,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { FORGOT_PASSWORD_SUCCESS_MESSAGE } from '@/constants/notifications';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { BackButton } from '@/components/common/BackButton';
@@ -81,7 +82,7 @@ export function ForgotPasswordForm() {
           type="submit"
           variant="contained"
           disabled={submitting || !captchaToken}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
           sx={BUTTON_STYLES.primary}
         >
           Send reset link

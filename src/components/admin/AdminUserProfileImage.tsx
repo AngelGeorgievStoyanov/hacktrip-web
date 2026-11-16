@@ -11,6 +11,7 @@ import { AppImage } from '@/components/images/AppImage';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 
 export function AdminUserProfileImage({ userId }: { userId: string }) {
@@ -91,7 +92,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
               });
             }}
           >
-            {deleteMutation.isPending ? <CircularProgress size={18} /> : 'Delete image'}
+            {deleteMutation.isPending ? <CircularProgress size={UI_SIZES.smallIndicator} /> : 'Delete image'}
           </Button>
         </Stack>
       ) : !imageQuery.isLoading && !imageQuery.error ? (

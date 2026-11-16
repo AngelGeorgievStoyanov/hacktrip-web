@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { UI_SIZES } from '@/constants/ui/sizes';
 
 /**
  * Layout preset for trip cards.
@@ -17,4 +18,4 @@ export const cardStyle: CSSProperties = {
 };
 
 /** Consistent horizontal inset for text inside trip and point cards. */
-export const CARD_TEXT_INSET_SX = { padding: '0px 15px' } as const;
+export const CARD_TEXT_INSET_SX = { padding: `0px ${UI_SIZES.cardTextInset}px` } as const;

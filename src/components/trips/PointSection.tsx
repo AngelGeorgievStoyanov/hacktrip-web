@@ -70,7 +70,7 @@ export function PointSection({
           ) : null}
 
           {point.description ? (
-            <div style={{ padding: '0px 15px', marginTop: '10px' }}>
+            <div style={{ ...CARD_TEXT_INSET_SX, marginTop: '10px' }}>
               <ExpandableText text={point.description} />
             </div>
           ) : null}

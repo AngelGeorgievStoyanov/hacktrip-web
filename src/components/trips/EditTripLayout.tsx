@@ -33,6 +33,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
 import { LEGACY_PANEL_SX } from '@/styles/presets/panels';
 import { UI_COLORS } from '@/constants/ui/colors';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
 
@@ -225,7 +226,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
     <Box
       sx={{
         width: '100%',
-        maxWidth: 1440,
+        maxWidth: UI_SIZES.contentMaxWidth,
         mx: 'auto',
         px: { xs: 1, sm: 2 },
         py: { xs: 2, sm: 2 },
@@ -332,7 +333,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                     m: 0,
                     p: 0,
                     maxWidth: 100,
-                    height: 36,
+                    height: UI_SIZES.compactControlHeight,
                     width: 50,
                   },
                 }}
@@ -482,7 +483,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
             disabled={
               !selectedDay || submitting || !isValid || (!isDirty && newImages.length === 0)
             }
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
             sx={BUTTON_STYLES.containedHover}
           >
             EDIT YOUR TRIP
@@ -553,7 +554,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                       }}
                     >
                       {deletingImageId === image.id ? (
-                        <CircularProgress size={18} />
+                        <CircularProgress size={UI_SIZES.smallIndicator} />
                       ) : (
                         <RemoveImageIcon fontSize="small" />
                       )}

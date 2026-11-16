@@ -29,6 +29,7 @@ import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { AdminUserProfileImage } from '@/components/admin/AdminUserProfileImage';
 import { BackButton } from '@/components/common/BackButton';
 import { hasRole } from '@/constants/roles';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 import type { AuthUserDto, Role, UserStatus } from '@/types';
 
@@ -305,7 +306,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
           )}
         />
         <Button type="submit" variant="contained" disabled={!isDirty || updateMutation.isPending}>
-          {updateMutation.isPending ? <CircularProgress size={18} /> : 'Save'}
+          {updateMutation.isPending ? <CircularProgress size={UI_SIZES.smallIndicator} /> : 'Save'}
         </Button>
       </Box>
 

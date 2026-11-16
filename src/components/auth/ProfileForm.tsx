@@ -15,6 +15,7 @@ import { updateProfileSchema } from '@/validations/auth';
 import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 
 export function ProfileForm() {
   const { user, updateUser } = useAuth();
@@ -122,7 +123,7 @@ export function ProfileForm() {
             type="submit"
             variant="contained"
             disabled={submitting || ((!isDirty || !isValid) && !selectedImage)}
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
             sx={BUTTON_STYLES.primary}
           >
             EDIT PROFILE
