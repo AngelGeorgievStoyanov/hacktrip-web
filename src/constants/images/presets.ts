@@ -30,7 +30,7 @@ export const IMAGE_PRESETS = {
   tripPointThumb: { width: 200, height: 150, useThumbnail: true },
   editorDayThumb: { width: 120, height: 90, useThumbnail: true },
   editorPointThumb: { width: 80, height: 60, useThumbnail: true },
-  profile: { width: 160, height: 160 },
+  profile: { width: 160, height: 160, objectFit: 'cover' },
   aboutIllustration: { width: 640, height: 480, sizes: IMAGE_SIZES.about },
 } satisfies Record<string, ImagePreset>;
 
