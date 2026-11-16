@@ -2429,9 +2429,9 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 
 #### Stage 1 progress boundary
 
-- The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. This pass has now re-opened the complete relevant declarations in `ProfileForm`, `ChangePasswordForm`, `PointForm`, `TripForm`, `EditTripLayout`, `TripActions`, `BackButton`, `TripDetails`, `TripFilters` and `AdminUserForm`, plus their directly related preset definitions.
-- This declaration pass confirms the account-profile field inset, Point/EditTrip nested control inset and trip-action sizing as separate reusable candidates. It also confirms that TripForm, standalone Auth forms, general BackButton behavior and AdminUserForm surface ownership must not be collapsed into those patterns.
-- Stage 1 remains open. The remaining work is to reconcile every other `sx` block and dynamic style across the 63-file inventory, verify every token/preset consumer and legacy exception, and close a file-by-file checklist. No migration should start merely because a matching value appears in multiple files.
+- The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. Declaration-level reviews now include the account/entity forms, trip actions/details, filters, admin user form/navigation/list, home headings/hero, Header/Footer, TripCard/PointCard/PointSection, comments/replies, ImageLightbox, LiveTracker, TripDaysNav and ExpandableText, in addition to the earlier CSS/token/theme/preset review.
+- Confirmed reusable candidates remain deliberately small: account-profile field inset, Point/EditTrip nested control inset, trip-action sizing, three AppImage cover-fill consumers, shared home heading/intro treatment and existing shared presets. The reviewed local compositions listed above remain local; no new global token family is justified by this pass.
+- Stage 1 remains open. The remaining work is to reconcile all still-unreviewed declarations across the full 63/36/5 source inventory, verify every token/preset consumer and legacy exception, and close a file-by-file checklist. No migration should start merely because a matching value appears in multiple files.
 
 ### Trip, point, navigation and utility component audit
 
@@ -2445,6 +2445,24 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 - `LiveTracker` owns a tracking-specific surface and status layout. Do not replace it with the generic Card surface without comparing its current border/radius/shadow treatment.
 - AdminFailedLogs and AdminReports reuse the existing admin pagination preset. NotificationProvider and Captcha have isolated control sizing/positioning; no cross-feature style pattern was established in this pass.
 - `app/error.tsx` uses a standalone error-boundary layout with 32px padding and 16px gap. It is not the same as the 30px page gutter or the account/admin route content wrapper contract.
+
+
+### Declaration-level review — navigation, cards, comments, images and tracking
+
+The next targeted source pass re-opened the style declarations in `AdminNavigation`, `AdminUsers`, `CommentsSection`, `RepliesSection`, `ExpandableText`, `ScrambleHeading`, `WelcomeHeading`, `HomeHero`, `HomeTrips`, `ImageLightbox`, `Footer`, `Header`, `PointCard`, `LiveTracker`, `PointSection`, `TripCard` and `TripDaysNav`.
+
+- `Header` uses one local `NAV_BUTTON_SX` for its desktop navigation links and logout action, plus a shared icon-size token for the menu button. The navigation item spacing is currently local to this component; the mobile drawer has a different vertical layout. `AdminNavigation` has one independent wrapping row. No cross-feature navigation preset is justified by these declarations.
+- `AdminUsers` keeps its 320px-minimum responsive card grid, 1.25 card-content gap, 88px avatar and action-row composition. Its image uses the already identified shared AppImage cover-fill behavior; the surrounding admin card/grid dimensions are feature-specific.
+- `TripCard` has named local constants for its own heading block, image frame, social-count region, stepper spacer, card content, pagination and description clamp. These constants make the component internally readable; they are not global tokens merely because they are named. Its 352px card, 300×200 image and fixed-height composition remain TripCard-owned. Existing `CARD_TEXT_INSET_SX` and `BUTTON_STYLES.primaryWide` are the genuine shared pieces.
+- `PointCard` uses its own 10px text inset, point reorder control visibility and compact card/action composition. Do not merge that inset with TripCard/TripDetails' 15px inset or PointSection's distinct content-note spacing.
+- `PointSection` uses shared trip text inset for the point title and a local negative-margin image bleed to align the gallery with CardContent. The image bleed and note treatment are composition-specific, not generic card padding.
+- `CommentsSection` and `RepliesSection` use feature-owned comment panel/card, author, reply, edit-form and nested reply spacing. Their shared `SOCIAL_ACTIONS_SX` use is appropriate; the comment-specific surfaces and reply indentation are not generic panels/forms.
+- `ImageLightbox` keeps absolute-positioned close/previous/next controls and contained full-screen image sizing within the lightbox. These styles are one cohesive overlay interaction, not a cross-feature button preset.
+- `LiveTracker` repeats its own tracking surface for the map and status/stat panels. This is a tracking-specific surface contract and should not be replaced with generic Card/Paper styling without a visual comparison.
+- `TripDaysNav` pagination item margin/color and its 10px top offset are day-navigation-specific. They must remain separate from `ADMIN_PAGINATION_SX`.
+- `ExpandableText`'s conditional line clamp is interaction behavior. `ScrambleHeading` intentionally merges caller-supplied style after its shared heading style, so any future heading preset must preserve caller override precedence.
+- `HomeHero`/home headings continue to match the previously identified heading/intro candidates. `Footer` consumes the shared typography and color tokens; no additional typography token is needed for its copyright line.
+- No new cross-feature preset was justified by this pass beyond the already recorded account-profile fields, Point/EditTrip field inset, trip-action sizing, image cover-fill and heading/intro candidates.
 
 ### Theme completeness and cross-system consistency findings
 
