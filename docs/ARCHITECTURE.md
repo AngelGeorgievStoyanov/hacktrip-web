@@ -94,13 +94,17 @@ The primary frontend structure is:
 
 ```text
 app/
+  globals.css
 src/
   api/
   components/
   constants/
+    ui/
   hooks/
   lib/
-  theme/          target location for MUI theme configuration
+  styles/
+    presets/
+  theme/
   types/
   validations/
   config/
@@ -133,8 +137,20 @@ src/types/
 src/constants/
     centralized application constants organized by responsibility
 
-src/theme/ (target)
-    MUI theme creation, palette, typography, shape and component overrides
+src/constants/ui/
+    semantic design tokens and shared UI scales: colors, spacing, sizes, breakpoints, shape, shadows, typography and z-index
+
+src/theme/
+    current MUI theme creation, palette, typography, shape, elevation resolution and component overrides
+
+src/styles/presets/
+    reusable composed sx/style fragments for buttons, cards, forms, layouts, panels, social actions, map controls and typography
+
+app/globals.css
+    minimal document reset, app shell, CSS variables consumers and server-rendered styles that need CSS selectors
+
+CSS Modules
+    complex component-local layout and responsive styles; they are not a second design-token store
 
 src/lib/
     framework-independent utilities and shared low-level helpers
@@ -2185,33 +2201,73 @@ MUI is the primary UI component system. The design system must provide one consi
 
 ## 11.1 Ownership
 
-The target ownership is:
+The current implementation uses the following ownership boundaries:
 
 ```text
+app/
+  globals.css
+    document reset, app shell and small CSS-only server-rendered rules
+
 src/constants/ui/
-    design tokens and shared UI constants
+  colors.ts
+  spacing.ts
+  sizes.ts
+  breakpoints.ts
+  shape.ts
+  shadows.ts
+  typography.ts
+  z-index.ts
+    semantic design tokens and shared UI scales
 
 src/theme/
-    MUI theme creation, palette, typography, shape and component overrides
+  index.ts
+  palette.ts
+  typography.ts
+  shape.ts
+  shadows.ts
+  components/
+    button.ts
+    card.ts
+    dialog.ts
+    surface.ts
+    text-field.ts
+    MUI theme creation and component defaults/overrides
+
+src/styles/presets/
+  buttons.ts
+  cards.ts
+  forms.ts
+  layouts.ts
+  map-controls.ts
+  panels.ts
+  social.ts
+  typography.ts
+    reusable composed sx/style fragments; this is not a second token store
 
 app/providers.tsx
-    provider composition and theme/provider wiring
+    provider composition and ThemeProvider wiring; imports the theme from src/theme/
 
 src/components/
     reusable UI building blocks and feature components
+    CSS Modules own complex component-local layout and responsive rules
 ```
 
-The current implementation may still create the MUI theme in `app/providers.tsx`. Extracting theme construction into `src/theme/` is a planned implementation step.
+`src/theme/index.ts` is the single MUI theme entry point. `app/providers.tsx` wires that theme into the application; it does not create a second theme.
+
+`UI_COLORS` is the semantic color source of truth. The unused flat `COLORS` compatibility map has been removed. Shared spacing and dimensions are represented by `UI_SPACING` and `UI_SIZES`; MUI spacing numbers are multipliers of the configured 8px theme unit.
+
+`src/constants/ui/styles.ts` is a temporary legacy exception containing only `CARD_BORDER`, still used by `LEGACY_PANEL_SX` for the profile and trip-edit panels. Do not add new styles there. Remove it after those legacy panels are migrated.
 
 ## 11.2 Styling rules
 
-- Reusable colors, typography values, spacing decisions, radii, shadows and breakpoints must have a clear central owner.
-- MUI palette, typography, shape and reusable component defaults belong in the MUI theme.
-- Shared non-theme constants and layout presets belong under `src/constants/ui/`.
-- Global CSS is reserved for document-level styles, resets, font declarations, CSS variables and behavior that cannot reasonably be expressed through MUI.
-- Component-local `sx` is appropriate for one-off layout or state-dependent styling; it must not introduce repeated palette values or duplicate design tokens.
-- Do not create a global style abstraction for a one-off style. Extract shared patterns when they have repeated use and the same visual or behavioral meaning.
-- Use MUI theme breakpoints for MUI responsive styles. Use CSS media/container queries when they are the correct tool, while keeping breakpoint values consistent with the responsive system.
+- Concrete reusable colors, spacing, sizes, radii, shadows, typography and JavaScript/MUI breakpoints have one central owner under `src/constants/ui/`.
+- MUI palette, typography, shape, elevation resolution and component defaults belong in `src/theme/`.
+- Reusable combinations of styles belong in `src/styles/presets/`. Presets compose tokens and theme values; they must not become a second source of raw design-token values.
+- MUI component surface defaults belong in the theme. Component `sx` should focus on layout, composition or state-dependent differences.
+- CSS Modules are appropriate for complex component-local layout and responsive rules. Keep unique geometry local; do not force one-off rules into global CSS or a generic preset.
+- `app/globals.css` stays minimal: document reset, app shell, and CSS-only behavior needed by server-rendered markup. Shared colors used by global CSS are exposed as semantic CSS variables by the MUI theme.
+- Use `BREAKPOINTS` and media helpers for JavaScript/MUI responsive styles. CSS Modules retain local media/container queries where CSS cannot consume TypeScript tokens; keep those thresholds documented and aligned where they share the same semantic breakpoint.
+- Extract a shared pattern only when call sites have the same visual meaning. Similar-looking styles with different semantics may remain separate.
 - Centralization must preserve existing visual behavior; it is not an unrequested redesign.
 
 ## 11.3 Reusable UI patterns
