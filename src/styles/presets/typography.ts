@@ -9,3 +9,18 @@ export const headingTextStyle: CSSProperties = {
   opacity: 1,
   textShadow: `3px 3px 3px ${UI_COLORS.decorative.headingShadow}`,
 };
+
+/** Shared centered home/public-trips heading composition. */
+export const HOME_HEADING_STYLE: CSSProperties = {
+  margin: '2px',
+  textAlign: 'center',
+  ...headingTextStyle,
+};
+
+/** Shared introductory paragraph treatment; each page owns its content max-width. */
+export const HOME_INTRO_STYLE: CSSProperties = {
+  margin: '0 20px 24px',
+  textAlign: 'center',
+  ...headingTextStyle,
+  lineHeight: 1.6,
+};
