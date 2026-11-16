@@ -99,5 +99,4 @@ const POINT_NAME_STYLE = CARD_HEADING_TEXT_STYLE;
 const POINT_NOTE_STYLE = {
   ...CARD_TEXT_BLOCK_STYLE,
   padding: '0px 25px',
-  fontSize: '0.875rem',
 } as const;

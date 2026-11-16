@@ -41,7 +41,7 @@ interface TripDetailsProps {
 }
 
 const NAME_STYLE: CSSProperties = CARD_HEADING_TEXT_STYLE;
-const LINE_STYLE: CSSProperties = { ...CARD_TEXT_BLOCK_STYLE, fontSize: '1rem', fontWeight: 400 };
+const LINE_STYLE: CSSProperties = CARD_TEXT_BLOCK_STYLE;
 
 /**
  * Trip Information Panel — standalone visual section matching legacy UI.
