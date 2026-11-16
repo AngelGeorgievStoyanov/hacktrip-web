@@ -2256,7 +2256,7 @@ src/components/
 
 `UI_COLORS` is the semantic color source of truth. The unused flat `COLORS` compatibility map has been removed. Shared spacing and dimensions are represented by `UI_SPACING` and `UI_SIZES`; MUI spacing numbers are multipliers of the configured 8px theme unit. The MUI palette is explicitly derived from semantic tokens for primary color, canvas/paper surfaces, text, dividers and action states; equivalent CSS custom properties are exposed by the single theme for plain CSS consumers.
 
-`src/constants/ui/styles.ts` is a temporary legacy exception containing only `CARD_BORDER`, still used by `LEGACY_PANEL_SX` for the profile and trip-edit panels. Do not add new styles there. Remove it after those legacy panels are migrated.
+`src/constants/ui/styles.ts` still contains the legacy `CARD_BORDER` token, but the profile and trip-edit panels no longer consume it. Do not add new styles there; remove the token only after a repository-wide consumer check.
 
 ## 11.2 Styling rules
 
@@ -2295,7 +2295,7 @@ The following audit was performed against the current modernization branch. It i
 
 ### Legacy surfaces and theme
 
-- `LEGACY_PANEL_SX` remains consumed by the profile page and EditTripLayout. It intentionally retains the old card background, shadow, border and square radius. Keep `CARD_BORDER`, `UI_SHADOWS.card` and the legacy preset until both consumers are migrated and visually verified.
+- The profile page and EditTripLayout have been migrated from `LEGACY_PANEL_SX` to `PANEL_SX(theme)`. The legacy preset has been removed. `UI_SHADOWS.card` remains separately used by the circular profile-image control.
 - MUI Card, Dialog and shared panel surfaces resolve through `getSurfaceStyles(theme)`; component `sx` should not recreate their shared background, border, radius and shadow.
 - TextField defaults are centralized as outlined/medium in the theme. Do not repeat those defaults in individual forms without a specific exception.
 - Semantic palette tokens explicitly own the primary color, canvas/paper, primary/secondary text, divider and selected/hover action states. Preserve the deliberate distinction between MUI paper and the legacy translucent card surface.
@@ -2367,7 +2367,7 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 #### Shape, shadows and layering
 
 - The MUI surface contract centralizes the default paper background, divider border, theme radius and theme elevation through `getSurfaceStyles`. `UI_SHAPE.borderRadius` and `UI_ELEVATION` feed that contract.
-- `LEGACY_PANEL_SX` still intentionally uses `UI_COLORS.surface.card`, `UI_SHADOWS.card`, `CARD_BORDER` and square radius for its two known consumers. These must not be removed until those consumers are migrated and visually checked.
+- The former legacy panel surface has been removed from both known consumers. `CARD_BORDER` is now a legacy token pending a final unused-token cleanup; `UI_SHADOWS.card` remains for the profile-image control.
 - `UI_SHADOWS.socialOverlay` is a separate overlay-specific CSS shadow. Keep it distinct from the MUI theme elevation scale unless a visual comparison proves the same elevation intent.
 - `UI_Z_INDEX` represents global MUI/app layer levels. Repeated `zIndex: 1`/`2` values in ImageLightbox, ProfileImage and EngagementBar are local stacking relationships inside component surfaces; `zIndex: -1` in the background hook is also local. Do not replace these with global modal/app-bar tokens.
 
@@ -2501,7 +2501,7 @@ All 36 `app/**/*.tsx` files were fetched and checked for styling entry points. T
 - Account, Admin and Auth layouts repeat a 32px (`2rem`) main-content gutter. Auth additionally owns a centered 480px content column; Admin composes its navigation inside the content area; Account remains a simple content wrapper. Keep the common gutter candidate distinct from `PAGE_CONTENT_PADDING = 30px`, and preserve each route's composition.
 - Public layout only provides the flex-growing page wrapper; individual public pages own their main content. Home and public Trips use `CENTERED_PAGE_MAIN_STYLE`; public Trip Details uses the same centered page shell before rendering its interactive detail view.
 - Account Favorites and My Trips already consume the shared account page, content, heading and empty-state presets. Do not recreate or re-migrate those styles at route level.
-- The account Profile page composes the existing legacy profile surface and form; its `LEGACY_PANEL_SX` usage remains pending the separately planned surface migration and visual comparison.
+- The account Profile page now composes its form inside `PANEL_SX(theme)`, sharing the same theme-owned surface contract as Cards and Dialog paper.
 - Live Tracking has a 32px route content gutter but a tracking-specific page body; do not merge it with the 30px public page gutter or generic form panel.
 - `app/error.tsx` uses a standalone error-boundary stack with MUI `p: 4` and `gap: 2` (32px/16px under the current theme spacing scale). It is not a general page-shell preset.
 - About uses a local shared image-style object for its editorial images and a CSS Module for page composition. Privacy Policy uses its own legal-page CSS Module. Their local content/layout rules remain page-owned.
@@ -2521,7 +2521,7 @@ All 36 `app/**/*.tsx` files were fetched and checked for styling entry points. T
 
 ### Remaining migration candidates
 
-- `ProfileForm` now consumes `ACCOUNT_FORM_FIELDS_SX`; `ChangePasswordForm` still contains the same field-stack declarations and is the remaining Stage 3 migration consumer. Keep its `mt: 2`, heading/content, action row and profile-only disabled field separate.
+- `ProfileForm` and `ChangePasswordForm` both consume `ACCOUNT_FORM_FIELDS_SX`. The password form keeps its `mt: 2` as local composition; heading/content, action row and profile-only disabled field remain separate.
 - Retain the 2rem route-content gutter as a candidate for explicit central ownership. It is 32px and must not silently replace the 30px public page gutter or the 30px Point form padding.
 - The declaration-level review has reconciled the 63 `sx=`, 36 `style=` and five `className=` source-file inventories, the single MUI `styled()` consumer, all eight CSS files and all 36 App Router TSX files. Ownership is classified as shared token, reusable preset, theme-owned MUI default, feature-local composition, dynamic component API/pass-through, or legacy pending visual verification.
 - The consumer review covers `BUTTON_STYLES`, panel/surface, layout/form/map/social/typography presets, UI tokens, MUI theme overrides and CSS variables. Legacy constants with documented consumers remain in place; no destructive cleanup is part of Stage 1.
@@ -2547,11 +2547,11 @@ Stage 1 is complete as an audit and architecture-definition phase. The source in
 
 #### Confirmed shared patterns and remaining consumers
 
-- Auth standalone forms already share the auth presets. `ProfileForm` uses `ACCOUNT_FORM_FIELDS_SX`; `ChangePasswordForm` is the remaining matching field-stack consumer to migrate in a later implementation pass.
+- Auth standalone forms share the auth presets. Both profile and change-password forms use `ACCOUNT_FORM_FIELDS_SX`.
 - Point create/edit page wrappers use `POINT_FORM_PANEL_SX`; the inner `PointForm` field-control inset is a matching extraction candidate, but its form gap, width constraints and responsive action layout must remain independent.
 - Admin pagination, account trips pages, map address inputs, social action groups, trip-card text inset and shared typography are already represented by presets.
 - Trip-action sizing, AppImage cover-fill, shared home heading/intro treatment and the 32px route-content gutter remain narrowly scoped extraction candidates. Their semantic variants and existing 30px page gutter must be preserved.
-- `LEGACY_PANEL_SX`, `CARD_BORDER`, `UI_SHADOWS.card` and related legacy surface values must not be removed until their remaining consumers are migrated and visually checked.
+- The legacy panel preset is removed. `CARD_BORDER` remains only as a legacy token pending final unused-token cleanup; `UI_SHADOWS.card` is still used for the circular profile-image control and must remain until that use is independently migrated.
 - CSS Modules are limited to the eight inventoried files. They own page/component geometry; the About page's Space Mono editorial headings, legal-page typography/spacing, trip-detail container query, image-gallery geometry and NotFound composition remain intentionally local.
 - `app/globals.css` remains minimal. Its `.ht-button` rules are required by server-rendered trip markup and must not be removed while those consumers exist.
 
@@ -2597,7 +2597,7 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 
 ### Still required before Stage 3 closure
 
-- Audit and migrate remaining legacy panel/surface consumers. `LEGACY_PANEL_SX`, `CARD_BORDER` and `UI_SHADOWS.card` remain until every consumer is confirmed and migrated; do not delete them prematurely.
+- The known profile and trip-edit panel consumers have been migrated to `PANEL_SX(theme)`. Continue checking other non-panel uses before removing legacy tokens such as `CARD_BORDER` or `UI_SHADOWS.card`.
 - Review repeated presets and component overrides for duplicated visual values, while keeping feature-specific geometry and responsive layout local.
 - Check other MUI surface types and variants only where their semantics require the shared surface contract; do not apply card styling indiscriminately to every `Paper`.
 - Stage 3 is in progress. Build/typecheck/lint and final visual/regression checks remain deferred to Stage 6.
