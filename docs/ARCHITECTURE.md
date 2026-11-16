@@ -2270,13 +2270,22 @@ src/components/
 - Extract a shared pattern only when call sites have the same visual meaning. Similar-looking styles with different semantics may remain separate.
 - Centralization must preserve existing visual behavior; it is not an unrequested redesign.
 
-## 11.3 Reusable UI patterns
+## 11.3 Verified migration inventory
+
+The current read-only consumer audit confirms the following:
+
+- Authentication forms (LoginForm, RegisterForm, ForgotPasswordForm) already consume the shared AUTH_FORM_SX and related form presets.
+- LEGACY_PANEL_SX is still consumed by the profile page and EditTripLayout. Its legacy surface values must remain until both consumers are deliberately migrated; do not remove CARD_BORDER or the legacy preset prematurely.
+- Direct component-level styling remains in Header, TripCard, TripDetails, PointCard, ProfileForm and EditTripLayout. The next migration pass must distinguish shared visual values from component-specific geometry before extracting tokens.
+- CSS Modules are already in use for public/legal pages, not-found, image gallery, trip details, trip list and pagination. Their unique layout rules should remain local; repeated design values should use shared CSS variables where practical.
+- This is a verified inventory of inspected consumers, not a claim that every component has been exhaustively scanned. Continue the full repository-wide audit before declaring migration complete.
+## 11.4 Reusable UI patterns
 
 Extract shared components or patterns when multiple call sites have the same semantics and behavior. Prefer small, composable building blocks for repeated form fields/actions, cards and content surfaces, dialogs and confirmation flows, icon buttons/action groups, and loading/empty/error states.
 
 Do not merge components solely because their markup looks similar when their domain behavior or accessibility semantics differ. Avoid universal components with many feature-specific flags.
 
-## 11.4 Icon registry
+## 11.5 Icon registry
 
 The current central registry is `src/constants/icons.ts`, imported through `@/constants/icons`.
 
