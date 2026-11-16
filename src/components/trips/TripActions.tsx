@@ -13,22 +13,6 @@ import { tripGroupKeys } from '@/hooks/useTripGroup';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
-const LEGACY_BUTTON_SX = {
-  ...BUTTON_STYLES.primary,
-  padding: '10px',
-  width: '100%',
-  minHeight: '48px',
-  boxSizing: 'border-box',
-};
-
-const DANGER_ACTION_BUTTON_SX = {
-  ...BUTTON_STYLES.danger,
-  padding: '10px',
-  width: '100%',
-  minHeight: '48px',
-  boxSizing: 'border-box',
-};
-
 const ACTION_BUTTON_BOX_SX = {
   display: 'contents',
 };
@@ -93,7 +77,7 @@ export function TripActions({
           component={Link}
           href={`/trips/create?tripGroupId=${tripGroup.id}`}
           variant="contained"
-          sx={LEGACY_BUTTON_SX}
+          sx={BUTTON_STYLES.tripAction}
         >
           ADD NEXT DAY TRIP
         </Button>
@@ -101,7 +85,7 @@ export function TripActions({
           component={Link}
           href={`/trips/create/points?tripGroupId=${tripGroup.id}&tripId=${tripId}`}
           variant="contained"
-          sx={LEGACY_BUTTON_SX}
+          sx={BUTTON_STYLES.tripAction}
         >
           ADD OR EDIT POINTS FOR YOUR TRIP
         </Button>
@@ -118,7 +102,7 @@ export function TripActions({
               component={Link}
               href={`/trips/${tripGroup.id}/edit?dayId=${selectedDay.id}`}
               variant="contained"
-              sx={LEGACY_BUTTON_SX}
+              sx={BUTTON_STYLES.tripAction}
             >
               EDIT DAY {selectedDay.dayNumber}
             </Button>
@@ -137,7 +121,7 @@ export function TripActions({
                 })
               }
               disabled={deleteDayMutation.isPending}
-              sx={DANGER_ACTION_BUTTON_SX}
+              sx={BUTTON_STYLES.tripActionDanger}
             >
               DELETE DAY {selectedDay?.dayNumber}
             </Button>
@@ -155,7 +139,7 @@ export function TripActions({
               })
             }
             disabled={deleteMutation.isPending}
-            sx={DANGER_ACTION_BUTTON_SX}
+            sx={BUTTON_STYLES.tripActionDanger}
           >
             DELETE TRIP
           </Button>
