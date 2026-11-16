@@ -2429,8 +2429,8 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 
 #### Stage 1 progress boundary
 
-- The current pass has reviewed the full token/theme/preset definitions, all eight CSS files, the full inline-style search result set, the principal direct-color/typography/shape/shadow/z-index matches, and targeted Admin/Maps/Forms/Comments/Social/Trip components.
-- The `sx=` search result set contains 63 source files. The remaining work is a file-by-file review of the remaining `sx` consumers not yet inspected in detail, plus final cross-reference checks for token and preset consumers. Stage 1 is not complete until that checklist is closed; no migration should be started merely because a matching value appears in multiple files.
+- The current pass has reviewed the token/theme/preset definitions, all eight CSS files, all 36 source paths returned by the inline-style search, all five `className` source paths, the single `styled()` consumer, the principal direct-color/typography/shape/shadow/z-index matches, and the 63-file `sx=` source inventory across Admin, Maps, Forms, Comments, Social, Trips, Points, Images, Layout and utility components.
+- The source-level inventory is now broad enough to identify the main ownership boundaries and verified repeated candidates. The remaining Stage 1 work is declaration-level reconciliation: check every remaining `sx` block and dynamic style against the token/preset map, verify all token/preset consumers and legacy exceptions, and close the findings checklist. Stage 1 is not complete until those checks are closed; no migration should be started merely because a matching value appears in multiple files.
 
 ### Trip, point, navigation and utility component audit
 
