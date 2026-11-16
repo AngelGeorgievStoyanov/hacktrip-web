@@ -3,9 +3,6 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 
-/** Backward-compatible form-panel preset. */
-export const FORM_PANEL_SX = PANEL_SX;
-
 /** Shared heading treatment for standalone authentication forms. */
 export const AUTH_FORM_TITLE_SX = {
   margin: '10px auto',
