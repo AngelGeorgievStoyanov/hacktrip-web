@@ -1,2 +1,2 @@
-/** Legacy card and panel border retained until those consumers are migrated. */
+/** Legacy compatibility token; new Card and panel surfaces must use the active MUI theme. */
 export const CARD_BORDER = 'solid 1px';
