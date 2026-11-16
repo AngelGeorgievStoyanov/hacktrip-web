@@ -2647,3 +2647,19 @@ The remaining validation and visual/regression checks are intentionally part of 
 - Migrated Trip Details responsive layout gaps to the shared spacing variables; migrated the About page desktop gutter to the shared page-padding token; migrated Image Gallery and Legal page control radii to the shared theme shape variable.
 - CSS Modules continue to own local geometry, responsive composition, editorial typography and specialized component styling. No second token store was introduced.
 - Stage 4 remains in progress. The remaining CSS Module values need a focused pass to distinguish genuine shared design tokens from intentionally local geometry before Stage 4 closure. Validation remains deferred to Stage 6.
+
+
+## Stage 4 closure — Global CSS and CSS Modules
+
+Stage 4 implementation is complete. `app/globals.css` remains a minimal global layer for document reset, app-shell layout, body rendering defaults, code font and the server-rendered `.ht-button` contract. Shared design values used by plain CSS are supplied through theme-generated CSS variables; no parallel CSS token file was introduced.
+
+The audited CSS Modules retain feature-owned geometry, responsive breakpoints, image layout, legal-document presentation and editorial typography. Shared spacing, shape and page-gutter values were moved to theme variables only where the stylesheets consume them. The Footer presentation has also been moved from React inline styles into a dedicated `Footer.module.css`, using existing theme color variables; its iOS landscape behavior and copyright output were left unchanged.
+
+The new Footer module increases the CSS Module count from the original Stage 1 inventory; this is an intentional migration, not an unexplained styling surface. Stage 4 is closed. Final validation remains deferred to Stage 6.
+
+## Stage 5 implementation progress — systematic component migration
+
+- Began the component migration with the shared layout layer. Footer colors now consume the theme CSS variables through its CSS Module, and presentation is no longer embedded in the JSX style prop.
+- Header navigation uses the existing MUI theme defaults and shared button behavior; its navigation-specific spacing and drawer geometry remain component-owned.
+- Map location pickers already consume the shared map-address and button presets; no duplicate map-input visual rules were introduced during this pass.
+- Stage 5 is in progress. Continue feature-by-feature through account/auth, trips/points/maps, images/social/comments and admin/public pages. Preserve behavior and responsive geometry; only migrate shared visual ownership.
