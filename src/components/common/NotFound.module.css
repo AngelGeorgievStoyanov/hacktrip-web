@@ -10,7 +10,7 @@
   justify-content: center;
   color: var(--ht-color-text-inverse);
   text-align: center;
-  gap: 0.5rem;
+  gap: var(--ht-spacing-xs);
 }
 
 .content {
