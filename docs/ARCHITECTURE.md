@@ -2254,7 +2254,7 @@ src/components/
 
 `src/theme/index.ts` is the single MUI theme entry point. `app/providers.tsx` wires that theme into the application; it does not create a second theme.
 
-`UI_COLORS` is the semantic color source of truth. The unused flat `COLORS` compatibility map has been removed. Shared spacing and dimensions are represented by `UI_SPACING` and `UI_SIZES`; MUI spacing numbers are multipliers of the configured 8px theme unit.
+`UI_COLORS` is the semantic color source of truth. The unused flat `COLORS` compatibility map has been removed. Shared spacing and dimensions are represented by `UI_SPACING` and `UI_SIZES`; MUI spacing numbers are multipliers of the configured 8px theme unit. The MUI palette is explicitly derived from semantic tokens for primary color, canvas/paper surfaces, text, dividers and action states; equivalent CSS custom properties are exposed by the single theme for plain CSS consumers.
 
 `src/constants/ui/styles.ts` is a temporary legacy exception containing only `CARD_BORDER`, still used by `LEGACY_PANEL_SX` for the profile and trip-edit panels. Do not add new styles there. Remove it after those legacy panels are migrated.
 
