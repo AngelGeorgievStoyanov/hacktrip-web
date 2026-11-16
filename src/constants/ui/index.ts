@@ -7,5 +7,5 @@ export * from './spacing';
 export * from './typography';
 export * from './z-index';
 
-/** Legacy card border retained for the profile and trip-edit panels. */
+/** Legacy compatibility export; new Card and panel surfaces must use the active MUI theme. */
 export { CARD_BORDER } from './styles';
