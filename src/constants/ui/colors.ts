@@ -12,9 +12,6 @@ export const UI_COLORS = {
   surface: {
     page: '#cfe8fc',
     card: '#eee7e79e',
-    commentCard: '#eee7e7cc',
-    formPanel: '#e5e3e3d9',
-    dialog: '#eee7e7',
     stickySocial: '#eee7e79e',
     socialOverlay: 'rgba(24, 31, 26, 0.82)',
     socialOverlayBorder: 'rgba(255,255,255,0.22)',
@@ -36,7 +33,6 @@ export const UI_COLORS = {
     dangerHover: '#ef0a0a',
     secondaryBackground: 'rgb(194 194 224)',
     secondaryHoverText: 'rgb(248 245 245)',
-    secondaryHoverBackground: 'rgb(170 170 210)',
     imageControlBackground: '#ffffffaa',
     imageControlBackgroundHover: '#ffffff',
     tripImageControlBackground: 'rgba(255, 255, 255, 0.82)',
