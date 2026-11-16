@@ -130,7 +130,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
               preset="profile"
               width={300}
               height={300}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: '100%' }}
             />
           </Box>
         </Tooltip>
