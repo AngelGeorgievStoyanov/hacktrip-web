@@ -3,6 +3,9 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 
+/** Shared nested form-control inset used by point and trip editing forms. */
+export const FORM_CONTROL_INSET_SX = { m: 0.5, width: 'calc(100% - 10px)' } as const;
+
 /** Shared panel layout for the create/edit Point form wrappers. */
 export const POINT_FORM_PANEL_SX = {
   p: { xs: 2, sm: '30px' },
@@ -10,7 +13,7 @@ export const POINT_FORM_PANEL_SX = {
   maxWidth: 600,
   minWidth: 0,
   boxSizing: 'border-box',
-  '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
+  '& .MuiFormControl-root': FORM_CONTROL_INSET_SX,
 } as const;
 
 /** Shared field stack for the profile and change-password forms. */
