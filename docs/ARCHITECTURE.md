@@ -2621,3 +2621,14 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 
 - `AdminUserForm` previously defined its own border, divider color, radius, paper background and elevation. It now composes `PANEL_SX(theme)`, matching the profile panel, trip-edit panel, authentication form surfaces, MUI Cards and Dialog paper.
 - Its content stack, width, padding and centering remain local layout concerns. The shared surface contract owns only the visual shell.
+
+
+### Additional Stage 3 review — Card surface consistency
+
+- Reviewed the current branch implementations of `TripCard`, `PointSection`, `PointCard`, `TripMapSection`, `TripForm`, point create/edit wrappers, `VerifyEmailForm`, account/auth forms, and the shared admin/list components.
+- MUI Card consumers now rely on the theme surface contract; their local `sx` is limited to content layout, spacing, sizing and responsive composition. No component-level background, border, radius or shadow overrides were found in the reviewed Card consumers.
+- `Dialog` paper uses the same `getSurfaceStyles(theme)` helper. Standalone auth/profile/trip-edit/admin panels use `PANEL_SX(theme)` where a non-Card surface is appropriate.
+- The legacy `CARD_BORDER` export is retained as a compatibility token for any remaining legacy consumer, but its comments now explicitly prohibit using it for new Card/panel surfaces. It is not removed until a complete current-branch consumer check and final cleanup.
+- No global `MuiPaper` override was added: Paper can represent menus, popovers and other semantic surfaces, so applying the Card contract indiscriminately would create unintended coupling.
+
+Stage 3 remains in progress. The next work is the remaining repeated presets and feature-specific surface exceptions, followed by a complete migration pass in Stage 5. Validation remains deferred to Stage 6.
