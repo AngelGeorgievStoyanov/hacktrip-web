@@ -2432,6 +2432,19 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 - The current pass has reviewed the full token/theme/preset definitions, all eight CSS files, the full inline-style search result set, the principal direct-color/typography/shape/shadow/z-index matches, and targeted Admin/Maps/Forms/Comments/Social/Trip components.
 - The `sx=` search result set contains 63 source files. The remaining work is a file-by-file review of the remaining `sx` consumers not yet inspected in detail, plus final cross-reference checks for token and preset consumers. Stage 1 is not complete until that checklist is closed; no migration should be started merely because a matching value appears in multiple files.
 
+### Trip, point, navigation and utility component audit
+
+- `TripActions` owns two local button-size presets (`LEGACY_BUTTON_SX` and `DANGER_ACTION_BUTTON_SX`) that differ only in the semantic button color treatment. Both share 10px padding, full width, 48px minimum height and border-box sizing. `TripDetails`' BackButton uses the same dimensions. This is a confirmed shared trip-action sizing candidate; the danger/primary color behavior should continue to come from `BUTTON_STYLES`.
+- `PointCard` deliberately uses a 10px text inset and a compact 300px card with its own map/actions arrangement. It must not be merged with the 15px TripCard/TripDetails text inset or the 25px PointSection note inset.
+- `TripDaysNav` has its own 3px pagination-item margin and 10px top offset. These belong to the day-navigation control, not the general pagination preset used by Admin lists.
+- `ExpandableText` uses a dynamic three-line clamp and its own show-more interaction. Its clamp styles are component behavior, not a generic typography preset.
+- `PointActions` and `SocialConfigStatus` use compact action/control spacing. `SOCIAL_ACTIONS_SX` remains the shared alignment for like/favorite/report groups; the point-action and status arrangements have distinct semantics.
+- `GoogleMapView` uses caller-provided `maxWidth` and `height` to support different map contexts. Map sizing remains a component API contract plus map-specific constants, not a generic UI card size.
+- `ImageUploadField`, `ImageGallery`, `ImageLightbox` and `DayImagesGallery` use image-specific thumbnail, upload, grid and full-screen geometry. Their `object-fit`, aspect ratios, control positions and responsive grids should stay local unless an exact shared image behavior is established.
+- `LiveTracker` owns a tracking-specific surface and status layout. Do not replace it with the generic Card surface without comparing its current border/radius/shadow treatment.
+- AdminFailedLogs and AdminReports reuse the existing admin pagination preset. NotificationProvider and Captcha have isolated control sizing/positioning; no cross-feature style pattern was established in this pass.
+- `app/error.tsx` uses a standalone error-boundary layout with 32px padding and 16px gap. It is not the same as the 30px page gutter or the account/admin route content wrapper contract.
+
 ### Remaining migration candidates
 
 - Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
