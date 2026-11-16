@@ -17,6 +17,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { truncatePointName } from '@/lib/pointName';
 import type { SocialImageDto, TripGroupResponse, TripPoint } from '@/types';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { FORM_CONTROL_INSET_SX } from '@/styles/presets/forms';
 
 interface PointFormProps {
   tripGroupId: number;
@@ -244,7 +245,7 @@ export function PointForm({
         width: '100%',
         maxWidth: '100%',
         alignItems: 'stretch',
-        '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
+        '& .MuiFormControl-root': FORM_CONTROL_INSET_SX,
       }}
     >
       <Typography gutterBottom variant="h5" sx={{ margin: '10px auto' }}>
