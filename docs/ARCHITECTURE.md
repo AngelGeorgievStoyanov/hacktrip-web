@@ -2663,3 +2663,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Header navigation uses the existing MUI theme defaults and shared button behavior; its navigation-specific spacing and drawer geometry remain component-owned.
 - Map location pickers already consume the shared map-address and button presets; no duplicate map-input visual rules were introduced during this pass.
 - Stage 5 is in progress. Continue feature-by-feature through account/auth, trips/points/maps, images/social/comments and admin/public pages. Preserve behavior and responsive geometry; only migrate shared visual ownership.
+
+
+### Additional Stage 5 migration — auth/profile and layout styling
+
+- Migrated Footer presentation from a React inline style object to `Footer.module.css`. Its background/text colors use the existing theme-generated CSS variables, while the legacy iOS landscape scroll behavior and content remain unchanged.
+- Replaced the disabled profile-email input's hardcoded black text-fill value with the semantic `UI_COLORS.text.primary` token. The disabled cursor and label treatment remain local to that field.
+- Confirmed that ProfileForm and ChangePasswordForm already share `ACCOUNT_FORM_FIELDS_SX`, standalone auth forms use `AUTH_FORM_SX`, and the map location pickers consume `MAP_ADDRESS_INPUT_SX` plus shared button presets.
+- Stage 5 remains in progress; this is a targeted migration, not a claim that every feature area has been migrated. No functional behavior or API contract was changed.
