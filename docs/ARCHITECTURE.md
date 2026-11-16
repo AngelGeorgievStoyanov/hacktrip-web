@@ -2729,3 +2729,10 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - WelcomeHeading, ScrambleHeading and HomeTrips now use the shared heading preset. ScrambleHeading still applies caller-provided styles last, preserving its public override contract.
 - HomeHero and the public Trips page now use the shared intro preset while retaining their distinct 850px and 900px content max-widths.
 - Scramble timing, responsive heading split, touch/hover triggers, copy and page layout remain unchanged.
+
+
+### Additional Stage 5 migration — authenticated and tracking route gutters
+
+- Added the semantic `ROUTE_CONTENT_PADDING` token (`2rem`) to the shared UI spacing constants. It is intentionally distinct from the existing `PAGE_CONTENT_PADDING` value (`30px`).
+- Account, Admin, Auth and Live Tracking route shells now consume the shared 32px gutter token rather than repeating the literal.
+- Auth's centered 480px content column, Admin navigation placement, route flex behavior and Live Tracking's feature-specific body remain unchanged. The standalone error boundary and public page gutter were intentionally not folded into this token.
