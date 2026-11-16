@@ -9,8 +9,8 @@ export const UI_ELEVATION = {
   overlay: 8,
 } as const;
 
-/** Legacy CSS shadow retained for components not yet migrated to theme elevation. */
+/** Special-purpose CSS shadows retained for controls that are not MUI surfaces. */
 export const UI_SHADOWS = {
-  card: '3px 2px 5px black',
+  profileImageControl: '3px 2px 5px black',
   socialOverlay: '0 4px 14px rgba(0,0,0,0.3)',
 } as const;
