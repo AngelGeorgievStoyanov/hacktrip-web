@@ -31,6 +31,7 @@ import { BackButton } from '@/components/common/BackButton';
 import { hasRole } from '@/constants/roles';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
+import { PANEL_SX } from '@/styles/presets/panels';
 import type { AuthUserDto, Role, UserStatus } from '@/types';
 
 const ROLE_OPTIONS: Role[] = ['user', 'admin', 'manager'];
@@ -140,18 +141,14 @@ export function AdminUserForm({ userId }: { userId: string }) {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
+        ...PANEL_SX(theme),
         ...COLUMN_STACK_SX,
         width: '100%',
         maxWidth: 760,
         mx: 'auto',
         p: { xs: 2, sm: 3 },
-        border: 1,
-        borderColor: 'divider',
-        borderRadius: 2,
-        bgcolor: 'background.paper',
-        boxShadow: 2,
-      }}
+      })}
     >
       <Typography variant="h4">Edit user</Typography>
       <Typography>Email: {target.email}</Typography>
