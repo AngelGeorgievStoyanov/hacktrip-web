@@ -8,4 +8,6 @@ export const UI_SIZES = {
   compactControlHeight: 36,
   contentMaxWidth: 1440,
   cardTextInset: 15,
+  wideButtonPaddingY: 10,
+  wideButtonPaddingX: 50,
 } as const;

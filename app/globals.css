@@ -37,9 +37,9 @@ code {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 50px;
+  padding: var(--ht-button-padding);
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--ht-shape-border-radius);
   background-color: var(--ht-color-primary);
   color: var(--ht-color-text-inverse);
   font-family: inherit;

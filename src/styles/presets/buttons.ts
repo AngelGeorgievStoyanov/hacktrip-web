@@ -9,6 +9,11 @@ const primary = {
   '&:hover': { backgroundColor: UI_COLORS.brand.primaryHover },
 } as const;
 
+const primaryWide = {
+  ...primary,
+  padding: 'var(--ht-button-padding)',
+} as const;
+
 const danger = {
   '&:hover': { backgroundColor: UI_COLORS.action.dangerHover },
 } as const;
@@ -42,6 +47,7 @@ const secondaryLightText = {
 
 export const BUTTON_STYLES = {
   primary,
+  primaryWide,
   danger,
   secondary,
   back: secondary,
