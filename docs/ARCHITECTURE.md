@@ -2371,11 +2371,11 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 - `UI_SHADOWS.socialOverlay` is a separate overlay-specific CSS shadow. Keep it distinct from the MUI theme elevation scale unless a visual comparison proves the same elevation intent.
 - `UI_Z_INDEX` represents global MUI/app layer levels. Repeated `zIndex: 1`/`2` values in ImageLightbox, ProfileImage and EngagementBar are local stacking relationships inside component surfaces; `zIndex: -1` in the background hook is also local. Do not replace these with global modal/app-bar tokens.
 
-#### Ownership and remaining Stage 1 work
+#### Ownership boundaries carried into implementation
 
 - Theme component overrides currently own the shared MUI Button font family, Card and Dialog surface treatment, and TextField default variant/size. Button color/interaction variants and feature-specific layout are still owned by presets and local composition.
 - The presets layer contains both visual treatments and layout fragments. This is acceptable where each preset has a clear documented responsibility, but later stages should avoid adding a second source of truth for the same property between theme overrides, tokens and presets.
-- This pass reviewed the token definitions, theme overrides, preset definitions, all eight CSS files, the main direct-color and typography search results, and the identified z-index consumers. Stage 1 remains open until the remaining `sx`/`style`/`className` source inventory is semantically classified across all 63/36/5 matching files and the final consumer/reference checks are complete.
+- This pass reviewed the token definitions, theme overrides, preset definitions, all eight CSS files, the main direct-color and typography search results, and the identified z-index consumers. The final 63/36/5 source-inventory reconciliation and preset/token consumer review are recorded in the Stage 1 closure section below.
 
 ### Inline-style and repeated-value audit — additional findings
 
