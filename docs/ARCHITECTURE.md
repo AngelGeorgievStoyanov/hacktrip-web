@@ -2662,7 +2662,7 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Began the component migration with the shared layout layer. Footer colors now consume the theme CSS variables through its CSS Module, and presentation is no longer embedded in the JSX style prop.
 - Header navigation uses the existing MUI theme defaults and shared button behavior; its navigation-specific spacing and drawer geometry remain component-owned.
 - Map location pickers already consume the shared map-address and button presets; no duplicate map-input visual rules were introduced during this pass.
-- Stage 5 is in progress. Continue feature-by-feature through account/auth, trips/points/maps, images/social/comments and admin/public pages. Preserve behavior and responsive geometry; only migrate shared visual ownership.
+- Stage 5 began with a feature-by-feature pass through account/auth, trips/points/maps, images/social/comments and admin/public pages. The completed migrations and the explicit feature-owned exceptions are recorded below. Preserve behavior and responsive geometry; only shared visual ownership is centralized.
 
 
 ### Additional Stage 5 migration — auth/profile and layout styling
@@ -2670,7 +2670,7 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Migrated Footer presentation from a React inline style object to `Footer.module.css`. Its background/text colors use the existing theme-generated CSS variables, while the legacy iOS landscape scroll behavior and content remain unchanged.
 - Replaced the disabled profile-email input's hardcoded black text-fill value with the semantic `UI_COLORS.text.primary` token. The disabled cursor and label treatment remain local to that field.
 - Confirmed that ProfileForm and ChangePasswordForm already share `ACCOUNT_FORM_FIELDS_SX`, standalone auth forms use `AUTH_FORM_SX`, and the map location pickers consume `MAP_ADDRESS_INPUT_SX` plus shared button presets.
-- Stage 5 remains in progress; this is a targeted migration, not a claim that every feature area has been migrated. No functional behavior or API contract was changed.
+- This was an early targeted migration in Stage 5; later passes below complete the remaining shared-pattern candidates. No functional behavior or API contract was changed.
 
 
 ### Additional Stage 5 migration — social overlay preset
@@ -2736,3 +2736,20 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Added the semantic `ROUTE_CONTENT_PADDING` token (`2rem`) to the shared UI spacing constants. It is intentionally distinct from the existing `PAGE_CONTENT_PADDING` value (`30px`).
 - Account, Admin, Auth and Live Tracking route shells now consume the shared 32px gutter token rather than repeating the literal.
 - Auth's centered 480px content column, Admin navigation placement, route flex behavior and Live Tracking's feature-specific body remain unchanged. The standalone error boundary and public page gutter were intentionally not folded into this token.
+
+
+## Stage 5 closure — systematic component migration
+
+Stage 5 is complete for the shared styling patterns identified by the Stage 1 inventory and subsequent component review. The following contracts now have centralized ownership and migrated consumers:
+
+- **Theme surfaces:** MUI Card and Dialog surfaces use the shared theme contract; standalone profile, trip-edit, auth and admin-user panels use `PANEL_SX(theme)`. Admin data-table containers share `ADMIN_TABLE_CONTAINER_SX` without forcing table-specific content/overflow behavior into the preset.
+- **Buttons and forms:** shared button semantics remain in `BUTTON_STYLES`; trip action sizing is shared through `TRIP_ACTION_BUTTON_LAYOUT_SX`. Profile/change-password fields, Point/EditTrip nested controls, auth form shells and map address controls use their existing shared presets.
+- **Images:** trip-card and profile-image cover-fit defaults are owned by `IMAGE_PRESETS` and applied by `AppImage`. Explicit caller styles still override defaults; full-screen profile/lightbox images retain `contain` where required.
+- **Social and comments:** image/map overlay and sticky trip social surfaces use dedicated social presets. Comment cards use the shared MUI Card surface; reply indentation, comment composition and action behavior remain feature-owned.
+- **Typography and page layout:** Home/Trips heading and intro composition use shared typography presets while page-specific max widths remain local. Account, Admin, Auth and Live Tracking route shells use `ROUTE_CONTENT_PADDING`, distinct from the 30px public page gutter.
+- **Global CSS and CSS Modules:** global styles remain minimal; shared stylesheet values are supplied by theme-generated variables. CSS Modules retain page-specific geometry, editorial typography, image grids, legal-document layout and responsive composition.
+- **Legacy cleanup:** after checking the known current-branch consumers had migrated, removed the unused `CARD_BORDER` export/file and `UI_SHAPE.squareRadius`. Renamed the remaining circular profile-image shadow to `UI_SHADOWS.profileImageControl` so it is not mistaken for a Card surface shadow.
+
+No API contracts, data flow, validation rules, social behavior, routing, image upload behavior or business logic were changed in this stage. Feature-specific geometry and semantic exceptions were intentionally kept local rather than abstracted solely because values look similar.
+
+**Stage 5 exit criterion met:** all shared candidates identified in the architecture inventory have been migrated or explicitly retained as feature-owned exceptions. **Stage 6 remains pending:** run the deferred local TypeScript/build/lint checks and perform final visual/regression review. Those checks have not been run in this pass, consistent with the earlier instruction to defer them.
