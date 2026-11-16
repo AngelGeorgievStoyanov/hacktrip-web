@@ -2678,3 +2678,10 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Extracted the image/map social-control overlay shell into `SOCIAL_OVERLAY_SX` in `src/styles/presets/social.ts`. The preset owns its positioning, translucent surface, border, radius, shadow, blur and hover treatment.
 - `EngagementBar` now composes that shared preset with only its size-dependent icon padding and compact badge metrics. Social behavior, event handling and inline presentation are unchanged.
 - The circular ProfileImage control remains a specialized circular control, not a Card surface; its unique geometry and overlay behavior are intentionally not forced into the shared Card contract.
+
+
+### Additional Stage 5 migration — trip details social surface
+
+- Extracted the sticky social-action container beneath TripDaysNav into `STICKY_SOCIAL_SX` in `src/styles/presets/social.ts`. The preset owns its translucent background, divider border, radius, elevation and backdrop blur, plus its shared inline placement.
+- `TripDetailsView` now consumes the preset rather than declaring those visual rules inline. Sticky header bleed/width geometry remains local to the page layout, and social action behavior is unchanged.
+- Reviewed TripForm, EditTripLayout, PointForm, PointCard and PointSection. TripForm and PointSection use MUI Card surfaces; local styles are layout/content-only. EditTripLayout and PointForm use shared panel/form presets. PointCard uses the shared button presets and MUI Card defaults. No further safe shared-surface extraction was needed in these files.
