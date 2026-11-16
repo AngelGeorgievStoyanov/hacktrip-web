@@ -29,6 +29,12 @@ export const theme = createTheme({
         ':root': {
           /* Semantic variables for new CSS Module and plain CSS consumers. */
           '--ht-color-primary': UI_COLORS.brand.primary,
+          '--ht-color-surface-canvas': UI_COLORS.surface.canvas,
+          '--ht-color-surface-paper': UI_COLORS.surface.paper,
+          '--ht-color-border-divider': UI_COLORS.border.divider,
+          '--ht-color-text-secondary': UI_COLORS.text.secondary,
+          '--ht-color-action-hover': UI_COLORS.action.hover,
+          '--ht-color-action-selected': UI_COLORS.action.selected,
           '--ht-button-padding': `${UI_SIZES.wideButtonPaddingY}px ${UI_SIZES.wideButtonPaddingX}px`,
           '--ht-shape-border-radius': `${themeShape.borderRadius}px`,
           '--ht-button-font-size': themeTypography.button.fontSize,
