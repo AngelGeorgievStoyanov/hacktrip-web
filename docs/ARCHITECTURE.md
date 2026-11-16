@@ -2319,6 +2319,28 @@ All CSS files currently present in the repository were inspected: AboutPage, Leg
 - ImageLightbox keeps its repeated control treatment local to the lightbox, while image upload field borders and radii remain upload-specific. The tracking surface is local to LiveTracker. These are not yet cross-feature patterns.
 - The reviewed public pages use CSS Modules or shared centered-page presets; the remaining inline styles in About and Trips are page content/layout composition rather than duplicate theme definitions.
 
+### First-pass source inventory and newly verified form patterns
+
+A repository-wide GitHub code-search pass on the modernization branch identified files containing the main styling entry points. The result counts below are matching files, not counts of individual style declarations; files may appear in more than one category:
+
+- 63 files matched the sx= entry point.
+- 36 files matched the style= entry point.
+- 5 files matched the className= entry point.
+- 1 file matched MUI's styled() API (TripFilters.tsx).
+- All 8 CSS files in the repository were fetched and inspected separately.
+
+This is a broad source inventory, but it is not yet a completed semantic classification of every style expression. Matching files still need to be checked for shared visual meaning, one-off geometry, dynamic styles and intentional feature-specific differences before Stage 1 can be closed.
+
+The deeper form review confirmed two related but distinct repeated field-inset patterns:
+
+- ProfileForm and ChangePasswordForm both use a vertical form stack with gap 1.5 and text fields sized to calc(100% - 10px) with 5px horizontal margins. They are nested within the account profile surface, not standalone auth panels; do not apply AUTH_FORM_SX to them. Their shared field inset is a candidate for a small composable form-fields preset, while the profile-only disabled-email treatment and distinct action rows remain local.
+- PointForm and EditTripLayout both apply m: 0.5 and width: calc(100% - 10px) to nested .MuiFormControl-root elements. POINT_FORM_PANEL_SX already contains this rule for the Point page wrappers; EditTripLayout repeats it independently. Verify the exact affected controls and rendering before extracting the field-inset rule from the Point panel preset.
+- TripForm has a different card width, form-control spacing, action group and responsive rules. Keep it separate unless a smaller, semantically identical sub-pattern is independently proven.
+- TripDetails and PointSection share CARD_TEXT_INSET_SX in their text content, but retain different card and image geometry. Do not merge their full layouts.
+- The width: 100%; height: 100%; object-fit: cover inline image style appears in admin user cards, admin profile-image management and profile-image display. It is a candidate for a shared image-fit style only if the rendered element/container contract is confirmed to be identical; the full-screen profile image deliberately uses contain and must remain distinct.
+
+The source inventory also reconfirmed that CSS Modules are limited to the eight files listed above. Their local grid, gallery, legal-page and responsive compositions remain distinct from shared design tokens.
+
 ### Remaining migration candidates
 
 - Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
