@@ -1,4 +1,5 @@
 import type { Theme } from '@mui/material/styles';
+import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 
@@ -28,7 +29,7 @@ export const AUTH_FORM_ACTIONS_SX = {
   gap: 2,
   flexWrap: 'wrap',
   justifyContent: 'center',
-  mt: 1,
+  mt: UI_SPACING.xs,
 } as const;
 
 /** Shared centered back-navigation row for standalone auth forms. */

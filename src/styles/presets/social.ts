@@ -1,10 +1,11 @@
 import type { CSSProperties } from 'react';
 import { UI_COLORS } from '@/constants/ui/colors';
+import { UI_SPACING } from '@/constants/ui/spacing';
 
 /** Shared alignment for like, favorite, report and moderation action groups. */
 export const SOCIAL_ACTIONS_SX = {
   display: 'flex',
-  gap: 1,
+  gap: UI_SPACING.xs,
   alignItems: 'center',
   flexWrap: 'wrap',
 } as const;

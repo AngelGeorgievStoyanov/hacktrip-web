@@ -1,4 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
+import { UI_SPACING } from '@/constants/ui/spacing';
 
 /**
  * Reusable MUI sx fragments for recurring button treatments.
@@ -24,7 +25,7 @@ const secondary = {
 const createTrip = {
   backgroundColor: UI_COLORS.action.createTripBackground,
   color: UI_COLORS.action.createTripText,
-  px: 4,
+  px: UI_SPACING.xl,
   '&:hover': {
     backgroundColor: UI_COLORS.action.createTripHoverBackground,
     color: UI_COLORS.action.createTripHoverText,

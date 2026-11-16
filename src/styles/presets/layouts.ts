@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
+import { PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
 import { headingTextStyle } from '@/styles/presets/typography';
 
 /** Shared layout presets used where the same page/list layout is required. */
@@ -42,12 +42,12 @@ export const ACCOUNT_TRIPS_CONTENT_SX = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  py: { xs: 3, md: 5 },
+  py: { xs: UI_SPACING.lg, md: 5 },
 } as const;
 
 export const ACCOUNT_TRIPS_HEADING_SX = {
   textAlign: 'center',
-  mb: { xs: 2, md: 3 },
+  mb: { xs: UI_SPACING.md, md: UI_SPACING.lg },
   ...headingTextStyle,
 } as const;
 
@@ -56,8 +56,8 @@ export const ACCOUNT_TRIPS_EMPTY_STATE_SX = {
   flexDirection: 'column',
   alignItems: 'center',
   textAlign: 'center',
-  gap: 3,
-  py: { xs: 6, md: 10 },
+  gap: UI_SPACING.lg,
+  py: { xs: UI_SPACING.xxl, md: 10 },
 } as const;
 
 /** Shared centered page shell used by the home and public trip pages. */
@@ -72,5 +72,5 @@ export const CENTERED_PAGE_MAIN_STYLE: CSSProperties = {
 export const COLUMN_STACK_SX = {
   display: 'flex',
   flexDirection: 'column',
-  gap: 2,
+  gap: UI_SPACING.md,
 } as const;
