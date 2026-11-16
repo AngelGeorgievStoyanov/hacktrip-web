@@ -2601,3 +2601,10 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - Review repeated presets and component overrides for duplicated visual values, while keeping feature-specific geometry and responsive layout local.
 - Check other MUI surface types and variants only where their semantics require the shared surface contract; do not apply card styling indiscriminately to every `Paper`.
 - Stage 3 is in progress. Build/typecheck/lint and final visual/regression checks remain deferred to Stage 6.
+
+
+### Additional Stage 3 migration — shared panel surface
+
+- The profile page and trip-edit form previously spread `LEGACY_PANEL_SX`, which carried its own background, black shadow, border and square radius. Both now consume `PANEL_SX(theme)` and therefore share the same theme-owned surface contract as MUI Cards and Dialog paper.
+- The obsolete `LEGACY_PANEL_SX` preset and its local token imports have been removed. The profile form and trip-edit form retain their own padding, spacing, width and responsive layout; only the visual surface is shared.
+- `UI_SHADOWS.card` remains in use for the circular profile-image control and is not treated as a card/panel surface token. It must not be removed as part of this panel migration.
