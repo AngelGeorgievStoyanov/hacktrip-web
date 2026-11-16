@@ -13,6 +13,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse, TripPoint } from '@/types';
 import { UI_SIZES } from '@/constants/ui/sizes';
+import { POINT_FORM_PANEL_SX } from '@/styles/presets/forms';
 
 export function CreatePointPage() {
   const router = useRouter();
@@ -233,15 +234,7 @@ export function CreatePointPage() {
           />
 
           <Card
-            sx={{
-              mt: 2.5,
-              p: { xs: 2, sm: '30px' },
-              width: '100%',
-              maxWidth: 600,
-              minWidth: 0,
-              boxSizing: 'border-box',
-              '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
-            }}
+            sx={{ ...POINT_FORM_PANEL_SX, mt: 2.5 }}
           >
             <PointForm
               tripGroupId={tripGroup.id}
