@@ -2,13 +2,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: var(--ht-spacing-xs);
   height: auto;
 }
 
 .grid {
   display: grid;
-  gap: 4px;
+  gap: var(--ht-spacing-xxs);
   width: 100%;
   max-width: 520px;
 }
@@ -20,7 +20,7 @@
 .item {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--ht-spacing-xxs);
   min-width: 0;
   position: relative;
 }
