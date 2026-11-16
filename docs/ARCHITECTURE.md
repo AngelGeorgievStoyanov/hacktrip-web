@@ -2692,3 +2692,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Added `ADMIN_TABLE_CONTAINER_SX` to the shared layout presets. It centralizes the common full-width table container and theme-based corner radius without owning table columns, overflow-specific content behavior or pagination layout.
 - Applied the preset and the outlined Paper variant consistently to AdminReports, AdminFailedLogs, AdminRouteNotFoundLogs and the AdminImages missing-thumbnail table. This removes the prior mismatch where only the image inventory table explicitly used an outlined Paper surface.
 - Existing table contents, pagination, selection and mutation behavior are unchanged. The map and image components reviewed in this pass already use semantic map/image tokens or feature-owned geometry; no forced abstraction was added there.
+
+
+### Additional Stage 5 migration — trip action buttons
+
+- Extracted the repeated full-width trip navigation/management button dimensions and primary/danger hover treatments into the semantic `BUTTON_STYLES.tripAction` and `BUTTON_STYLES.tripActionDanger` presets.
+- `TripActions` now consumes those shared presets for add/edit/delete actions instead of maintaining two component-local style objects.
+- Existing 10px padding, full-width sizing, 48px minimum height, box sizing, primary/danger variants, labels, routing, ownership checks and mutation behavior are unchanged.
+- This extraction is intentionally limited to the repeated trip-action pattern; the PointForm buttons retain their distinct 32ch/mobile-stacked layout.
