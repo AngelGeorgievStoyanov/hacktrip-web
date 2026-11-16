@@ -31,7 +31,7 @@ import { DAY_NUMBER_MAX } from '@/constants/trips';
 import { AddIcon, RemoveIcon, RemoveImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
-import { LEGACY_PANEL_SX } from '@/styles/presets/panels';
+import { PANEL_SX } from '@/styles/presets/panels';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
@@ -267,7 +267,8 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
       <Box
         component="form"
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
+        sx={(theme) => ({
+          ...PANEL_SX(theme),
           gridArea: 'form',
           boxSizing: 'border-box',
           m: { xs: 0, sm: 2 },
@@ -280,10 +281,9 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
           flex: '0 1 520px',
           minWidth: 0,
           height: 'fit-content',
-          ...LEGACY_PANEL_SX,
           '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
           '& .MuiButton-root': { m: 1 },
-        }}
+        })}
       >
         <Typography
           component="h1"
