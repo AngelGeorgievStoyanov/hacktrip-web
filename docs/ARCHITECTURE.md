@@ -2721,3 +2721,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - The `profile` image preset now owns the shared `objectFit: cover` default.
 - AdminUsers, AdminUserProfileImage and ProfileImage now consume that preset instead of repeating the same cover-fit style inline. Their own rendered dimensions, avatar/circular clipping, click behavior and loading/fallback behavior remain caller-owned.
 - Explicit AppImage `style` values continue to override preset defaults, so the full-screen profile image retains its distinct `contain` behavior and is not forced into the thumbnail preset.
+
+
+### Additional Stage 5 migration — shared home/public-trips typography
+
+- Added `HOME_HEADING_STYLE` and `HOME_INTRO_STYLE` to the shared typography presets. They own the repeated heading margin/alignment and the centered intro paragraph treatment (margin, alignment, shared heading typography and line-height).
+- WelcomeHeading, ScrambleHeading and HomeTrips now use the shared heading preset. ScrambleHeading still applies caller-provided styles last, preserving its public override contract.
+- HomeHero and the public Trips page now use the shared intro preset while retaining their distinct 850px and 900px content max-widths.
+- Scramble timing, responsive heading split, touch/hover triggers, copy and page layout remain unchanged.
