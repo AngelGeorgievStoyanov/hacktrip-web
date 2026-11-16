@@ -74,11 +74,12 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
             <AppImage
               image={image}
               alt="User profile image"
+              preset="profile"
               useThumbnail
               width={88}
               height={88}
               sizes="88px"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{ width: '100%', height: '100%' }}
             />
           </Avatar>
           <Button
