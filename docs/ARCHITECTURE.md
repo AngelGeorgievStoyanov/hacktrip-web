@@ -2429,9 +2429,9 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 
 #### Stage 1 progress boundary
 
-- The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. Declaration-level reviews now include the account/entity forms, trip actions/details, filters, admin user form/navigation/list, home headings/hero, Header/Footer, TripCard/PointCard/PointSection, comments/replies, ImageLightbox, LiveTracker, TripDaysNav and ExpandableText, in addition to the earlier CSS/token/theme/preset review.
+- The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. Declaration-level reviews now also include the remaining Auth guards/forms, Admin list/log/image components, Maps, image upload/gallery, Point page/action components and Social controls, alongside the previously reviewed trip, card, comment, navigation and tracking components.
 - Confirmed reusable candidates remain deliberately small: account-profile field inset, Point/EditTrip nested control inset, trip-action sizing, three AppImage cover-fill consumers, shared home heading/intro treatment and existing shared presets. The reviewed local compositions listed above remain local; no new global token family is justified by this pass.
-- Stage 1 remains open. The remaining work is to reconcile all still-unreviewed declarations across the full 63/36/5 source inventory, verify every token/preset consumer and legacy exception, and close a file-by-file checklist. No migration should start merely because a matching value appears in multiple files.
+- Stage 1 remains open. The remaining work is to reconcile the App Router/layout/page-level declarations and then verify every token/preset consumer and legacy exception against a file-by-file checklist for the full 63/36/5 source inventory. No migration should start merely because a matching value appears in multiple files.
 
 ### Trip, point, navigation and utility component audit
 
@@ -2463,6 +2463,22 @@ The next targeted source pass re-opened the style declarations in `AdminNavigati
 - `ExpandableText`'s conditional line clamp is interaction behavior. `ScrambleHeading` intentionally merges caller-supplied style after its shared heading style, so any future heading preset must preserve caller override precedence.
 - `HomeHero`/home headings continue to match the previously identified heading/intro candidates. `Footer` consumes the shared typography and color tokens; no additional typography token is needed for its copyright line.
 - No new cross-feature preset was justified by this pass beyond the already recorded account-profile fields, Point/EditTrip field inset, trip-action sizing, image cover-fill and heading/intro candidates.
+
+
+### Declaration-level review — Auth, Admin, Maps, uploads and social controls
+
+The follow-up pass checked the remaining component-level styling entry points in the Admin lists/logs, Auth forms, image upload/gallery, Maps, Point pages/actions, and Social controls.
+
+- The standalone Login, Register, Forgot Password, Resend Verification and Reset Password forms consistently consume `AUTH_FORM_SX`, `AUTH_FORM_TITLE_SX`, and the appropriate shared action/back presets. Keep them on those presets; the registration terms checkbox state treatment and individual form content remain local. `GuestOnly`, `RequireAuth`, `RequireRole`, `RequireTripOwner` and moderator guards have no styling declarations to migrate.
+- `AdminFailedLogs`, `AdminReports`, `AdminRouteNotFoundLogs` and the main AdminImages table pagination consume `ADMIN_PAGINATION_SX`. AdminImages also has a local `IMAGE_PAGINATION_ROW_SX` used by three other image-inventory sections; it shares flex/gap/alignment but intentionally has no preset top margin. Do not replace it with the full pagination preset without preserving that margin distinction.
+- AdminImages' thumbnail button/image dimensions, preview dialog sizing and table URL wrapping are image-management-specific. AdminRouteNotFoundLogs' preformatted diagnostic fields and compact expansion rows remain diagnostic UI, not generic text/card presets.
+- `AddressAutocomplete` is the map-specific composition boundary: it accepts caller-owned `inputSx`, `buttonSx` and `containerSx`, while PointLocationPicker and TripLocationPicker provide the shared map address input preset. Preserve caller overrides and map-specific responsive arrangements.
+- PointLocationPicker's 40px control row and TripLocationPicker's 56px search/clear controls are different interaction layouts. Do not force them into one universal control-height token. GoogleMapView's caller-supplied `maxWidth` and `height` remain its component API.
+- ImageGallery combines CSS Module grid/thumbnail composition with a minimal focus-visible MUI outline; ImageUploadField owns its upload queue, preview rows and file-specific dimensions. EditPointPage's image thumbnail/delete overlay and placeholder sizing are also page-local.
+- `AppImage` forwards caller-provided className/style to Next Image or its fallback; it is not itself an independent style system. The already documented three profile/avatar consumers share the cover-fill contract.
+- PointActions' compact gap and SocialConfigStatus placement differ from TripGroupSocialActions' horizontal group. Existing social badge, action and error-text presets are the actual shared pieces; report tooltip wrappers, animation styles and feature-level action spacing remain local.
+- `CustomFileUploadButton` has a single 30ch wrapper and no repeated cross-feature contract. PasswordRequirements' checklist spacing and icon treatment are component-specific.
+- No additional global preset was justified by this pass. Existing map, auth, admin pagination and social presets have the expected consumers; keep local upload/gallery/diagnostic and responsive composition in their owning features.
 
 ### Theme completeness and cross-system consistency findings
 
