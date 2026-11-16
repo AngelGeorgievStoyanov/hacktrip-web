@@ -484,7 +484,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               !selectedDay || submitting || !isValid || (!isDirty && newImages.length === 0)
             }
             startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-            sx={BUTTON_STYLES.containedHover}
+            sx={BUTTON_STYLES.primary}
           >
             EDIT YOUR TRIP
           </Button>
