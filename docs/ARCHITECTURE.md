@@ -2377,6 +2377,31 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 - The presets layer contains both visual treatments and layout fragments. This is acceptable where each preset has a clear documented responsibility, but later stages should avoid adding a second source of truth for the same property between theme overrides, tokens and presets.
 - This pass reviewed the token definitions, theme overrides, preset definitions, all eight CSS files, the main direct-color and typography search results, and the identified z-index consumers. Stage 1 remains open until the remaining `sx`/`style`/`className` source inventory is semantically classified across all 63/36/5 matching files and the final consumer/reference checks are complete.
 
+### Inline-style and repeated-value audit — additional findings
+
+#### Confirmed reusable candidates
+
+- `HomeTrips` and `WelcomeHeading` independently define the same welcome-heading treatment: 2px margin, centered alignment and the shared `headingTextStyle`. `ScrambleHeading` also hardcodes the same 2px heading margin while accepting caller style overrides. This is a real shared heading composition candidate; the scramble component's caller override and responsive behavior must remain intact.
+- `HomeHero` and the public Trips page intro both combine `headingTextStyle`, centered text, `lineHeight: 1.6`, and `margin: 0 20px 24px`. Their max widths differ (850px vs 900px), so a shared base intro treatment with caller-owned max width is preferable to a single rigid preset.
+- `AppImage` consumers in `AdminUsers`, `AdminUserProfileImage` and `ProfileImage` repeat the exact `width: 100%; height: 100%; object-fit: cover` style. This is a confirmed reusable image-fill style candidate. `ProfileImage`'s full-screen `height: auto; max-height: 85vh; object-fit: contain` is a different behavior and must not be folded into it.
+- Auth, Admin, Account and Live Tracking route layouts contain repeated `padding: 2rem` on main content wrappers. Auth additionally centers a constrained 480px content column; Admin includes its navigation. A shared route-content padding token/preset may be appropriate, but the 2rem (32px) value must remain distinct from the existing 30px page gutter.
+
+#### Similar values that are not automatically shared
+
+- `gap: 1` is repeated throughout the app and maps to the existing 8px `UI_SPACING.xs` token under MUI's spacing scale. The value can be migrated to the token where it represents application spacing, but the same number in generated OG-image markup or local CSS geometry is not automatically the same design contract.
+- `gap: 2` similarly maps to `UI_SPACING.md` (16px). The audit must distinguish MUI spacing values from literal CSS pixel values and non-MUI inline style properties before replacing them.
+- `borderRadius: 1` in MUI `sx` resolves through the theme's 4px radius scale and already follows `UI_SHAPE.borderRadius`; local `borderRadius: '50%'` is avatar/circle geometry and remains local. CSS Module radii need separate comparison with CSS variables.
+- `PointSection` uses a 25px text inset while TripCard/TripDetails use the shared 15px `CARD_TEXT_INSET_SX`. Preserve the distinction unless the design is intentionally changed.
+- `CommentsSection` has its own panel/card padding and comment-author/content spacing. These are comment-feature compositions, not yet proven to match generic panels or cards.
+- TripCard's 200px image frame, 105px heading block, 58px social-count area and 20px stepper spacer form one fixed-height card composition. Do not turn each dimension into a global token merely because it is repeated within that component.
+
+#### Remaining source classification
+
+- The inline-style search surfaced route layouts, Home/About/Trips content, Footer, TripDetails, PointSection, social controls, image components, Admin image surfaces, CommentsSection, LiveTracker and the OG image renderer. Several style props are intentionally dynamic or are passed through `AppImage`; they are not all duplicated CSS declarations.
+- `renderTripOgImage.tsx` uses its own HTML/CSS rendering environment and brand-specific typography. Treat it as a separate output surface; share semantic brand tokens only where technically appropriate, not browser MUI component styles.
+- CSS Modules contain local composition rules. `ImageGallery.module.css` uses a 4px image-button radius; compare it with the theme-backed `--ht-shape-border-radius` variable before migrating. Legal page's 6px table-of-contents radius and its content spacing remain page-specific.
+- The token layer currently exports spacing, shape and typography values to TypeScript consumers, but CSS variables are not yet emitted for every token family. Stage 2/4 must decide which tokens genuinely need CSS access; avoid duplicating all TypeScript tokens into CSS variables without a CSS consumer.
+
 ### Remaining migration candidates
 
 - Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
