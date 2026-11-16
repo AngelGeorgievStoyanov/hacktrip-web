@@ -48,6 +48,10 @@ export function AppImage({
   const resolvedWidth = width ?? presetProps?.width;
   const resolvedHeight = height ?? presetProps?.height;
   const resolvedSizes = sizes ?? presetProps?.sizes;
+  // Preset defaults provide shared image rendering semantics; caller styles remain an explicit override.
+  const resolvedStyle = presetProps?.objectFit
+    ? { objectFit: presetProps.objectFit, ...style }
+    : style;
 
   // A thumbnail URL in the DTO does not guarantee the object exists in storage; retry with
   // the full image URL once before giving up to the placeholder.
@@ -55,7 +59,7 @@ export function AppImage({
   const resolved = useFullImage ? (image?.url ?? null) : primary;
 
   if (errored || !resolved) {
-    return <div className={className} style={style} role="img" aria-label={alt} />;
+    return <div className={className} style={resolvedStyle} role="img" aria-label={alt} />;
   }
 
   return (
@@ -70,7 +74,7 @@ export function AppImage({
       loading={loading}
       fetchPriority={fetchPriority}
       className={className}
-      style={style}
+      style={resolvedStyle}
       onError={() => {
         if (!src && !useFullImage && resolvedUseThumbnail && image && image.url !== primary) {
           setUseFullImage(true);
