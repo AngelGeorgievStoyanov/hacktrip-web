@@ -1,19 +1,13 @@
 import { TripList } from '@/components/trips/TripList';
-import { headingTextStyle } from '@/styles/presets/typography';
+import { HOME_HEADING_STYLE } from '@/styles/presets/typography';
 import type { TripGroupResponse } from '@/types';
-
-const HEADING_STYLE = {
-  margin: '2px',
-  textAlign: 'center' as const,
-  ...headingTextStyle,
-};
 
 export function HomeTrips({ trips }: { trips: TripGroupResponse[] }) {
   if (trips.length === 0) return null;
 
   return (
     <>
-      <h3 style={HEADING_STYLE}>These are our TOP 5 most liked in Hack Trips!</h3>
+      <h3 style={HOME_HEADING_STYLE}>These are our TOP 5 most liked in Hack Trips!</h3>
       <TripList trips={trips} prioritizeFirstImage />
     </>
   );
