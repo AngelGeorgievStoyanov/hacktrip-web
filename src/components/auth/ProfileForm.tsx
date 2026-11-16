@@ -17,6 +17,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { ACCOUNT_FORM_FIELDS_SX } from '@/styles/presets/forms';
 import { UI_SIZES } from '@/constants/ui/sizes';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 export function ProfileForm() {
   const { user, updateUser } = useAuth();
@@ -80,7 +81,7 @@ export function ProfileForm() {
           disabled
           sx={{
             '& .MuiInputBase-input.Mui-disabled': {
-              WebkitTextFillColor: 'rgba(0, 0, 0, 0.87)',
+              WebkitTextFillColor: UI_COLORS.text.primary,
               cursor: 'default',
             },
             '& .MuiInputLabel-root.Mui-disabled': { color: 'text.secondary' },
