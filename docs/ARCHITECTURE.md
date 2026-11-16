@@ -2400,7 +2400,20 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 - The inline-style search surfaced route layouts, Home/About/Trips content, Footer, TripDetails, PointSection, social controls, image components, Admin image surfaces, CommentsSection, LiveTracker and the OG image renderer. Several style props are intentionally dynamic or are passed through `AppImage`; they are not all duplicated CSS declarations.
 - `renderTripOgImage.tsx` uses its own HTML/CSS rendering environment and brand-specific typography. Treat it as a separate output surface; share semantic brand tokens only where technically appropriate, not browser MUI component styles.
 - CSS Modules contain local composition rules. `ImageGallery.module.css` uses a 4px image-button radius; compare it with the theme-backed `--ht-shape-border-radius` variable before migrating. Legal page's 6px table-of-contents radius and its content spacing remain page-specific.
-- The token layer currently exports spacing, shape and typography values to TypeScript consumers, but CSS variables are not yet emitted for every token family. Stage 2/4 must decide which tokens genuinely need CSS access; avoid duplicating all TypeScript tokens into CSS variables without a CSS consumer.
+- TypeScript tokens remain the source of truth for spacing, sizes, breakpoints, shape, shadows and z-index. CSS variables are emitted only for the semantic values consumed by the inventoried plain CSS/CSS Module rules; do not mirror every token into CSS.
+
+### Stage 2 implementation record — Design Tokens and MUI Theme
+
+The existing token/theme foundation has now been completed in code without changing the current blue/white identity:
+
+- **Palette:** `UI_COLORS` now explicitly owns primary/secondary brand colors, feedback colors (error/warning/info/success), semantic text, surfaces, borders and action states. MUI `common`, `primary`, `secondary`, feedback, background, text, divider and action roles are derived from these tokens. Existing MUI secondary/status defaults are preserved.
+- **Typography:** `TYPOGRAPHY` now defines the complete MUI variant scale (h1–h6, subtitle1–2, body1–2, button, caption and overline) plus shared font weights and the existing font stack. Values match MUI's existing defaults; this is centralization, not a visual redesign.
+- **Breakpoints:** `MUI_BREAKPOINTS` explicitly defines the existing MUI scale (0/600/900/1200/1536). Feature-specific legacy thresholds remain separately named in `BREAKPOINTS` and are not remapped.
+- **Spacing and dimensions:** `UI_SPACING`, `PAGE_CONTENT_PADDING` and `UI_SIZES` remain the shared sources. Numeric spacing values are MUI 8px multipliers, not pixel values.
+- **Shape, elevation and layering:** `UI_SHAPE`, `UI_ELEVATION`, `UI_SHADOWS` and `UI_Z_INDEX` remain centralized with legacy values retained where consumers still require them.
+- **CSS variables:** root variables are now limited to values with inventoried CSS/CSS Module consumers. Unused canvas/paper/divider/secondary/action-state variables were removed; values used only by MUI/TypeScript remain in their typed token/theme contracts.
+
+**Implementation status:** Stage 2 code changes are committed. Runtime/build/type-check verification has not been performed in this environment, so the stage remains pending that verification before it is formally closed.
 
 ### Admin, maps and remaining feature-surface audit
 
