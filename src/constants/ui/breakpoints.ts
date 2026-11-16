@@ -1,11 +1,19 @@
 /**
- * The legacy application used exact pixel thresholds instead of generic responsive
- * breakpoints. These values are the `max-width` of the legacy `useMediaQuery`/`@media`
- * rules they came from, so they are kept verbatim rather than mapped onto MUI defaults.
- *
- * Consumed by the header (`desktopNav`, `headerCompact`), trips filters (`tripsFilters`),
- * home heading (`homeHeading`), trip map (`tripDetails`, `smallPhone`) and trip card
- * (`tripCard`). CSS Modules keep their local media queries because CSS cannot import TS tokens.
+ * MUI's standard breakpoint scale, made explicit so responsive utilities and
+ * theme breakpoint helpers share one source of truth.
+ */
+export const MUI_BREAKPOINTS = {
+  xs: 0,
+  sm: 600,
+  md: 900,
+  lg: 1200,
+  xl: 1536,
+} as const;
+
+/**
+ * Additional legacy application thresholds. These are exact pixel values
+ * used by existing features and intentionally remain separate from MUI's
+ * five named breakpoint steps. Do not remap them without a responsive audit.
  */
 export const BREAKPOINTS = {
   /** Legacy header switched to the drawer menu here. */
