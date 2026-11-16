@@ -2341,6 +2341,42 @@ The deeper form review confirmed two related but distinct repeated field-inset p
 
 The source inventory also reconfirmed that CSS Modules are limited to the eight files listed above. Their local grid, gallery, legal-page and responsive compositions remain distinct from shared design tokens.
 
+### Color, typography, spacing, shape and layering audit — findings
+
+#### Colors
+
+- Semantic colors are centralized in `src/constants/ui/colors.ts`; most application-owned color treatments found in the reviewed components consume `UI_COLORS` or MUI semantic palette names (`primary.main`, `text.secondary`, `divider`, `action.hover`, `common.white`).
+- `ProfileForm` still has a direct `rgba(0, 0, 0, 0.87)` for `WebkitTextFillColor` on the disabled email field. This is a browser-specific disabled-input rendering override, not automatically a new general-purpose text token. Validate whether it can use `text.primary` without changing disabled-field contrast before altering it.
+- The remaining color literals found in `colors.ts` are the intended token definitions. Do not create additional aliases for identical values unless they represent different semantic roles.
+- CSS Modules currently consume semantic CSS variables for shared colors. The legal-page-specific link/border/background variables and the About/NotFound text variables are deliberate semantic usages; the CSS variable list in `theme/index.ts` should be checked against all CSS-module references during the final audit.
+
+#### Typography
+
+- The application font stack is centralized in `TYPOGRAPHY.fontFamily` and used by the MUI theme. Footer consumes the same stack. The About page's `Space Mono` heading font is a page-specific visual treatment; the generated OG image uses `Arial` and `Georgia` inside its own image-rendering environment, which is separate from the browser UI theme.
+- `AdminRouteNotFoundLogs` uses a monospace diagnostic block and a local `0.8rem` size; keep it feature-specific.
+- `SocialObjectPlaceholder` has local `0.95rem` and `0.72rem` text sizes for its compact overlay hierarchy. These are not yet proven to be shared with other components.
+- MUI typography variants should remain the primary shared type scale. Do not turn every local variant adjustment or generated-image text size into an application token.
+
+#### Spacing and dimensions
+
+- The 8px MUI spacing base and named `UI_SPACING` multipliers are centralized. Existing `PAGE_CONTENT_PADDING = '30px'` is intentionally not equivalent to `UI_SPACING.lg` (24px) or `UI_SPACING.xl` (32px).
+- `UI_SIZES` contains established cross-component dimensions. Many fixed values in CSS Modules (gallery grid gaps, thumbnail geometry, trip-detail columns, pagination spacing) describe local composition and should remain local unless a true repeated contract is found.
+- `TripDetailsView.module.css` uses a 1120px container-query threshold and a 600px viewport media query. The 1120px threshold is content-container geometry, not the legacy 900px trip-details viewport breakpoint; do not merge them.
+- The `30px` point-form panel padding and the 30px global page gutter happen to match numerically but have different ownership and responsive behavior. Keep them semantically distinct.
+
+#### Shape, shadows and layering
+
+- The MUI surface contract centralizes the default paper background, divider border, theme radius and theme elevation through `getSurfaceStyles`. `UI_SHAPE.borderRadius` and `UI_ELEVATION` feed that contract.
+- `LEGACY_PANEL_SX` still intentionally uses `UI_COLORS.surface.card`, `UI_SHADOWS.card`, `CARD_BORDER` and square radius for its two known consumers. These must not be removed until those consumers are migrated and visually checked.
+- `UI_SHADOWS.socialOverlay` is a separate overlay-specific CSS shadow. Keep it distinct from the MUI theme elevation scale unless a visual comparison proves the same elevation intent.
+- `UI_Z_INDEX` represents global MUI/app layer levels. Repeated `zIndex: 1`/`2` values in ImageLightbox, ProfileImage and EngagementBar are local stacking relationships inside component surfaces; `zIndex: -1` in the background hook is also local. Do not replace these with global modal/app-bar tokens.
+
+#### Ownership and remaining Stage 1 work
+
+- Theme component overrides currently own the shared MUI Button font family, Card and Dialog surface treatment, and TextField default variant/size. Button color/interaction variants and feature-specific layout are still owned by presets and local composition.
+- The presets layer contains both visual treatments and layout fragments. This is acceptable where each preset has a clear documented responsibility, but later stages should avoid adding a second source of truth for the same property between theme overrides, tokens and presets.
+- This pass reviewed the token definitions, theme overrides, preset definitions, all eight CSS files, the main direct-color and typography search results, and the identified z-index consumers. Stage 1 remains open until the remaining `sx`/`style`/`className` source inventory is semantically classified across all 63/36/5 matching files and the final consumer/reference checks are complete.
+
 ### Remaining migration candidates
 
 - Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
