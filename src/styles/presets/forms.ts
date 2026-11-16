@@ -26,7 +26,7 @@ export const AUTH_FORM_SX = (theme: Theme) => ({
 /** Shared centered action row for auth forms with multiple navigation actions. */
 export const AUTH_FORM_ACTIONS_SX = {
   display: 'flex',
-  gap: 2,
+  gap: UI_SPACING.md,
   flexWrap: 'wrap',
   justifyContent: 'center',
   mt: UI_SPACING.xs,
@@ -36,5 +36,5 @@ export const AUTH_FORM_ACTIONS_SX = {
 export const AUTH_FORM_BACK_ACTION_SX = {
   display: 'flex',
   justifyContent: 'center',
-  mt: 1,
+  mt: UI_SPACING.xs,
 } as const;

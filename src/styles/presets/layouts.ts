@@ -30,9 +30,9 @@ export const commentListStyle: CSSProperties = {
 /** Shared spacing and alignment for admin list pagination controls. */
 export const ADMIN_PAGINATION_SX = {
   display: 'flex',
-  gap: 1,
+  gap: UI_SPACING.xs,
   alignItems: 'center',
-  mt: 1,
+  mt: UI_SPACING.xs,
 } as const;
 
 /** Shared layout for the account trip and favorites listing pages. */
