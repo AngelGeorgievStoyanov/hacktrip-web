@@ -11,7 +11,7 @@ import { authApi } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { resetPasswordSchema } from '@/validations/auth';
-import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { PasswordField } from '@/components/common/PasswordField';
@@ -128,7 +128,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         >
           Reset password
         </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+        <Box sx={AUTH_FORM_BACK_ACTION_SX}>
           <BackButton component={Link} href="/login" disabled={submitting}>
             Back to login
           </BackButton>

@@ -20,7 +20,7 @@ import { zodResolver } from '@/lib/zodResolver';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { registerSchema } from '@/validations/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { Captcha } from '@/components/auth/Captcha';
 import { PasswordField } from '@/components/common/PasswordField';
@@ -220,7 +220,7 @@ export function RegisterForm() {
         >
           Register
         </Button>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mt: 1 }}>
+        <Box sx={AUTH_FORM_ACTIONS_SX}>
           <Button
             component={Link}
             href="/login"

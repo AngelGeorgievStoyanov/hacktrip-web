@@ -13,7 +13,7 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { FORGOT_PASSWORD_SUCCESS_MESSAGE } from '@/constants/notifications';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { BackButton } from '@/components/common/BackButton';
 
@@ -86,7 +86,7 @@ export function ForgotPasswordForm() {
         >
           Send reset link
         </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
+        <Box sx={AUTH_FORM_BACK_ACTION_SX}>
           <BackButton component={Link} href="/login" disabled={submitting} sx={{ m: '5px' }}>
             Back to login
           </BackButton>

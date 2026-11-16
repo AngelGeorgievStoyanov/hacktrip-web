@@ -20,7 +20,7 @@ import { getAuthErrorMessage } from '@/lib/errors';
 import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
@@ -137,7 +137,7 @@ export function LoginForm() {
         >
           Login
         </Button>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mt: 1 }}>
+        <Box sx={AUTH_FORM_ACTIONS_SX}>
           <Button component={Link} href="/register" variant="contained" sx={SECONDARY_BUTTON_SX}>
             Register
           </Button>

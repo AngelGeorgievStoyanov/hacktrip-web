@@ -22,3 +22,19 @@ export const AUTH_FORM_SX = (theme: Theme) => ({
   boxSizing: 'border-box',
   marginX: 'auto',
 });
+
+/** Shared centered action row for auth forms with multiple navigation actions. */
+export const AUTH_FORM_ACTIONS_SX = {
+  display: 'flex',
+  gap: 2,
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  mt: 1,
+} as const;
+
+/** Shared centered back-navigation row for standalone auth forms. */
+export const AUTH_FORM_BACK_ACTION_SX = {
+  display: 'flex',
+  justifyContent: 'center',
+  mt: 1,
+} as const;
