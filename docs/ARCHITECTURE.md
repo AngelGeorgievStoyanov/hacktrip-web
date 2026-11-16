@@ -2429,9 +2429,9 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 
 #### Stage 1 progress boundary
 
-- The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. Declaration-level reviews now also include the remaining Auth guards/forms, Admin list/log/image components, Maps, image upload/gallery, Point page/action components and Social controls, alongside the previously reviewed trip, card, comment, navigation and tracking components.
-- Confirmed reusable candidates remain deliberately small: account-profile field inset, Point/EditTrip nested control inset, trip-action sizing, three AppImage cover-fill consumers, shared home heading/intro treatment and existing shared presets. The reviewed local compositions listed above remain local; no new global token family is justified by this pass.
-- Stage 1 remains open. The remaining work is to reconcile the App Router/layout/page-level declarations and then verify every token/preset consumer and legacy exception against a file-by-file checklist for the full 63/36/5 source inventory. No migration should start merely because a matching value appears in multiple files.
+- The source-level inventory still covers 63 `sx=` files, 36 `style=` files, five `className=` files, one MUI `styled()` consumer and all eight CSS files. The declaration review has now covered all 36 App Router TSX files in addition to the feature components and the CSS/token/theme/preset layers.
+- Confirmed reusable candidates remain deliberately small: account-profile field inset, Point/EditTrip nested control inset, trip-action sizing, three AppImage cover-fill consumers, shared home heading/intro treatment, a route-content gutter candidate distinct from the 30px page gutter, and existing shared presets. The reviewed local compositions listed above remain local; no new global token family is justified by this pass.
+- Stage 1 remains open. The remaining work is the final file-by-file reconciliation of each `sx`/`style`/`className` expression against token/preset ownership, plus verification of all token/preset consumers and legacy exceptions. No migration should start merely because a matching value appears in multiple files.
 
 ### Trip, point, navigation and utility component audit
 
@@ -2480,6 +2480,21 @@ The follow-up pass checked the remaining component-level styling entry points in
 - `CustomFileUploadButton` has a single 30ch wrapper and no repeated cross-feature contract. PasswordRequirements' checklist spacing and icon treatment are component-specific.
 - No additional global preset was justified by this pass. Existing map, auth, admin pagination and social presets have the expected consumers; keep local upload/gallery/diagnostic and responsive composition in their owning features.
 
+
+### Declaration-level review — App Router pages and route composition
+
+All 36 `app/**/*.tsx` files were fetched and checked for styling entry points. The route-level findings are:
+
+- Account, Admin and Auth layouts repeat a 32px (`2rem`) main-content gutter. Auth additionally owns a centered 480px content column; Admin composes its navigation inside the content area; Account remains a simple content wrapper. Keep the common gutter candidate distinct from `PAGE_CONTENT_PADDING = 30px`, and preserve each route's composition.
+- Public layout only provides the flex-growing page wrapper; individual public pages own their main content. Home and public Trips use `CENTERED_PAGE_MAIN_STYLE`; public Trip Details uses the same centered page shell before rendering its interactive detail view.
+- Account Favorites and My Trips already consume the shared account page, content, heading and empty-state presets. Do not recreate or re-migrate those styles at route level.
+- The account Profile page composes the existing legacy profile surface and form; its `LEGACY_PANEL_SX` usage remains pending the separately planned surface migration and visual comparison.
+- Live Tracking has a 32px route content gutter but a tracking-specific page body; do not merge it with the 30px public page gutter or generic form panel.
+- `app/error.tsx` uses a standalone error-boundary stack with MUI `p: 4` and `gap: 2` (32px/16px under the current theme spacing scale). It is not a general page-shell preset.
+- About uses a local shared image-style object for its editorial images and a CSS Module for page composition. Privacy Policy uses its own legal-page CSS Module. Their local content/layout rules remain page-owned.
+- Auth/Admin route page files are thin route adapters without additional styling; the standalone form presets are owned by their feature components. The Open Graph/Twitter route image files do not introduce browser UI styling.
+- The route-level review found no reason to add a second global page-layout system. Preserve the existing centered-page and account presets, and treat the route gutters as a later, explicit ownership decision.
+
 ### Theme completeness and cross-system consistency findings
 
 - `themePalette` explicitly maps primary, background, text, divider and action roles, but does not yet define the full MUI semantic palette (`secondary`, `error`, `warning`, `info`, `success`, their contrast text, and related action states). Components using MUI semantic colors such as `error` currently rely on MUI's built-in defaults. Stage 2 must decide and explicitly own the semantic palette roles that the application actually uses; do not blindly copy every MUI default into custom tokens.
@@ -2494,6 +2509,7 @@ The follow-up pass checked the remaining component-level styling entry points in
 ### Remaining migration candidates
 
 - The ProfileForm/ChangePasswordForm field inset is now classified; retain it as a candidate for Stage 3 extraction after the full inventory is closed. Keep their heading, profile-only disabled field, action rows and ChangePasswordForm top margin separate.
+- The route-content 2rem gutter is a candidate for explicit central ownership, but it must remain a 32px route-layout value and must not silently replace the 30px public page gutter or the 30px Point form padding.
 - Continue the declaration-level review of TripCard, TripDetails and PointCard. Preserve fixed image/card dimensions, map dimensions, content insets and responsive geometry unless identical semantic use is confirmed.
 - The trip-action sizing and Point/EditTrip nested field inset are now classified candidates; review their remaining consumers before extraction. Review Header, AdminNavigation and map controls for repeated action/navigation patterns, keeping map-specific styling separate from ordinary form fields.
 - Check all remaining component files for direct color literals, inline styles and ad-hoc `sx` fragments before declaring the styling inventory complete.
