@@ -27,6 +27,12 @@ export const commentListStyle: CSSProperties = {
   margin: 0,
 };
 
+/** Shared surface and horizontal overflow behavior for admin data tables. */
+export const ADMIN_TABLE_CONTAINER_SX = {
+  width: '100%',
+  borderRadius: 2,
+} as const;
+
 /** Shared spacing and alignment for admin list pagination controls. */
 export const ADMIN_PAGINATION_SX = {
   display: 'flex',
