@@ -21,3 +21,13 @@ export const cardStyle: CSSProperties = {
 
 /** Consistent horizontal inset for text inside trip and point cards. */
 export const CARD_TEXT_INSET_SX = { padding: `0px ${UI_SIZES.cardTextInset}px` } as const;
+
+/** Shared text-block spacing for trip and point card content. */
+export const CARD_TEXT_BLOCK_STYLE = { margin: '0 0 0.35em' } as const;
+
+/** Shared heading treatment for the primary title inside a trip or point card. */
+export const CARD_HEADING_TEXT_STYLE = {
+  ...CARD_TEXT_BLOCK_STYLE,
+  fontSize: '1.5rem',
+  fontWeight: 500,
+} as const;

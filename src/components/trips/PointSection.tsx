@@ -8,7 +8,12 @@ import { CommentsToggle } from '@/components/comments/CommentsToggle';
 import { ExpandableText } from '@/components/common/ExpandableText';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
-import { CARD_CONTENT_TOP_PADDING, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
+import {
+  CARD_CONTENT_TOP_PADDING,
+  CARD_HEADING_TEXT_STYLE,
+  CARD_TEXT_BLOCK_STYLE,
+  CARD_TEXT_INSET_SX,
+} from '@/styles/presets/cards';
 
 interface PointSectionProps {
   point: TripPoint;
@@ -89,14 +94,10 @@ export function PointSection({
   );
 }
 
-const POINT_NAME_STYLE = {
-  margin: '0 0 0.35em',
-  fontSize: '1.5rem',
-  fontWeight: 500,
-} as const;
+const POINT_NAME_STYLE = CARD_HEADING_TEXT_STYLE;
 
 const POINT_NOTE_STYLE = {
-  margin: '0 0 0.35em',
+  ...CARD_TEXT_BLOCK_STYLE,
   padding: '0px 25px',
   fontSize: '0.875rem',
 } as const;

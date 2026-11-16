@@ -23,7 +23,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
-import { CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
+import {
+  CARD_HEADING_TEXT_STYLE,
+  CARD_TEXT_BLOCK_STYLE,
+  CARD_TEXT_INSET_SX,
+} from '@/styles/presets/cards';
 
 interface TripDetailsProps {
   tripGroup: TripGroupResponse;
@@ -36,8 +40,8 @@ interface TripDetailsProps {
   onDayDeleted: (updatedTripGroup: TripGroupResponse) => void;
 }
 
-const NAME_STYLE: CSSProperties = { margin: '0 0 0.35em', fontSize: '1.5rem', fontWeight: 500 };
-const LINE_STYLE: CSSProperties = { margin: '0 0 0.35em', fontSize: '1rem', fontWeight: 400 };
+const NAME_STYLE: CSSProperties = CARD_HEADING_TEXT_STYLE;
+const LINE_STYLE: CSSProperties = { ...CARD_TEXT_BLOCK_STYLE, fontSize: '1rem', fontWeight: 400 };
 
 /**
  * Trip Information Panel — standalone visual section matching legacy UI.
