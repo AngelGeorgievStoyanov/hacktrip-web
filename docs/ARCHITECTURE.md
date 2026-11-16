@@ -2615,3 +2615,9 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - Extracted `FORM_CONTROL_INSET_SX` into `src/styles/presets/forms.ts`.
 - Reused it in `POINT_FORM_PANEL_SX`, `PointForm` and `EditTripLayout`, removing three copies of the same nested control spacing/width rule without coupling the forms' outer layout.
 - Stage 3 remains in progress; component/preset coverage and remaining legacy values still need systematic review before closure.
+
+
+### Additional Stage 3 migration — admin form surface
+
+- `AdminUserForm` previously defined its own border, divider color, radius, paper background and elevation. It now composes `PANEL_SX(theme)`, matching the profile panel, trip-edit panel, authentication form surfaces, MUI Cards and Dialog paper.
+- Its content stack, width, padding and centering remain local layout concerns. The shared surface contract owns only the visual shell.
