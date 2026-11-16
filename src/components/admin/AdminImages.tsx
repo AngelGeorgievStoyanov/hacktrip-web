@@ -28,7 +28,7 @@ import {
 } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { adminApi } from '@/api/admin';
-import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 
@@ -269,7 +269,7 @@ function MissingThumbnails() {
       {isLoading ? <CircularProgress /> : null}
       {data ? (
         <>
-          <TableContainer component={Paper} variant="outlined">
+          <TableContainer component={Paper} variant="outlined" sx={ADMIN_TABLE_CONTAINER_SX}>
             <Table size="small">
               <TableHead>
                 <TableRow>
