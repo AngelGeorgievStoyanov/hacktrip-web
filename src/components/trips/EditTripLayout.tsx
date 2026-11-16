@@ -32,6 +32,7 @@ import { AddIcon, RemoveIcon, RemoveImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
 import { PANEL_SX } from '@/styles/presets/panels';
+import { FORM_CONTROL_INSET_SX } from '@/styles/presets/forms';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
@@ -281,7 +282,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
           flex: '0 1 520px',
           minWidth: 0,
           height: 'fit-content',
-          '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
+          '& .MuiFormControl-root': FORM_CONTROL_INSET_SX,
           '& .MuiButton-root': { m: 1 },
         })}
       >
