@@ -119,7 +119,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
               border: '1px solid',
               borderRadius: '50%',
               overflow: 'hidden',
-              boxShadow: UI_SHADOWS.card,
+              boxShadow: UI_SHADOWS.profileImageControl,
               cursor: 'pointer',
               background: 'transparent',
             }}
