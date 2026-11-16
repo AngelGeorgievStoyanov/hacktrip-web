@@ -2707,3 +2707,10 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Split the common full-width action dimensions into `TRIP_ACTION_BUTTON_LAYOUT_SX`, then composed the primary and destructive trip-action presets from that single layout contract.
 - The Trip Details Back action now consumes the same layout preset, aligning its 10px padding, full-width sizing, 48px minimum height and box sizing with the adjacent Add/Edit/Delete actions while retaining the BackButton's own secondary visual treatment.
 - Navigation targets, action labels, ownership checks and mutation behavior remain unchanged.
+
+
+### Additional Stage 5 migration — trip-card image rendering
+
+- Extended the existing image-preset contract with an optional `objectFit` default. `AppImage` applies the preset default while preserving explicit caller `style` values as higher-priority overrides.
+- The shared `tripCard` image preset now owns the `cover` fit used by TripCard. The component keeps its own frame dimensions and responsive layout; it no longer duplicates the image-fit rule.
+- Existing thumbnail fallback, loading priority, dimensions, image alt text and interaction behavior remain unchanged. The preset's responsive `sizes` hint is now also used by TripCard.
