@@ -2270,15 +2270,53 @@ src/components/
 - Extract a shared pattern only when call sites have the same visual meaning. Similar-looking styles with different semantics may remain separate.
 - Centralization must preserve existing visual behavior; it is not an unrequested redesign.
 
-## 11.3 Verified migration inventory
+## 11.3 Verified migration inventory and deeper styling audit
 
-The current read-only consumer audit confirms the following:
+The following audit was performed against the current modernization branch. It inspected the token and theme layers, provider wiring, global CSS, every CSS Module present in the repository, reusable presets, and representative consumers across layout, home, authentication, admin, comments/social, maps, points and trips. This is a deeper verified inventory, not a claim that every JSX style expression in every component has been exhaustively classified.
 
-- Authentication forms (LoginForm, RegisterForm, ForgotPasswordForm) already consume the shared AUTH_FORM_SX and related form presets.
-- LEGACY_PANEL_SX is still consumed by the profile page and EditTripLayout. Its legacy surface values must remain until both consumers are deliberately migrated; do not remove CARD_BORDER or the legacy preset prematurely.
-- Direct component-level styling remains in Header, TripCard, TripDetails, PointCard, ProfileForm and EditTripLayout. The next migration pass must distinguish shared visual values from component-specific geometry before extracting tokens.
-- CSS Modules are already in use for public/legal pages, not-found, image gallery, trip details, trip list and pagination. Their unique layout rules should remain local; repeated design values should use shared CSS variables where practical.
-- This is a verified inventory of inspected consumers, not a claim that every component has been exhaustively scanned. Continue the full repository-wide audit before declaring migration complete.
+### Runtime ownership and CSS variables
+
+- `app/providers.tsx` mounts MUI `CssBaseline` inside the single `ThemeProvider`; the CSS variables declared by `src/theme/index.ts` are therefore emitted at runtime.
+- The inspected `app/globals.css` and CSS Modules consume semantic variables that are declared by the theme. The global stylesheet is appropriately small: reset, app shell, code font and the CSS-only `.ht-button` rules needed by server-rendered trip markup.
+- Keep the `.ht-button` rules in global CSS while server-rendered trip surfaces depend on them. Their shared button geometry and typography are already sourced from theme-generated CSS variables.
+- `UI_SPACING` uses an 8px MUI unit. `PAGE_CONTENT_PADDING` remains a separate 30px page-gutter value; do not silently replace it with a multiple of the spacing scale where exact legacy geometry is required.
+- The shared MUI font stack is `TYPOGRAPHY.fontFamily`, consumed by the theme/CssBaseline and Footer. The About page has a separate `Space Mono` heading declaration; verify font loading and intended brand treatment before changing it. Do not introduce a second global font stack.
+- The primary token is currently blue (`#1976d2`) while its hover token is green (`#4daf30`). This is existing visual behavior and has deliberately not been changed during architecture migration. Revisit both together during the planned brand redesign rather than making an incidental styling change.
+
+### Reusable patterns verified
+
+- LoginForm, RegisterForm and ForgotPasswordForm already consume `AUTH_FORM_SX` and the related auth presets. Do not migrate them again.
+- The compact social count badge had the same five metrics in EngagementBar, LikeButton and FavoriteButton. These are now owned by `SOCIAL_BADGE_COMPACT_STYLE` in `src/styles/presets/social.ts`, and all three consumers reference that preset. This is a genuine shared visual pattern, not a new design token.
+- `SOCIAL_ACTIONS_SX` and the compact horizontal group in TripGroupSocialActions have different spacing/behavior; do not force them into one preset without a visual and interaction comparison.
+- CommentsSection has its own comments panel and comment-card layout definitions. They currently describe a feature-specific structure, not a proven cross-feature surface pattern; keep them local unless another consumer with the same semantics is found.
+- `CARD_TEXT_INSET_SX` is shared by trip-card and trip-details content. PointCard uses a different 10px inset, so it must not be silently changed to the shared 15px card inset.
+- Header navigation button spacing, Footer padding, HomeHero text width/margins, map picker geometry and form-specific responsive widths are local compositions. Their current reuse scope does not justify global tokens or universal presets.
+
+### Legacy surfaces and theme
+
+- `LEGACY_PANEL_SX` remains consumed by the profile page and EditTripLayout. It intentionally retains the old card background, shadow, border and square radius. Keep `CARD_BORDER`, `UI_SHADOWS.card` and the legacy preset until both consumers are migrated and visually verified.
+- MUI Card, Dialog and shared panel surfaces resolve through `getSurfaceStyles(theme)`; component `sx` should not recreate their shared background, border, radius and shadow.
+- TextField defaults are centralized as outlined/medium in the theme. Do not repeat those defaults in individual forms without a specific exception.
+- Semantic palette tokens explicitly own the primary color, canvas/paper, primary/secondary text, divider and selected/hover action states. Preserve the deliberate distinction between MUI paper and the legacy translucent card surface.
+
+### CSS Modules and responsive rules
+
+All CSS files currently present in the repository were inspected: AboutPage, LegalPage, NotFound, ImageGallery, TripDetailsView, TripList, TripPagination and globals.
+
+- Keep TripDetailsView's grid/container-query composition local. Its 1120px container threshold is based on available component width, not the same semantic breakpoint as the legacy 900px viewport breakpoint in `BREAKPOINTS.tripDetails`.
+- Keep the image gallery's grid/stack/thumbnail geometry local to the gallery.
+- TripList empty-state typography and TripPagination list geometry are feature-local. Reuse shared tokens only where a genuine semantic value is established.
+- About's 820px layout threshold is page-specific. The 600px rules in other modules should be compared with `BREAKPOINTS.smallPhone` before changing; CSS Modules cannot directly import TypeScript constants.
+- LegalPage and NotFound already use semantic CSS variables for their shared colors. Their remaining padding, border radius and image/layout values are currently local page geometry, not evidence for global tokens.
+
+### Remaining migration candidates
+
+- Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
+- Continue the feature-by-feature review of TripCard, TripDetails and PointCard. Preserve fixed image/card dimensions, map dimensions, content insets and responsive geometry unless identical semantic use is confirmed.
+- Review Header, AdminNavigation and map controls for any repeated action/navigation patterns, but keep map-specific control styling under the map preset and do not merge it with ordinary form fields.
+- Check all remaining component files for direct color literals, inline styles and ad-hoc `sx` fragments before declaring the styling inventory complete.
+
+The next safe migration is to continue from the verified shared-pattern inventory above. Do not remove legacy styles, change visual tokens or redesign the blue/white identity as part of this migration.
 ## 11.4 Reusable UI patterns
 
 Extract shared components or patterns when multiple call sites have the same semantics and behavior. Prefer small, composable building blocks for repeated form fields/actions, cards and content surfaces, dialogs and confirmation flows, icon buttons/action groups, and loading/empty/error states.
