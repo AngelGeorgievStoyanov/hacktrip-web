@@ -67,3 +67,10 @@ export const CENTERED_PAGE_MAIN_STYLE: CSSProperties = {
   flexDirection: 'column',
   alignItems: 'center',
 };
+
+/** Shared vertical stack used by forms and compact content panels. */
+export const COLUMN_STACK_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 2,
+} as const;

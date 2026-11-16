@@ -11,6 +11,7 @@ import { AppImage } from '@/components/images/AppImage';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
+import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 
 export function AdminUserProfileImage({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
@@ -49,7 +50,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
   const image = imageQuery.data;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={COLUMN_STACK_SX}>
       <Typography variant="h6">Profile image</Typography>
       {error ? (
         <Alert severity="error" onClose={() => setError(null)}>

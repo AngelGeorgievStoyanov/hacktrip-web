@@ -29,6 +29,7 @@ import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { AdminUserProfileImage } from '@/components/admin/AdminUserProfileImage';
 import { BackButton } from '@/components/common/BackButton';
 import { hasRole } from '@/constants/roles';
+import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 import type { AuthUserDto, Role, UserStatus } from '@/types';
 
 const ROLE_OPTIONS: Role[] = ['user', 'admin', 'manager'];
@@ -139,9 +140,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
+        ...COLUMN_STACK_SX,
         width: '100%',
         maxWidth: 760,
         mx: 'auto',
@@ -184,7 +183,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
           };
           updateMutation.mutate(managerInput);
         })}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        sx={COLUMN_STACK_SX}
       >
         <TextField
           label="First name"

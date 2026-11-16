@@ -13,6 +13,7 @@ import {
   LOGIN_EMAIL_VERIFIED_MESSAGE,
 } from '@/constants/notifications';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 
 export function VerifyEmailForm({ token }: { token?: string }) {
   const router = useRouter();
@@ -63,10 +64,8 @@ export function VerifyEmailForm({ token }: { token?: string }) {
     <WelcomeHeading>
       <Card
         sx={{
-          display: 'flex',
-          flexDirection: 'column',
+          ...COLUMN_STACK_SX,
           alignItems: 'center',
-          gap: 2,
           width: '100%',
           maxWidth: 560,
           boxSizing: 'border-box',

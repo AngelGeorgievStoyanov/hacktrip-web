@@ -1,4 +1,5 @@
 import type { Theme } from '@mui/material/styles';
+import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 
 /** Backward-compatible form-panel preset. */
@@ -13,9 +14,7 @@ export const AUTH_FORM_TITLE_SX = {
 /** Shared layout and surface treatment for standalone authentication forms. */
 export const AUTH_FORM_SX = (theme: Theme) => ({
   ...PANEL_SX(theme),
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 2,
+  ...COLUMN_STACK_SX,
   padding: '30px',
   maxWidth: '700px',
   width: '100%',
