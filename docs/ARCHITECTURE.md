@@ -2508,11 +2508,11 @@ All 36 `app/**/*.tsx` files were fetched and checked for styling entry points. T
 
 ### Remaining migration candidates
 
-- The ProfileForm/ChangePasswordForm field inset is now classified; retain it as a candidate for Stage 3 extraction after the full inventory is closed. Keep their heading, profile-only disabled field, action rows and ChangePasswordForm top margin separate.
-- The route-content 2rem gutter is a candidate for explicit central ownership, but it must remain a 32px route-layout value and must not silently replace the 30px public page gutter or the 30px Point form padding.
-- Continue the declaration-level review of TripCard, TripDetails and PointCard. Preserve fixed image/card dimensions, map dimensions, content insets and responsive geometry unless identical semantic use is confirmed.
-- The trip-action sizing and Point/EditTrip nested field inset are now classified candidates; review their remaining consumers before extraction. Review Header, AdminNavigation and map controls for repeated action/navigation patterns, keeping map-specific styling separate from ordinary form fields.
-- Check all remaining component files for direct color literals, inline styles and ad-hoc `sx` fragments before declaring the styling inventory complete.
+- Retain the ProfileForm/ChangePasswordForm field inset as a Stage 3 extraction candidate after the audit is closed. Keep their heading, profile-only disabled field, action rows and ChangePasswordForm top margin separate.
+- Retain the 2rem route-content gutter as a candidate for explicit central ownership. It is 32px and must not silently replace the 30px public page gutter or the 30px Point form padding.
+- The declaration-level review has covered the major component and route surfaces. The remaining Stage 1 task is a final reconciliation checklist across every path in the 63 `sx=`, 36 `style=` and five `className=` source inventories: classify each occurrence as shared token/preset, feature-local composition, dynamic component API/pass-through, or legacy pending visual verification.
+- Verify all imports and consumers of `BUTTON_STYLES`, panel/surface presets, layout/form/map/social presets, UI tokens and emitted CSS variables. Confirm that no legacy constant is orphaned or removed while consumers remain, and that no token/preset duplicates a property already owned by the MUI theme.
+- Keep the trip-action sizing, Point/EditTrip nested field inset and AppImage cover-fill as small Stage 3 candidates. Do not extract them until the final consumer map and visual verification requirements are recorded.
 
 The next safe migration is to continue from the verified shared-pattern inventory above. Do not remove legacy styles, change visual tokens or redesign the blue/white identity as part of this migration.
 ## 11.4 Reusable UI patterns
