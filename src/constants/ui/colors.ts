@@ -7,6 +7,15 @@ export const UI_COLORS = {
   brand: {
     primary: '#1976d2',
     primaryHover: '#4daf30',
+    /** MUI's existing secondary default, now explicit and theme-owned. */
+    secondary: '#9c27b0',
+  },
+  feedback: {
+    /** Preserve MUI's existing default feedback colors. */
+    error: '#d32f2f',
+    warning: '#ed6c02',
+    info: '#0288d1',
+    success: '#2e7d32',
   },
   surface: {
     /** MUI canvas and paper defaults, explicit so theme behavior is token-owned. */
@@ -30,8 +39,9 @@ export const UI_COLORS = {
     strong: '#000',
   },
   text: {
-    /** MUI secondary text default. */
+    /** MUI secondary and disabled text defaults. */
     secondary: 'rgba(0, 0, 0, 0.6)',
+    disabled: 'rgba(0, 0, 0, 0.38)',
     inverse: '#fff',
     primary: '#17212b',
     onSecondary: '#000',
@@ -40,6 +50,9 @@ export const UI_COLORS = {
     /** MUI interaction-state defaults, explicitly owned by semantic tokens. */
     hover: 'rgba(0, 0, 0, 0.04)',
     selected: 'rgba(0, 0, 0, 0.08)',
+    focus: 'rgba(0, 0, 0, 0.12)',
+    disabled: 'rgba(0, 0, 0, 0.26)',
+    disabledBackground: 'rgba(0, 0, 0, 0.12)',
     danger: 'red',
     dangerHover: '#ef0a0a',
     secondaryBackground: 'rgb(194 194 224)',
