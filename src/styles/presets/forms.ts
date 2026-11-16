@@ -13,6 +13,15 @@ export const POINT_FORM_PANEL_SX = {
   '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
 } as const;
 
+/** Shared field stack for the profile and change-password forms. */
+export const ACCOUNT_FORM_FIELDS_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 1.5,
+  width: '100%',
+  '& .MuiTextField-root': { width: 'calc(100% - 10px)', mx: '5px' },
+} as const;
+
 /** Shared heading treatment for standalone authentication forms. */
 export const AUTH_FORM_TITLE_SX = {
   margin: '10px auto',
