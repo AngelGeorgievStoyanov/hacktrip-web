@@ -45,6 +45,24 @@ const secondaryLightText = {
   },
 } as const;
 
+/** Shared full-width action sizing for trip navigation and management actions. */
+const tripAction = {
+  ...primary,
+  padding: '10px',
+  width: '100%',
+  minHeight: '48px',
+  boxSizing: 'border-box',
+} as const;
+
+/** Shared danger treatment and sizing for destructive trip actions. */
+const tripActionDanger = {
+  ...danger,
+  padding: '10px',
+  width: '100%',
+  minHeight: '48px',
+  boxSizing: 'border-box',
+} as const;
+
 export const BUTTON_STYLES = {
   primary,
   primaryWide,
@@ -53,4 +71,6 @@ export const BUTTON_STYLES = {
   back: secondary,
   secondaryLightText,
   createTrip,
+  tripAction,
+  tripActionDanger,
 } as const;
