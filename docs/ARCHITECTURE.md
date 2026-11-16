@@ -2632,3 +2632,18 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - No global `MuiPaper` override was added: Paper can represent menus, popovers and other semantic surfaces, so applying the Card contract indiscriminately would create unintended coupling.
 
 Stage 3 remains in progress. The next work is the remaining repeated presets and feature-specific surface exceptions, followed by a complete migration pass in Stage 5. Validation remains deferred to Stage 6.
+
+
+## Stage 3 closure — MUI components and reusable presets
+
+Stage 3 implementation is complete. The MUI component overrides and all files under `src/styles/presets/` were reviewed. Shared Card and Dialog surfaces use the common theme contract; Button typography/shape and TextField defaults are theme-owned; repeated form, panel, card-content, map-control, social, layout and typography patterns remain in the appropriate presets. Feature-specific geometry and specialized overlays remain local by design. No global Paper override was introduced because Paper is used for multiple semantic roles.
+
+The remaining validation and visual/regression checks are intentionally part of Stage 6. The older “Still required before Stage 3 closure” progress list above is superseded by this closure record.
+
+## Stage 4 implementation progress — Global CSS and CSS Modules
+
+- Kept `app/globals.css` limited to document reset, body font smoothing, app-shell layout, code font and the small server-rendered `.ht-button` rules. These server-rendered button rules remain necessary and now consume theme-generated CSS variables.
+- Added only CSS variables with confirmed stylesheet consumers: the MUI medium/large spacing values and the existing page-content gutter token. The page gutter variable is derived from `PAGE_CONTENT_PADDING`, not duplicated as a new literal.
+- Migrated Trip Details responsive layout gaps to the shared spacing variables; migrated the About page desktop gutter to the shared page-padding token; migrated Image Gallery and Legal page control radii to the shared theme shape variable.
+- CSS Modules continue to own local geometry, responsive composition, editorial typography and specialized component styling. No second token store was introduced.
+- Stage 4 remains in progress. The remaining CSS Module values need a focused pass to distinguish genuine shared design tokens from intentionally local geometry before Stage 4 closure. Validation remains deferred to Stage 6.
