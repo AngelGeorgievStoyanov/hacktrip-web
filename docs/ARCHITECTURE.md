@@ -2583,3 +2583,21 @@ The current central registry is `src/constants/icons.ts`, imported through `@/co
 Components must not import icons directly from `@mui/icons-material/*`. Add new icon exports to the registry using stable semantic names and keep icon-library implementation details inside that file.
 
 The directory-style path `src/constants/icons/index.ts` is not the current repository structure. Do not move the registry without updating all consumers and the agent instructions in the same change.
+
+
+## Stage 3 implementation progress — shared component defaults
+
+The Stage 2 local validation commands (`npm run check` and `npm run build`) are intentionally deferred to Stage 6 at the user's direction. Stage 2 implementation is present, but is not marked as locally verified.
+
+### Implemented in the current Stage 3 pass
+
+- `MuiCard` explicitly defaults to elevation 1 and obtains its background, border, radius and shadow from the shared `getSurfaceStyles(theme)` contract. Individual cards should use `sx` for dimensions/content layout, not redefine the shared surface appearance.
+- `MuiButton` typography and border radius are now explicitly derived from `theme.typography.button` and `theme.shape.borderRadius`; semantic colors and states remain palette/variant-owned.
+- `ChangePasswordForm` now consumes `ACCOUNT_FORM_FIELDS_SX`, matching `ProfileForm` and removing the duplicated field-stack declarations while preserving its local top margin.
+
+### Still required before Stage 3 closure
+
+- Audit and migrate remaining legacy panel/surface consumers. `LEGACY_PANEL_SX`, `CARD_BORDER` and `UI_SHADOWS.card` remain until every consumer is confirmed and migrated; do not delete them prematurely.
+- Review repeated presets and component overrides for duplicated visual values, while keeping feature-specific geometry and responsive layout local.
+- Check other MUI surface types and variants only where their semantics require the shared surface contract; do not apply card styling indiscriminately to every `Paper`.
+- Stage 3 is in progress. Build/typecheck/lint and final visual/regression checks remain deferred to Stage 6.
