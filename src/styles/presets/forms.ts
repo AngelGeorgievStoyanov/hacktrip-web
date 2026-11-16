@@ -3,6 +3,16 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 
+/** Shared panel layout for the create/edit Point form wrappers. */
+export const POINT_FORM_PANEL_SX = {
+  padding: { xs: 2, sm: '30px' },
+  width: '100%',
+  maxWidth: 600,
+  minWidth: 0,
+  boxSizing: 'border-box',
+  '& .MuiFormControl-root': { margin: 0.5, width: 'calc(100% - 10px)' },
+} as const;
+
 /** Shared heading treatment for standalone authentication forms. */
 export const AUTH_FORM_TITLE_SX = {
   margin: '10px auto',
