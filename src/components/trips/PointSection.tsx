@@ -8,7 +8,7 @@ import { CommentsToggle } from '@/components/comments/CommentsToggle';
 import { ExpandableText } from '@/components/common/ExpandableText';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
-import { CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
+import { CARD_CONTENT_TOP_PADDING, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
 
 interface PointSectionProps {
   point: TripPoint;
@@ -22,7 +22,7 @@ const POINT_CARD_STYLE = {
   alignItems: 'center',
   maxWidth: '500px',
   margin: '20px auto',
-  padding: '25px 0px 0px 0px',
+  ...CARD_CONTENT_TOP_PADDING,
 } as const;
 
 export function PointSection({
