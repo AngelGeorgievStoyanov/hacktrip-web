@@ -14,5 +14,11 @@ export const UI_SPACING = {
   xxl: 6,
 } as const;
 
-/** Existing page gutter retained until all page layouts are migrated. */
+/** Existing public page gutter retained until all page layouts are migrated. */
 export const PAGE_CONTENT_PADDING = '30px';
+
+/**
+ * Shared 32px content gutter for authenticated, admin and live-tracking route shells.
+ * Keep distinct from the 30px public page gutter and form-panel padding.
+ */
+export const ROUTE_CONTENT_PADDING = '2rem';
