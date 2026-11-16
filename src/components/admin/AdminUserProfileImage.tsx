@@ -108,7 +108,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
         sx={{ alignSelf: 'flex-start' }}
       >
         {uploadMutation.isPending ? (
-          <CircularProgress size={18} />
+          <CircularProgress size={UI_SIZES.smallIndicator} />
         ) : image ? (
           'Replace image'
         ) : (

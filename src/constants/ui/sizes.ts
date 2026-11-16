@@ -4,7 +4,6 @@
  */
 export const UI_SIZES = {
   smallIndicator: 18,
-  iconLarge: 32,
   compactControlHeight: 36,
   contentMaxWidth: 1440,
   cardTextInset: 15,
