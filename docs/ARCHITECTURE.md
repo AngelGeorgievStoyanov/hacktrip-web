@@ -2295,7 +2295,7 @@ The following audit was performed against the current modernization branch. It i
 
 ### Legacy surfaces and theme
 
-- The profile page and EditTripLayout have been migrated from `LEGACY_PANEL_SX` to `PANEL_SX(theme)`. The legacy preset has been removed. `UI_SHADOWS.card` remains separately used by the circular profile-image control.
+- The profile page and EditTripLayout have been migrated from `LEGACY_PANEL_SX` to `PANEL_SX(theme)`. The legacy preset has been removed. `UI_SHADOWS.profileImageControl` remains separately used by the circular profile-image control.
 - MUI Card, Dialog and shared panel surfaces resolve through `getSurfaceStyles(theme)`; component `sx` should not recreate their shared background, border, radius and shadow.
 - TextField defaults are centralized as outlined/medium in the theme. Do not repeat those defaults in individual forms without a specific exception.
 - Semantic palette tokens explicitly own the primary color, canvas/paper, primary/secondary text, divider and selected/hover action states. Preserve the deliberate distinction between MUI paper and the legacy translucent card surface.
@@ -2367,7 +2367,7 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 #### Shape, shadows and layering
 
 - The MUI surface contract centralizes the default paper background, divider border, theme radius and theme elevation through `getSurfaceStyles`. `UI_SHAPE.borderRadius` and `UI_ELEVATION` feed that contract.
-- The former legacy panel surface has been removed from both known consumers. `CARD_BORDER` is now a legacy token pending a final unused-token cleanup; `UI_SHADOWS.card` remains for the profile-image control.
+- The former legacy panel surface has been removed from both known consumers. After confirming the remaining source consumers had migrated, the unused `CARD_BORDER` and `UI_SHAPE.squareRadius` compatibility tokens were removed. The circular profile-image control retains its dedicated `UI_SHADOWS.profileImageControl` shadow.
 - `UI_SHADOWS.socialOverlay` is a separate overlay-specific CSS shadow. Keep it distinct from the MUI theme elevation scale unless a visual comparison proves the same elevation intent.
 - `UI_Z_INDEX` represents global MUI/app layer levels. Repeated `zIndex: 1`/`2` values in ImageLightbox, ProfileImage and EngagementBar are local stacking relationships inside component surfaces; `zIndex: -1` in the background hook is also local. Do not replace these with global modal/app-bar tokens.
 
@@ -2421,7 +2421,7 @@ The existing token/theme foundation has now been completed in code without chang
 
 - `ADMIN_PAGINATION_SX` is already shared by AdminUsers, AdminImages, AdminReports, AdminFailedLogs and AdminRouteNotFoundLogs. Keep its consumers on the existing preset.
 - `COLUMN_STACK_SX` is already used by AdminUserForm and AdminUserProfileImage; AdminUserForm adds its own max width, panel padding and surface treatment around that stack.
-- AdminUserForm's outer Box currently recreates a surface using border, `borderRadius: 2`, `bgcolor: background.paper` and `boxShadow: 2`. This differs from the global MUI Card/Dialog surface contract (theme radius/elevation). Treat it as a migration candidate requiring visual approval, not as an accidental duplicate to replace silently.
+- AdminUserForm's outer Box has since been migrated to `PANEL_SX(theme)`, matching the shared theme-owned panel surface while retaining its own width, padding and content layout.
 - AdminUsers uses a 320px minimum card grid and a local 1.25 spacing for card content. AdminImages has its own thumbnail dimensions and table controls. Admin logs use diagnostic/monospace presentation. These are feature-specific layouts.
 - The three AppImage profile/avatar consumers share the exact cover-fill style identified above; this remains the strongest confirmed reusable inline image style.
 
@@ -2551,7 +2551,7 @@ Stage 1 is complete as an audit and architecture-definition phase. The source in
 - Point create/edit page wrappers use `POINT_FORM_PANEL_SX`; the inner `PointForm` field-control inset is a matching extraction candidate, but its form gap, width constraints and responsive action layout must remain independent.
 - Admin pagination, account trips pages, map address inputs, social action groups, trip-card text inset and shared typography are already represented by presets.
 - Trip-action sizing, profile/trip-card image cover-fit, shared home heading/intro treatment and the 32px route-content gutter have been migrated to shared presets/tokens. Their semantic variants and the existing 30px page gutter remain distinct.
-- The legacy panel preset is removed. `CARD_BORDER` remains only as a legacy token pending final unused-token cleanup; `UI_SHADOWS.card` is still used for the circular profile-image control and must remain until that use is independently migrated.
+- The legacy panel preset and unused `CARD_BORDER`/`UI_SHAPE.squareRadius` tokens are removed. The circular profile-image control retains a separately named `UI_SHADOWS.profileImageControl` token because it is not a Card or panel surface.
 - CSS Modules are limited to the eight inventoried files. They own page/component geometry; the About page's Space Mono editorial headings, legal-page typography/spacing, trip-detail container query, image-gallery geometry and NotFound composition remain intentionally local.
 - `app/globals.css` remains minimal. Its `.ht-button` rules are required by server-rendered trip markup and must not be removed while those consumers exist.
 
@@ -2597,7 +2597,7 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 
 ### Still required before Stage 3 closure
 
-- The known profile and trip-edit panel consumers have been migrated to `PANEL_SX(theme)`. Continue checking other non-panel uses before removing legacy tokens such as `CARD_BORDER` or `UI_SHADOWS.card`.
+- The known profile, trip-edit and admin-user form panel consumers have been migrated to `PANEL_SX(theme)`. The obsolete legacy border/square-radius tokens have been removed after consumer reconciliation; the circular profile-image control keeps its dedicated special-purpose shadow.
 - Review repeated presets and component overrides for duplicated visual values, while keeping feature-specific geometry and responsive layout local.
 - Check other MUI surface types and variants only where their semantics require the shared surface contract; do not apply card styling indiscriminately to every `Paper`.
 - Stage 3 is in progress. Build/typecheck/lint and final visual/regression checks remain deferred to Stage 6.
@@ -2607,7 +2607,7 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 
 - The profile page and trip-edit form previously spread `LEGACY_PANEL_SX`, which carried its own background, black shadow, border and square radius. Both now consume `PANEL_SX(theme)` and therefore share the same theme-owned surface contract as MUI Cards and Dialog paper.
 - The obsolete `LEGACY_PANEL_SX` preset and its local token imports have been removed. The profile form and trip-edit form retain their own padding, spacing, width and responsive layout; only the visual surface is shared.
-- `UI_SHADOWS.card` remains in use for the circular profile-image control and is not treated as a card/panel surface token. It must not be removed as part of this panel migration.
+- `UI_SHADOWS.profileImageControl` is a special-purpose circular image-control shadow, not a Card/panel surface token.
 
 
 ### Additional Stage 3 migration — shared form-control inset
