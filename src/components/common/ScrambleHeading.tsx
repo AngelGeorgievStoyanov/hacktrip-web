@@ -9,7 +9,7 @@ import {
   type CSSProperties,
   type Ref,
 } from 'react';
-import { headingTextStyle } from '@/styles/presets/typography';
+import { HOME_HEADING_STYLE } from '@/styles/presets/typography';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const SCRAMBLE_INTERVAL_MS = 30;
@@ -81,7 +81,7 @@ export function ScrambleHeading({ text, ref, style }: ScrambleHeadingProps) {
     <h1
       aria-label={text}
       onMouseOver={scramble}
-      style={{ margin: '2px', ...headingTextStyle, ...style }}
+      style={{ ...HOME_HEADING_STYLE, ...style }}
     >
       <span aria-hidden="true">{display}</span>
     </h1>
