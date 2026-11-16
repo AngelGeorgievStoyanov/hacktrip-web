@@ -2522,10 +2522,10 @@ All 36 `app/**/*.tsx` files were fetched and checked for styling entry points. T
 ### Remaining migration candidates
 
 - `ProfileForm` and `ChangePasswordForm` both consume `ACCOUNT_FORM_FIELDS_SX`. The password form keeps its `mt: 2` as local composition; heading/content, action row and profile-only disabled field remain separate.
-- Retain the 2rem route-content gutter as a candidate for explicit central ownership. It is 32px and must not silently replace the 30px public page gutter or the 30px Point form padding.
+- The 2rem route-content gutter is now centralized as `ROUTE_CONTENT_PADDING` and used by Account, Admin, Auth and Live Tracking route shells. It remains distinct from the 30px public page gutter and 30px Point form padding.
 - The declaration-level review has reconciled the 63 `sx=`, 36 `style=` and five `className=` source-file inventories, the single MUI `styled()` consumer, all eight CSS files and all 36 App Router TSX files. Ownership is classified as shared token, reusable preset, theme-owned MUI default, feature-local composition, dynamic component API/pass-through, or legacy pending visual verification.
 - The consumer review covers `BUTTON_STYLES`, panel/surface, layout/form/map/social/typography presets, UI tokens, MUI theme overrides and CSS variables. Legacy constants with documented consumers remain in place; no destructive cleanup is part of Stage 1.
-- Keep the trip-action sizing, Point/EditTrip nested field inset and AppImage cover-fill as small Stage 3 candidates. Do not extract them until the final consumer map and visual verification requirements are recorded.
+- Trip-action sizing, Point/EditTrip nested field inset and AppImage cover-fill are now represented by shared presets and consumed by their reviewed call sites. Preserve the documented exceptions (BackButton semantic treatment, profile fullscreen `contain`, and feature-owned layout geometry).
 
 ### Stage 1 closure — final ownership reconciliation
 
@@ -2550,7 +2550,7 @@ Stage 1 is complete as an audit and architecture-definition phase. The source in
 - Auth standalone forms share the auth presets. Both profile and change-password forms use `ACCOUNT_FORM_FIELDS_SX`.
 - Point create/edit page wrappers use `POINT_FORM_PANEL_SX`; the inner `PointForm` field-control inset is a matching extraction candidate, but its form gap, width constraints and responsive action layout must remain independent.
 - Admin pagination, account trips pages, map address inputs, social action groups, trip-card text inset and shared typography are already represented by presets.
-- Trip-action sizing, AppImage cover-fill, shared home heading/intro treatment and the 32px route-content gutter remain narrowly scoped extraction candidates. Their semantic variants and existing 30px page gutter must be preserved.
+- Trip-action sizing, profile/trip-card image cover-fit, shared home heading/intro treatment and the 32px route-content gutter have been migrated to shared presets/tokens. Their semantic variants and the existing 30px page gutter remain distinct.
 - The legacy panel preset is removed. `CARD_BORDER` remains only as a legacy token pending final unused-token cleanup; `UI_SHADOWS.card` is still used for the circular profile-image control and must remain until that use is independently migrated.
 - CSS Modules are limited to the eight inventoried files. They own page/component geometry; the About page's Space Mono editorial headings, legal-page typography/spacing, trip-detail container query, image-gallery geometry and NotFound composition remain intentionally local.
 - `app/globals.css` remains minimal. Its `.ht-button` rules are required by server-rendered trip markup and must not be removed while those consumers exist.
