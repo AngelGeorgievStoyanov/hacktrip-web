@@ -14,7 +14,7 @@ import { buildTripUrl } from '@/lib/tripUrl';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
-import { UI_COLORS } from '@/constants/ui/colors';
+import { STICKY_SOCIAL_SX } from '@/styles/presets/social';
 import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
 import type { TripGroupResponse } from '@/types';
 
@@ -129,21 +129,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           onSelect={handleSelectDay}
         />
         <Box
-          sx={{
-            display: 'inline-flex',
-            maxWidth: 'calc(100% - 32px)',
-            ml: { xs: 2, sm: 3 },
-            mt: 1,
-            px: 0.75,
-            py: 0.5,
-            border: 1,
-            borderColor: 'divider',
-            borderRadius: 2.5,
-            backgroundColor: UI_COLORS.surface.stickySocial,
-            boxShadow: 1,
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-          }}
+          sx={STICKY_SOCIAL_SX}
         >
           <TripGroupSocialActions
             tripGroupId={group.id}
