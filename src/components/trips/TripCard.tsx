@@ -39,7 +39,6 @@ const IMAGE_STYLE: CSSProperties = {
   display: 'block',
   width: '100%',
   height: '200px',
-  objectFit: 'cover',
 };
 
 const CARD_HEIGHT = '540px';
@@ -242,6 +241,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
         {images.length > 0 ? (
           <AppImage
             image={images[activeStep]}
+            preset="tripCard"
             useThumbnail
             loading={prioritizeImage ? 'eager' : undefined}
             fetchPriority={prioritizeImage ? 'high' : undefined}
