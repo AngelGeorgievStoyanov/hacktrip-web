@@ -1,6 +1,6 @@
 /**
- * Shared dimensions confirmed in current component usage.
- * Component-specific widths stay local until repeated usage is established by the audit.
+ * Shared dimensions reused across multiple components.
+ * Component-specific geometry stays local until repeated usage is established by the audit.
  */
 export const UI_SIZES = {
   smallIndicator: 18,
