@@ -15,8 +15,7 @@ import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialCon
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
-import { UI_COLORS, UI_SHADOWS } from '@/constants/ui';
-import { SOCIAL_BADGE_COMPACT_STYLE } from '@/styles/presets/social';
+import { SOCIAL_BADGE_COMPACT_STYLE, SOCIAL_OVERLAY_SX } from '@/styles/presets/social';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
@@ -100,24 +99,15 @@ export function EngagementBar({
       onTouchEnd={(event) => event.stopPropagation()}
       sx={
         presentation === 'overlay'
-          ? {
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              zIndex: 2,
-              p: 0.35,
-              border: `1px solid ${UI_COLORS.surface.socialOverlayBorder}`,
-              borderRadius: 3,
-              backgroundColor: UI_COLORS.surface.socialOverlay,
-              boxShadow: UI_SHADOWS.socialOverlay,
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              '& .MuiIconButton-root': { color: 'common.white', p: size === 'small' ? 0.5 : 0.65 },
-              '& .MuiIconButton-root:hover': { backgroundColor: UI_COLORS.surface.socialOverlayHover },
-              '& .MuiBadge-badge': {
-                ...(size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : {}),
+          ? [
+              SOCIAL_OVERLAY_SX,
+              {
+                '& .MuiIconButton-root': { p: size === 'small' ? 0.5 : 0.65 },
+                '& .MuiBadge-badge': {
+                  ...(size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : {}),
+                },
               },
-            }
+            ]
           : { display: 'flex', flexDirection: 'column', gap: '0.25rem', margin: '0.25rem 0' }
       }
     >
