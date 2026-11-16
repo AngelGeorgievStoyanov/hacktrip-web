@@ -34,6 +34,9 @@ export const theme = createTheme({
           /* Variables are emitted only for values consumed by plain CSS/CSS Modules. */
           '--ht-button-padding': `${UI_SIZES.wideButtonPaddingY}px ${UI_SIZES.wideButtonPaddingX}px`,
           '--ht-shape-border-radius': `${themeShape.borderRadius}px`,
+          '--ht-spacing-xxs': `${UI_SPACING.xxs * UI_SPACING.unit}px`,
+          '--ht-spacing-xs': `${UI_SPACING.xs * UI_SPACING.unit}px`,
+          '--ht-spacing-sm': `${UI_SPACING.sm * UI_SPACING.unit}px`,
           '--ht-spacing-md': `${UI_SPACING.md * UI_SPACING.unit}px`,
           '--ht-spacing-lg': `${UI_SPACING.lg * UI_SPACING.unit}px`,
           '--ht-page-content-padding': PAGE_CONTENT_PADDING,
