@@ -67,33 +67,3 @@ export const UI_COLORS = {
     pickerHintBackground: 'rgba(255, 255, 255, 0.92)',
   },
 } as const;
-
-/**
- * Backward-compatible names for existing components.
- * Do not add new consumers of this flat legacy object.
- */
-export const COLORS = {
-  pageBackground: UI_COLORS.surface.page,
-  brand: UI_COLORS.brand.primary,
-  cardBackground: UI_COLORS.surface.card,
-  commentCardBackground: UI_COLORS.surface.commentCard,
-  formPanelBackground: UI_COLORS.surface.formPanel,
-  dialogBackground: UI_COLORS.surface.dialog,
-  stickySocialBackground: UI_COLORS.surface.stickySocial,
-  buttonHover: UI_COLORS.brand.primaryHover,
-  dangerHover: UI_COLORS.action.dangerHover,
-  secondaryButtonBackground: UI_COLORS.action.secondaryBackground,
-  secondaryButtonHoverText: UI_COLORS.action.secondaryHoverText,
-  secondaryButtonHoverBackground: UI_COLORS.action.secondaryHoverBackground,
-  textLight: UI_COLORS.text.inverse,
-  textDark: UI_COLORS.text.primary,
-  legalLink: UI_COLORS.legal.link,
-  legalBorder: UI_COLORS.legal.border,
-  legalBackBackground: UI_COLORS.legal.backBackground,
-  headingShadow: UI_COLORS.decorative.headingShadow,
-  mapAddressInputBackground: UI_COLORS.map.addressBackground,
-  mapAddressInputText: UI_COLORS.map.addressText,
-  mapAddressInputLabel: UI_COLORS.map.addressLabel,
-  mapAddressInputBorder: UI_COLORS.map.addressBorder,
-  mapAddressInputBorderHover: UI_COLORS.map.addressBorderHover,
-} as const;

@@ -7,5 +7,5 @@ export * from './spacing';
 export * from './typography';
 export * from './z-index';
 
-/** Legacy style constants kept temporarily for existing imports. */
+/** Legacy card border retained for the profile and trip-edit panels. */
 export { CARD_BORDER } from './styles';
