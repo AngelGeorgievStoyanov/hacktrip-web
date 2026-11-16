@@ -2700,3 +2700,10 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - `TripActions` now consumes those shared presets for add/edit/delete actions instead of maintaining two component-local style objects.
 - Existing 10px padding, full-width sizing, 48px minimum height, box sizing, primary/danger variants, labels, routing, ownership checks and mutation behavior are unchanged.
 - This extraction is intentionally limited to the repeated trip-action pattern; the PointForm buttons retain their distinct 32ch/mobile-stacked layout.
+
+
+### Additional Stage 5 refinement — shared trip action dimensions
+
+- Split the common full-width action dimensions into `TRIP_ACTION_BUTTON_LAYOUT_SX`, then composed the primary and destructive trip-action presets from that single layout contract.
+- The Trip Details Back action now consumes the same layout preset, aligning its 10px padding, full-width sizing, 48px minimum height and box sizing with the adjacent Add/Edit/Delete actions while retaining the BackButton's own secondary visual treatment.
+- Navigation targets, action labels, ownership checks and mutation behavior remain unchanged.
