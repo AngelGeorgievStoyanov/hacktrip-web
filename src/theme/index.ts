@@ -31,14 +31,7 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         ':root': {
-          /* Semantic variables for new CSS Module and plain CSS consumers. */
-          '--ht-color-primary': UI_COLORS.brand.primary,
-          '--ht-color-surface-canvas': UI_COLORS.surface.canvas,
-          '--ht-color-surface-paper': UI_COLORS.surface.paper,
-          '--ht-color-border-divider': UI_COLORS.border.divider,
-          '--ht-color-text-secondary': UI_COLORS.text.secondary,
-          '--ht-color-action-hover': UI_COLORS.action.hover,
-          '--ht-color-action-selected': UI_COLORS.action.selected,
+          /* Variables are emitted only for values consumed by plain CSS/CSS Modules. */
           '--ht-button-padding': `${UI_SIZES.wideButtonPaddingY}px ${UI_SIZES.wideButtonPaddingX}px`,
           '--ht-shape-border-radius': `${themeShape.borderRadius}px`,
           '--ht-button-font-size': themeTypography.button.fontSize,
@@ -46,6 +39,7 @@ export const theme = createTheme({
           '--ht-button-letter-spacing': themeTypography.button.letterSpacing,
           '--ht-button-line-height': themeTypography.button.lineHeight,
           '--ht-button-text-transform': themeTypography.button.textTransform,
+          '--ht-color-primary': UI_COLORS.brand.primary,
           '--ht-color-primary-hover': UI_COLORS.brand.primaryHover,
           '--ht-color-surface-page': UI_COLORS.surface.page,
           '--ht-color-text-primary': UI_COLORS.text.primary,
