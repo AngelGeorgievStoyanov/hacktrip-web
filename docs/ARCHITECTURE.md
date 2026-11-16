@@ -2714,3 +2714,10 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Extended the existing image-preset contract with an optional `objectFit` default. `AppImage` applies the preset default while preserving explicit caller `style` values as higher-priority overrides.
 - The shared `tripCard` image preset now owns the `cover` fit used by TripCard. The component keeps its own frame dimensions and responsive layout; it no longer duplicates the image-fit rule.
 - Existing thumbnail fallback, loading priority, dimensions, image alt text and interaction behavior remain unchanged. The preset's responsive `sizes` hint is now also used by TripCard.
+
+
+### Additional Stage 5 migration — shared profile-image cover rendering
+
+- The `profile` image preset now owns the shared `objectFit: cover` default.
+- AdminUsers, AdminUserProfileImage and ProfileImage now consume that preset instead of repeating the same cover-fit style inline. Their own rendered dimensions, avatar/circular clipping, click behavior and loading/fallback behavior remain caller-owned.
+- Explicit AppImage `style` values continue to override preset defaults, so the full-screen profile image retains its distinct `contain` behavior and is not forced into the thumbnail preset.
