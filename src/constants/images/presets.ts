@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 export interface ImagePreset {
   width?: number;
   height?: number;
@@ -5,6 +7,8 @@ export interface ImagePreset {
   priority?: boolean;
   fill?: boolean;
   useThumbnail?: boolean;
+  /** Default image content fit; an explicit AppImage style can still override it. */
+  objectFit?: CSSProperties['objectFit'];
 }
 
 const IMAGE_SIZES = {
@@ -16,7 +20,12 @@ const IMAGE_SIZES = {
 
 export const IMAGE_PRESETS = {
   hero: { width: 1200, height: 630, sizes: IMAGE_SIZES.hero, priority: true },
-  tripCard: { width: 400, height: 240, sizes: IMAGE_SIZES.card },
+  tripCard: {
+    width: 400,
+    height: 240,
+    sizes: IMAGE_SIZES.card,
+    objectFit: 'cover',
+  },
   gallery: { width: 240, height: 180, sizes: IMAGE_SIZES.gallery, useThumbnail: true },
   tripPointThumb: { width: 200, height: 150, useThumbnail: true },
   editorDayThumb: { width: 120, height: 90, useThumbnail: true },
