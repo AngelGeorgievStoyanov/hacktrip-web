@@ -2402,6 +2402,36 @@ The source inventory also reconfirmed that CSS Modules are limited to the eight 
 - CSS Modules contain local composition rules. `ImageGallery.module.css` uses a 4px image-button radius; compare it with the theme-backed `--ht-shape-border-radius` variable before migrating. Legal page's 6px table-of-contents radius and its content spacing remain page-specific.
 - The token layer currently exports spacing, shape and typography values to TypeScript consumers, but CSS variables are not yet emitted for every token family. Stage 2/4 must decide which tokens genuinely need CSS access; avoid duplicating all TypeScript tokens into CSS variables without a CSS consumer.
 
+### Admin, maps and remaining feature-surface audit
+
+#### Admin
+
+- `ADMIN_PAGINATION_SX` is already shared by AdminUsers, AdminImages, AdminReports, AdminFailedLogs and AdminRouteNotFoundLogs. Keep its consumers on the existing preset.
+- `COLUMN_STACK_SX` is already used by AdminUserForm and AdminUserProfileImage; AdminUserForm adds its own max width, panel padding and surface treatment around that stack.
+- AdminUserForm's outer Box currently recreates a surface using border, `borderRadius: 2`, `bgcolor: background.paper` and `boxShadow: 2`. This differs from the global MUI Card/Dialog surface contract (theme radius/elevation). Treat it as a migration candidate requiring visual approval, not as an accidental duplicate to replace silently.
+- AdminUsers uses a 320px minimum card grid and a local 1.25 spacing for card content. AdminImages has its own thumbnail dimensions and table controls. Admin logs use diagnostic/monospace presentation. These are feature-specific layouts.
+- The three AppImage profile/avatar consumers share the exact cover-fill style identified above; this remains the strongest confirmed reusable inline image style.
+
+#### Maps and trip filters
+
+- `MAP_ADDRESS_INPUT_SX` is correctly shared by PointLocationPicker and TripLocationPicker through AddressAutocomplete. Preserve the map-specific surface, radius, text and outline contract.
+- `AddressAutocomplete` exposes caller-owned `inputSx`, `buttonSx`, `containerSx` and responsive direction. These are intentional composition extension points, not duplicate styles to hide inside the generic component.
+- PointLocationPicker and TripLocationPicker share the 600px map width and map picker constants, but their control rows differ (GPS action, remove-marker action, button heights and responsive arrangements). Keep their compositions distinct.
+- TripFilters is the sole MUI `styled()` consumer found. It uses `theme.shape`, `theme.spacing`, `theme.breakpoints` and `alpha(theme.palette.common.white, ...)`; it is already theme-aware. Its search control geometry and select widths remain filter-specific.
+- TripDetailsView's sticky day/social header uses the global `appBar` z-index token, while its 2.5 radius and elevation 1 belong to the local sticky social surface. Do not merge this surface with generic cards without a visual comparison.
+
+#### Forms, comments and social
+
+- Standalone authentication forms already use shared AUTH_FORM presets; do not re-migrate them. ProfileForm and ChangePasswordForm have the separate shared nested-field pattern documented above.
+- TripForm and PointForm use different panel dimensions, control spacing and responsive ordering. Preserve those distinctions; only extract independently verified field-level patterns.
+- CommentsSection and RepliesSection retain comment-specific panel, reply and author/content layouts. `SOCIAL_ACTIONS_SX`, compact social badges and shared social error text are already reused; TripGroupSocialActions' compact horizontal group has different spacing and behavior.
+- Social overlay colors/shadow and the sticky social bar are different semantic surfaces; keep their token roles separate.
+
+#### Stage 1 progress boundary
+
+- The current pass has reviewed the full token/theme/preset definitions, all eight CSS files, the full inline-style search result set, the principal direct-color/typography/shape/shadow/z-index matches, and targeted Admin/Maps/Forms/Comments/Social/Trip components.
+- The `sx=` search result set contains 63 source files. The remaining work is a file-by-file review of the remaining `sx` consumers not yet inspected in detail, plus final cross-reference checks for token and preset consumers. Stage 1 is not complete until that checklist is closed; no migration should be started merely because a matching value appears in multiple files.
+
 ### Remaining migration candidates
 
 - Continue classifying ProfileForm and ChangePasswordForm field/action spacing against TripForm and PointForm before extracting a shared form preset. Auth standalone forms are already complete; account-edit and entity-edit forms are not automatically the same pattern.
