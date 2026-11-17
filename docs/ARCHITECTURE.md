@@ -2754,6 +2754,9 @@ The Stage 5 closure recorded above is a historical status from the earlier, narr
 - Migrated profile avatars and TripCard image frames to the shared fill-based image presets, with frame sizing owned by the surrounding layout.
 - Removed the arbitrary `style` prop from `AppImage`; image presentation now comes only from its named preset. A current-branch search of AppImage consumers found no remaining caller-side style overrides.
 
+- Removed the unrestricted `AppImage.style` caller API after migrating all indexed AppImage consumers to named presets; profile avatar, profile lightbox, trip card, gallery grid and image lightbox rendering now use preset-owned fit/sizing behavior.
+- Added central tokens for the About page mobile gutter and legal table-of-contents radius, exposed as theme CSS variables, and migrated the corresponding CSS Modules.
+
 These are partial migrations, not evidence that all styling is centralized. Remaining known work includes removing arbitrary `AppImage.style` overrides after all consumers have named presets, tightening `BackButton` so callers cannot override its visual contract, auditing all semantic button roles and remaining local `sx`/CSS declarations, and confirming legacy selectors are truly unused.
 
 ## Stage 5 closure — systematic component migration
