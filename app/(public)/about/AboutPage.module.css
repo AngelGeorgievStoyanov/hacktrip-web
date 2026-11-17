@@ -58,7 +58,7 @@
 
 @media (max-width: 820px) {
   .aboutPage {
-    padding: 20px 16px;
+    padding: var(--ht-page-mobile-content-padding);
   }
   .aboutPageImageRow {
     flex-direction: column;
