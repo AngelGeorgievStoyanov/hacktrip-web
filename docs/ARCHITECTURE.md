@@ -3038,18 +3038,18 @@ The following manifest was generated from the recursive Git tree of the current 
 - [ ] `app/(auth)/resend-verification/page.tsx`
 - [ ] `app/(auth)/reset-password/page.tsx`
 - [ ] `app/(auth)/verify-email/page.tsx`
-- [~] `app/(public)/about/AboutPage.module.css` — previously modified; full audit still required
+- [~] `app/(public)/about/AboutPage.module.css` — stylesheet inspected; local typography/spacing declarations and consumers still require audit
 - [ ] `app/(public)/about/page.tsx`
 - [ ] `app/(public)/layout.tsx`
 - [ ] `app/(public)/live-tracking/page.tsx`
 - [ ] `app/(public)/page.tsx`
-- [~] `app/(public)/privacy-policy/LegalPage.module.css` — previously modified; full audit still required
+- [~] `app/(public)/privacy-policy/LegalPage.module.css` — stylesheet inspected; local spacing/typography/back-link treatment and consumers still require audit
 - [ ] `app/(public)/privacy-policy/page.tsx`
 - [ ] `app/(public)/trips/[id]/page.tsx`
 - [ ] `app/(public)/trips/page.tsx`
 - [ ] `app/api/og/trips/[id]/route.ts`
 - [ ] `app/error.tsx`
-- [ ] `app/globals.css`
+- [~] `app/globals.css` — stylesheet inspected; selector consumers and migration still pending
 - [ ] `app/layout.tsx`
 - [ ] `app/not-found.tsx`
 - [ ] `app/opengraph-image.tsx`
@@ -3140,7 +3140,7 @@ The following manifest was generated from the recursive Git tree of the current 
 - [ ] `src/components/common/ConfirmDialog.tsx`
 - [ ] `src/components/common/ExpandableText.tsx`
 - [ ] `src/components/common/JsonLd.tsx`
-- [ ] `src/components/common/NotFound.module.css`
+- [~] `src/components/common/NotFound.module.css` — stylesheet inspected; local home-button treatment and consumers still require audit
 - [ ] `src/components/common/NotFound.tsx`
 - [ ] `src/components/common/NotificationProvider.tsx`
 - [ ] `src/components/common/PasswordField.tsx`
@@ -3162,7 +3162,7 @@ The following manifest was generated from the recursive Git tree of the current 
 ### `src/components/images/`
 
 - [~] `src/components/images/AppImage.tsx` — previously modified; full audit still required
-- [ ] `src/components/images/ImageGallery.module.css`
+- [~] `src/components/images/ImageGallery.module.css` — stylesheet inspected; selector/consumer verification still pending
 - [~] `src/components/images/ImageGallery.tsx` — previously modified; full audit still required
 - [~] `src/components/images/ImageLightbox.tsx` — previously modified; full audit still required
 - [ ] `src/components/images/ImageUploadField.tsx`
@@ -3170,7 +3170,7 @@ The following manifest was generated from the recursive Git tree of the current 
 
 ### `src/components/layout/`
 
-- [ ] `src/components/layout/Footer.module.css`
+- [~] `src/components/layout/Footer.module.css` — stylesheet inspected; literal horizontal padding and consumers still require audit
 - [ ] `src/components/layout/Footer.tsx`
 - [ ] `src/components/layout/Header.tsx`
 
@@ -3221,14 +3221,14 @@ The following manifest was generated from the recursive Git tree of the current 
 - [~] `src/components/trips/TripCard.tsx` — previously modified; full audit still required
 - [ ] `src/components/trips/TripDaysNav.tsx`
 - [ ] `src/components/trips/TripDetails.tsx`
-- [ ] `src/components/trips/TripDetailsView.module.css`
+- [~] `src/components/trips/TripDetailsView.module.css` — stylesheet inspected; structural geometry vs shared tokens and consumers still require audit
 - [ ] `src/components/trips/TripDetailsView.tsx`
 - [ ] `src/components/trips/TripFilters.tsx`
 - [~] `src/components/trips/TripForm.tsx` — previously modified; full audit still required
-- [ ] `src/components/trips/TripList.module.css`
+- [~] `src/components/trips/TripList.module.css` — stylesheet inspected; local typography/margins and consumers still require audit
 - [ ] `src/components/trips/TripList.tsx`
 - [ ] `src/components/trips/TripMapSection.tsx`
-- [ ] `src/components/trips/TripPagination.module.css`
+- [~] `src/components/trips/TripPagination.module.css` — stylesheet inspected; literal outer margin and consumers still require audit
 - [ ] `src/components/trips/TripPagination.tsx`
 - [ ] `src/components/trips/TripSelectField.tsx`
 
@@ -3567,6 +3567,56 @@ Previously recorded commits (historical; verify against current branch history b
 - Verify the current `AppImage` API and every consumer after the earlier removal of its arbitrary style prop. Do not reintroduce caller overrides as a shortcut.
 - Distinguish true design values from content geometry, map SDK styling, third-party library requirements and one-off structural layout. Centralize shared design decisions, not every numeric value indiscriminately.
 
+## 12.9.1 CSS and styling audit checkpoint — 2026-11-17
+
+**Scope inspected in this batch:** all nine tracked stylesheet files in the current manifest:
+- `app/globals.css`
+- `app/(public)/about/AboutPage.module.css`
+- `app/(public)/privacy-policy/LegalPage.module.css`
+- `src/components/common/NotFound.module.css`
+- `src/components/images/ImageGallery.module.css`
+- `src/components/layout/Footer.module.css`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripList.module.css`
+- `src/components/trips/TripPagination.module.css`
+
+Central styling foundations inspected alongside those stylesheets:
+- `src/theme/index.ts`, `src/theme/palette.ts`, `src/theme/shape.ts`, `src/theme/shadows.ts`, `src/theme/typography.ts`
+- `src/theme/components/button.ts`, `card.ts`, `dialog.ts`, `surface.ts`, `text-field.ts`
+- `src/constants/ui/colors.ts`, `spacing.ts`, `sizes.ts`, `shadows.ts`, `shape.ts`
+- `src/styles/presets/layouts.ts`, `buttons.ts`
+
+### Findings — confirmed, not yet migrated
+
+1. **Global CSS has more than a reset.** It owns the app shell and a separate `.ht-button` visual contract. Its existence and actual consumers still need a branch-wide search before it can be consolidated or removed.
+2. **Token coverage is incomplete for CSS consumers.** `:root` variables currently expose only a subset of semantic color/spacing/shape/typography values. Several stylesheet declarations still use literal values.
+3. **Legacy/local visual declarations remain in CSS Modules.**
+   - `NotFound.module.css`: local home-button padding/margin and button appearance; compare with the shared semantic button contract.
+   - `Footer.module.css`: literal horizontal padding.
+   - `AboutPage.module.css`: local font family/weights, responsive font sizing, margins and text shadow; font family and repeated typography need central ownership review.
+   - `LegalPage.module.css`: literal page/content/TOC padding, margins, font sizing/line-height and a local back-link treatment.
+   - `TripDetailsView.module.css`: literal content widths, margins and container breakpoints alongside shared spacing variables. Distinguish structural geometry from repeated design tokens before moving values.
+   - `TripList.module.css`: local font sizes/weight and small margins.
+   - `TripPagination.module.css`: literal outer margin.
+   - `ImageGallery.module.css`: inspected declarations already consume shared spacing and shape variables; full selector/consumer verification is still required.
+4. **Theme ownership is only partial.** MUI Card and Dialog Paper share `getSurfaceStyles`, but Paper and custom/CSS surfaces have not been proven to follow the same contract. TextField overrides currently declare defaults that match MUI defaults; this alone does not establish consistent field states/appearance.
+5. **Semantic button roles are not complete.** `BUTTON_STYLES.back` aliases `secondary`; this does not prove Back actions are consistent across MUI buttons, anchors and plain HTML controls. `.ht-button` is another styling path.
+6. **Token duplication / inconsistency needs a dedicated pass.** Spacing values appear as scale multipliers and literal pixel/rem values, and semantic values are exposed through CSS variables while other CSS still embeds literals. Do not consolidate until all consumers and intended exceptions are mapped.
+
+### Status of this batch
+
+- Stylesheet content inspected: **9/9**.
+- Central theme/token/preset files inspected: **17 files** (listed above).
+- Consumer-wide searches for every selector, token and preset: **not yet complete**.
+- No stylesheet or application source was modified in this batch.
+- No file is marked VERIFIED. Inspection alone is not completion: a file becomes VERIFIED only after declarations, imports, selectors, consumers, responsive states and relevant visual contracts are checked against the full repository.
+- The nine stylesheet manifest entries are marked PARTIAL to record this inspection without implying migration or complete verification.
+
+### Next task
+
+Continue Stage 1 from the exact current branch HEAD: perform exhaustive selector/token/preset consumer searches, then audit the complete theme and preset dependency graph. Only after the ownership map is complete should migrations begin. Keep Stage 5 open until every feature group has been migrated and re-audited.
+
+---
 ## 12.10 Append-only audit log and mandatory update protocol
 
 **Append a new dated entry here after every completed audit batch, migration batch, meaningful discovery or checkpoint.** Keep older entries as history; correct them with a newer entry rather than silently rewriting history.
@@ -3595,3 +3645,17 @@ Each entry must contain:
 - Consolidated the project objective, six approved stages, ownership boundaries, semantic consistency rules, file-level checklist, incremental audit procedure and handoff instructions.
 - No application source files were modified in this documentation batch. No build, tests, lint or CI were run.
 - Next task: continue Stage 1 using the manifest, audit central styling foundations first, then proceed file-by-file and by dependency group. Do not re-scan unchanged files on each turn; use the Git diff from the latest checkpoint and targeted consumer searches.
+
+
+#### 2026-11-17 — CSS foundation and stylesheet inspection checkpoint
+
+- Branch: `feature/frontend-modernization`
+- Starting HEAD: `4bdfdf649f6c231c086b188c76e973ddd69c8555`
+- Stage: 1 — inventory and audit; CSS/theme foundation subgroup.
+- Inspected all nine stylesheet files in the manifest and the 17 central theme/token/preset files listed in §12.9.1.
+- Confirmed outstanding styling paths: global `.ht-button`, MUI theme overrides, CSS Modules, semantic `sx` presets and inline React styles coexist. This is not an exhaustive consumer list; repository-wide consumer searches remain pending.
+- Confirmed local visual declarations remain in NotFound button, Footer padding, About typography, Legal page spacing/typography/back link, Trip Details layout geometry, Trip List typography/margins and Trip Pagination margin. ImageGallery CSS uses shared variables in the inspected declarations but its complete consumer contract remains unverified.
+- Added findings and CSS checkpoint to §12.9.1; updated all nine stylesheet manifest entries to PARTIAL. No source files were modified.
+- Verification: inspected file contents on the target branch. No build, tests, lint or CI run. No application behavior or visual regression checks performed.
+- Current checkpoint before documentation commit: `4bdfdf649f6c231c086b188c76e973ddd69c8555`.
+- Next task: exhaustive searches for CSS class selectors, CSS variables, token/preset imports, inline `style` and MUI `sx` usage; map consumers before any CSS cleanup or migration.
