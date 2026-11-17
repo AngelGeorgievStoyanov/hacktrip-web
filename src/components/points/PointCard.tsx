@@ -2,11 +2,15 @@
 
 import { Box, Button, Card, IconButton, Typography } from '@mui/material';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import {
+  POINT_CARD_ACTION_BUTTON_SX,
+  POINT_CARD_TEXT_INSET_SX,
+  POINT_CARD_TEXT_WRAP_SX,
+} from '@/styles/presets/cards';
 import { GoogleMapView } from '@/components/maps/GoogleMapView';
 import { ArrowCircleDownIcon, ArrowCircleUpIcon } from '@/constants/icons';
 import type { TripPoint } from '@/types';
 
-const POINT_CARD_TEXT_SX = { px: '10px' } as const;
 
 interface PointCardProps {
   point: TripPoint;
@@ -51,13 +55,13 @@ export function PointCard({
           p: '15px 0',
         }}
       >
-        <Typography gutterBottom component="h6" sx={POINT_CARD_TEXT_SX}>
+        <Typography gutterBottom component="h6" sx={POINT_CARD_TEXT_INSET_SX}>
           Point N {point.pointNumber}
         </Typography>
-        <Typography gutterBottom component="h1" sx={[POINT_CARD_TEXT_SX, { overflowWrap: 'anywhere' }]}>
+        <Typography gutterBottom component="h1" sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}>
           NAME: {point.name}
         </Typography>
-        <Typography gutterBottom component="p" sx={[POINT_CARD_TEXT_SX, { overflowWrap: 'anywhere' }]}>
+        <Typography gutterBottom component="p" sx={[POINT_CARD_TEXT_INSET_SX, { overflowWrap: 'anywhere' }]}>
           DESCRIPTION : {point.description ?? ''}
         </Typography>
 
@@ -86,7 +90,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onEdit(point)}
             disabled={disabled || !point.permissions.canEdit}
-            sx={{ ...BUTTON_STYLES.primary, m: '5px' }}
+            sx={[BUTTON_STYLES.primary, POINT_CARD_ACTION_BUTTON_SX]}
           >
             EDIT POINT
           </Button>
@@ -94,7 +98,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onDelete(point)}
             disabled={disabled || !point.permissions.canDelete}
-            sx={{ ...BUTTON_STYLES.danger, m: '5px' }}
+            sx={[BUTTON_STYLES.danger, POINT_CARD_ACTION_BUTTON_SX]}
           >
             DELETE POINT
           </Button>
