@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type CSSProperties } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { pickImageUrl } from '@/lib/images/thumbnail';
 import { IMAGE_PRESETS, type ImagePreset, type ImagePresetName } from '@/constants/images/presets';
@@ -20,7 +20,6 @@ interface AppImageProps {
   loading?: 'eager' | 'lazy';
   fetchPriority?: 'high' | 'low' | 'auto';
   className?: string;
-  style?: CSSProperties;
 }
 
 export function AppImage({
@@ -37,7 +36,6 @@ export function AppImage({
   loading,
   fetchPriority,
   className,
-  style,
 }: AppImageProps) {
   const [useFullImage, setUseFullImage] = useState(false);
   const [errored, setErrored] = useState(false);
@@ -52,7 +50,6 @@ export function AppImage({
   const resolvedStyle = {
     ...(presetProps?.style ?? {}),
     ...(presetProps?.objectFit ? { objectFit: presetProps.objectFit } : {}),
-    ...style,
   };
 
   // A thumbnail URL in the DTO does not guarantee the object exists in storage; retry with
