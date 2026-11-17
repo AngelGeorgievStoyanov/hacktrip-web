@@ -1,9 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { MUI_BREAKPOINTS } from '@/constants/ui/breakpoints';
-import { PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
+import { ABOUT_PAGE_MOBILE_PADDING, PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { UI_Z_INDEX } from '@/constants/ui/z-index';
+import { UI_SHAPE } from '@/constants/ui/shape';
 import { themePalette } from './palette';
 import { themeShape } from './shape';
 import { themeTypography } from './typography';
@@ -40,6 +41,8 @@ export const theme = createTheme({
           '--ht-spacing-md': `${UI_SPACING.md * UI_SPACING.unit}px`,
           '--ht-spacing-lg': `${UI_SPACING.lg * UI_SPACING.unit}px`,
           '--ht-page-content-padding': PAGE_CONTENT_PADDING,
+          '--ht-page-mobile-content-padding': ABOUT_PAGE_MOBILE_PADDING,
+          '--ht-shape-legal-toc-radius': `${UI_SHAPE.legalTocRadius}px`,
           '--ht-button-font-size': themeTypography.button.fontSize,
           '--ht-button-font-weight': themeTypography.button.fontWeight,
           '--ht-button-letter-spacing': themeTypography.button.letterSpacing,
