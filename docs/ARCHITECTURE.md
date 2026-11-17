@@ -3299,13 +3299,13 @@ The following manifest was generated from the recursive Git tree of the current 
 ### `src/constants/ui/`
 
 - [ ] `src/constants/ui/breakpoints.ts`
-- [ ] `src/constants/ui/colors.ts`
+- [~] `src/constants/ui/colors.ts` — token file inspected; all consumers and semantic role consistency still pending
 - [ ] `src/constants/ui/index.ts`
-- [ ] `src/constants/ui/shadows.ts`
-- [~] `src/constants/ui/shape.ts` — previously modified; full audit still required
-- [~] `src/constants/ui/sizes.ts` — previously modified; full audit still required
-- [~] `src/constants/ui/spacing.ts` — previously modified; full audit still required
-- [ ] `src/constants/ui/typography.ts`
+- [~] `src/constants/ui/shadows.ts` — token file inspected; all shadow consumers still pending
+- [~] `src/constants/ui/shape.ts` — inspected; radius roles and all consumers still pending
+- [~] `src/constants/ui/sizes.ts` — inspected; dimensions and all consumers still pending
+- [~] `src/constants/ui/spacing.ts` — inspected; spacing scale and all consumers still pending
+- [~] `src/constants/ui/typography.ts` — inspected; all typography consumers and overrides still pending
 - [ ] `src/constants/ui/z-index.ts`
 
 ### `src/hooks/useAuth.tsx/`
@@ -3425,42 +3425,42 @@ The following manifest was generated from the recursive Git tree of the current 
 
 ### `src/styles/presets/`
 
-- [~] `src/styles/presets/buttons.ts` — previously modified; full audit still required
-- [~] `src/styles/presets/cards.ts` — previously modified; full audit still required
-- [~] `src/styles/presets/forms.ts` — previously modified; full audit still required
+- [~] `src/styles/presets/buttons.ts` — inspected; semantic role coverage and all consumers still pending
+- [~] `src/styles/presets/cards.ts` — inspected; layout/visual ownership and all consumers still pending
+- [~] `src/styles/presets/forms.ts` — inspected; form roles/states and all consumers still pending
 - [ ] `src/styles/presets/layouts.ts`
-- [ ] `src/styles/presets/map-controls.ts`
-- [ ] `src/styles/presets/panels.ts`
-- [ ] `src/styles/presets/social.ts`
-- [ ] `src/styles/presets/typography.ts`
+- [~] `src/styles/presets/map-controls.ts` — inspected; map-control consumers and exceptions still pending
+- [~] `src/styles/presets/panels.ts` — inspected; panel consumers and surface consistency still pending
+- [~] `src/styles/presets/social.ts` — inspected; social overlay/action consumers still pending
+- [~] `src/styles/presets/typography.ts` — inspected; typography consumers and page exceptions still pending
 
 ### `src/theme/components/`
 
-- [ ] `src/theme/components/button.ts`
-- [ ] `src/theme/components/card.ts`
-- [ ] `src/theme/components/dialog.ts`
-- [ ] `src/theme/components/surface.ts`
-- [ ] `src/theme/components/text-field.ts`
+- [~] `src/theme/components/button.ts` — inspected; all button variants/states and consumers still pending
+- [~] `src/theme/components/card.ts` — inspected; Paper/custom surface parity still pending
+- [~] `src/theme/components/dialog.ts` — inspected; dialog variants/states and consumers still pending
+- [~] `src/theme/components/surface.ts` — inspected; all surface consumers and parity still pending
+- [~] `src/theme/components/text-field.ts` — inspected; full field-state contract still pending
 
 ### `src/theme/index.ts/`
 
-- [~] `src/theme/index.ts` — previously modified; full audit still required
+- [~] `src/theme/index.ts` — inspected; full token exposure and all CSS variable consumers still pending
 
 ### `src/theme/palette.ts/`
 
-- [ ] `src/theme/palette.ts`
+- [~] `src/theme/palette.ts` — inspected; palette roles and component consumers still pending
 
 ### `src/theme/shadows.ts/`
 
-- [ ] `src/theme/shadows.ts`
+- [~] `src/theme/shadows.ts` — inspected; elevation consumers still pending
 
 ### `src/theme/shape.ts/`
 
-- [ ] `src/theme/shape.ts`
+- [~] `src/theme/shape.ts` — inspected; shape consumers still pending
 
 ### `src/theme/typography.ts/`
 
-- [ ] `src/theme/typography.ts`
+- [~] `src/theme/typography.ts` — inspected; typography consumers and overrides still pending
 
 ### `src/types/admin.ts/`
 
@@ -3602,6 +3602,21 @@ Central styling foundations inspected alongside those stylesheets:
 4. **Theme ownership is only partial.** MUI Card and Dialog Paper share `getSurfaceStyles`, but Paper and custom/CSS surfaces have not been proven to follow the same contract. TextField overrides currently declare defaults that match MUI defaults; this alone does not establish consistent field states/appearance.
 5. **Semantic button roles are not complete.** `BUTTON_STYLES.back` aliases `secondary`; this does not prove Back actions are consistent across MUI buttons, anchors and plain HTML controls. `.ht-button` is another styling path.
 6. **Token duplication / inconsistency needs a dedicated pass.** Spacing values appear as scale multipliers and literal pixel/rem values, and semantic values are exposed through CSS variables while other CSS still embeds literals. Do not consolidate until all consumers and intended exceptions are mapped.
+
+
+### Additional foundation findings from the same checkpoint
+
+- `src/constants/ui/colors.ts` contains a broad semantic map, but some values are role-ambiguous or visually inconsistent (for example the primary hover token is green while the primary main token is blue). Preserve the current brand until a deliberate redesign is approved; do not normalize values by guessing.
+- `src/constants/ui/spacing.ts` defines an 8px MUI scale, while the presets and CSS Modules also contain literal pixel/rem values and direct numeric MUI spacing values. Each repeated value needs consumer mapping before it is either tokenized or classified as one-off geometry.
+- `src/constants/ui/shape.ts` defines the general MUI radius plus separate map and legal radii. Determine whether these are deliberate semantic exceptions or accidental divergence; do not force every surface to one radius without role analysis.
+- `src/constants/ui/shadows.ts` contains semantic MUI elevation and two literal CSS shadows. Verify all shadow consumers and whether non-MUI surfaces share a single elevation contract.
+- `src/styles/presets/cards.ts` is not purely visual: `cardStyle` combines layout, dimensions and spacing, while other card presets define content inset/typography/action spacing. Separate reusable structure from visual surface ownership without breaking existing layout.
+- `src/styles/presets/forms.ts` contains several form layout presets and literal dimensions/padding. `MuiTextField` currently sets only variant/size defaults; focus, error, disabled, label, helper text and input states still need an app-wide contract audit.
+- `src/styles/presets/social.ts` includes hard-coded overlay offsets, radii, badge metrics and literal shadow consumers. Verify repeated social/image/map overlay roles before consolidating.
+- `src/styles/presets/map-controls.ts` is a specialized Google Maps control contract. Keep third-party/map-specific behavior separate from general form-field styling where the distinction is intentional.
+- `src/styles/presets/typography.ts` centralizes some legacy HTML heading styles, but page-specific heading declarations (notably About) remain outside this preset and require comparison.
+
+These are confirmed observations from the inspected files, not a completed dependency audit. The associated files remain PARTIAL until their imports, call sites and visual states have been checked.
 
 ### Status of this batch
 
