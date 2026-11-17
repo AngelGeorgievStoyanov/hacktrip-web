@@ -216,7 +216,6 @@ export function EditPointPage() {
                     preset="editorPointThumb"
                     fill
                     sizes="(max-width: 600px) 30vw, 160px"
-                    style={{ objectFit: 'cover' }}
                   />
                   <Tooltip title="Delete image" arrow>
                     <span>
