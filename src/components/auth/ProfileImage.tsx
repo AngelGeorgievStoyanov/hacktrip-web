@@ -113,6 +113,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
             onClick={() => setFullscreen(true)}
             sx={{
               display: 'block',
+              position: 'relative',
               width: '100%',
               height: 'min(300px, 75vw)',
               p: 0,
@@ -128,9 +129,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
               image={image}
               alt="Profile image"
               preset="profile"
-              width={300}
-              height={300}
-              style={{ width: '100%', height: '100%' }}
+              fill
             />
           </Box>
         </Tooltip>
@@ -166,9 +165,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
             image={image}
             alt="Profile image full screen"
             useThumbnail={false}
-            width={1600}
-            height={1200}
-            style={{ width: '100%', height: 'auto', maxHeight: '85vh', objectFit: 'contain' }}
+            preset="profileLightbox"
           />
         </Box>
       </Dialog>
