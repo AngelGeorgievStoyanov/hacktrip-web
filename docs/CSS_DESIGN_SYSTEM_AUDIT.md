@@ -700,12 +700,59 @@ Page wrappers without visual declarations are not automatically migration target
 7. Migrate in the order specified in Stage 5. Update exact file statuses and the next task after every batch.
 8. Do not re-audit unchanged files merely for context. Use this document and Git diff.
 
-**Immediate next batch — exhaustive semantic action consumer mapping:**
+**NEXT TASK — continue the semantic action consumer inventory (Stage 1):**
 
-- Search every BackButton, `BUTTON_STYLES.*`, Button, IconButton, native button and links styled as actions.
-- Create a role matrix (Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm/Secondary/Navigation/Pagination/stepper) listing every file and call site.
-- Compare identical roles and determine the exact component/preset/API owner.
-- Do not modify source code before the role map has been recorded.
+- Continue scanning every UI-bearing TSX/TS/JS/JSX file not yet inspected on the current branch, including all direct MUI Button/IconButton, native button, action-like links, and CSS-backed action controls.
+- Complete the BackButton and `BUTTON_STYLES.*` import/call-site list, then verify each shared component's full caller set.
+- Extend the role matrix below with exact file paths and call-site line numbers; distinguish semantic role from component implementation.
+- Do not migrate source code until the action inventory is exhaustive and recorded.
+
+
+### 2026-11-18 — Stage 1 action/button inventory, first inspection batch
+
+- Re-read this audit document before continuing. Confirmed branch: `feature/frontend-modernization`.
+- Confirmed branch HEAD: `8ca0a5c9aa010d792056a64903ffdf05900e690b`. Compared against audit baseline `f77d0cff2f98298279273d0d15a27b7a236a2dd7`: branch is ahead by 3 commits, with no divergence reported. The three commits are documentation-only (audit creation, architecture link, English translation); no application-source changes exist after the recorded baseline.
+- Confirmed `docs/ARCHITECTURE.md` links to `docs/CSS_DESIGN_SYSTEM_AUDIT.md`.
+- Re-read the actual current-branch source for the shared BackButton, button presets, Header, AdminNavigation, TripActions, PointActions, ConfirmDialog, TripCard, TripDetails, TripMapSection, PointCard, EditPointPage, EditTripLayout, LoginForm, ProfileForm, RegisterForm, ForgotPasswordForm, ChangePasswordForm, ResendVerificationForm, ResetPasswordForm, VerifyEmailForm, AdminUserForm, AdminUsers, AdminReports, AdminImages, AdminFailedLogs, AdminRouteNotFoundLogs, AdminUserProfileImage, CommentsSection, RepliesSection, CommentsToggle, ReportButton, TripGroupSocialActions, EngagementBar, LikeButton, FavoriteButton, TripForm, TripFilters, TripDaysNav, TripPagination, LiveTracker, TripLocationPicker, PointLocationPicker, ImageUploadField, ImageGallery, ImageLightbox, ProfileImage, DayImagesGallery, PointsSection, CustomFileUploadButton, NotFound and the Legal page stylesheet.
+- This is a first consumer-mapping batch, **not an exhaustive Stage 1 completion**. Several remaining UI files and all CSS action-link consumers still need inspection. No source code was changed. No build, tests, lint, CI or browser checks were run.
+
+#### Action-role evidence matrix (observed call sites only; not yet exhaustive)
+
+| Semantic role / family | Observed file and call site | Current implementation / issue |
+|---|---|---|
+| Back | `src/components/trips/TripDetails.tsx:223`; `src/components/trips/EditTripLayout.tsx:492`; `src/components/auth/ProfileForm.tsx:126`; `src/components/auth/ForgotPasswordForm.tsx:91`; `src/components/auth/ResendVerificationForm.tsx:91`; `src/components/auth/ResetPasswordForm.tsx:133`; `src/components/trips/TripForm.tsx:605`; `src/components/admin/AdminUserForm.tsx:327` | Uses shared `BackButton`. Component still accepts caller `sx`; current implementation places caller `sx` before `BUTTON_STYLES.back`, so shared preset wins for overlapping style keys, but arbitrary `style`, `className` and other props have not been contractually restricted. Back is an alias of Secondary. |
+| Primary / Submit / Save | `src/components/points/PointCard.tsx:89-101`; `src/components/auth/LoginForm.tsx:132-153`; `src/components/auth/RegisterForm.tsx:215-234`; `src/components/auth/ChangePasswordForm.tsx:129-134`; `src/components/auth/ForgotPasswordForm.tsx:81-86`; `src/components/auth/ResendVerificationForm.tsx:81-86`; `src/components/auth/ResetPasswordForm.tsx:123-128`; `src/components/auth/VerifyEmailForm.tsx:85-88`; `src/components/auth/ProfileForm.tsx:117-122`; `src/components/trips/TripForm.tsx:574-590`; `src/components/admin/AdminUserForm.tsx:306` | Uses a mixture of `BUTTON_STYLES.primary`, `save` alias, direct contained Button defaults and inline composition. Submit/Save are not yet verified as a consistent semantic role. |
+| Edit | `src/components/points/PointCard.tsx:89-93`; `src/components/trips/TripActions.tsx: EDIT DAY action`; `src/components/admin/AdminUsers.tsx:169` | PointCard uses generic primary preset; trip/admin edit navigation uses direct Button defaults. No dedicated Edit role exists in the preset API. |
+| Delete / destructive | `src/components/points/PointCard.tsx:97-101`; `src/components/trips/TripActions.tsx: DELETE DAY / DELETE TRIP`; `src/components/admin/AdminUserForm.tsx:312-313` | Uses generic `danger`, `tripActionDanger`, `dangerText` or direct controls. No unified Delete semantic component/API. |
+| Add / Create | `src/components/trips/TripActions.tsx: ADD NEXT DAY TRIP / ADD OR EDIT POINTS`; `src/components/comments/CommentsSection.tsx:493`; `src/components/home/*` (no Button found in HomeHero/HomeTrips) | Mix of trip-specific action preset, icon-only Add comment and other controls. No general Add role. |
+| Cancel | `src/components/comments/CommentsSection.tsx:286-288`; `src/components/comments/RepliesSection.tsx:179-181`; `src/components/social/ReportButton.tsx:117`; `src/components/common/ConfirmDialog.tsx: No action` | Direct IconButton/Button or default MUI treatment; not consistently assigned a shared Cancel role. |
+| Confirm | `src/components/common/ConfirmDialog.tsx: Button actions` | Both No and Yes currently use identical direct `contained primary` props; semantic Cancel/Confirm distinction is missing. |
+| Secondary | `src/components/auth/LoginForm.tsx:142`; `src/components/auth/RegisterForm.tsx` (secondary preset alias); `src/components/auth/ProfileForm.tsx:131`; `src/components/trips/TripForm.tsx:601`; map pickers | Preset exists, but it is also reused as Back; some map/admin/navigation controls use direct MUI variants. |
+| Navigation | `src/components/layout/Header.tsx` (`NAV_BUTTON_SX`, direct Button props); `src/components/admin/AdminNavigation.tsx` (active/inactive direct variant/color); `src/components/trips/TripActions.tsx` | Header and AdminNavigation implement separate local navigation treatments; trip actions have a separate trip-specific treatment. |
+| Pagination | `src/components/admin/AdminUsers.tsx:205-211`; `src/components/admin/AdminReports.tsx:113-119`; `src/components/admin/AdminImages.tsx:72-76,103,142-146`; `src/components/admin/AdminFailedLogs.tsx:143-149`; `src/components/admin/AdminRouteNotFoundLogs.tsx:158-164` | Direct MUI Button defaults are repeated. TripPagination/TripFilters/TripDaysNav did not expose direct Button matches in the inspected source. |
+| Day stepper | `src/components/trips/TripForm.tsx:405-418` | Uses shared `dayDecrement`/`dayIncrement` preset names, currently aliases to one `dayNumberButton` style. |
+| Icon-only actions | `src/components/comments/CommentsSection.tsx:276-288,365-382,410,475-493`; `src/components/comments/RepliesSection.tsx:169-181,225-242,289-302`; `src/components/social/LikeButton.tsx:81`; `FavoriteButton.tsx:63`; `EngagementBar.tsx:169`; `TripGroupSocialActions.tsx:111,140,164,191`; `ImageUploadField.tsx:277-296`; `ProfileImage.tsx:150,256-257`; `ImageLightbox.tsx:76,98,112`; `EditPointPage.tsx:222-223`; `AdminImages.tsx:372`; `CustomFileUploadButton.tsx:35` | Raw IconButtons represent several distinct roles (edit/delete/save/cancel/like/favorite/report/remove/close/zoom/navigation). Need a separate shared icon-action family with semantic variants and consistent hit area/focus/disabled states. |
+| Native action button | `src/components/common/NotFound.tsx:50-53` | Native `button` styled by `NotFound.module.css`; separate from MUI Button presets. |
+| File upload action | `src/components/CustomFileUploadButton.tsx:58`; `src/components/images/ImageUploadField.tsx:307` | Button-as-label / upload controls require a named Upload role, not arbitrary primary styling. |
+| Stepper internals | `src/components/trips/TripCard.tsx:259-265`; `src/components/trips/TripMapSection.tsx` Stepper `backButton` slot | MUI Stepper navigation buttons are separate controls and need explicit contract/ownership review. |
+
+#### Confirmed design-system gaps from this batch
+
+1. `BUTTON_STYLES.back` is currently the same object as `secondary`; the code does not yet express Back as an independent semantic role.
+2. `BackButtonProps` omits only `variant` and `color`; callers can supply `sx` and the component spreads the rest of ButtonProps. The role contract is therefore not enforced at the type/API boundary.
+3. `BUTTON_STYLES` has no dedicated `edit`, `add`, `remove`, `cancel`, `confirm`, `navigation`, `pagination` or general `iconAction` roles.
+4. `ConfirmDialog` styles No and Yes identically as contained primary actions.
+5. Header navigation uses local `NAV_BUTTON_SX`; AdminNavigation has direct active/inactive variant and color decisions.
+6. Admin pagination repeats direct MUI Buttons with defaults in five separate components.
+7. Comment/reply actions and image/profile actions use raw IconButtons for multiple semantic roles; social action buttons are not the same family as edit/delete controls.
+8. NotFound still uses a native button with a CSS Module skin.
+9. Upload buttons are another semantic family not yet represented in the central role API.
+10. The current action inventory is incomplete; do not begin migration or mark any affected file VERIFIED based on this batch.
+
+#### NEXT TASK
+
+Continue Stage 1: inspect all remaining UI-bearing files from the 246-file tree, prioritizing any not yet read for Button/IconButton/native button/action-link usage. Complete the BackButton and preset consumer map, inspect all CSS Modules/global CSS for action-like anchors/buttons, and record the remaining exact paths/call sites before proposing the semantic component API.
+
 
 ---
 
@@ -723,3 +770,9 @@ Page wrappers without visual declarations are not automatically migration target
 - Source-level audit only. No application source files were changed. No build, tests, lint, CI or browser visual verification was run.
 - No files are VERIFIED. Stage 1 remains OPEN until the consumer search matrix and remaining UI-file review are complete.
 - Next task: complete the semantic action/button consumer matrix in Section 11, then card/surface and field/image consumer mapping.
+
+### 2026-11-18 — Action/button consumer mapping batch recorded
+
+- Reconfirmed branch HEAD `8ca0a5c9aa010d792056a64903ffdf05900e690b` and the three-commit documentation-only delta from the audit baseline.
+- Inspected the first batch of current-branch action consumers and recorded the observed semantic-role matrix, exact call sites, design-system gaps and remaining NEXT TASK in Section 11.
+- Stage 1 remains IN PROGRESS. The action consumer inventory is not exhaustive; no application source changes were made and no tests/build/lint/CI were run.
