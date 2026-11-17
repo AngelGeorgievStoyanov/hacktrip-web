@@ -28,6 +28,7 @@ import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { AdminUserProfileImage } from '@/components/admin/AdminUserProfileImage';
 import { BackButton } from '@/components/common/BackButton';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
@@ -302,14 +303,14 @@ export function AdminUserForm({ userId }: { userId: string }) {
             </TextField>
           )}
         />
-        <Button type="submit" variant="contained" disabled={!isDirty || updateMutation.isPending}>
+        <Button type="submit" variant="contained" sx={BUTTON_STYLES.save} disabled={!isDirty || updateMutation.isPending}>
           {updateMutation.isPending ? <CircularProgress size={UI_SIZES.smallIndicator} /> : 'Save'}
         </Button>
       </Box>
 
       <Box>
         <Button
-          color="error"
+          sx={BUTTON_STYLES.dangerText}
           disabled={deleteMutation.isPending}
           onClick={() =>
             void confirm('Are you sure you want to delete this user?', 'Delete Confirmation').then(
