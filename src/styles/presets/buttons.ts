@@ -1,5 +1,6 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SPACING } from '@/constants/ui/spacing';
+import { UI_SIZES } from '@/constants/ui/sizes';
 
 /**
  * Reusable MUI sx fragments for recurring button treatments.
@@ -76,7 +77,7 @@ export const DAY_NUMBER_BUTTON_GROUP_SX = {
 const dayNumberButton = {
   minWidth: 40,
   width: 40,
-  height: 'var(--ht-control-height-compact)',
+  height: UI_SIZES.compactControlHeight,
   padding: 0,
   margin: 0,
   '&:hover': { backgroundColor: 'primary.dark' },
