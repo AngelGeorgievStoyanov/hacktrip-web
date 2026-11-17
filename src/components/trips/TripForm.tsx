@@ -24,9 +24,9 @@ import ImageUploadField from '@/components/images/ImageUploadField';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { UI_SIZES } from '@/constants/ui/sizes';
+import { BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
+import { DAY_NUMBER_FIELD_SX } from '@/styles/presets/forms';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
   const normalize = (value: string) => value.toLowerCase().replace(/[\\s_-]/g, '');
@@ -394,33 +394,19 @@ export function TripForm() {
             }}
             error={!!errors.dayNumber}
             helperText={errors.dayNumber?.message}
-            slotProps={{
-              htmlInput: { min: 1, max: DAY_NUMBER_MAX, step: 1, style: { textAlign: 'center' } },
-            }}
-            sx={{ width: '76px !important', '& .MuiInputBase-root': { pointerEvents: 'none' } }}
+            slotProps={{ htmlInput: { min: 1, max: DAY_NUMBER_MAX, step: 1 } }}
+            sx={DAY_NUMBER_FIELD_SX}
           />
           <ButtonGroup
             size="small"
             aria-label="Change day number"
-            sx={{
-              ml: 0.5,
-              mr: 0,
-              my: 0,
-              alignSelf: 'center',
-              '& .MuiButton-root': {
-                minWidth: 40,
-                width: 40,
-                height: UI_SIZES.compactControlHeight,
-                p: 0,
-                m: 0,
-                '&:hover': { backgroundColor: 'primary.dark' },
-              },
-            }}
+            sx={DAY_NUMBER_BUTTON_GROUP_SX}
           >
             <Button
               type="button"
               aria-label="Decrease day number"
               disabled={watch('dayNumber') <= 1}
+              sx={BUTTON_STYLES.dayDecrement}
               onClick={() => changeDayNumber(-1)}
             >
               <RemoveIcon fontSize="small" />
@@ -429,6 +415,7 @@ export function TripForm() {
               type="button"
               aria-label="Increase day number"
               disabled={watch('dayNumber') >= DAY_NUMBER_MAX}
+              sx={BUTTON_STYLES.dayIncrement}
               onClick={() => changeDayNumber(1)}
             >
               <AddIcon fontSize="small" />
