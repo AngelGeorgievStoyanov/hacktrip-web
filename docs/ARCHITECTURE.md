@@ -2738,6 +2738,20 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Auth's centered 480px content column, Admin navigation placement, route flex behavior and Live Tracking's feature-specific body remain unchanged. The standalone error boundary and public page gutter were intentionally not folded into this token.
 
 
+## Stage 5 status correction — migration reopened by mandatory styling contract
+
+The Stage 5 closure recorded above is a historical status from the earlier, narrower audit. It is **superseded** by the mandatory styling ownership rules below and must not be treated as the current completion status. A follow-up source audit found remaining feature-local visual declarations and incomplete semantic contracts (including image overrides, day-number controls, admin actions and PointCard text spacing). Stage 5 is therefore **open** until those consumers are migrated and a complete current-branch source audit confirms the exit criteria. Stage 6 remains pending; build, tests, lint and CI are intentionally not run until explicitly authorized.
+
+### Follow-up migration entries
+
+- Centralized `editorPointThumb.objectFit = cover` in `IMAGE_PRESETS` and removed the call-site `style={{ objectFit: 'cover' }}` from `EditPointPage`.
+- Added semantic day increment/decrement presets and a shared day-number button-group layout preset; `TripForm` now consumes them instead of local button interaction/dimension styles.
+- Added a shared day-number field preset and removed its local `!important` width and inline input text alignment.
+- Added a named Save preset and text-danger preset; `AdminUserForm` now consumes them for Save/Delete.
+- Added the explicit `pointCardTextInset` token and named PointCard text/action presets; `PointCard` no longer declares its local 10px inset or repeated action margins.
+
+These are partial migrations, not evidence that all styling is centralized. Remaining known work includes removing arbitrary `AppImage.style` overrides after all consumers have named presets, tightening `BackButton` so callers cannot override its visual contract, auditing all semantic button roles and remaining local `sx`/CSS declarations, and confirming legacy selectors are truly unused.
+
 ## Stage 5 closure — systematic component migration
 
 Stage 5 is complete for the shared styling patterns identified by the Stage 1 inventory and subsequent component review. The following contracts now have centralized ownership and migrated consumers:
