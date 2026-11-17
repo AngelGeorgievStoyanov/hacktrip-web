@@ -65,6 +65,23 @@ const tripActionDanger = {
   ...TRIP_ACTION_BUTTON_LAYOUT_SX,
 } as const;
 
+/** Shared day-number stepper layout and semantic button contracts. */
+export const DAY_NUMBER_BUTTON_GROUP_SX = {
+  ml: 0.5,
+  mr: 0,
+  my: 0,
+  alignSelf: 'center',
+} as const;
+
+const dayNumberButton = {
+  minWidth: 40,
+  width: 40,
+  height: 'var(--ht-control-height-compact)',
+  padding: 0,
+  margin: 0,
+  '&:hover': { backgroundColor: 'primary.dark' },
+} as const;
+
 export const BUTTON_STYLES = {
   primary,
   primaryWide,
@@ -75,4 +92,6 @@ export const BUTTON_STYLES = {
   createTrip,
   tripAction,
   tripActionDanger,
+  dayIncrement: dayNumberButton,
+  dayDecrement: dayNumberButton,
 } as const;
