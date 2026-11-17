@@ -85,12 +85,17 @@ export function ImageGallery({
                   <AppImage
                     image={image}
                     alt={alt}
-                    preset={position === 0 && leadPreset ? leadPreset : preset}
+                    preset={
+                      variant === 'grid'
+                        ? 'galleryGrid'
+                        : position === 0 && leadPreset
+                          ? leadPreset
+                          : preset
+                    }
                     fill={variant === 'grid'}
                     priority={prioritizeFirstImage && position === 0}
                     loading={prioritizeFirstImage && position === 0 ? 'eager' : undefined}
                     fetchPriority={prioritizeFirstImage && position === 0 ? 'high' : undefined}
-                    style={variant === 'grid' ? { objectFit: 'cover' } : undefined}
                   />
                 </Box>
                 <EngagementBar
