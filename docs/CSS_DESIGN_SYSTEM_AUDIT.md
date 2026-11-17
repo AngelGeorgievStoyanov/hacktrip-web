@@ -1,394 +1,401 @@
 # HackTrip Frontend — CSS & Design System Audit
 
-> **Работен документ / source of truth за CSS, MUI Theme, UI tokens, presets и визуалната миграция.**
+> **Operational source of truth for CSS, the MUI theme, UI tokens, style presets, and the visual migration.**
 >
-> Това е продължение на одобрения план „HackTrip Frontend – Единен план за Design System и Styling Architecture“. Не започвай нов одит при всяка сесия. Прочети този документ и продължи от секция 11. Актуализирай manifest-а и добавяй записи в audit log-а.
+> This document continues the already-approved six-stage plan, **“HackTrip Frontend — Unified Design System and Styling Architecture.”** Do not restart the audit or create a replacement plan in future sessions. Read this document and continue from Section 11. Update the file manifest and append dated entries to the audit log as work progresses.
 
-- Repository: AngelGeorgievStoyanov/hacktrip-web
-- Branch: feature/frontend-modernization
-- Audit baseline: f77d0cff2f98298279273d0d15a27b7a236a2dd7
+- Repository: `AngelGeorgievStoyanov/hacktrip-web`
+- Branch: `feature/frontend-modernization`
+- Audit baseline: `f77d0cff2f98298279273d0d15a27b7a236a2dd7`
 - Audit date: 2026-11-18
-- Scope: frontend presentation layer — app/, src/components/, src/constants/ui/, src/constants/images/, src/theme/, src/styles/.
-- No backend/API/business-logic changes, no branch creation, no build/tests/lint/CI without explicit user authorization.
+- Scope: frontend presentation layer — `app/`, `src/components/`, `src/constants/ui/`, `src/constants/images/`, `src/theme/`, `src/styles/`.
+- Do not change backend/API/business logic. Do not create branches. Do not run build, tests, lint, or CI without explicit user authorization.
 
 ---
 
-## 1. Цел и задължителни правила
+## 1. Goal and mandatory rules
 
-Целта е цялата повтаряща се визуална система да има централен собственик. Смяна на цветовата схема (например синьо/бяло към charcoal/gold) трябва да става основно чрез промяна на tokens/theme, а не чрез редактиране на десетки feature компоненти.
+The goal is to give the entire recurring visual system a single, centralized owner. A future color redesign (for example, blue/white to charcoal/gold) should be achievable primarily by changing design tokens and the theme, not by editing dozens of feature components.
 
-### 1.1 Един визуален договор за еднаква роля
+### 1.1 One visual contract for each semantic role
 
-Еднаквите компоненти и действия трябва да изглеждат еднакво навсякъде, независимо от страницата или feature-а:
+Components and actions with the same purpose must look and behave consistently everywhere, regardless of page or feature:
 
-- **Back** — един общ стил, размер, padding, radius, hover/focus/active/disabled икона/позициониране, когато е част от ролята.
-- **Edit** — един общ стил за Edit действие.
-- **Create / Add** — общи роли за създаване и добавяне; отделни само когато UX семантиката е различна.
-- **Delete / Remove** — общи семантични роли; отделни само при доказана разлика в значението.
-- **Save / Cancel / Confirm / Secondary / Navigation** — централизирани роли.
-- **Cards** — еднакъв тип карта споделя surface color, border, radius, shadow, основни вътрешни отстояния и states. Разликата в съдържанието или layout-а не създава нов skin.
-- **Panels, dialogs, tables, fields, image frames, social controls, map controls, alerts и pagination** — повтарящите се роли имат общ договор.
+- **Back** — one shared style, size, padding, radius, hover/focus/active/disabled behavior, icon and positioning where those are part of the role.
+- **Edit** — one shared visual contract for the Edit action.
+- **Create / Add** — shared semantic roles; keep them separate only when their UX meaning is genuinely different.
+- **Delete / Remove** — shared semantic roles; keep them separate only when their meaning is demonstrably different.
+- **Save / Cancel / Confirm / Secondary / Navigation** — centrally defined roles.
+- **Cards** — cards of the same role share surface color, border, radius, shadow, core content insets and interaction states. Different content or layout does not justify a different skin.
+- **Panels, dialogs, tables, fields, image frames, social controls, map controls, alerts and pagination** — recurring roles must have shared contracts.
 
-Не уеднаквявай различни действия само защото са един и същ HTML/MUI елемент. Уеднаквявай еднаквото предназначение. Изключение е допустимо само когато е семантично обосновано и описано.
+Do not make different actions identical merely because they use the same HTML or MUI element. Make actions with the same purpose consistent. An exception is allowed only when it is semantically justified and documented.
 
-### 1.2 Забранено като краен резултат
+### 1.2 Forbidden end state
 
-- Локални цветове, hex/rgb/rgba/gradient, radius, shadow, typography, spacing, padding, margin, размери или interaction states, когато стойността се повтаря или е споделена.
-- Локални константи за визуални правила във feature/page/component файлове, когато принадлежат на обща роля.
-- Различни локални реализации на един и същ Back/Edit/Delete/Add/Save бутон.
-- Различни локални Card/Paper surface стилове за карти от един и същ тип.
-- Inline style={{...}} или sx={{...}} за повтаряща се визия.
-- Повтарящи се CSS декларации в CSS Modules, когато трябва да използват централен token/preset.
-- Паралелни styling системи за един и същ елемент без изрично описана причина.
+- Local colors, hex/rgb/rgba/gradient values, radius, shadows, typography, spacing, padding, margins, dimensions or interaction states when the value is shared or repeated.
+- Feature/page/component-local visual constants when the rule belongs to a shared role.
+- Different local implementations of the same Back/Edit/Delete/Add/Save action.
+- Different local Card/Paper surface skins for cards of the same role.
+- Inline `style={{...}}` or `sx={{...}}` for recurring visual treatment.
+- Repeated CSS declarations in CSS Modules where a central token or preset should be used.
+- Parallel styling systems for the same element without an explicitly documented reason.
 
-### 1.3 Какво може да остане локално
+### 1.3 What may remain local
 
-Само истински специфична структура или геометрия, която не е споделена: уникална grid композиция, специфично позициониране в карта, layout на една конкретна страница, responsive пренареждане или third-party интеграция. И тогава всички споделени визуални стойности идват от tokens/theme/presets.
+Only genuinely unique structure or geometry that is not shared: a unique grid composition, a specific map position, a one-page layout, responsive rearrangement, or third-party integration geometry. Even then, all shared visual values must come from tokens, the theme, or presets.
 
-CSS Modules са позволени за структурно оформление и специфични responsive правила, но не са втори склад за цветове, radius, shadows, typography и повтарящи се component skins.
+CSS Modules are allowed for structural layout and page-specific responsive rules. They must not become a second repository for colors, radius, shadows, typography, or recurring component skins.
 
-### 1.4 Не променяй визуалните стойности на сляпо
+### 1.4 Do not change visual values blindly
 
-Текущата синьо-бяла визия се запазва по време на архитектурната миграция. При конфликт първо се описват всички потребители и текущото поведение. Не се избира произволно цвят/размер и не се прави редизайн без одобрение.
+Preserve the current blue/white design during the architecture migration. When values conflict, first identify all consumers and document current behavior. Do not choose arbitrary colors or dimensions, and do not perform a redesign without approval.
 
 ---
 
-## 2. Одобрена целева архитектура
+## 2. Approved target architecture
 
-    app/
-      globals.css                 # минимален reset, app shell, CSS variable consumers
+```text
+app/
+  globals.css                 # minimal reset, app shell, CSS-variable consumers
 
-    src/
-      constants/
-        ui/                       # colors, spacing, sizes, breakpoints, shape, shadows, typography, z-index
-        images/presets.ts         # named image rendering roles
-      theme/
-        index.ts                  # single MUI theme + CSS variables
-        palette.ts
-        shape.ts
-        shadows.ts
-        typography.ts
-        components/
-          button.ts
-          card.ts
-          dialog.ts
-          surface.ts
-          text-field.ts
-      styles/presets/
-        buttons.ts                # semantic action roles
-        cards.ts                  # content/layout only; surface belongs to theme
-        forms.ts
-        layouts.ts
-        map-controls.ts
-        panels.ts
-        social.ts
-        typography.ts
-      components/                 # feature UI consumes semantic contracts
+src/
+  constants/
+    ui/                       # colors, spacing, sizes, breakpoints, shape, shadows, typography, z-index
+    images/presets.ts         # named image-rendering roles
+  theme/
+    index.ts                  # single MUI theme + CSS variables
+    palette.ts
+    shape.ts
+    shadows.ts
+    typography.ts
+    components/
+      button.ts
+      card.ts
+      dialog.ts
+      surface.ts
+      text-field.ts
+  styles/presets/
+    buttons.ts                # semantic action roles
+    cards.ts                  # content/layout only; surface belongs to the theme
+    forms.ts
+    layouts.ts
+    map-controls.ts
+    panels.ts
+    social.ts
+    typography.ts
+  components/                 # feature UI consumes semantic contracts
+```
 
-### Единствен собственик на всяка стойност
+### One owner for every value
 
 | Concern | Owner |
 |---|---|
-| Brand/semantic colors | src/constants/ui/colors.ts → MUI palette / CSS variables |
-| Spacing and gutters | src/constants/ui/spacing.ts |
-| Shared dimensions | src/constants/ui/sizes.ts |
-| Breakpoints | src/constants/ui/breakpoints.ts |
-| Radius | src/constants/ui/shape.ts |
-| Elevation/shadows | src/constants/ui/shadows.ts + theme resolver |
-| Typography | src/constants/ui/typography.ts → theme |
-| MUI global behavior | src/theme/components/* |
-| Semantic reusable sx contracts | src/styles/presets/* |
-| Named image behavior | src/constants/images/presets.ts + AppImage |
-| CSS consumers | app/globals.css and CSS Modules using CSS variables |
-| Unique layout composition | feature component/CSS Module only when not reusable |
+| Brand and semantic colors | `src/constants/ui/colors.ts` → MUI palette / CSS variables |
+| Spacing and gutters | `src/constants/ui/spacing.ts` |
+| Shared dimensions | `src/constants/ui/sizes.ts` |
+| Breakpoints | `src/constants/ui/breakpoints.ts` |
+| Radius | `src/constants/ui/shape.ts` |
+| Elevation and shadows | `src/constants/ui/shadows.ts` + theme resolver |
+| Typography | `src/constants/ui/typography.ts` → theme |
+| Global MUI behavior | `src/theme/components/*` |
+| Reusable semantic `sx` contracts | `src/styles/presets/*` |
+| Named image behavior | `src/constants/images/presets.ts` + `AppImage` |
+| CSS consumers | `app/globals.css` and CSS Modules using CSS variables |
+| Unique layout composition | Feature component/CSS Module only when it is not reusable |
 
-Една стойност няма право да има два независими собственика. Ако token трябва да се използва от CSS и MUI, дефинира се веднъж и се предоставя на CSS чрез CSS variable от theme.
-
----
-
-## 3. Одитирана база и ограничения
-
-При baseline f77d0cff2f98298279273d0d15a27b7a236a2dd7 recursive repository tree съдържа 274 tracked files и 246 файла под app/ и src/ с TS/TSX/JS/JSX/CSS разширения. Този одит обхваща presentation layer. API clients, DTOs, validation schemas, SEO builders и server utilities не са styling migration targets, освен ако consumer search не докаже друго.
-
-**Статуси:**
-- PARTIAL: файлът е прочетен/инспектиран, но consumers, call sites, states или visual parity не са изчерпателно проверени.
-- PENDING: предстои отделна проверка.
-- CHANGE REQUIRED: има конкретно наблюдавано локално/дублирано визуално правило, което трябва да се мигрира.
-- VERIFIED: само след проверка на декларации, всички consumers, semantic role, responsive поведение и states. На този baseline няма VERIFIED файлове.
-
-Това е source-code одит, не browser screenshot/visual QA. Не са изпълнявани build, tests, lint, CI или visual regression.
+A value must not have two independent owners. If a token is needed by both CSS and MUI, define it once and expose it to CSS through a CSS variable generated by the theme.
 
 ---
 
-## 4. Потвърдени архитектурни проблеми
+## 3. Audit baseline and limitations
 
-### 4.1 Няколко паралелни styling пътя
+At baseline `f77d0cff2f98298279273d0d15a27b7a236a2dd7`, the recursive repository tree contained 274 tracked files and 246 TS/TSX/JS/JSX/CSS files under `app/` and `src/`. This audit covers the presentation layer. API clients, DTOs, validation schemas, SEO builders and server utilities are not styling migration targets unless consumer searches prove otherwise.
 
-Визията идва едновременно от:
-1. MUI theme и component overrides.
-2. src/styles/presets/*.ts през sx.
-3. CSS custom properties от src/theme/index.ts.
-4. app/globals.css, включително отделния .ht-button.
+**Status definitions:**
+- **PARTIAL** — the file was read/inspected, but its consumers, call sites, states or visual parity have not been exhaustively verified.
+- **PENDING** — a dedicated inspection is still required.
+- **CHANGE REQUIRED** — a concrete local or duplicated visual rule has been observed and must be migrated.
+- **VERIFIED** — only after declarations, all consumers, semantic role, responsive behavior and states have been checked. No files were VERIFIED at this baseline.
+
+This is a source-code audit, not browser screenshot or visual QA. No build, tests, lint, CI or visual regression checks have been run.
+
+---
+
+## 4. Confirmed architectural problems
+
+### 4.1 Multiple parallel styling paths
+
+Visual appearance currently comes from all of the following:
+
+1. MUI theme and component overrides.
+2. `src/styles/presets/*.ts` consumed through `sx`.
+3. CSS custom properties generated by `src/theme/index.ts`.
+4. `app/globals.css`, including the separate `.ht-button` skin.
 5. CSS Modules.
-6. component-local sx={{...}}, style={{...}} и локални style constants.
-7. директни MUI props color/variant/size и native HTML controls.
+6. Component-local `sx={{...}}`, `style={{...}}` and local style constants.
+7. Direct MUI `color`/`variant`/`size` props and native HTML controls.
 
-Това позволява еднакви контроли да изглеждат различно в различни features. Целта не е премахване на MUI или CSS Modules, а ясен собственик за всяка визуална роля и премахване на конкуриращите се локални дефиниции.
+This allows controls with the same purpose to look different across features. The goal is not to remove MUI or CSS Modules. The goal is to establish a clear owner for every visual role and remove competing local definitions.
 
-### 4.2 Buttons — семантичната система е непълна
+### 4.2 Buttons — semantic system is incomplete
 
-Потвърдено:
-- src/styles/presets/buttons.ts има primary/save alias, danger, dangerText, secondary/back alias, createTrip, tripAction, tripActionDanger и day stepper.
-- BackButton.tsx използва BUTTON_STYLES.back, но публичните props позволяват caller sx и така всеки call site може да променя общия стил.
-- Back е alias на Secondary; това е текущо решение, не доказателство, че всички Back контроли го използват.
-- Header има локален NAV_BUTTON_SX и директни MUI color props.
-- AdminNavigation дефинира active/inactive цветове и variants локално.
-- Admin pagination използва голи MUI Button defaults.
-- Auth формите използват primary/secondary presets непоследователно; някои Back calls override-ват spacing.
-- PointCard използва primary/danger, но много Edit/Delete/Save/Remove IconButtons в comments, images, profiles и admin са raw MUI IconButtons.
-- ConfirmDialog използва директни MUI primary buttons.
-- ReportButton има директни Cancel/Submit buttons.
-- LiveTracker и TripMapSection имат директни buttons.
-- CSS .ht-button е отделен server-rendered button contract.
+Confirmed observations:
 
-**Необходимо:** дефинирай semantic roles (Back, Primary/Submit, Create, Add, Edit, Delete, Remove, Save, Cancel, Confirm, Secondary, Navigation, pagination/stepper). Създай reusable components или API, което не позволява произволен caller visual override. Провери MUI и native/server-rendered buttons. Не оставяй .ht-button като паралелна design system. Icon-only controls са отделно семейство със споделени размери, hit area, radius, focus ring и disabled behavior.
+- `src/styles/presets/buttons.ts` contains primary/save alias, danger, dangerText, secondary/back alias, createTrip, tripAction, tripActionDanger and day-stepper styles.
+- `BackButton.tsx` uses `BUTTON_STYLES.back`, but its public props allow callers to pass `sx`, so each call site can override the shared appearance.
+- Back is currently an alias of Secondary. This describes the current implementation; it does not prove that every Back control uses it.
+- Header has a local `NAV_BUTTON_SX` and direct MUI color props.
+- AdminNavigation defines active/inactive colors and variants locally.
+- Admin pagination uses uncustomized MUI Button defaults.
+- Auth forms use primary/secondary presets inconsistently; some Back call sites override spacing.
+- PointCard uses primary/danger presets, but many Edit/Delete/Save/Remove IconButtons in comments, images, profiles and admin are raw MUI IconButtons.
+- ConfirmDialog uses direct MUI primary buttons.
+- ReportButton has direct Cancel/Submit buttons.
+- LiveTracker and TripMapSection have direct buttons.
+- CSS `.ht-button` is a separate server-rendered button contract.
 
-### 4.3 Cards and surfaces — глобалната собственост е частична
+**Required:** define semantic roles (Back, Primary/Submit, Create, Add, Edit, Delete, Remove, Save, Cancel, Confirm, Secondary, Navigation, pagination/stepper). Create reusable components or an API that prevents arbitrary caller-level visual overrides. Inspect MUI and native/server-rendered buttons. Do not leave `.ht-button` as a parallel design system. Icon-only controls are a separate family with shared dimensions, hit area, radius, focus ring and disabled behavior.
 
-Потвърдено:
-- MUI Card използва cardOverrides и getSurfaceStyles: paper background, divider border, theme radius и surface shadow.
-- Dialog Paper използва същия surface resolver.
-- PANEL_SX също делегира към същия resolver.
-- Други Paper, Box-as-card, native containers и CSS surfaces не се покриват автоматично.
-- Card presets смесват content spacing и trip-card geometry.
-- Локални Card sx остават в comments, trip details, trip form, point form, admin и други features.
-- Sticky social и map/image overlays са отделни surface роли.
+### 4.3 Cards and surfaces — centralized ownership is partial
 
-**Необходимо:** един base card contract (surface color, border, radius, shadow, states). Card-specific layout е отделно. TripCard и PointCard могат да имат различно съдържание, но не и различен базов skin, ако са една и съща card роля. Прилагай договора към MUI Card, Paper panels и Box/native елементи, които действат като карти. Премахвай локални surface overrides без документирана причина.
+Confirmed observations:
 
-### 4.4 Fields and forms — theme contract е непълен
+- MUI Card uses `cardOverrides` and `getSurfaceStyles`: paper background, divider border, theme radius and surface shadow.
+- Dialog Paper uses the same surface resolver.
+- `PANEL_SX` also delegates to the same resolver.
+- Other Paper elements, Box-as-card elements, native containers and CSS surfaces are not automatically covered.
+- Card presets mix content spacing with trip-card geometry.
+- Local Card `sx` remains in comments, trip details, trip form, point form, admin and other features.
+- Sticky social and map/image overlays are separate surface roles.
 
-- src/theme/components/text-field.ts задава само default variant/size; не описва пълния app field contract.
-- forms.ts смесва form layout presets и фиксирани field dimensions.
-- TextFields в auth, profile, admin, points, trips, comments и maps разчитат на defaults или локални props/sx.
-- Map address autocomplete има отделен visual treatment; трябва да остане named map-specific variant, не произволен локален override.
+**Required:** establish one base card contract (surface color, border, radius, shadow and states). Card-specific layout must be separate. TripCard and PointCard may have different content, but must not have different base skins if they are the same card role. Apply the contract to MUI Card, Paper panels and Box/native elements that function as cards. Remove local surface overrides unless there is a documented reason.
 
-**Необходимо:** централен field contract за default/hover/focus/error/disabled/read-only, label, helper text, input padding/height, border, radius, typography и adornments. Всички стандартни полета да са еднакви; map field да наследява общия договор и да променя само описаните map-specific свойства.
+### 4.4 Fields and forms — theme contract is incomplete
+
+- `src/theme/components/text-field.ts` sets only default variant/size; it does not define the complete application field contract.
+- `forms.ts` mixes form layout presets with fixed field dimensions.
+- TextFields in auth, profile, admin, points, trips, comments and maps rely on defaults or local props/`sx`.
+- Map address autocomplete has separate visual treatment; it should remain a named map-specific variant, not an arbitrary local override.
+
+**Required:** define a central field contract for default/hover/focus/error/disabled/read-only states, label, helper text, input padding/height, border, radius, typography and adornments. All standard fields must match. A map field must inherit the base contract and change only explicitly documented map-specific properties.
 
 ### 4.5 Colors and semantic tokens
 
-Потвърдени несъответствия в src/constants/ui/colors.ts:
-- brand.primary е синьо (#1976d2), brand.primaryHover е зелено (#4daf30).
-- action.danger е literal red, feedback.error е #d32f2f, dangerHover е #ef0a0a.
-- Secondary/Create/Navigation имат отделни legacy цветове.
-- CSS variables expose само част от semantic colors; CSS Modules съдържат literals.
-- MUI palette и plain CSS нямат пълна parity.
+Confirmed inconsistencies in `src/constants/ui/colors.ts`:
 
-**Необходимо:** запази текущите стойности до одобрение на coherent mapping. Изгради semantic tokens за brand, neutral surfaces, text, border, feedback, destructive, hover/focus/selected/disabled, overlay и decorative. Всички tokens, нужни в CSS Modules, се излагат като CSS variables от theme. Без повторени hex/rgb literals във feature CSS.
+- `brand.primary` is blue (#1976d2), while `brand.primaryHover` is green (#4daf30).
+- `action.danger` is literal red, `feedback.error` is #d32f2f, and `dangerHover` is #ef0a0a.
+- Secondary/Create/Navigation use separate legacy colors.
+- CSS variables expose only part of the semantic color map; CSS Modules still contain literals.
+- MUI palette and plain CSS do not have complete parity.
 
-### 4.6 Spacing, shape, shadows, typography, breakpoints
+**Required:** preserve current values until a coherent mapping is approved. Establish semantic tokens for brand, neutral surfaces, text, border, feedback, destructive actions, hover/focus/selected/disabled, overlays and decorative use. Expose every token needed by CSS Modules as a CSS variable generated by the theme. Do not leave repeated hex/rgb literals in feature CSS.
 
-- Spacing scale използва 8px MUI unit, но presets/CSS съдържат raw px/rem и numeric MUI spacing.
-- Shape има general radius 4, map input radius 5 и legal TOC radius 6. Всички еднакви card роли трябва да се уеднаквят.
-- MUI surfaces използват theme elevation; profile-image и social-overlay имат literal CSS shadows.
-- Typography tokens възпроизвеждат MUI defaults, но About използва локален Space Mono и локални font sizes/weights.
-- MUI breakpoints и legacy feature thresholds съществуват едновременно.
-- Z-index tokens съществуват, но raw z-index стойности остават в component styles.
+### 4.6 Spacing, shape, shadows, typography and breakpoints
 
-**Необходимо:** замени повтарящите се raw spacing/size с named tokens; дефинирай semantic radius roles и един card radius; semantic elevations; централизирай typography и editorial variant; централизирай breakpoint constants и raw z-index.
+- The spacing scale uses an 8px MUI unit, but presets/CSS also contain raw px/rem values and numeric MUI spacing.
+- Shape currently has general radius 4, map input radius 5 and legal TOC radius 6. Cards with the same role must be unified.
+- MUI surfaces use theme elevation; profile-image and social-overlay styles contain literal CSS shadows.
+- Typography tokens reproduce MUI defaults, but About uses local Space Mono and local font sizes/weights.
+- MUI breakpoints and legacy feature thresholds coexist.
+- Z-index tokens exist, but raw z-index values remain in component styles.
+
+**Required:** replace repeated raw spacing/sizes with named tokens; define semantic radius roles and one card radius; define semantic elevations; centralize typography and any editorial variant; centralize breakpoint constants and raw z-index values.
 
 ### 4.7 Images
 
-- IMAGE_PRESETS централизират named dimensions, object-fit и някои preset styles.
-- AppImage derives style only from selected preset и не expose-ва arbitrary style prop — това е правилната API посока.
-- Някои call sites заобикалят AppImage с Next Image или component="img" и локални style objects (About, image upload previews, profile previews).
-- Image frame/button/overlay behavior е разделено между ImageGallery CSS Module и локални sx в ImageGallery/ImageLightbox/ProfileImage/EditPointPage/TripForm/Admin.
+- `IMAGE_PRESETS` centralizes named dimensions, object-fit and some preset styles.
+- `AppImage` derives style only from the selected preset and does not expose an arbitrary style prop — this is the correct API direction.
+- Some call sites bypass AppImage with Next Image or `component="img"` and local style objects (About, image upload previews and profile previews).
+- Image frame/button/overlay behavior is split between the ImageGallery CSS Module and local `sx` in ImageGallery, ImageLightbox, ProfileImage, EditPointPage, TripForm and Admin.
 
-**Необходимо:** използвай AppImage/named image presets за споделените image roles, където е съвместимо. Централизирай fit, frame radius, thumbnail dimensions, preview size, lightbox controls и overlays. Проверявай всеки AppImage и direct Image/img consumer преди промяна на API.
+**Required:** use AppImage/named image presets for shared image roles where compatible. Centralize fit, frame radius, thumbnail dimensions, preview size, lightbox controls and overlays. Inspect every AppImage and direct Image/img consumer before changing the API.
 
-### 4.8 CSS Modules and globals
+### 4.8 CSS Modules and global CSS
 
-Потвърдени локални декларации:
-- app/globals.css: app shell плюс отделен .ht-button skin.
-- AboutPage.module.css: Space Mono, font weights/sizes, text shadow, margins.
-- LegalPage.module.css: page/content padding, font sizing/line-height, Back link skin.
-- NotFound.module.css: Home button color/background/padding/margin.
-- Footer.module.css: literal horizontal padding.
-- TripDetailsView.module.css: уникална grid/container geometry плюс literal widths/margins за класификация.
-- TripList.module.css: local empty-state typography/margins.
-- TripPagination.module.css: local outer margin.
-- ImageGallery.module.css: inspected declarations използват shared spacing/shape variables; нуждае се от пълна selector/consumer verification.
+Confirmed local declarations:
 
-**Необходимо:** запази unique structural grid/flex/container rules; замени shared visual literals с CSS variables; мигрирай shared button/link/card skins към semantic components/theme; не създавай нови CSS Modules за shared visual values.
+- `app/globals.css`: app shell plus a separate `.ht-button` skin.
+- `AboutPage.module.css`: Space Mono, font weights/sizes, text shadow and margins.
+- `LegalPage.module.css`: page/content padding, font sizing/line-height and a Back-link skin.
+- `NotFound.module.css`: Home button color/background/padding/margin.
+- `Footer.module.css`: literal horizontal padding.
+- `TripDetailsView.module.css`: unique grid/container geometry plus literal widths/margins that need classification.
+- `TripList.module.css`: local empty-state typography/margins.
+- `TripPagination.module.css`: local outer margin.
+- `ImageGallery.module.css`: inspected declarations use shared spacing/shape variables; full selector/consumer verification is still required.
+
+**Required:** preserve unique structural grid/flex/container rules; replace shared visual literals with CSS variables; migrate shared button/link/card skins to semantic components/theme; do not create new CSS Modules for shared visual values.
 
 ---
 
-## 5. Файлове и конкретни промени
+## 5. Files and required changes
 
-### 5.1 Central tokens and theme — най-висок приоритет
+### 5.1 Central tokens and theme — highest priority
 
-| File | Потвърдено състояние | Required action |
+| File | Confirmed state | Required action |
 |---|---|---|
-| src/constants/ui/colors.ts | Semantic colors; primary hover/danger несъответствия | Reconcile semantic map след consumer inventory; не сменяй текущи стойности без одобрение |
-| src/constants/ui/spacing.ts | 8px scale + page/route/About gutters | Tokenize повтарящи се spacing стойности |
-| src/constants/ui/sizes.ts | Малък набор shared dimensions | Добави само доказани повторяеми sizes |
-| src/constants/ui/breakpoints.ts | MUI + legacy thresholds | Map every use; обедини aliases със същото значение |
-| src/constants/ui/shape.ts | Radius 4/5/6 | Semantic roles; еднаквите cards трябва да имат един radius |
-| src/constants/ui/shadows.ts | MUI elevations + literal shadows | Semantic elevations за shared surfaces |
-| src/constants/ui/typography.ts | MUI typography tokens | Named editorial role само ако е нужно |
-| src/constants/ui/z-index.ts | App layering scale | Замени повтарящи се raw z-index |
-| src/constants/ui/index.ts | Token barrel | Поддържай единни exports |
-| src/theme/index.ts | MUI theme + CSS variables | Разшири CSS variable bridge за всички CSS Module consumers |
-| src/theme/palette.ts | MUI palette from UI_COLORS | Единствен palette mapping |
-| src/theme/shape.ts | MUI radius | Derive from semantic shape token |
-| src/theme/shadows.ts | Semantic elevation resolver | Единствен MUI elevation resolver |
-| src/theme/typography.ts | MUI typography mapping | Единствен MUI typography mapping |
-| src/theme/components/surface.ts | Shared Card/Panel/Dialog surface resolver | Единствен surface skin contract |
-| src/theme/components/card.ts | MUI Card override | Запази; премахни локални surface overrides |
-| src/theme/components/dialog.ts | Dialog paper surface | Align dialog states |
-| src/theme/components/button.ts | Само typography/radius | Добави shared global interaction behavior |
-| src/theme/components/text-field.ts | Defaults only | Пълен field contract and states |
-| src/constants/images/presets.ts | Named image roles; style/objectFit | Провери всички consumers; раздели frame/fit/size roles чисто |
+| `src/constants/ui/colors.ts` | Semantic colors; primary-hover/danger inconsistencies | Reconcile the semantic map after consumer inventory; do not change current values without approval |
+| `src/constants/ui/spacing.ts` | 8px scale + page/route/About gutters | Tokenize repeated spacing values |
+| `src/constants/ui/sizes.ts` | Small set of shared dimensions | Add only dimensions proven to recur |
+| `src/constants/ui/breakpoints.ts` | MUI + legacy thresholds | Map every use; merge aliases with identical meaning |
+| `src/constants/ui/shape.ts` | Radius 4/5/6 | Define semantic roles; cards of the same role must share one radius |
+| `src/constants/ui/shadows.ts` | MUI elevations + literal shadows | Define semantic elevations for shared surfaces |
+| `src/constants/ui/typography.ts` | MUI typography tokens | Add a named editorial role only if required |
+| `src/constants/ui/z-index.ts` | App layering scale | Replace repeated raw z-index values |
+| `src/constants/ui/index.ts` | Token barrel | Maintain consistent exports |
+| `src/theme/index.ts` | MUI theme + CSS variables | Extend the CSS-variable bridge for all CSS Module consumers |
+| `src/theme/palette.ts` | MUI palette from UI_COLORS | Keep this as the single palette mapping |
+| `src/theme/shape.ts` | MUI radius | Derive from semantic shape tokens |
+| `src/theme/shadows.ts` | Semantic elevation resolver | Keep one MUI elevation resolver |
+| `src/theme/typography.ts` | MUI typography mapping | Keep one MUI typography mapping |
+| `src/theme/components/surface.ts` | Shared Card/Panel/Dialog surface resolver | Keep one surface-skin contract |
+| `src/theme/components/card.ts` | MUI Card override | Preserve; remove local surface overrides from consumers |
+| `src/theme/components/dialog.ts` | Dialog Paper surface | Align dialog states |
+| `src/theme/components/button.ts` | Typography/radius only | Add shared global interaction behavior |
+| `src/theme/components/text-field.ts` | Defaults only | Define the complete field contract and states |
+| `src/constants/images/presets.ts` | Named image roles; style/objectFit | Verify all consumers; cleanly separate frame/fit/size roles |
 
-### 5.2 Presets
+### 5.2 Style presets
 
 | File | Issue | Required action |
 |---|---|---|
-| src/styles/presets/buttons.ts | Непълни roles; Back=Secondary alias | Semantic role API; Edit/Add/Remove/Cancel/Confirm/Navigation/IconButton; премахни подвеждащи aliases |
-| src/styles/presets/cards.ts | Content insets + trip-card geometry | Отдели shared surface (theme) от content/layout |
-| src/styles/presets/forms.ts | Смесени layout, field dimensions, panel styles | Раздели field appearance от form composition |
-| src/styles/presets/layouts.ts | Page/list/admin layout | Запази structural presets; tokenize spacing |
-| src/styles/presets/map-controls.ts | Named map address field variant | Наследява base field contract + map delta |
-| src/styles/presets/panels.ts | Delegates to shared surface | Остави само ако има смисъл като semantic alias |
-| src/styles/presets/social.ts | Social actions/badges/overlay/sticky surface | Раздели social controls от image/map overlay surface; centralize metrics |
-| src/styles/presets/typography.ts | Legacy headings/home intro | Named text roles; премахни локални дубликати |
+| `src/styles/presets/buttons.ts` | Incomplete roles; Back=Secondary alias | Define semantic role API; add Edit/Add/Remove/Cancel/Confirm/Navigation/IconButton; remove misleading aliases |
+| `src/styles/presets/cards.ts` | Content insets + trip-card geometry | Separate shared surface (theme-owned) from content/layout |
+| `src/styles/presets/forms.ts` | Mixes layout, field dimensions and panel styles | Separate field appearance from form composition |
+| `src/styles/presets/layouts.ts` | Page/list/admin layout | Preserve structural presets; tokenize spacing |
+| `src/styles/presets/map-controls.ts` | Named map address-field variant | Inherit base field contract + map-specific delta |
+| `src/styles/presets/panels.ts` | Delegates to shared surface | Keep only if it remains a meaningful semantic alias |
+| `src/styles/presets/social.ts` | Social actions/badges/overlay/sticky surface | Separate social controls from image/map overlay surfaces; centralize metrics |
+| `src/styles/presets/typography.ts` | Legacy headings/home intro | Define named text roles; remove local duplicates |
 
 ### 5.3 Global CSS and CSS Modules
 
 | File | Local declarations | Required action |
 |---|---|---|
-| app/globals.css | App shell + independent .ht-button skin | Остави reset/shell; премахни parallel button skin след миграция на consumers |
-| app/(public)/about/AboutPage.module.css | Space Mono, weights/clamp sizes, margins, text shadow | Consume typography tokens/CSS vars; остави layout/responsive |
-| app/(public)/privacy-policy/LegalPage.module.css | Page/content padding, typography, Back link skin | Tokenize; Back link да използва shared Back role |
-| src/components/common/NotFound.module.css | Home button skin | Shared CTA role; остави page layout/background |
-| src/components/images/ImageGallery.module.css | Gallery structure; shared vars | Verify selectors/consumers; запази structure |
-| src/components/layout/Footer.module.css | Literal horizontal padding | Shared page/container gutter |
-| src/components/trips/TripDetailsView.module.css | Unique grid/container queries + literal widths/margins | Запази geometry; tokenize repeated spacing |
-| src/components/trips/TripList.module.css | Empty-state typography/margins | Shared typography/spacing |
-| src/components/trips/TripPagination.module.css | Outer margin | Shared pagination spacing |
+| `app/globals.css` | App shell + independent `.ht-button` skin | Keep reset/shell; remove parallel button skin after all consumers migrate |
+| `app/(public)/about/AboutPage.module.css` | Space Mono, weights/clamp sizes, margins, text shadow | Consume typography tokens/CSS variables; keep layout/responsive rules |
+| `app/(public)/privacy-policy/LegalPage.module.css` | Page/content padding, typography, Back-link skin | Tokenize; Back link must use shared Back role |
+| `src/components/common/NotFound.module.css` | Home button skin | Use shared CTA role; keep page layout/background |
+| `src/components/images/ImageGallery.module.css` | Gallery structure; shared variables | Verify selectors/consumers; preserve structure |
+| `src/components/layout/Footer.module.css` | Literal horizontal padding | Use shared page/container gutter |
+| `src/components/trips/TripDetailsView.module.css` | Unique grid/container queries + literal widths/margins | Preserve geometry; tokenize repeated spacing |
+| `src/components/trips/TripList.module.css` | Empty-state typography/margins | Use shared typography/spacing |
+| `src/components/trips/TripPagination.module.css` | Outer margin | Use shared pagination spacing |
 
 ### 5.4 Shared/common, navigation and images
 
 | File | Finding | Required action |
 |---|---|---|
-| src/components/common/BackButton.tsx | Back preset, but caller can override sx | Enforce Back role; allow layout/accessibility props only |
-| src/components/common/ConfirmDialog.tsx | Confirm/Cancel direct MUI buttons | Shared Confirm/Cancel roles |
-| src/components/common/NotFound.tsx | Native button + CSS skin | Shared CTA role |
-| src/components/common/ExpandableText.tsx | Direct Button + local sx | Shared Expand/Collapse role |
-| src/components/common/PasswordField.tsx | TextField + IconButton defaults | Common field/icon-control contract |
-| src/components/common/PasswordRequirements.tsx | Local row sx and conditional colors | Feedback tokens + shared typography |
-| src/components/common/NotificationProvider.tsx | Snackbar/Alert local width sx | Verify notification surface/spacing |
-| src/components/layout/Header.tsx | Local NAV_BUTTON_SX, menu icon size, direct nav Button props | Shared Navigation role; desktop/drawer parity |
-| src/components/layout/Footer.tsx | CSS Module consumer | Shared footer/page gutter |
-| src/components/CustomFileUploadButton.tsx | Raw IconButton and Button | Shared Upload/Select and icon roles |
-| src/components/images/AppImage.tsx | Central preset resolver; no arbitrary style prop | Preserve boundary; named preset for each shared image role |
-| src/components/images/ImageGallery.tsx | CSS Module + local sx | Shared image button/frame presets |
-| src/components/images/ImageLightbox.tsx | Local overlay controls sx | Shared lightbox frame/overlay/icon controls |
-| src/components/images/ImageUploadField.tsx | Local preview geometry/radius/objectFit + raw buttons | Image preview preset + Remove/Upload roles |
-| src/components/auth/ProfileImage.tsx | Local circle frame/shadow/lightbox + preview objectFit | Shared profile frame, remove control, lightbox, preview |
-| src/components/admin/AdminUserProfileImage.tsx | Local image button dimensions + raw Delete/Upload | Reuse profile image/action roles |
-| src/components/admin/AdminImages.tsx | Raw pagination/action buttons, local row/cell sx, dialog | Shared pagination/table/image actions/dialog |
-| src/components/placeholders/SocialObjectPlaceholder.tsx | Local overlay/text sizes/gradient | Shared placeholder overlay tokens/typography |
+| `src/components/common/BackButton.tsx` | Back preset, but callers can override `sx` | Enforce Back role; allow layout/accessibility props only |
+| `src/components/common/ConfirmDialog.tsx` | Direct MUI Confirm/Cancel buttons | Use shared Confirm/Cancel roles |
+| `src/components/common/NotFound.tsx` | Native button + CSS skin | Use shared CTA role |
+| `src/components/common/ExpandableText.tsx` | Direct Button + local `sx` | Use shared Expand/Collapse role |
+| `src/components/common/PasswordField.tsx` | TextField + IconButton defaults | Use common field/icon-control contract |
+| `src/components/common/PasswordRequirements.tsx` | Local row `sx` and conditional colors | Use feedback tokens + shared typography |
+| `src/components/common/NotificationProvider.tsx` | Snackbar/Alert local width `sx` | Verify notification surface/spacing |
+| `src/components/layout/Header.tsx` | Local NAV_BUTTON_SX, menu icon size, direct nav Button props | Use shared Navigation role; ensure desktop/drawer parity |
+| `src/components/layout/Footer.tsx` | CSS Module consumer | Use shared footer/page gutter |
+| `src/components/CustomFileUploadButton.tsx` | Raw IconButton and Button | Use shared Upload/Select and icon roles |
+| `src/components/images/AppImage.tsx` | Central preset resolver; no arbitrary style prop | Preserve boundary; define a named preset for each shared image role |
+| `src/components/images/ImageGallery.tsx` | CSS Module + local `sx` | Use shared image button/frame presets |
+| `src/components/images/ImageLightbox.tsx` | Local overlay-control `sx` | Use shared lightbox frame/overlay/icon controls |
+| `src/components/images/ImageUploadField.tsx` | Local preview geometry/radius/objectFit + raw buttons | Use image-preview preset + Remove/Upload roles |
+| `src/components/auth/ProfileImage.tsx` | Local circle frame/shadow/lightbox + preview objectFit | Use shared profile frame, remove control, lightbox and preview |
+| `src/components/admin/AdminUserProfileImage.tsx` | Local image button dimensions + raw Delete/Upload | Reuse profile-image/action roles |
+| `src/components/admin/AdminImages.tsx` | Raw pagination/action buttons, local row/cell `sx`, dialog | Use shared pagination/table/image actions/dialog |
+| `src/components/placeholders/SocialObjectPlaceholder.tsx` | Local overlay/text sizes/gradient | Use shared placeholder overlay tokens/typography |
 
 ### 5.5 Auth, profile and admin
 
 | File | Finding | Required action |
 |---|---|---|
-| src/components/auth/LoginForm.tsx | Auth presets; raw IconButton | Normalize actions and fields |
-| src/components/auth/RegisterForm.tsx | Auth presets; local pointerEvents sx | Normalize fields/actions; keep interaction-only behavior |
-| src/components/auth/ForgotPasswordForm.tsx | Shared presets; Back caller margin override | Enforce Back role |
-| src/components/auth/ResendVerificationForm.tsx | Same Back margin override | Enforce Back role |
-| src/components/auth/ResetPasswordForm.tsx | Direct contained Button in success state + preset in form | Same semantic role in both states |
-| src/components/auth/VerifyEmailForm.tsx | Local Card sx/heading weight | Shared panel/card/typography |
-| src/components/auth/ChangePasswordForm.tsx | Account field preset; local action spacing | Shared field and Save/Submit |
-| src/components/auth/ProfileForm.tsx | Local title/field sx; primary/secondary buttons | Shared field/heading/action roles |
-| src/components/auth/ProfileImage.tsx | See image findings | Shared image/action roles |
-| src/components/auth/Captcha.tsx | Local CAPTCHA container sx | Keep integration geometry; tokenize spacing |
-| src/components/admin/AdminUserForm.tsx | Save/Danger presets but local panel/layout sx | Shared form/panel/Delete |
-| src/components/admin/AdminUsers.tsx | Local Card/CardContent layout + raw Edit/Delete/pagination | Common card surface/action roles |
-| src/components/admin/AdminNavigation.tsx | Local nav layout and active/inactive styles | Shared Navigation role |
-| src/components/admin/AdminDashboard.tsx | Link-based admin navigation | Verify link/button role parity |
-| src/components/admin/AdminFailedLogs.tsx | Local filter/action layout + raw pagination/delete | Shared filter/action/pagination |
-| src/components/admin/AdminReports.tsx | Raw destructive and pagination buttons | Shared Delete/Resolve/Pagination |
-| src/components/admin/AdminRouteNotFoundLogs.tsx | Local expanded row sx + raw buttons | Shared table/details/pagination |
+| `src/components/auth/LoginForm.tsx` | Auth presets; raw IconButton | Normalize actions and fields |
+| `src/components/auth/RegisterForm.tsx` | Auth presets; local pointerEvents `sx` | Normalize fields/actions; keep interaction-only behavior |
+| `src/components/auth/ForgotPasswordForm.tsx` | Shared presets; Back caller margin override | Enforce Back role |
+| `src/components/auth/ResendVerificationForm.tsx` | Same Back margin override | Enforce Back role |
+| `src/components/auth/ResetPasswordForm.tsx` | Direct contained Button in success state + preset in form | Use the same semantic role in both states |
+| `src/components/auth/VerifyEmailForm.tsx` | Local Card `sx`/heading weight | Use shared panel/card/typography |
+| `src/components/auth/ChangePasswordForm.tsx` | Account field preset; local action spacing | Use shared field and Save/Submit |
+| `src/components/auth/ProfileForm.tsx` | Local title/field `sx`; primary/secondary buttons | Use shared field/heading/action roles |
+| `src/components/auth/ProfileImage.tsx` | See image findings | Use shared image/action roles |
+| `src/components/auth/Captcha.tsx` | Local CAPTCHA container `sx` | Keep integration geometry; tokenize spacing |
+| `src/components/admin/AdminUserForm.tsx` | Save/Danger presets but local panel/layout `sx` | Use shared form/panel/Delete |
+| `src/components/admin/AdminUsers.tsx` | Local Card/CardContent layout + raw Edit/Delete/pagination | Use common card surface/action roles |
+| `src/components/admin/AdminNavigation.tsx` | Local navigation layout and active/inactive styles | Use shared Navigation role |
+| `src/components/admin/AdminDashboard.tsx` | Link-based admin navigation | Verify link/button role parity |
+| `src/components/admin/AdminFailedLogs.tsx` | Local filter/action layout + raw pagination/delete | Use shared filter/action/pagination |
+| `src/components/admin/AdminReports.tsx` | Raw destructive and pagination buttons | Use shared Delete/Resolve/Pagination |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Local expanded-row `sx` + raw buttons | Use shared table/details/pagination |
 
 ### 5.6 Points, trips, maps and tracking
 
 | File | Finding | Required action |
 |---|---|---|
-| src/components/points/CreatePointPage.tsx | Local page/container sx + central panel | Shared page shell and form panel |
-| src/components/points/EditPointPage.tsx | Many local sx, image controls/frame dimensions | Shared point form, image frame, icon controls |
-| src/components/points/PointActions.tsx | Local action-row layout sx | Shared action row and Edit/Delete |
-| src/components/points/PointCard.tsx | Presets + local Card sx/icon controls/layout | Common Card surface; Edit/Delete/icon roles |
-| src/components/points/PointForm.tsx | Local field/layout sx and stacked buttons | Common fields and Create/Save/Cancel |
-| src/components/points/PointList.tsx | Local list/container composition | Shared list/empty state if repeated |
-| src/components/trips/TripActions.tsx | Existing tripAction/tripActionDanger | Compare same roles across all features |
-| src/components/trips/TripCard.tsx | Presets + local responsive geometry + raw stepper buttons | Common card surface; stepper role |
-| src/components/trips/TripDetails.tsx | Local Card sx, inline NAME/LINE styles, raw icons | Common card/content typography/actions |
-| src/components/trips/TripDetailsView.tsx | CSS Module layout + local overlay sx | Preserve layout; centralize overlay |
-| src/components/trips/TripFilters.tsx | Local select/filter style objects | Common field/select contract |
-| src/components/trips/TripForm.tsx | Some stepper presets, local Card/field/layout | Common card/field/action contracts |
-| src/components/trips/EditTripLayout.tsx | Many local sx, stepper and image actions | Migrate panel, fields, stepper, image actions, Save/Add/Cancel |
-| src/components/trips/TripDaysNav.tsx | Local page-item colors/spacing | Shared day-navigation role/states |
-| src/components/trips/TripMapSection.tsx | Local Card + raw buttons | Common card/map surface/actions |
-| src/components/trips/PointSection.tsx | Local style constants, Card layout, inline style, image geometry | Common card/content/image presets |
-| src/components/trips/PointsSection.tsx | No style matches in initial scan | Full file/import check before VERIFIED |
-| src/components/trips/DayImagesGallery.tsx | Local image wrapper geometry | Named image frame preset |
-| src/components/trips/TripList.tsx | CSS Module + local heading/list style constants | Shared empty-state typography/list |
-| src/components/trips/TripPagination.tsx | CSS Module pagination structure | Shared pagination role/spacing |
-| src/components/trips/TripSelectField.tsx | TextField usage | Common field contract |
-| src/components/maps/AddressAutocomplete.tsx | Caller textFieldProps/sx/buttonSx + map preset | Enforce map variant; limit overrides |
-| src/components/maps/GoogleMapView.tsx | Local loading/map container geometry | Shared spacing; map canvas remains integration-specific |
-| src/components/maps/PointLocationPicker.tsx | Primary/secondary presets + local container/button sx | Shared map field/action/panel |
-| src/components/maps/TripLocationPicker.tsx | Local primary color values + presets | Remove duplicate primary colors |
-| src/components/tracking/LiveTracker.tsx | Local surface sx + raw Start/Stop/Reset/Follow buttons | Shared panel and tracking action roles |
+| `src/components/points/CreatePointPage.tsx` | Local page/container `sx` + central panel | Use shared page shell and form panel |
+| `src/components/points/EditPointPage.tsx` | Many local `sx`, image controls/frame dimensions | Use shared point form, image frame and icon controls |
+| `src/components/points/PointActions.tsx` | Local action-row layout `sx` | Use shared action row and Edit/Delete |
+| `src/components/points/PointCard.tsx` | Presets + local Card `sx`/icon controls/layout | Use common Card surface; Edit/Delete/icon roles |
+| `src/components/points/PointForm.tsx` | Local field/layout `sx` and stacked buttons | Use common fields and Create/Save/Cancel |
+| `src/components/points/PointList.tsx` | Local list/container composition | Use shared list/empty state if repeated |
+| `src/components/trips/TripActions.tsx` | Existing tripAction/tripActionDanger | Compare the same roles across all features |
+| `src/components/trips/TripCard.tsx` | Presets + local responsive geometry + raw stepper buttons | Use common card surface and stepper role |
+| `src/components/trips/TripDetails.tsx` | Local Card `sx`, inline NAME/LINE styles, raw icons | Use common card/content typography/actions |
+| `src/components/trips/TripDetailsView.tsx` | CSS Module layout + local overlay `sx` | Preserve layout; centralize overlay |
+| `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
+| `src/components/trips/TripForm.tsx` | Some stepper presets, local Card/field/layout | Use common card/field/action contracts |
+| `src/components/trips/EditTripLayout.tsx` | Many local `sx`, stepper and image actions | Migrate panel, fields, stepper, image actions, Save/Add/Cancel |
+| `src/components/trips/TripDaysNav.tsx` | Local page-item colors/spacing | Use shared day-navigation role/states |
+| `src/components/trips/TripMapSection.tsx` | Local Card + raw buttons | Use common card/map surface/actions |
+| `src/components/trips/PointSection.tsx` | Local style constants, Card layout, inline style, image geometry | Use common card/content/image presets |
+| `src/components/trips/PointsSection.tsx` | No style matches in initial scan | Inspect full file/imports before marking VERIFIED |
+| `src/components/trips/DayImagesGallery.tsx` | Local image-wrapper geometry | Use named image-frame preset |
+| `src/components/trips/TripList.tsx` | CSS Module + local heading/list style constants | Use shared empty-state typography/list |
+| `src/components/trips/TripPagination.tsx` | CSS Module pagination structure | Use shared pagination role/spacing |
+| `src/components/trips/TripSelectField.tsx` | TextField usage | Use common field contract |
+| `src/components/maps/AddressAutocomplete.tsx` | Caller textFieldProps/`sx`/buttonSx + map preset | Enforce map variant; constrain overrides |
+| `src/components/maps/GoogleMapView.tsx` | Local loading/map-container geometry | Use shared spacing; map canvas remains integration-specific |
+| `src/components/maps/PointLocationPicker.tsx` | Primary/secondary presets + local container/button `sx` | Use shared map field/action/panel |
+| `src/components/maps/TripLocationPicker.tsx` | Local primary color values + presets | Remove duplicate primary colors |
+| `src/components/tracking/LiveTracker.tsx` | Local surface `sx` + raw Start/Stop/Reset/Follow buttons | Use shared panel and tracking action roles |
 
 ### 5.7 Comments and social
 
 | File | Finding | Required action |
 |---|---|---|
-| src/components/comments/CommentsSection.tsx | Local COMMENTS_PANEL_SX / COMMENT_CARD_SX, local sx, raw Edit/Delete/Save/Cancel IconButtons | Central panel/comment-card surface and semantic icon/action roles |
-| src/components/comments/CommentsToggle.tsx | Native inline layout style + local typography margin | Shared comments toggle role/layout |
-| src/components/comments/RepliesSection.tsx | Local reply border/spacing, raw action IconButtons | Shared nested comment layout and action roles |
-| src/components/social/LikeButton.tsx | Shared badge preset + local conditional sx wrapper | Central like icon states |
-| src/components/social/FavoriteButton.tsx | Shared badge preset + local conditional sx wrapper | Central favorite icon states |
-| src/components/social/EngagementBar.tsx | Local conditional sx + raw social controls | Shared engagement layout/icon roles |
-| src/components/social/ReportButton.tsx | Inline span styles, raw Cancel/Submit, local error sx | Shared Report/Cancel/Submit/feedback roles |
-| src/components/social/TripGroupSocialActions.tsx | Repeated raw icon controls and local error spans | Shared Like/Favorite/Report roles |
-| src/components/social/SocialConfigStatus.tsx | Local compact sx | Shared status indicator role |
-| src/components/social/LikeAnimation.tsx | No style match in initial scan | Verify full motion behavior separately from skin |
+| `src/components/comments/CommentsSection.tsx` | Local COMMENTS_PANEL_SX / COMMENT_CARD_SX, local `sx`, raw Edit/Delete/Save/Cancel IconButtons | Centralize panel/comment-card surface and semantic icon/action roles |
+| `src/components/comments/CommentsToggle.tsx` | Native inline layout style + local typography margin | Use shared comments-toggle role/layout |
+| `src/components/comments/RepliesSection.tsx` | Local reply border/spacing, raw action IconButtons | Use shared nested-comment layout and action roles |
+| `src/components/social/LikeButton.tsx` | Shared badge preset + local conditional `sx` wrapper | Centralize Like icon states |
+| `src/components/social/FavoriteButton.tsx` | Shared badge preset + local conditional `sx` wrapper | Centralize Favorite icon states |
+| `src/components/social/EngagementBar.tsx` | Local conditional `sx` + raw social controls | Use shared engagement layout/icon roles |
+| `src/components/social/ReportButton.tsx` | Inline span styles, raw Cancel/Submit, local error `sx` | Use shared Report/Cancel/Submit/feedback roles |
+| `src/components/social/TripGroupSocialActions.tsx` | Repeated raw icon controls and local error spans | Use shared Like/Favorite/Report roles |
+| `src/components/social/SocialConfigStatus.tsx` | Local compact `sx` | Use shared status-indicator role |
+| `src/components/social/LikeAnimation.tsx` | No style match in initial scan | Verify motion behavior separately from visual skin |
 
 ---
 
-## 6. Одобреният шестетапен план — не го заменяй
+## 6. Approved six-stage plan — do not replace it
 
 ### Stage 1 — Full inventory and audit
-- [x] Recursive tree inventory at baseline.
+- [x] Recursive repository tree inventory at baseline.
 - [x] Read all nine CSS files.
 - [x] Read core UI tokens, theme and presets.
-- [x] Read primary UI component families and record observed local styles.
-- [ ] Exhaustive consumer mapping for every CSS selector, CSS variable, token and preset.
-- [ ] Search every sx, style, inline CSS object, local style constant, direct MUI visual prop and native button/link.
+- [x] Inspect primary UI component families and record observed local styles.
+- [ ] Exhaustively map every CSS selector, CSS variable, token and preset to all consumers.
+- [ ] Search every `sx`, `style`, inline CSS object, local style constant, direct MUI visual prop and native button/link.
 - [ ] Verify imports and call sites for every shared component.
-- [ ] Classify local declarations as shared visual token, semantic component skin, reusable layout preset or genuine one-off geometry.
-- [ ] Finish manifest for all UI-bearing files. No file is VERIFIED yet.
+- [ ] Classify local declarations as shared visual token, semantic component skin, reusable layout preset or genuinely one-off geometry.
+- [ ] Complete the manifest for all UI-bearing files. No file is VERIFIED yet.
 
 ### Stage 2 — Design Tokens + MUI Theme
-- [ ] Resolve semantic color roles while preserving current design.
+- [ ] Resolve semantic color roles while preserving the current design.
 - [ ] Establish spacing, sizes, breakpoints, shape, shadows, typography and z-index.
 - [ ] Expose tokens as CSS variables.
 - [ ] Define common card/panel/button/field states.
-- [ ] Keep true special variants as documented deltas.
+- [ ] Keep genuine special variants as documented deltas.
 
 ### Stage 3 — MUI Component Overrides + reusable presets
 - [ ] Complete Button and IconButton contracts.
@@ -396,17 +403,19 @@ CSS Modules са позволени за структурно оформлени
 - [ ] Complete TextField/Select/FormControl state contract.
 - [ ] Add semantic action roles/components: Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm/Secondary/Navigation.
 - [ ] Separate visual skins from layout/geometry presets.
-- [ ] Ensure coherent exports/types and no duplicate owners.
+- [ ] Ensure consistent exports/types and no duplicate owners.
 
 ### Stage 4 — CSS Modules + Global CSS
 - [ ] Reduce globals to reset, shell and CSS-variable consumers.
-- [ ] Remove .ht-button as independent style path after all consumers migrate.
+- [ ] Remove `.ht-button` as an independent style path after all consumers have migrated.
 - [ ] Replace shared literals in CSS Modules with CSS variables.
 - [ ] Keep only unique structural/responsive rules in Modules.
 - [ ] Check responsive breakpoints and visual states.
 
 ### Stage 5 — Systematic component migration
-Мигрирай в този ред:
+
+Migrate in this order:
+
 1. Common primitives/app shell: Header, Footer, BackButton, ConfirmDialog, NotFound, common fields.
 2. Cards, surfaces and shared images.
 3. Trips: TripCard, TripDetails, TripDetailsView, TripForm, EditTripLayout, TripActions, TripFilters, TripDaysNav, TripMapSection, pagination/list.
@@ -418,276 +427,285 @@ CSS Modules са позволени за структурно оформлени
 9. Public pages: About, Legal, home, public trip pages, NotFound.
 10. Route layouts and remaining UI consumers.
 
-Stage 5 остава OPEN, докато всеки consumer не е мигриран и проверен отново. Файлът не е готов само защото импортира preset; старите локални визуални декларации трябва да бъдат премахнати или изрично оправдани.
+Stage 5 remains **OPEN** until every consumer has been migrated and re-verified. A file is not complete merely because it imports a preset; old local visual declarations must be removed or explicitly justified.
 
 ### Stage 6 — Final audit and validation
-- [ ] Exhaustive search for raw color/spacing/radius/shadow/typography in UI source.
-- [ ] Exhaustive search for local visual constants and inline style/sx.
+- [ ] Exhaustive search for raw color/spacing/radius/shadow/typography values in UI source.
+- [ ] Exhaustive search for local visual constants and inline style/`sx`.
 - [ ] Verify semantic button/card/field parity.
 - [ ] Verify CSS Module/global variable ownership.
 - [ ] Verify hover/focus/active/disabled/error/loading states and responsive breakpoints.
 - [ ] Build/tests/lint/CI only after explicit user authorization.
-- [ ] Browser visual regression only after explicit authorization and environment availability.
+- [ ] Browser visual regression only after explicit authorization and when the environment is available.
 - [ ] Mark files VERIFIED only with evidence.
 
 ---
 
-## 7. Задължителна search matrix
+## 7. Mandatory search matrix
 
-За всеки search запиши точната команда/scope, брой резултати и consumer paths в audit log-а.
+For every search, record the exact command/scope, result count and consumer paths in the audit log.
 
-- CSS Modules imports: *.module.css, *.module.scss.
-- CSS selectors: всички exported class names и всички styles.* / className consumers.
-- CSS variables: --ht-* declarations и var(--ht-*) consumers.
-- Token imports: @/constants/ui и всеки exported token usage.
-- Preset imports: @/styles/presets/* и всички property-level consumers.
-- Inline styling: sx=, sx={{, sx={(, style=, style={{, style={.
-- Local style constants: имена STYLE, _SX, _STYLE, *_STYLES плюс object literals в sx/style.
-- Visual values: hex/rgb/hsl/rgba/gradient, borderRadius, boxShadow, fontSize, fontWeight, padding, margin, gap, border, background, color.
+- CSS Module imports: `*.module.css`, `*.module.scss`.
+- CSS selectors: every exported class name and every `styles.*` / `className` consumer.
+- CSS variables: all `--ht-*` declarations and `var(--ht-*)` consumers.
+- Token imports: `@/constants/ui` and every exported token usage.
+- Preset imports: `@/styles/presets/*` and all property-level consumers.
+- Inline styling: `sx=`, `sx={{`, `sx={(`, `style=`, `style={{`, `style={`.
+- Local style constants: names containing STYLE, _SX, _STYLE, *_STYLES, plus object literals passed to `sx`/`style`.
+- Visual values: hex/rgb/hsl/rgba/gradient, borderRadius, boxShadow, fontSize, fontWeight, padding, margin, gap, border, background and color.
 - Buttons: Button, IconButton, ButtonGroup, native button, links styled as buttons, BackButton; semantic labels Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm.
-- Surfaces: Card, Paper, Dialog, Accordion, Alert, Box/native elements styled as cards/panels.
+- Surfaces: Card, Paper, Dialog, Accordion, Alert, and Box/native elements styled as cards/panels.
 - Fields: TextField, Select, Autocomplete, InputBase, FormControl, Checkbox, Radio, Switch.
-- Images: AppImage, Next Image, component="img", native img, objectFit, image frame/overlay/lightbox.
+- Images: AppImage, Next Image, `component="img"`, native img, objectFit, image frame/overlay/lightbox.
 - States: hover, focus-visible, focus, active, selected, disabled, error, loading, expanded, pressed.
-- Responsive: MUI breakpoints, media queries, container queries, responsive sx.
+- Responsive behavior: MUI breakpoints, media queries, container queries and responsive `sx`.
 
-Search не е завършен само с намиране на imports. Следвай всеки резултат до компонента и всички call sites.
+Finding imports is not enough to complete a search. Follow every result to the component and all of its call sites.
 
 ---
 
-## 8. Изрични договори за изграждане
+## 8. Explicit contracts to implement
 
 ### Buttons
-Създай един semantic role map и reusable API. Минимални роли:
+
+Create one semantic role map and reusable API. Minimum roles:
+
 Back, Primary/Submit, Create, Add, Edit, Save, Delete, Remove, Cancel, Confirm, Secondary, Navigation, Icon action, Pagination/stepper.
 
-Една и съща роля не трябва да приема произволни caller colors/variants/sx. Разрешавай layout-only props като fullWidth/size само като изрични options.
+A role must not accept arbitrary caller-level colors/variants/`sx`. Allow layout-only props such as `fullWidth` or `size` only as explicit supported options.
 
 ### Cards/surfaces
-Base card contract: surface color, border, radius, shadow, text contrast, padding/content spacing и interaction states. Card-specific layout е отделно. TripCard и PointCard могат да имат различна композиция, но еднакъв base surface skin, ако са една и съща card роля.
+
+Base card contract: surface color, border, radius, shadow, text contrast, padding/content spacing and interaction states. Card-specific layout is separate. TripCard and PointCard may have different compositions, but share the same base surface skin when they represent the same card role.
 
 ### Fields
-Base field contract: typography, label, input height/padding, border, radius, hover/focus/error/disabled/read-only, helper text и adornments. Map address input е named variant, който наследява базовия договор.
+
+Base field contract: typography, label, input height/padding, border, radius, hover/focus/error/disabled/read-only states, helper text and adornments. Map address input is a named variant that inherits the base contract.
 
 ### Images
-Named roles: avatar/profile, card thumbnail, point thumbnail, gallery grid, gallery stack, upload preview, editor thumbnail, lightbox, hero/OG, About illustration. Fit, frame, radius, dimensions и overlay controls се дефинират веднъж за всяка роля.
+
+Named roles: avatar/profile, card thumbnail, point thumbnail, gallery grid, gallery stack, upload preview, editor thumbnail, lightbox, hero/OG, About illustration. Fit, frame, radius, dimensions and overlay controls are defined once for each role.
 
 ---
 
-## 9. Правила за безопасна миграция
+## 9. Safe migration rules
 
-1. Не променяй API calls, DTOs, validation, authentication, business logic или backend behavior.
-2. Не създавай branch. Работи само в feature/frontend-modernization.
-3. Не изтривай стар token/preset/class преди exhaustive consumer search.
-4. Не изтривай CSS Module само защото има локални стилове; отдели структурата от skin-а.
-5. Не заменяй semantic roles с един generic button style.
-6. Не сливай map/image/social overlays с общия card surface без основание.
-7. Не променяй текущи цветове/dimensions без before/after и причина.
-8. Не изпълнявай build/tests/lint/CI без изрично разрешение.
-9. След всяка source промяна направи targeted search за стари декларации и всички засегнати consumers.
-10. След всеки batch актуализирай този документ и append-вай log entry. Не започвай отначало.
+1. Do not change API calls, DTOs, validation, authentication, business logic or backend behavior.
+2. Do not create a branch. Work only on `feature/frontend-modernization`.
+3. Do not delete an old token/preset/class before an exhaustive consumer search.
+4. Do not delete a CSS Module just because it contains local styles; separate structure from skin.
+5. Do not replace semantic roles with one generic button style.
+6. Do not merge map/image/social overlays into the general card surface without justification.
+7. Do not change current colors/dimensions without a before/after comparison and a reason.
+8. Do not run build/tests/lint/CI without explicit authorization.
+9. After every source change, run targeted searches for old declarations and all affected consumers.
+10. After every batch, update this document and append an audit-log entry. Do not restart the audit.
 
 ---
 
 ## 10. File status manifest
 
-Статусите са консервативни. PARTIAL означава inspected, не migrated/verified. PENDING означава, че е нужна отделна проверка.
+Statuses are intentionally conservative. PARTIAL means inspected, not migrated/verified. PENDING means a separate inspection is still required.
 
 ### Styling foundation
 
 | File | Status |
 |---|---|
-| src/constants/ui/breakpoints.ts | PARTIAL |
-| src/constants/ui/colors.ts | PARTIAL |
-| src/constants/ui/index.ts | PARTIAL |
-| src/constants/ui/shadows.ts | PARTIAL |
-| src/constants/ui/shape.ts | PARTIAL |
-| src/constants/ui/sizes.ts | PARTIAL |
-| src/constants/ui/spacing.ts | PARTIAL |
-| src/constants/ui/typography.ts | PARTIAL |
-| src/constants/ui/z-index.ts | PARTIAL |
-| src/constants/images/presets.ts | PARTIAL |
-| src/theme/index.ts | PARTIAL |
-| src/theme/palette.ts | PARTIAL |
-| src/theme/shadows.ts | PARTIAL |
-| src/theme/shape.ts | PARTIAL |
-| src/theme/typography.ts | PARTIAL |
-| src/theme/components/button.ts | PARTIAL |
-| src/theme/components/card.ts | PARTIAL |
-| src/theme/components/dialog.ts | PARTIAL |
-| src/theme/components/surface.ts | PARTIAL |
-| src/theme/components/text-field.ts | PARTIAL |
-| src/styles/presets/buttons.ts | PARTIAL |
-| src/styles/presets/cards.ts | PARTIAL |
-| src/styles/presets/forms.ts | PARTIAL |
-| src/styles/presets/layouts.ts | PARTIAL |
-| src/styles/presets/map-controls.ts | PARTIAL |
-| src/styles/presets/panels.ts | PARTIAL |
-| src/styles/presets/social.ts | PARTIAL |
-| src/styles/presets/typography.ts | PARTIAL |
+| `src/constants/ui/breakpoints.ts` | PARTIAL |
+| `src/constants/ui/colors.ts` | PARTIAL |
+| `src/constants/ui/index.ts` | PARTIAL |
+| `src/constants/ui/shadows.ts` | PARTIAL |
+| `src/constants/ui/shape.ts` | PARTIAL |
+| `src/constants/ui/sizes.ts` | PARTIAL |
+| `src/constants/ui/spacing.ts` | PARTIAL |
+| `src/constants/ui/typography.ts` | PARTIAL |
+| `src/constants/ui/z-index.ts` | PARTIAL |
+| `src/constants/images/presets.ts` | PARTIAL |
+| `src/theme/index.ts` | PARTIAL |
+| `src/theme/palette.ts` | PARTIAL |
+| `src/theme/shadows.ts` | PARTIAL |
+| `src/theme/shape.ts` | PARTIAL |
+| `src/theme/typography.ts` | PARTIAL |
+| `src/theme/components/button.ts` | PARTIAL |
+| `src/theme/components/card.ts` | PARTIAL |
+| `src/theme/components/dialog.ts` | PARTIAL |
+| `src/theme/components/surface.ts` | PARTIAL |
+| `src/theme/components/text-field.ts` | PARTIAL |
+| `src/styles/presets/buttons.ts` | PARTIAL |
+| `src/styles/presets/cards.ts` | PARTIAL |
+| `src/styles/presets/forms.ts` | PARTIAL |
+| `src/styles/presets/layouts.ts` | PARTIAL |
+| `src/styles/presets/map-controls.ts` | PARTIAL |
+| `src/styles/presets/panels.ts` | PARTIAL |
+| `src/styles/presets/social.ts` | PARTIAL |
+| `src/styles/presets/typography.ts` | PARTIAL |
 
 ### Stylesheets
 
 | File | Status |
 |---|---|
-| app/globals.css | CHANGE REQUIRED |
-| app/(public)/about/AboutPage.module.css | CHANGE REQUIRED |
-| app/(public)/privacy-policy/LegalPage.module.css | CHANGE REQUIRED |
-| src/components/common/NotFound.module.css | CHANGE REQUIRED |
-| src/components/images/ImageGallery.module.css | PARTIAL |
-| src/components/layout/Footer.module.css | CHANGE REQUIRED |
-| src/components/trips/TripDetailsView.module.css | PARTIAL |
-| src/components/trips/TripList.module.css | CHANGE REQUIRED |
-| src/components/trips/TripPagination.module.css | CHANGE REQUIRED |
+| `app/globals.css` | CHANGE REQUIRED |
+| `app/(public)/about/AboutPage.module.css` | CHANGE REQUIRED |
+| `app/(public)/privacy-policy/LegalPage.module.css` | CHANGE REQUIRED |
+| `src/components/common/NotFound.module.css` | CHANGE REQUIRED |
+| `src/components/images/ImageGallery.module.css` | PARTIAL |
+| `src/components/layout/Footer.module.css` | CHANGE REQUIRED |
+| `src/components/trips/TripDetailsView.module.css` | PARTIAL |
+| `src/components/trips/TripList.module.css` | CHANGE REQUIRED |
+| `src/components/trips/TripPagination.module.css` | CHANGE REQUIRED |
 
 ### Shared/common, images, layout, maps and placeholders
 
 | File | Status |
 |---|---|
-| src/components/CustomFileUploadButton.tsx | CHANGE REQUIRED |
-| src/components/common/BackButton.tsx | CHANGE REQUIRED |
-| src/components/common/ConfirmDialog.tsx | CHANGE REQUIRED |
-| src/components/common/ExpandableText.tsx | PARTIAL |
-| src/components/common/NotFound.tsx | CHANGE REQUIRED |
-| src/components/common/NotificationProvider.tsx | PARTIAL |
-| src/components/common/PasswordField.tsx | PARTIAL |
-| src/components/common/PasswordRequirements.tsx | PARTIAL |
-| src/components/common/ScrambleHeading.tsx | PARTIAL |
-| src/components/common/WelcomeHeading.tsx | CHANGE REQUIRED |
-| src/components/home/HomeHero.tsx | CHANGE REQUIRED |
-| src/components/home/HomeTrips.tsx | CHANGE REQUIRED |
-| src/components/images/AppImage.tsx | PARTIAL |
-| src/components/images/ImageGallery.tsx | PARTIAL |
-| src/components/images/ImageLightbox.tsx | CHANGE REQUIRED |
-| src/components/images/ImageUploadField.tsx | CHANGE REQUIRED |
-| src/components/layout/Footer.tsx | PARTIAL |
-| src/components/layout/Header.tsx | CHANGE REQUIRED |
-| src/components/maps/AddressAutocomplete.tsx | PARTIAL |
-| src/components/maps/GoogleMapView.tsx | PARTIAL |
-| src/components/maps/PointLocationPicker.tsx | PARTIAL |
-| src/components/maps/TripLocationPicker.tsx | CHANGE REQUIRED |
-| src/components/placeholders/SocialObjectPlaceholder.tsx | CHANGE REQUIRED |
+| `src/components/CustomFileUploadButton.tsx` | CHANGE REQUIRED |
+| `src/components/common/BackButton.tsx` | CHANGE REQUIRED |
+| `src/components/common/ConfirmDialog.tsx` | CHANGE REQUIRED |
+| `src/components/common/ExpandableText.tsx` | PARTIAL |
+| `src/components/common/NotFound.tsx` | CHANGE REQUIRED |
+| `src/components/common/NotificationProvider.tsx` | PARTIAL |
+| `src/components/common/PasswordField.tsx` | PARTIAL |
+| `src/components/common/PasswordRequirements.tsx` | PARTIAL |
+| `src/components/common/ScrambleHeading.tsx` | PARTIAL |
+| `src/components/common/WelcomeHeading.tsx` | CHANGE REQUIRED |
+| `src/components/home/HomeHero.tsx` | CHANGE REQUIRED |
+| `src/components/home/HomeTrips.tsx` | CHANGE REQUIRED |
+| `src/components/images/AppImage.tsx` | PARTIAL |
+| `src/components/images/ImageGallery.tsx` | PARTIAL |
+| `src/components/images/ImageLightbox.tsx` | CHANGE REQUIRED |
+| `src/components/images/ImageUploadField.tsx` | CHANGE REQUIRED |
+| `src/components/layout/Footer.tsx` | PARTIAL |
+| `src/components/layout/Header.tsx` | CHANGE REQUIRED |
+| `src/components/maps/AddressAutocomplete.tsx` | PARTIAL |
+| `src/components/maps/GoogleMapView.tsx` | PARTIAL |
+| `src/components/maps/PointLocationPicker.tsx` | PARTIAL |
+| `src/components/maps/TripLocationPicker.tsx` | CHANGE REQUIRED |
+| `src/components/placeholders/SocialObjectPlaceholder.tsx` | CHANGE REQUIRED |
 
 ### Auth and admin
 
 | File | Status |
 |---|---|
-| src/components/auth/Captcha.tsx | PARTIAL |
-| src/components/auth/ChangePasswordForm.tsx | PARTIAL |
-| src/components/auth/ForgotPasswordForm.tsx | CHANGE REQUIRED |
-| src/components/auth/LoginForm.tsx | PARTIAL |
-| src/components/auth/ProfileForm.tsx | CHANGE REQUIRED |
-| src/components/auth/ProfileImage.tsx | CHANGE REQUIRED |
-| src/components/auth/RegisterForm.tsx | PARTIAL |
-| src/components/auth/ResendVerificationForm.tsx | CHANGE REQUIRED |
-| src/components/auth/ResetPasswordForm.tsx | CHANGE REQUIRED |
-| src/components/auth/VerifyEmailForm.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminDashboard.tsx | PARTIAL |
-| src/components/admin/AdminFailedLogs.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminImages.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminNavigation.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminReports.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminRouteNotFoundLogs.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminUserForm.tsx | PARTIAL |
-| src/components/admin/AdminUserProfileImage.tsx | CHANGE REQUIRED |
-| src/components/admin/AdminUsers.tsx | CHANGE REQUIRED |
+| `src/components/auth/Captcha.tsx` | PARTIAL |
+| `src/components/auth/ChangePasswordForm.tsx` | PARTIAL |
+| `src/components/auth/ForgotPasswordForm.tsx` | CHANGE REQUIRED |
+| `src/components/auth/LoginForm.tsx` | PARTIAL |
+| `src/components/auth/ProfileForm.tsx` | CHANGE REQUIRED |
+| `src/components/auth/ProfileImage.tsx` | CHANGE REQUIRED |
+| `src/components/auth/RegisterForm.tsx` | PARTIAL |
+| `src/components/auth/ResendVerificationForm.tsx` | CHANGE REQUIRED |
+| `src/components/auth/ResetPasswordForm.tsx` | CHANGE REQUIRED |
+| `src/components/auth/VerifyEmailForm.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminDashboard.tsx` | PARTIAL |
+| `src/components/admin/AdminFailedLogs.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminImages.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminNavigation.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminReports.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminUserForm.tsx` | PARTIAL |
+| `src/components/admin/AdminUserProfileImage.tsx` | CHANGE REQUIRED |
+| `src/components/admin/AdminUsers.tsx` | CHANGE REQUIRED |
 
 ### Comments, social, points, trips and tracking
 
 | File | Status |
 |---|---|
-| src/components/comments/CommentsSection.tsx | CHANGE REQUIRED |
-| src/components/comments/CommentsToggle.tsx | CHANGE REQUIRED |
-| src/components/comments/RepliesSection.tsx | CHANGE REQUIRED |
-| src/components/points/CreatePointPage.tsx | PARTIAL |
-| src/components/points/EditPointPage.tsx | CHANGE REQUIRED |
-| src/components/points/PointActions.tsx | CHANGE REQUIRED |
-| src/components/points/PointCard.tsx | CHANGE REQUIRED |
-| src/components/points/PointForm.tsx | CHANGE REQUIRED |
-| src/components/points/PointList.tsx | PARTIAL |
-| src/components/social/EngagementBar.tsx | CHANGE REQUIRED |
-| src/components/social/FavoriteButton.tsx | PARTIAL |
-| src/components/social/LikeAnimation.tsx | PENDING |
-| src/components/social/LikeButton.tsx | PARTIAL |
-| src/components/social/ReportButton.tsx | CHANGE REQUIRED |
-| src/components/social/SocialConfigStatus.tsx | PARTIAL |
-| src/components/social/TripGroupSocialActions.tsx | CHANGE REQUIRED |
-| src/components/tracking/LiveTracker.tsx | CHANGE REQUIRED |
-| src/components/trips/DayImagesGallery.tsx | PARTIAL |
-| src/components/trips/EditTripLayout.tsx | CHANGE REQUIRED |
-| src/components/trips/PointSection.tsx | CHANGE REQUIRED |
-| src/components/trips/PointsSection.tsx | PENDING |
-| src/components/trips/TripActions.tsx | PARTIAL |
-| src/components/trips/TripCard.tsx | CHANGE REQUIRED |
-| src/components/trips/TripDaysNav.tsx | CHANGE REQUIRED |
-| src/components/trips/TripDetails.tsx | CHANGE REQUIRED |
-| src/components/trips/TripDetailsView.tsx | PARTIAL |
-| src/components/trips/TripFilters.tsx | CHANGE REQUIRED |
-| src/components/trips/TripForm.tsx | CHANGE REQUIRED |
-| src/components/trips/TripList.tsx | CHANGE REQUIRED |
-| src/components/trips/TripMapSection.tsx | CHANGE REQUIRED |
-| src/components/trips/TripPagination.tsx | PARTIAL |
-| src/components/trips/TripSelectField.tsx | PARTIAL |
+| `src/components/comments/CommentsSection.tsx` | CHANGE REQUIRED |
+| `src/components/comments/CommentsToggle.tsx` | CHANGE REQUIRED |
+| `src/components/comments/RepliesSection.tsx` | CHANGE REQUIRED |
+| `src/components/points/CreatePointPage.tsx` | PARTIAL |
+| `src/components/points/EditPointPage.tsx` | CHANGE REQUIRED |
+| `src/components/points/PointActions.tsx` | CHANGE REQUIRED |
+| `src/components/points/PointCard.tsx` | CHANGE REQUIRED |
+| `src/components/points/PointForm.tsx` | CHANGE REQUIRED |
+| `src/components/points/PointList.tsx` | PARTIAL |
+| `src/components/social/EngagementBar.tsx` | CHANGE REQUIRED |
+| `src/components/social/FavoriteButton.tsx` | PARTIAL |
+| `src/components/social/LikeAnimation.tsx` | PENDING |
+| `src/components/social/LikeButton.tsx` | PARTIAL |
+| `src/components/social/ReportButton.tsx` | CHANGE REQUIRED |
+| `src/components/social/SocialConfigStatus.tsx` | PARTIAL |
+| `src/components/social/TripGroupSocialActions.tsx` | CHANGE REQUIRED |
+| `src/components/tracking/LiveTracker.tsx` | CHANGE REQUIRED |
+| `src/components/trips/DayImagesGallery.tsx` | PARTIAL |
+| `src/components/trips/EditTripLayout.tsx` | CHANGE REQUIRED |
+| `src/components/trips/PointSection.tsx` | CHANGE REQUIRED |
+| `src/components/trips/PointsSection.tsx` | PENDING |
+| `src/components/trips/TripActions.tsx` | PARTIAL |
+| `src/components/trips/TripCard.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripDaysNav.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripDetails.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripDetailsView.tsx` | PARTIAL |
+| `src/components/trips/TripFilters.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripForm.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripList.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripMapSection.tsx` | CHANGE REQUIRED |
+| `src/components/trips/TripPagination.tsx` | PARTIAL |
+| `src/components/trips/TripSelectField.tsx` | PARTIAL |
 
 ### Route/page and layout consumers
 
 | File | Status |
 |---|---|
-| app/layout.tsx | PARTIAL |
-| app/providers.tsx | PARTIAL |
-| app/(account)/layout.tsx | CHANGE REQUIRED |
-| app/(admin)/layout.tsx | CHANGE REQUIRED |
-| app/(auth)/layout.tsx | CHANGE REQUIRED |
-| app/(public)/layout.tsx | PARTIAL |
-| app/(account)/favorites/page.tsx | PARTIAL |
-| app/(account)/my-trips/page.tsx | PARTIAL |
-| app/(account)/profile/page.tsx | PARTIAL |
-| app/(public)/about/page.tsx | CHANGE REQUIRED |
-| app/(public)/live-tracking/page.tsx | CHANGE REQUIRED |
-| app/(public)/page.tsx | PARTIAL |
-| app/(public)/trips/[id]/page.tsx | PARTIAL |
-| app/(public)/trips/page.tsx | PARTIAL |
+| `app/layout.tsx` | PARTIAL |
+| `app/providers.tsx` | PARTIAL |
+| `app/(account)/layout.tsx` | CHANGE REQUIRED |
+| `app/(admin)/layout.tsx` | CHANGE REQUIRED |
+| `app/(auth)/layout.tsx` | CHANGE REQUIRED |
+| `app/(public)/layout.tsx` | PARTIAL |
+| `app/(account)/favorites/page.tsx` | PARTIAL |
+| `app/(account)/my-trips/page.tsx` | PARTIAL |
+| `app/(account)/profile/page.tsx` | PARTIAL |
+| `app/(public)/about/page.tsx` | CHANGE REQUIRED |
+| `app/(public)/live-tracking/page.tsx` | CHANGE REQUIRED |
+| `app/(public)/page.tsx` | PARTIAL |
+| `app/(public)/trips/[id]/page.tsx` | PARTIAL |
+| `app/(public)/trips/page.tsx` | PARTIAL |
 
-Page wrappers without visual declarations are not automatically migration targets. Their imported components are actual styling consumers. Remaining route files need a confirmation pass for imported UI and overlooked local styles before VERIFIED.
+Page wrappers without visual declarations are not automatically migration targets. Their imported components are the actual styling consumers. Remaining route files need a confirmation pass for imported UI and overlooked local styles before being marked VERIFIED.
 
 ---
 
-## 11. Текущ статус и точна следваща задача
+## 11. Current status and exact next task
 
 ### Current stage
-**Stage 1 — inventory and audit: IN PROGRESS.**
 
-### Потвърдено извършено
-- Прочетени са всичките 9 CSS файла.
-- Прочетени са UI token files, image presets, MUI theme и всичките 8 shared style preset files.
-- Инспектирани са основните component families: common controls, images, auth/profile, admin, comments/social, points, trips, maps и tracking.
-- Записани са конкретни migration targets в секция 5 и file statuses в секция 10.
-- Установен е основният проблем: MUI Theme + presets + global CSS + CSS Modules + local sx/style coexist без завършен semantic ownership contract.
+**Stage 1 — Full inventory and audit: IN PROGRESS.**
 
-### Не е завършено — не твърди обратното
-- Exhaustive search на всеки CSS variable/token/preset export до всички consumers.
-- Пълно четене на всички останали UI файлове от 246-те app/src файла.
-- Пълна call-site verification за всеки shared component.
-- Browser/visual verification на всички roles/states.
-- Няма application source migration в този audit batch.
-- Не са изпълнявани build/tests/lint/CI.
+### Confirmed work completed
 
-### Следващ AI/developer — изпълни точно това, без нов план
+- All nine CSS files have been read.
+- UI token files, image presets, the MUI theme and all eight shared style-preset files have been read.
+- The main component families have been inspected: common controls, images, auth/profile, admin, comments/social, points, trips, maps and tracking.
+- Concrete migration targets are recorded in Section 5 and file statuses in Section 10.
+- The primary issue has been identified: MUI Theme + presets + global CSS + CSS Modules + local `sx`/`style` coexist without a complete semantic ownership contract.
 
-1. Прочети този документ първо.
-2. Потвърди branch и HEAD; не създавай branch.
-3. Сравни текущия HEAD с audit baseline; инспектирай само changed files след baseline и изрично PENDING файловете.
-4. Довърши Stage 1 consumer mapping по search matrix от секция 7. Започни със semantic button consumers, след това card/surface, fields, image roles, CSS variables и preset exports.
-5. Обнови manifest-а и добави dated log entry с точните paths, search results и discoveries.
-6. След приключване на Stage 1 премини към Stage 2 и Stage 3; не чакай нов prompt, за да измисляш план.
-7. Мигрирай в Stage 5 реда. Всеки batch обновява точните file statuses и следващата задача.
-8. Не преодитирай непроменени файлове само за контекст. Използвай този документ и Git diff.
+### Not completed — do not claim otherwise
+
+- Exhaustive tracing of every CSS variable/token/preset export to all consumers.
+- Full reading of all remaining UI files among the 246 files under app/src.
+- Full call-site verification for every shared component.
+- Browser/visual verification of all roles and states.
+- No application source migration was performed in this audit batch.
+- No build/tests/lint/CI were run.
+
+### Instructions for the next AI/developer — execute this, do not create a new plan
+
+1. Read this document first.
+2. Confirm the branch and HEAD; do not create a branch.
+3. Compare current HEAD with the audit baseline; inspect only files changed since the baseline and explicitly PENDING files.
+4. Complete Stage 1 consumer mapping using the search matrix in Section 7. Start with semantic button consumers, then card/surface, fields, image roles, CSS variables and preset exports.
+5. Update the manifest and append a dated log entry with exact paths, search results and discoveries.
+6. Once Stage 1 is complete, proceed to Stage 2 and Stage 3; do not wait for another prompt to invent a plan.
+7. Migrate in the order specified in Stage 5. Update exact file statuses and the next task after every batch.
+8. Do not re-audit unchanged files merely for context. Use this document and Git diff.
 
 **Immediate next batch — exhaustive semantic action consumer mapping:**
-- Search every BackButton, BUTTON_STYLES.*, Button, IconButton, native button and links styled as actions.
-- Направи role matrix (Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm/Secondary/Navigation/Pagination/stepper) с всеки file и call site.
-- Сравни еднаквите роли и определи точния component/preset/API owner.
-- Не променяй source, преди role map да е записана.
+
+- Search every BackButton, `BUTTON_STYLES.*`, Button, IconButton, native button and links styled as actions.
+- Create a role matrix (Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm/Secondary/Navigation/Pagination/stepper) listing every file and call site.
+- Compare identical roles and determine the exact component/preset/API owner.
+- Do not modify source code before the role map has been recorded.
 
 ---
 
@@ -695,13 +713,13 @@ Page wrappers without visual declarations are not automatically migration target
 
 ### 2026-11-18 — Dedicated CSS & Design System audit document created
 
-- Branch: feature/frontend-modernization
-- Baseline HEAD: f77d0cff2f98298279273d0d15a27b7a236a2dd7
-- Stage: 1 — full inventory and audit.
-- Създаден е този отделен оперативен документ, за да запази audit findings, file targets, statuses и handoff instructions между сесиите.
-- Потвърден recursive tree: 274 tracked files общо; 246 TS/TSX/JS/JSX/CSS files под app/ и src/.
-- Прочетени са всичките 9 CSS файла, UI token/theme/image-preset foundation и 8 shared style preset files.
-- Инспектирани са основните UI component families; локалните стилове и target migrations са записани в секция 5. Manifest-ът е в секция 10.
-- Source-level audit only. Не са променяни application source files. Не са изпълнявани build, tests, lint, CI или browser visual verification.
-- Няма VERIFIED files. Stage 1 остава OPEN до приключване на consumer search matrix и прегледа на останалите UI файлове.
-- Следваща задача: завърши semantic action/button consumer matrix по секция 11, след това card/surface и field/image consumer mapping.
+- Branch: `feature/frontend-modernization`
+- Baseline HEAD: `f77d0cff2f98298279273d0d15a27b7a236a2dd7`
+- Stage: 1 — Full inventory and audit.
+- This dedicated operational document was created to preserve audit findings, file targets, statuses and handoff instructions between sessions.
+- Confirmed recursive tree: 274 tracked files total; 246 TS/TSX/JS/JSX/CSS files under `app/` and `src/`.
+- All nine CSS files, the UI token/theme/image-preset foundation and all eight shared style-preset files were read.
+- The main UI component families were inspected; local styles and migration targets are recorded in Section 5. The manifest is in Section 10.
+- Source-level audit only. No application source files were changed. No build, tests, lint, CI or browser visual verification was run.
+- No files are VERIFIED. Stage 1 remains OPEN until the consumer search matrix and remaining UI-file review are complete.
+- Next task: complete the semantic action/button consumer matrix in Section 11, then card/surface and field/image consumer mapping.
