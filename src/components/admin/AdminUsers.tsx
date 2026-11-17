@@ -124,10 +124,8 @@ export function AdminUsers() {
                             alt={`${u.firstName} ${u.lastName}`.trim() || 'User profile'}
                             preset="profile"
                             useThumbnail
-                            width={88}
-                            height={88}
+                            fill
                             sizes="88px"
-                            style={{ width: '100%', height: '100%' }}
                           />
                         ) : (
                           <PersonOutlineRoundedIcon fontSize="large" />
