@@ -7,7 +7,7 @@ export interface ImagePreset {
   priority?: boolean;
   fill?: boolean;
   useThumbnail?: boolean;
-  /** Default image content fit; an explicit AppImage style can still override it. */
+  /** Default image content fit for this named rendering role. */
   objectFit?: CSSProperties['objectFit'];
   style?: CSSProperties;
 }
