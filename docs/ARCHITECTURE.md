@@ -2844,3 +2844,754 @@ A styling migration is not complete merely because a token or preset exists. It 
 - source searches confirm old declarations/classes are no longer used.
 
 Do not mark a styling stage complete while equivalent controls have divergent visual owners or a global rule is silently overridden by feature-local styling.
+
+
+---
+
+# 12. Design System Modernization — Execution Plan, Audit Register and Handoff
+
+> **This section is the operational source of truth for the frontend styling-centralization project.** It supersedes older stage-completion statements in this document wherever they conflict with the current status recorded here. Update this section after every meaningful audit batch or migration commit. A new assistant or developer must read this section before starting work.
+
+## 12.1 Objective and definition of done
+
+The objective is to make the entire frontend use one coherent, centrally controlled design system so that a future visual redesign (for example, the current blue/white direction to a charcoal/gold direction) can be performed by changing central tokens, theme configuration and named semantic variants—not by editing dozens or hundreds of feature components.
+
+The system must centrally own:
+
+- Color roles and palettes, including semantic success/warning/error/info states and surface/background/text/border roles.
+- Typography: font families, sizes, weights, line heights, letter spacing and responsive type scales.
+- Spacing, page gutters, component padding, dimensions, control heights and responsive breakpoints.
+- Shape: border radii, outlines, borders and clipping conventions.
+- Elevation: shadows, overlays and layering/z-index.
+- Component appearance and behavior: default, hover, focus-visible, active, selected, disabled, loading and error states.
+- Semantic component roles: Back, Edit, Delete, Add, Remove, Save, primary/secondary actions, cards, panels, dialogs, fields, tabs, chips, avatars, image frames and map controls.
+- Image presentation: object-fit, aspect ratio, dimensions, responsive sizes, thumbnail behavior and image-role defaults.
+- CSS variables consumed by Global CSS and CSS Modules.
+
+A token or preset existing is not enough. **Definition of done is consumer migration and verified consistency across every equivalent instance.** Feature components may choose a named role and provide data/handlers, but must not independently design that role.
+
+### Non-negotiable visual consistency rules
+
+1. All Back actions share one visual contract; all Edit actions share one; all Delete actions share one; likewise Add (+), Remove (−), Save and other repeated semantic roles.
+2. Different semantic roles may have different colors/emphasis, but instances of the same role must agree on dimensions, typography, spacing, radius, border, shadow and all interaction states.
+3. Equivalent Cards must share the same surface, border, radius, shadow and internal spacing contract unless a documented named variant explains the difference.
+4. No ad-hoc inline `style={{...}}`, inline `sx={{...}}`, locally declared visual style objects, duplicated CSS rules or hard-coded design values in feature components.
+5. `sx` is acceptable as a consumer only when it references a centrally defined preset (for example `sx={BUTTON_STYLES.edit}`); it must not be a locally authored style object.
+6. CSS Modules may own genuinely unique structural layout and responsive composition. Their visual values must use shared CSS variables/tokens; they must not create a parallel palette, typography, shape or shadow system.
+7. Image components must select named image presets. Call sites must not override preset-owned rendering behavior such as `objectFit`.
+8. Avoid `!important`. Any unavoidable remaining use must be documented with its reason, exact file and removal condition.
+9. Preserve all business logic, API contracts, routing, permissions, data flow and interaction behavior. This project is a styling-architecture migration, not a feature rewrite.
+10. Do not delete a legacy selector, token, preset or component until repository-wide consumers and dynamic references have been checked.
+
+## 12.2 Approved six-stage plan (the existing plan; not a replacement plan)
+
+| Stage | Scope | Exit condition | Current status |
+|---|---|---|---|
+| 1. Full inventory and audit | Enumerate files; inspect styling architecture; scan local styles, tokens, variants, image rules, CSS and consumers; record findings | A versioned file manifest and actionable findings exist | **Partially documented; exhaustive file-by-file audit remains open** |
+| 2. Design Tokens and MUI Theme | Centralize semantic tokens and map them into MUI theme/CSS variables | One authoritative source for every shared raw design value | **Foundation exists; completeness and consumers require verification** |
+| 3. MUI overrides and reusable presets | Central component defaults, semantic variants and reusable presets | Shared component roles have explicit owners and predictable states | **Foundation exists; semantic coverage requires verification** |
+| 4. Global CSS and CSS Modules | Minimize global CSS; migrate shared values to tokens/CSS variables; retain only justified structural module rules | No duplicate visual systems or unowned shared values remain | **Partially migrated; full audit remains open** |
+| 5. Systematic component migration | Migrate all consumers in the agreed feature order and compare equivalent roles | Every in-scope file is checked; all shared patterns migrated or documented as exceptions | **OPEN — historical closure statements are superseded** |
+| 6. Final audit and validation | Repeat source scans, verify consumer coverage and review visual/regression behavior; run checks only when authorized | Clean audit register, no unexplained exceptions, validation results recorded | **PENDING** |
+
+### Stage 5 migration order
+
+Follow this order unless a dependency requires a documented deviation:
+
+1. Shared shell and Layout (header, footer, navigation, route shells, common controls).
+2. Trips (cards, details, actions, forms, days, pagination, filters).
+3. Points (cards, lists, forms, create/edit, actions).
+4. Forms and Auth (fields, password controls, validation presentation, auth layouts).
+5. Admin (tables, panels, user forms, logs, actions).
+6. Social and Comments (like/favorite/report, engagement bars, comment/reply surfaces).
+7. Maps and Tracking (map controls, address fields, overlays, tracking UI).
+8. Images (AppImage, image presets, upload, gallery, lightboxes, avatars, thumbnails).
+9. Public pages and remaining route-specific CSS Modules.
+
+For each group: **inventory → inspect source and consumers → record findings → add/fix central token or preset → migrate all equivalent consumers → search again → verify behavior is unchanged → update this register**.
+
+## 12.3 Architecture ownership map
+
+| Concern | Authoritative owner | Consumer rule |
+|---|---|---|
+| Raw UI values | `src/constants/ui/` and domain-specific token registries | Components must not duplicate values |
+| MUI palette/theme/variants/defaults | `src/theme/` | MUI components inherit central defaults |
+| Reusable semantic visual patterns | `src/styles/presets/` | Feature components import named presets |
+| Enforced application-wide UI roles | Shared components under `src/components/common/` or the relevant shared component area | Callers cannot bypass the role's visual contract |
+| Image rendering contracts | `src/constants/images/presets.ts` and `AppImage` | Callers select a named preset; no arbitrary presentation overrides |
+| Global document/app-shell rules | `app/globals.css` | Keep minimal; use theme-generated CSS variables |
+| Unique structural/responsive composition | CSS Modules | Shared visual values must use CSS variables/tokens |
+| Feature-specific content and behavior | Feature components | May compose layout and select semantic roles; may not redefine shared appearance |
+
+Do not create extra abstraction layers merely to move a few lines. Extend an existing token/preset/component when it is the natural owner. Create a new named variant only when there is a real semantic distinction and more than one consumer or a clear reusable contract.
+
+## 12.4 Efficient audit protocol — avoid repeating work
+
+The audit is incremental and checkpoint-based. **Do not reread or rescan the entire repository on every continuation.**
+
+At the start of a work session:
+
+1. Read this section and the latest audit log entry.
+2. Read the current branch HEAD and compare it with the recorded `AUDIT_BASE_COMMIT`.
+3. Obtain the Git tree for the current branch. Compare it with the saved file manifest; identify added, deleted, renamed and changed files.
+4. Inspect the diffs for files changed since the checkpoint. Do not re-audit unchanged files whose status is already `VERIFIED`, unless a changed dependency invalidates that verification.
+5. For each changed file, inspect its full current contents when necessary and search all relevant consumers/references before changing a shared API, preset, token or component.
+6. Expand the audit only to the dependency surface affected by the change. Examples: changing `AppImage` requires checking every AppImage consumer; changing a button preset requires checking every consumer of that semantic role; changing a CSS variable requires checking all references and its theme definition.
+7. Update the status and checkpoint after each completed batch. Never rely on conversational memory as the only record of progress.
+
+### When a full scan is justified
+
+Run a full source scan only when one of these is true:
+
+- The file manifest is missing, corrupt or materially out of date.
+- A large refactor or mass rename makes the prior file-level status unreliable.
+- A central API/contract changes in a way that may affect unknown consumers.
+- A prior search was incomplete or produced ambiguous results.
+- The final Stage 6 audit is being performed.
+
+Otherwise, use the Git diff plus targeted consumer/reference searches. This prevents repeating completed checks and reduces context loss.
+
+### Evidence and verification rules
+
+- A file is not `VERIFIED` merely because it was opened. Record the exact checks performed and the result.
+- A search result is not proof of no consumers unless the search scope is known to cover the current branch. Prefer a current-branch tree/blob scan or another exhaustive method over indexed search.
+- Record exact paths and relevant symbols for each finding. Avoid vague notes such as “some local styles remain.”
+- Do not claim a migration is complete until all consumers of the old contract are accounted for.
+- Do not run build, tests, lint, CI or other validation commands unless the user authorizes them. Record them as `NOT RUN — awaiting authorization`, not as passed.
+- If a tool limit interrupts a batch, record the exact completed range and resume from the first unchecked item. Never restart the completed range without a reason.
+- If the branch HEAD changes externally, reconcile the new commits before writing. Do not overwrite another person's work.
+
+## 12.5 Per-file status definitions
+
+Use only these statuses in the manifest:
+
+- `[ ] PENDING` — not yet inspected in the current audit cycle.
+- `[~] PARTIAL` — previously modified or inspected, but the complete checklist/consumer verification is still outstanding.
+- `[x] VERIFIED` — current file inspected against the checklist; relevant consumers checked; outcome recorded.
+- `[!] BLOCKED` — cannot safely complete without missing evidence, a decision or an external dependency.
+- `[-] OUT OF SCOPE` — excluded with a written reason. Do not use this merely to avoid an inconvenient file.
+
+For every file marked `VERIFIED`, the audit log must state the scope checked, findings, migration (if any), and verification evidence. If a later change invalidates it, return it to `PENDING` or `PARTIAL`.
+
+### Required file-level checklist
+
+For each source file, inspect as applicable:
+
+- Inline `style` props and locally declared style objects.
+- `sx` inline objects, local sx constants and whether imported sx values are truly central.
+- `className`, CSS Modules, global selectors and duplicate rules.
+- Hard-coded colors, spacing, dimensions, typography, borders, radii, shadows and z-index.
+- Hover, focus-visible, active, selected, disabled, loading and error states.
+- Semantic button/action role and consistency with all equivalent instances.
+- Card/panel/dialog/field surface consistency.
+- Image sizing, `objectFit`, aspect ratio, responsive `sizes`, thumbnail and avatar behavior.
+- Responsive breakpoints and repeated media-query values.
+- Existing props/API that allow a caller to bypass the shared visual contract.
+- Unused tokens/presets/selectors only after exhaustive consumer and dynamic-reference checks.
+- Behavior preservation: handlers, navigation, ownership/permissions, data and accessibility must remain unchanged.
+
+Not every item applies to every file; mark it not applicable in the file's audit note rather than inventing a styling change.
+
+## 12.6 Baseline inventory and current checkpoint
+
+The following manifest was generated from the recursive Git tree of the current branch, not inferred from memory.
+
+- Repository: `AngelGeorgievStoyanov/hacktrip-web`
+- Working branch: `feature/frontend-modernization`
+- Baseline HEAD: `d86dc34bd8595bce4f6b3b36f6673e3dadbcb064`
+- Inventory scope: tracked source files under `app/` and `src/` with TypeScript/JavaScript/stylesheet/MDX extensions, plus root package/build TypeScript configuration files listed below.
+- Baseline count: **249 files** (246 app/src source files; 9 stylesheet files; 3 root configuration files).
+- Current per-file status: **21 PARTIAL; 228 PENDING; 0 VERIFIED in this new file-by-file register.** This is intentionally conservative: previous component migrations are recorded above, but they have not yet passed the complete repeatable per-file checklist in this register.
+- The manifest is a checkpoint, not a claim that every listed file has already been inspected.
+
+### Status legend
+
+- `[ ]` Pending full file-level audit.
+- `[~]` Previously modified; must be re-audited and its consumers verified.
+- Replace with `[x]` only after meeting the verification rules above.
+- Replace with `[!]` only with a short blocker explanation in the audit log.
+
+## 12.7 Complete tracked source-file manifest
+
+### `app/`
+
+- [ ] `app/(account)/favorites/page.tsx`
+- [ ] `app/(account)/layout.tsx`
+- [ ] `app/(account)/my-trips/page.tsx`
+- [ ] `app/(account)/points/edit/[pointId]/page.tsx`
+- [ ] `app/(account)/profile/page.tsx`
+- [ ] `app/(account)/trips/[id]/edit/page.tsx`
+- [ ] `app/(account)/trips/create/page.tsx`
+- [ ] `app/(account)/trips/create/points/page.tsx`
+- [ ] `app/(admin)/admin/failed-login-logs/page.tsx`
+- [ ] `app/(admin)/admin/images/page.tsx`
+- [ ] `app/(admin)/admin/page.tsx`
+- [ ] `app/(admin)/admin/reports/page.tsx`
+- [ ] `app/(admin)/admin/route-not-found-logs/page.tsx`
+- [ ] `app/(admin)/admin/users/[userId]/page.tsx`
+- [ ] `app/(admin)/admin/users/page.tsx`
+- [ ] `app/(admin)/layout.tsx`
+- [ ] `app/(auth)/forgot-password/page.tsx`
+- [ ] `app/(auth)/layout.tsx`
+- [ ] `app/(auth)/login/page.tsx`
+- [ ] `app/(auth)/register/page.tsx`
+- [ ] `app/(auth)/resend-verification/page.tsx`
+- [ ] `app/(auth)/reset-password/page.tsx`
+- [ ] `app/(auth)/verify-email/page.tsx`
+- [~] `app/(public)/about/AboutPage.module.css` — previously modified; full audit still required
+- [ ] `app/(public)/about/page.tsx`
+- [ ] `app/(public)/layout.tsx`
+- [ ] `app/(public)/live-tracking/page.tsx`
+- [ ] `app/(public)/page.tsx`
+- [~] `app/(public)/privacy-policy/LegalPage.module.css` — previously modified; full audit still required
+- [ ] `app/(public)/privacy-policy/page.tsx`
+- [ ] `app/(public)/trips/[id]/page.tsx`
+- [ ] `app/(public)/trips/page.tsx`
+- [ ] `app/api/og/trips/[id]/route.ts`
+- [ ] `app/error.tsx`
+- [ ] `app/globals.css`
+- [ ] `app/layout.tsx`
+- [ ] `app/not-found.tsx`
+- [ ] `app/opengraph-image.tsx`
+- [ ] `app/providers.tsx`
+- [ ] `app/robots.ts`
+- [ ] `app/sitemap.ts`
+- [ ] `app/twitter-image.tsx`
+
+### `root configuration/`
+
+- [ ] `next.config.mjs`
+- [ ] `package.json`
+- [ ] `tsconfig.json`
+
+### `src/api/admin/`
+
+- [ ] `src/api/admin/index.ts`
+
+### `src/api/auth/`
+
+- [ ] `src/api/auth/index.ts`
+
+### `src/api/client.ts/`
+
+- [ ] `src/api/client.ts`
+
+### `src/api/comments/`
+
+- [ ] `src/api/comments/index.ts`
+
+### `src/api/config/`
+
+- [ ] `src/api/config/index.ts`
+
+### `src/api/points/`
+
+- [ ] `src/api/points/index.ts`
+
+### `src/api/social/`
+
+- [ ] `src/api/social/index.ts`
+
+### `src/api/trips/`
+
+- [ ] `src/api/trips/index.ts`
+
+### `src/components/admin/`
+
+- [ ] `src/components/admin/AdminDashboard.tsx`
+- [ ] `src/components/admin/AdminFailedLogs.tsx`
+- [ ] `src/components/admin/AdminImages.tsx`
+- [ ] `src/components/admin/AdminNavigation.tsx`
+- [ ] `src/components/admin/AdminReports.tsx`
+- [ ] `src/components/admin/AdminRouteNotFoundLogs.tsx`
+- [~] `src/components/admin/AdminUserForm.tsx` — previously modified; full audit still required
+- [~] `src/components/admin/AdminUserProfileImage.tsx` — previously modified; full audit still required
+- [~] `src/components/admin/AdminUsers.tsx` — previously modified; full audit still required
+- [ ] `src/components/admin/index.ts`
+
+### `src/components/auth/`
+
+- [ ] `src/components/auth/Captcha.tsx`
+- [ ] `src/components/auth/ChangePasswordForm.tsx`
+- [ ] `src/components/auth/ForgotPasswordForm.tsx`
+- [ ] `src/components/auth/GuestOnly.tsx`
+- [ ] `src/components/auth/LoginForm.tsx`
+- [ ] `src/components/auth/ProfileForm.tsx`
+- [~] `src/components/auth/ProfileImage.tsx` — previously modified; full audit still required
+- [ ] `src/components/auth/RegisterForm.tsx`
+- [ ] `src/components/auth/RequireAuth.tsx`
+- [ ] `src/components/auth/RequireModeratorRedirect.tsx`
+- [ ] `src/components/auth/RequireRole.tsx`
+- [ ] `src/components/auth/RequireTripOwner.tsx`
+- [ ] `src/components/auth/ResendVerificationForm.tsx`
+- [ ] `src/components/auth/ResetPasswordForm.tsx`
+- [ ] `src/components/auth/VerifyEmailForm.tsx`
+- [ ] `src/components/auth/index.ts`
+
+### `src/components/comments/`
+
+- [ ] `src/components/comments/CommentsSection.tsx`
+- [ ] `src/components/comments/CommentsToggle.tsx`
+- [ ] `src/components/comments/RepliesSection.tsx`
+
+### `src/components/common/`
+
+- [ ] `src/components/common/BackButton.tsx`
+- [ ] `src/components/common/ConfirmDialog.tsx`
+- [ ] `src/components/common/ExpandableText.tsx`
+- [ ] `src/components/common/JsonLd.tsx`
+- [ ] `src/components/common/NotFound.module.css`
+- [ ] `src/components/common/NotFound.tsx`
+- [ ] `src/components/common/NotificationProvider.tsx`
+- [ ] `src/components/common/PasswordField.tsx`
+- [ ] `src/components/common/PasswordRequirements.tsx`
+- [ ] `src/components/common/ScrambleHeading.tsx`
+- [ ] `src/components/common/TabSyncListener.tsx`
+- [ ] `src/components/common/WelcomeHeading.tsx`
+
+### `src/components/CustomFileUploadButton.tsx/`
+
+- [ ] `src/components/CustomFileUploadButton.tsx`
+
+### `src/components/home/`
+
+- [ ] `src/components/home/HomeHero.tsx`
+- [ ] `src/components/home/HomeTrips.tsx`
+- [ ] `src/components/home/index.ts`
+
+### `src/components/images/`
+
+- [~] `src/components/images/AppImage.tsx` — previously modified; full audit still required
+- [ ] `src/components/images/ImageGallery.module.css`
+- [~] `src/components/images/ImageGallery.tsx` — previously modified; full audit still required
+- [~] `src/components/images/ImageLightbox.tsx` — previously modified; full audit still required
+- [ ] `src/components/images/ImageUploadField.tsx`
+- [ ] `src/components/images/index.ts`
+
+### `src/components/layout/`
+
+- [ ] `src/components/layout/Footer.module.css`
+- [ ] `src/components/layout/Footer.tsx`
+- [ ] `src/components/layout/Header.tsx`
+
+### `src/components/maps/`
+
+- [ ] `src/components/maps/AddressAutocomplete.tsx`
+- [ ] `src/components/maps/GoogleMapView.tsx`
+- [ ] `src/components/maps/PointLocationPicker.tsx`
+- [ ] `src/components/maps/TripLocationPicker.tsx`
+
+### `src/components/placeholders/`
+
+- [ ] `src/components/placeholders/SocialObjectPlaceholder.tsx`
+- [ ] `src/components/placeholders/index.ts`
+- [ ] `src/components/placeholders/socialObjectPlaceholderAssets.ts`
+
+### `src/components/points/`
+
+- [ ] `src/components/points/CreatePointPage.tsx`
+- [~] `src/components/points/EditPointPage.tsx` — previously modified; full audit still required
+- [ ] `src/components/points/PointActions.tsx`
+- [~] `src/components/points/PointCard.tsx` — previously modified; full audit still required
+- [ ] `src/components/points/PointForm.tsx`
+- [ ] `src/components/points/PointList.tsx`
+
+### `src/components/social/`
+
+- [ ] `src/components/social/EngagementBar.tsx`
+- [ ] `src/components/social/FavoriteButton.tsx`
+- [ ] `src/components/social/LikeAnimation.tsx`
+- [ ] `src/components/social/LikeButton.tsx`
+- [ ] `src/components/social/ReportButton.tsx`
+- [ ] `src/components/social/SocialConfigStatus.tsx`
+- [ ] `src/components/social/TripGroupSocialActions.tsx`
+
+### `src/components/tracking/`
+
+- [ ] `src/components/tracking/LiveTracker.tsx`
+- [ ] `src/components/tracking/index.ts`
+
+### `src/components/trips/`
+
+- [ ] `src/components/trips/DayImagesGallery.tsx`
+- [ ] `src/components/trips/EditTripLayout.tsx`
+- [ ] `src/components/trips/PointSection.tsx`
+- [ ] `src/components/trips/PointsSection.tsx`
+- [ ] `src/components/trips/TripActions.tsx`
+- [~] `src/components/trips/TripCard.tsx` — previously modified; full audit still required
+- [ ] `src/components/trips/TripDaysNav.tsx`
+- [ ] `src/components/trips/TripDetails.tsx`
+- [ ] `src/components/trips/TripDetailsView.module.css`
+- [ ] `src/components/trips/TripDetailsView.tsx`
+- [ ] `src/components/trips/TripFilters.tsx`
+- [~] `src/components/trips/TripForm.tsx` — previously modified; full audit still required
+- [ ] `src/components/trips/TripList.module.css`
+- [ ] `src/components/trips/TripList.tsx`
+- [ ] `src/components/trips/TripMapSection.tsx`
+- [ ] `src/components/trips/TripPagination.module.css`
+- [ ] `src/components/trips/TripPagination.tsx`
+- [ ] `src/components/trips/TripSelectField.tsx`
+
+### `src/config/index.ts/`
+
+- [ ] `src/config/index.ts`
+
+### `src/constants/admin/`
+
+- [ ] `src/constants/admin/index.ts`
+
+### `src/constants/api/`
+
+- [ ] `src/constants/api/index.ts`
+
+### `src/constants/comments/`
+
+- [ ] `src/constants/comments/index.ts`
+
+### `src/constants/config/`
+
+- [ ] `src/constants/config/index.ts`
+
+### `src/constants/icons.ts/`
+
+- [ ] `src/constants/icons.ts`
+
+### `src/constants/images/`
+
+- [ ] `src/constants/images/index.ts`
+- [~] `src/constants/images/presets.ts` — previously modified; full audit still required
+
+### `src/constants/maps/`
+
+- [ ] `src/constants/maps/index.ts`
+
+### `src/constants/notifications.ts/`
+
+- [ ] `src/constants/notifications.ts`
+
+### `src/constants/pagination.ts/`
+
+- [ ] `src/constants/pagination.ts`
+
+### `src/constants/points/`
+
+- [ ] `src/constants/points/index.ts`
+
+### `src/constants/roles/`
+
+- [ ] `src/constants/roles/index.ts`
+
+### `src/constants/seo/`
+
+- [ ] `src/constants/seo/branding.ts`
+- [ ] `src/constants/seo/coordinates.ts`
+- [ ] `src/constants/seo/defaults.ts`
+- [ ] `src/constants/seo/images.ts`
+- [ ] `src/constants/seo/index.ts`
+- [ ] `src/constants/seo/limits.ts`
+- [ ] `src/constants/seo/robots.ts`
+- [ ] `src/constants/seo/sitemap.ts`
+
+### `src/constants/trips/`
+
+- [ ] `src/constants/trips/index.ts`
+
+### `src/constants/ui/`
+
+- [ ] `src/constants/ui/breakpoints.ts`
+- [ ] `src/constants/ui/colors.ts`
+- [ ] `src/constants/ui/index.ts`
+- [ ] `src/constants/ui/shadows.ts`
+- [~] `src/constants/ui/shape.ts` — previously modified; full audit still required
+- [~] `src/constants/ui/sizes.ts` — previously modified; full audit still required
+- [~] `src/constants/ui/spacing.ts` — previously modified; full audit still required
+- [ ] `src/constants/ui/typography.ts`
+- [ ] `src/constants/ui/z-index.ts`
+
+### `src/hooks/useAuth.tsx/`
+
+- [ ] `src/hooks/useAuth.tsx`
+
+### `src/hooks/useBackground.tsx/`
+
+- [ ] `src/hooks/useBackground.tsx`
+
+### `src/hooks/useGoogleMapsLoader.ts/`
+
+- [ ] `src/hooks/useGoogleMapsLoader.ts`
+
+### `src/hooks/useLiveTracking.ts/`
+
+- [ ] `src/hooks/useLiveTracking.ts`
+
+### `src/hooks/useReportActions.ts/`
+
+- [ ] `src/hooks/useReportActions.ts`
+
+### `src/hooks/useSelects.ts/`
+
+- [ ] `src/hooks/useSelects.ts`
+
+### `src/hooks/useSocialConfig.ts/`
+
+- [ ] `src/hooks/useSocialConfig.ts`
+
+### `src/hooks/useTripGroup.ts/`
+
+- [ ] `src/hooks/useTripGroup.ts`
+
+### `src/lib/errors.ts/`
+
+- [ ] `src/lib/errors.ts`
+
+### `src/lib/images/`
+
+- [ ] `src/lib/images/renderTripOgImage.tsx`
+- [ ] `src/lib/images/representative.ts`
+- [ ] `src/lib/images/thumbnail.ts`
+- [ ] `src/lib/images/tripOgData.ts`
+- [ ] `src/lib/images/validate.ts`
+
+### `src/lib/maps.ts/`
+
+- [ ] `src/lib/maps.ts`
+
+### `src/lib/pointName.ts/`
+
+- [ ] `src/lib/pointName.ts`
+
+### `src/lib/selects.ts/`
+
+- [ ] `src/lib/selects.ts`
+
+### `src/lib/serverApi.ts/`
+
+- [ ] `src/lib/serverApi.ts`
+
+### `src/lib/share.ts/`
+
+- [ ] `src/lib/share.ts`
+
+### `src/lib/socialConfig.ts/`
+
+- [ ] `src/lib/socialConfig.ts`
+
+### `src/lib/socialQuerySync.ts/`
+
+- [ ] `src/lib/socialQuerySync.ts`
+
+### `src/lib/tabSync.ts/`
+
+- [ ] `src/lib/tabSync.ts`
+
+### `src/lib/tracking.ts/`
+
+- [ ] `src/lib/tracking.ts`
+
+### `src/lib/trimRequestData.ts/`
+
+- [ ] `src/lib/trimRequestData.ts`
+
+### `src/lib/tripUrl.ts/`
+
+- [ ] `src/lib/tripUrl.ts`
+
+### `src/lib/zodResolver.ts/`
+
+- [ ] `src/lib/zodResolver.ts`
+
+### `src/seo/index.ts/`
+
+- [ ] `src/seo/index.ts`
+
+### `src/seo/metadata/`
+
+- [ ] `src/seo/metadata/buildMetadata.ts`
+
+### `src/seo/modules/`
+
+- [ ] `src/seo/modules/trip/buildContent.ts`
+- [ ] `src/seo/modules/trip/buildMetadata.ts`
+- [ ] `src/seo/modules/trip/buildStructuredData.ts`
+- [ ] `src/seo/modules/trip/types.ts`
+
+### `src/seo/SiteStructuredData.tsx/`
+
+- [ ] `src/seo/SiteStructuredData.tsx`
+
+### `src/seo/types.ts/`
+
+- [ ] `src/seo/types.ts`
+
+### `src/styles/presets/`
+
+- [~] `src/styles/presets/buttons.ts` — previously modified; full audit still required
+- [~] `src/styles/presets/cards.ts` — previously modified; full audit still required
+- [~] `src/styles/presets/forms.ts` — previously modified; full audit still required
+- [ ] `src/styles/presets/layouts.ts`
+- [ ] `src/styles/presets/map-controls.ts`
+- [ ] `src/styles/presets/panels.ts`
+- [ ] `src/styles/presets/social.ts`
+- [ ] `src/styles/presets/typography.ts`
+
+### `src/theme/components/`
+
+- [ ] `src/theme/components/button.ts`
+- [ ] `src/theme/components/card.ts`
+- [ ] `src/theme/components/dialog.ts`
+- [ ] `src/theme/components/surface.ts`
+- [ ] `src/theme/components/text-field.ts`
+
+### `src/theme/index.ts/`
+
+- [~] `src/theme/index.ts` — previously modified; full audit still required
+
+### `src/theme/palette.ts/`
+
+- [ ] `src/theme/palette.ts`
+
+### `src/theme/shadows.ts/`
+
+- [ ] `src/theme/shadows.ts`
+
+### `src/theme/shape.ts/`
+
+- [ ] `src/theme/shape.ts`
+
+### `src/theme/typography.ts/`
+
+- [ ] `src/theme/typography.ts`
+
+### `src/types/admin.ts/`
+
+- [ ] `src/types/admin.ts`
+
+### `src/types/auth.ts/`
+
+- [ ] `src/types/auth.ts`
+
+### `src/types/comments.ts/`
+
+- [ ] `src/types/comments.ts`
+
+### `src/types/common.ts/`
+
+- [ ] `src/types/common.ts`
+
+### `src/types/config.ts/`
+
+- [ ] `src/types/config.ts`
+
+### `src/types/images.ts/`
+
+- [ ] `src/types/images.ts`
+
+### `src/types/index.ts/`
+
+- [ ] `src/types/index.ts`
+
+### `src/types/points.ts/`
+
+- [ ] `src/types/points.ts`
+
+### `src/types/social.ts/`
+
+- [ ] `src/types/social.ts`
+
+### `src/types/trips.ts/`
+
+- [ ] `src/types/trips.ts`
+
+### `src/validations/admin/`
+
+- [ ] `src/validations/admin/index.ts`
+
+### `src/validations/auth/`
+
+- [ ] `src/validations/auth/index.ts`
+
+### `src/validations/comments/`
+
+- [ ] `src/validations/comments/index.ts`
+
+### `src/validations/index.ts/`
+
+- [ ] `src/validations/index.ts`
+
+### `src/validations/params.ts/`
+
+- [ ] `src/validations/params.ts`
+
+### `src/validations/points/`
+
+- [ ] `src/validations/points/index.ts`
+
+### `src/validations/shared.ts/`
+
+- [ ] `src/validations/shared.ts`
+
+### `src/validations/social/`
+
+- [ ] `src/validations/social/index.ts`
+
+### `src/validations/trips/`
+
+- [ ] `src/validations/trips/index.ts`
+
+## 12.8 Known migration record — already changed, not yet fully re-audited
+
+The following work is recorded as previously committed on this branch. It must not be repeated blindly; first compare the current file and its consumers with the intended result.
+
+| Area | Files / change | Current audit status |
+|---|---|---|
+| Image presets | `src/constants/images/presets.ts`: editor/gallery/lightbox/profile/trip-card image roles centralized | PARTIAL — inspect current preset definitions and all consumers |
+| AppImage contract | `src/components/images/AppImage.tsx`: arbitrary caller `style` API removed; named presets own image rendering | PARTIAL — inspect API and exhaustively verify all call sites |
+| Point editor | `src/components/points/EditPointPage.tsx`: local object-fit removed | PARTIAL |
+| Day controls | `src/styles/presets/buttons.ts`, `src/styles/presets/forms.ts`, `src/components/trips/TripForm.tsx`: increment/decrement and field presets | PARTIAL — compare all day controls |
+| Admin user form | `src/components/admin/AdminUserForm.tsx`: Save/Delete semantic presets | PARTIAL — compare other admin actions |
+| PointCard | `src/constants/ui/sizes.ts`, `src/styles/presets/cards.ts`, `src/components/points/PointCard.tsx`: inset/action/text-wrap presets | PARTIAL |
+| Image consumers | `ImageGallery.tsx`, `ImageLightbox.tsx`, `ProfileImage.tsx`, `AdminUsers.tsx`, `AdminUserProfileImage.tsx`, `TripCard.tsx` | PARTIAL — verify dimensions, fit, clipping and fallback behavior |
+| CSS Module tokens | About mobile gutter and Legal TOC radius moved to shared tokens/theme CSS variables | PARTIAL — inspect all module declarations and remaining raw values |
+| Documentation | This architecture document contains the approved design-system rules and historical migration notes | UPDATED — this operational register supersedes older completion claims |
+
+Previously recorded commits (historical; verify against current branch history before relying on them): `99020cef123f3eece3e3ce49c116371432f7ff42` and `d86dc34bd8595bce4f6b3b36f6673e3dadbcb064`.
+
+## 12.9 Known risks and open questions — do not assume resolved
+
+- `BackButton` may still expose caller-provided `sx` or other props that can weaken its semantic visual contract. Inspect the component API and all callers before tightening it.
+- Semantic action coverage is incomplete until every Back/Edit/Delete/Add/Remove/Save and other repeated action is compared across the full current branch.
+- Existing `.ht-button` global CSS/selectors must not be deleted until exhaustive static and dynamic consumer checks prove they are unused.
+- Existing CSS Modules may legitimately own unique layout, but their colors, radii, shadows, typography and repeated spacing must be checked against shared tokens.
+- Confirm there is no competing Card surface contract across MUI Card, Paper, custom panels and CSS Modules.
+- Check whether theme tokens and preset tokens duplicate the same value or disagree; do not create duplicate sources of truth.
+- Verify the current `AppImage` API and every consumer after the earlier removal of its arbitrary style prop. Do not reintroduce caller overrides as a shortcut.
+- Distinguish true design values from content geometry, map SDK styling, third-party library requirements and one-off structural layout. Centralize shared design decisions, not every numeric value indiscriminately.
+
+## 12.10 Append-only audit log and mandatory update protocol
+
+**Append a new dated entry here after every completed audit batch, migration batch, meaningful discovery or checkpoint.** Keep older entries as history; correct them with a newer entry rather than silently rewriting history.
+
+Each entry must contain:
+
+1. Date/time and current branch HEAD.
+2. Stage and functional group.
+3. Exact files inspected and exact files modified.
+4. Findings: local styles/legacy declarations, central owner, consumers and any exceptions.
+5. Changes made and commit SHA (if committed).
+6. Verification performed and its scope. Explicitly state which checks were not run.
+7. File status changes (`PENDING → PARTIAL → VERIFIED`, etc.).
+8. Remaining blockers and the single next task.
+9. Updated checkpoint commit and manifest changes (new/deleted/renamed files).
+
+### Audit log
+
+#### 2026-11-17 — Operational register created
+
+- Branch: `feature/frontend-modernization`
+- Baseline HEAD before this documentation update: `d86dc34bd8595bce4f6b3b36f6673e3dadbcb064`
+- Stage: 1 — inventory and audit process.
+- Generated a recursive Git tree inventory and identified **249** in-scope files (246 under `app/` and `src/`, including 9 stylesheet files).
+- Added a complete file manifest with conservative statuses. The 21 files with previously recorded modifications are marked PARTIAL, not VERIFIED. The remaining files are PENDING.
+- Consolidated the project objective, six approved stages, ownership boundaries, semantic consistency rules, file-level checklist, incremental audit procedure and handoff instructions.
+- No application source files were modified in this documentation batch. No build, tests, lint or CI were run.
+- Next task: continue Stage 1 using the manifest, audit central styling foundations first, then proceed file-by-file and by dependency group. Do not re-scan unchanged files on each turn; use the Git diff from the latest checkpoint and targeted consumer searches.
