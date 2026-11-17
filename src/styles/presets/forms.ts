@@ -3,6 +3,13 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 
+/** Compact day-number field: dimensions and non-editable numeric display. */
+export const DAY_NUMBER_FIELD_SX = {
+  width: '76px',
+  '& input': { textAlign: 'center' },
+  '& .MuiInputBase-root': { pointerEvents: 'none' },
+} as const;
+
 /** Shared nested form-control inset used by point and trip editing forms. */
 export const FORM_CONTROL_INSET_SX = { m: 0.5, width: 'calc(100% - 10px)' } as const;
 
