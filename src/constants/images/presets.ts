@@ -27,6 +27,14 @@ export const IMAGE_PRESETS = {
     objectFit: 'cover',
   },
   gallery: { width: 240, height: 180, sizes: IMAGE_SIZES.gallery, useThumbnail: true },
+  galleryGrid: {
+    width: 240,
+    height: 180,
+    sizes: IMAGE_SIZES.gallery,
+    useThumbnail: true,
+    objectFit: 'cover',
+  },
+  lightbox: { fill: true, objectFit: 'contain' },
   tripPointThumb: { width: 200, height: 150, useThumbnail: true },
   editorDayThumb: { width: 120, height: 90, useThumbnail: true },
   editorPointThumb: {
