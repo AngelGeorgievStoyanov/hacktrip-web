@@ -35,12 +35,6 @@ interface TripCardProps {
   prioritizeImage?: boolean;
 }
 
-const IMAGE_STYLE: CSSProperties = {
-  display: 'block',
-  width: '100%',
-  height: '200px',
-};
-
 const CARD_HEIGHT = '540px';
 
 const HEAD_BLOCK_SX = {
@@ -56,6 +50,7 @@ const HEAD_BLOCK_SX = {
 } as const;
 
 const IMAGE_FRAME_SX = {
+  position: 'relative',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -246,9 +241,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             loading={prioritizeImage ? 'eager' : undefined}
             fetchPriority={prioritizeImage ? 'high' : undefined}
             alt={title}
-            width={300}
-            height={200}
-            style={IMAGE_STYLE}
+            fill
           />
         ) : (
           <SocialObjectPlaceholder key={dayNumber} />
