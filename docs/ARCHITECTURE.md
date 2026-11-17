@@ -2753,3 +2753,73 @@ Stage 5 is complete for the shared styling patterns identified by the Stage 1 in
 No API contracts, data flow, validation rules, social behavior, routing, image upload behavior or business logic were changed in this stage. Feature-specific geometry and semantic exceptions were intentionally kept local rather than abstracted solely because values look similar.
 
 **Stage 5 exit criterion met:** all shared candidates identified in the architecture inventory have been migrated or explicitly retained as feature-owned exceptions. **Stage 6 remains pending:** run the deferred local TypeScript/build/lint checks and perform final visual/regression review. Those checks have not been run in this pass, consistent with the earlier instruction to defer them.
+
+
+## Design System — mandatory styling ownership rules
+
+These rules apply to all new code and every component touched during the styling migration.
+
+### Single source of truth
+
+1. **Tokens own raw design values:** colors, typography, spacing scales, radii, shadows, breakpoints, sizes and z-index values belong in `src/constants/ui/` (or the matching domain-specific token registry, such as image presets).
+2. **Theme owns framework defaults:** MUI palette, component defaults, variants and interaction states (hover, focus-visible, active, disabled) belong in `src/theme/`.
+3. **Semantic presets own reusable visual roles:** repeated patterns such as Back, Edit, Delete, day increment/decrement, primary/secondary actions, cards, panels and form layouts belong in `src/styles/presets/`.
+4. **Shared components own application-wide contracts:** use a shared component when a role needs enforced props/behavior, not just a copied style object.
+5. **Feature components compose; they do not design:** feature components should select a semantic component/preset and provide data/handlers. They must not define local visual values.
+
+### Button consistency contract
+
+Button styling is centralized by **semantic role**, not forced into one appearance for every button.
+
+- Every Back button uses the same Back contract.
+- Every Edit button uses the same Edit contract.
+- Every Delete button uses the same Delete contract.
+- Every day increment (+) button uses the same increment contract.
+- Every day decrement (−) button uses the same decrement contract.
+- The contracts may intentionally differ from one another in color or emphasis, but each role must have one owner for background, text color, border, radius, dimensions, typography, hover, focus-visible, active and disabled states.
+- A component may not override these properties locally. If a genuine exception is required, add a named semantic variant to the shared button system and document why it exists.
+- MUI Button theme defaults must provide a predictable baseline; semantic variants/presets define role-specific differences. Do not rely on accidental MUI defaults in one feature and hand-written hover styles in another.
+
+### No component-local styling values
+
+The following are not allowed inside feature/component render code:
+
+- inline style objects containing design values;
+- inline `sx={{ ... }}` objects or locally declared sx constants;
+- ad-hoc CSS classes that duplicate a token or semantic preset;
+- direct hex/rgb/rgba/hsl colors;
+- locally repeated radius, shadow, spacing, typography or interaction-state values;
+- per-call-site `objectFit` declarations when an image preset owns the rendering role.
+
+Use `sx` only to consume a centrally exported preset or a shared theme-owned style. CSS Modules are permitted only for genuinely component-specific layout/structure that cannot reasonably be represented by shared tokens/presets; their design values must still use shared CSS variables/tokens. A CSS Module must not create a competing color, radius, shadow or typography system.
+
+### Override and precedence contract
+
+The intended order is:
+
+```text
+Design tokens
+    ↓
+MUI Theme defaults and component variants
+    ↓
+Semantic shared presets / shared components
+    ↓
+Feature composition (selects role; supplies content and behavior)
+```
+
+Feature composition must not override the visual contract selected above it. Explicit overrides are allowed only through named, centrally defined variants. Avoid `!important`; any remaining use must be documented with its technical reason and an owner for removal.
+
+### Images
+
+Image rendering behavior belongs to named `IMAGE_PRESETS` consumed by `AppImage`. Components select a preset such as `tripCard`, `editorPointThumb` or `profile`; they do not repeat `objectFit`, dimensions, responsive sizes or thumbnail rules inline. If two image roles should render identically, they should share one preset or a shared preset base. If they differ, the difference must be named and centralized. Caller-provided inline styles must not be used to bypass an image preset.
+
+### Migration and review gate
+
+A styling migration is not complete merely because a token or preset exists. It is complete only when:
+- all equivalent consumers use the same semantic contract;
+- no competing local declarations remain;
+- the override chain is understood and documented;
+- intentional differences have named variants;
+- source searches confirm old declarations/classes are no longer used.
+
+Do not mark a styling stage complete while equivalent controls have divergent visual owners or a global rule is silently overridden by feature-local styling.
