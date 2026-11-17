@@ -761,9 +761,21 @@ The following additional current-branch files were read specifically for action 
 9. Upload buttons are another semantic family not yet represented in the central role API.
 10. The current action inventory is incomplete; do not begin migration or mark any affected file VERIFIED based on this batch.
 
+#### CSS-backed action and clickable-element scan — first pass
+
+The following current-branch stylesheets were read again for action-like selectors and independent button skins:
+
+- `app/globals.css`: `.ht-button` defines a second contained-button visual contract (display, padding, border/radius, background, text, typography, cursor and hover); `.ht-button--danger:hover` adds a destructive hover treatment. The complete consumer set is **not yet traced**. Do not remove these selectors until every `ht-button` / `ht-button--danger` use is located and migrated.
+- `src/components/common/NotFound.module.css`: `.homeButton` is a native Home CTA skin; `NotFound.tsx:50-53` consumes it. It must ultimately use the shared semantic action API.
+- `app/(public)/privacy-policy/LegalPage.module.css`: `.legalPageBack` is a CSS-styled Back link; `app/(public)/privacy-policy/page.tsx:326` consumes it. This duplicates the BackButton role and must be migrated to the shared Back contract.
+- `src/components/images/ImageGallery.module.css`: `.imageButton` / `.gridImageButton` reset and style a clickable image surface, consumed by `ImageGallery.tsx:80`. This is a gallery-image interaction, not a generic CTA; it should use the shared icon/control reset, focus-visible and hit-target contract while retaining gallery-specific geometry.
+- `app/(public)/about/AboutPage.module.css`: anchors are ordinary content links, not button-like controls.
+- `src/components/layout/Footer.module.css`, `src/components/trips/TripList.module.css`, `src/components/trips/TripPagination.module.css` and `src/components/trips/TripDetailsView.module.css`: no dedicated action-button selector was found in the inspected stylesheet source.
+- The `.ht-button` consumer search is still pending. The five server/public trip-related files inspected in this pass (`app/(public)/trips/[id]/page.tsx`, `src/lib/images/renderTripOgImage.tsx`, `src/seo/modules/trip/buildContent.ts`, `src/lib/share.ts`, `src/components/trips/TripDetailsView.module.css`) did not expose a direct `ht-button` match; that is not proof that no other consumer exists.
+
 #### NEXT TASK
 
-Continue Stage 1: inspect the remaining UI-bearing files from the 246-file tree and complete the source-level search for BackButton, BUTTON_STYLES, Button, IconButton, native button, and action-like anchors. Then inspect all CSS Modules/global CSS for action-like links and buttons, verify every shared component caller, and record the remaining exact paths/call sites before proposing the semantic component API.
+Continue Stage 1: finish the repository-wide consumer search for BackButton, BUTTON_STYLES, Button, IconButton, native button, action-like anchors and especially `.ht-button` / `.ht-button--danger`. Trace every CSS selector to all consumers, inspect the remaining UI-bearing files, verify every shared component caller, and record exact paths/call sites before proposing the semantic component API.
 
 
 ---
@@ -794,3 +806,9 @@ Continue Stage 1: inspect the remaining UI-bearing files from the 246-file tree 
 - Read the additional common, auth, maps, trips, points, layout, route-layout and public-page files listed in Section 11.
 - Added the legal-page native Back anchor, map-search Button, ExpandableText disclosure Button and PasswordField reveal/hide IconButton to the role analysis.
 - No source files changed. Stage 1 remains IN PROGRESS; the complete repository-wide action inventory and CSS action-link scan are still pending.
+
+### 2026-11-18 — CSS-backed action scan, first pass
+
+- Re-read the current global stylesheet and all CSS Modules listed in the baseline stylesheet inventory, including TripDetailsView.module.css.
+- Recorded the independent `.ht-button` contract, NotFound Home CTA, legal Back link and clickable ImageGallery surface, including their known consumers and outstanding consumer-tracing requirements.
+- Stage 1 remains IN PROGRESS. No source changes and no validation commands were run.
