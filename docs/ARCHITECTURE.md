@@ -3705,3 +3705,7 @@ Each entry must contain:
 - Updated §12.9.1 and marked the six inspected component files PARTIAL. No application source files were modified.
 - Verification: source inspection only. No full consumer search, build, tests, lint, CI or visual regression run.
 - Next task: continue full-application component audit and map every repeated semantic action, surface and field to its current implementation before changing shared contracts.
+
+## 12.11 Dedicated CSS and Design System audit
+
+The detailed CSS/styling audit, file-by-file migration targets, status manifest, approved six-stage execution plan and handoff instructions are maintained in **[docs/CSS_DESIGN_SYSTEM_AUDIT.md](./CSS_DESIGN_SYSTEM_AUDIT.md)**. This is the operational source of truth for CSS and Design System work. Read it before continuing styling tasks; append progress there rather than restarting the audit or creating another plan.
