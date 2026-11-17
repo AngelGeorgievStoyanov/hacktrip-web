@@ -76,10 +76,8 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
               alt="User profile image"
               preset="profile"
               useThumbnail
-              width={88}
-              height={88}
+              fill
               sizes="88px"
-              style={{ width: '100%', height: '100%' }}
             />
           </Avatar>
           <Button
