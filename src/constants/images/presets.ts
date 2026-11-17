@@ -9,6 +9,7 @@ export interface ImagePreset {
   useThumbnail?: boolean;
   /** Default image content fit; an explicit AppImage style can still override it. */
   objectFit?: CSSProperties['objectFit'];
+  style?: CSSProperties;
 }
 
 const IMAGE_SIZES = {
@@ -35,6 +36,12 @@ export const IMAGE_PRESETS = {
     objectFit: 'cover',
   },
   lightbox: { fill: true, objectFit: 'contain' },
+  profileLightbox: {
+    width: 1600,
+    height: 1200,
+    objectFit: 'contain',
+    style: { width: '100%', height: 'auto', maxHeight: '85vh' },
+  },
   tripPointThumb: { width: 200, height: 150, useThumbnail: true },
   editorDayThumb: { width: 120, height: 90, useThumbnail: true },
   editorPointThumb: {
