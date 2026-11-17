@@ -4,4 +4,5 @@ export const UI_SHAPE = {
   borderRadius: 4,
   /** Address autocomplete control radius. */
   mapAddressInputRadius: 5,
+  legalTocRadius: 6,
 } as const;
