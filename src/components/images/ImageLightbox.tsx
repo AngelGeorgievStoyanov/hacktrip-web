@@ -138,9 +138,8 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
                 <AppImage
                   src={current.url}
                   alt={alt}
-                  fill
+                  preset="lightbox"
                   sizes="100vw"
-                  style={{ objectFit: 'contain' }}
                 />
               </Box>
             </Box>
