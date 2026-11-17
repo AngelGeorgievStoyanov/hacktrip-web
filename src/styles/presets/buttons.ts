@@ -85,8 +85,10 @@ const dayNumberButton = {
 
 export const BUTTON_STYLES = {
   primary,
+  save: primary,
   primaryWide,
   danger,
+  dangerText: { color: 'error.main' },
   secondary,
   back: secondary,
   secondaryLightText,
