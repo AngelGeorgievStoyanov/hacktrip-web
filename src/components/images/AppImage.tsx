@@ -49,9 +49,11 @@ export function AppImage({
   const resolvedHeight = height ?? presetProps?.height;
   const resolvedSizes = sizes ?? presetProps?.sizes;
   // Preset defaults provide shared image rendering semantics; caller styles remain an explicit override.
-  const resolvedStyle = presetProps?.objectFit
-    ? { objectFit: presetProps.objectFit, ...style }
-    : style;
+  const resolvedStyle = {
+    ...(presetProps?.style ?? {}),
+    ...(presetProps?.objectFit ? { objectFit: presetProps.objectFit } : {}),
+    ...style,
+  };
 
   // A thumbnail URL in the DTO does not guarantee the object exists in storage; retry with
   // the full image URL once before giving up to the placeholder.
