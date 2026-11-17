@@ -2750,6 +2750,10 @@ The Stage 5 closure recorded above is a historical status from the earlier, narr
 - Added a named Save preset and text-danger preset; `AdminUserForm` now consumes them for Save/Delete.
 - Added the explicit `pointCardTextInset` token and named PointCard text/action presets; `PointCard` no longer declares its local 10px inset or repeated action margins.
 
+- Added named `galleryGrid`, `lightbox` and `profileLightbox` image presets; ImageGallery and ImageLightbox now select those presets instead of passing local `objectFit` styles.
+- Migrated profile avatars and TripCard image frames to the shared fill-based image presets, with frame sizing owned by the surrounding layout.
+- Removed the arbitrary `style` prop from `AppImage`; image presentation now comes only from its named preset. A current-branch search of AppImage consumers found no remaining caller-side style overrides.
+
 These are partial migrations, not evidence that all styling is centralized. Remaining known work includes removing arbitrary `AppImage.style` overrides after all consumers have named presets, tightening `BackButton` so callers cannot override its visual contract, auditing all semantic button roles and remaining local `sx`/CSS declarations, and confirming legacy selectors are truly unused.
 
 ## Stage 5 closure — systematic component migration
