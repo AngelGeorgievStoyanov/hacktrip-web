@@ -3101,7 +3101,7 @@ The following manifest was generated from the recursive Git tree of the current 
 - [ ] `src/components/admin/AdminDashboard.tsx`
 - [ ] `src/components/admin/AdminFailedLogs.tsx`
 - [ ] `src/components/admin/AdminImages.tsx`
-- [ ] `src/components/admin/AdminNavigation.tsx`
+- [~] `src/components/admin/AdminNavigation.tsx` — inspected; local nav sx/semantic states need central contract review
 - [ ] `src/components/admin/AdminReports.tsx`
 - [ ] `src/components/admin/AdminRouteNotFoundLogs.tsx`
 - [~] `src/components/admin/AdminUserForm.tsx` — previously modified; full audit still required
@@ -3136,7 +3136,7 @@ The following manifest was generated from the recursive Git tree of the current 
 
 ### `src/components/common/`
 
-- [ ] `src/components/common/BackButton.tsx`
+- [~] `src/components/common/BackButton.tsx` — inspected; visual API still permits caller sx; all call sites pending
 - [ ] `src/components/common/ConfirmDialog.tsx`
 - [ ] `src/components/common/ExpandableText.tsx`
 - [ ] `src/components/common/JsonLd.tsx`
@@ -3191,7 +3191,7 @@ The following manifest was generated from the recursive Git tree of the current 
 
 - [ ] `src/components/points/CreatePointPage.tsx`
 - [~] `src/components/points/EditPointPage.tsx` — previously modified; full audit still required
-- [ ] `src/components/points/PointActions.tsx`
+- [~] `src/components/points/PointActions.tsx` — inspected; inline layout sx needs shared social preset comparison
 - [~] `src/components/points/PointCard.tsx` — previously modified; full audit still required
 - [ ] `src/components/points/PointForm.tsx`
 - [ ] `src/components/points/PointList.tsx`
@@ -3199,9 +3199,9 @@ The following manifest was generated from the recursive Git tree of the current 
 ### `src/components/social/`
 
 - [ ] `src/components/social/EngagementBar.tsx`
-- [ ] `src/components/social/FavoriteButton.tsx`
+- [~] `src/components/social/FavoriteButton.tsx` — inspected; compact badge wrapper and all social states pending
 - [ ] `src/components/social/LikeAnimation.tsx`
-- [ ] `src/components/social/LikeButton.tsx`
+- [~] `src/components/social/LikeButton.tsx` — inspected; compact badge wrapper and all social states pending
 - [ ] `src/components/social/ReportButton.tsx`
 - [ ] `src/components/social/SocialConfigStatus.tsx`
 - [ ] `src/components/social/TripGroupSocialActions.tsx`
@@ -3217,7 +3217,7 @@ The following manifest was generated from the recursive Git tree of the current 
 - [ ] `src/components/trips/EditTripLayout.tsx`
 - [ ] `src/components/trips/PointSection.tsx`
 - [ ] `src/components/trips/PointsSection.tsx`
-- [ ] `src/components/trips/TripActions.tsx`
+- [~] `src/components/trips/TripActions.tsx` — inspected; compare semantic action roles across all feature groups
 - [~] `src/components/trips/TripCard.tsx` — previously modified; full audit still required
 - [ ] `src/components/trips/TripDaysNav.tsx`
 - [ ] `src/components/trips/TripDetails.tsx`
@@ -3618,6 +3618,27 @@ Central styling foundations inspected alongside those stylesheets:
 
 These are confirmed observations from the inspected files, not a completed dependency audit. The associated files remain PARTIAL until their imports, call sites and visual states have been checked.
 
+
+### First component-consumer sample — action and social controls
+
+Inspected these call sites/components after the stylesheet/theme pass:
+- `src/components/common/BackButton.tsx`
+- `src/components/trips/TripActions.tsx`
+- `src/components/points/PointActions.tsx`
+- `src/components/admin/AdminNavigation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/FavoriteButton.tsx`
+
+Confirmed findings:
+- `BackButtonProps` still exposes the full MUI `ButtonProps` surface except `variant`/`color`; caller `sx` is accepted and merged. The shared Back visual contract is therefore not enforced at the component API boundary.
+- `TripActions` consumes semantic `tripAction` / `tripActionDanger` presets, but the exact same action roles across other feature areas have not yet been compared.
+- `PointActions` contains an inline layout `sx` object; this needs to be compared with the shared social action layout preset before deciding whether to reuse or extend it.
+- `AdminNavigation` defines its navigation layout directly in inline `sx`; active/inactive action styling also uses MUI variants/colors directly rather than an app-owned navigation role.
+- `LikeButton` and `FavoriteButton` share a compact badge preset, but each still owns an inline conditional `sx` wrapper. Their different semantic colors are intentional candidates to preserve, not blindly unify.
+- This is a sample, not a complete button/social audit. Other Back/Edit/Delete/Add/Remove/Save, IconButton, anchor and native button consumers remain to be located and compared.
+
+Component files in this sample are PARTIAL, not VERIFIED. No source changes were made.
+
 ### Status of this batch
 
 - Stylesheet content inspected: **9/9**.
@@ -3674,3 +3695,13 @@ Each entry must contain:
 - Verification: inspected file contents on the target branch. No build, tests, lint or CI run. No application behavior or visual regression checks performed.
 - Current checkpoint before documentation commit: `4bdfdf649f6c231c086b188c76e973ddd69c8555`.
 - Next task: exhaustive searches for CSS class selectors, CSS variables, token/preset imports, inline `style` and MUI `sx` usage; map consumers before any CSS cleanup or migration.
+
+#### 2026-11-17 — First action/social consumer sample
+
+- Branch: `feature/frontend-modernization`
+- Starting HEAD: `92ccf23f019aa93fba19d8a34598e6ac5e57bf13`
+- Stage: 1 — inventory and audit; action/social consumer sample.
+- Inspected BackButton, TripActions, PointActions, AdminNavigation, LikeButton and FavoriteButton. Confirmed caller-controlled BackButton sx, inline PointActions/AdminNavigation layout styles and inline compact badge wrappers in Like/Favorite.
+- Updated §12.9.1 and marked the six inspected component files PARTIAL. No application source files were modified.
+- Verification: source inspection only. No full consumer search, build, tests, lint, CI or visual regression run.
+- Next task: continue full-application component audit and map every repeated semantic action, surface and field to its current implementation before changing shared contracts.
