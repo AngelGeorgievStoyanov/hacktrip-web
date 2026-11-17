@@ -22,3 +22,6 @@ export const PAGE_CONTENT_PADDING = '30px';
  * Keep distinct from the 30px public page gutter and form-panel padding.
  */
 export const ROUTE_CONTENT_PADDING = '2rem';
+
+/** Compact mobile gutter for the public About page. */
+export const ABOUT_PAGE_MOBILE_PADDING = '20px 16px';
