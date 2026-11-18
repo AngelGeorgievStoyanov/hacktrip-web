@@ -1,6 +1,7 @@
+import { Typography } from '@mui/material';
 import { TripCard } from './TripCard';
 import { cardListStyle } from '@/styles/presets/layouts';
-import { headingTextStyle } from '@/styles/presets/typography';
+import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 import styles from './TripList.module.css';
 import type { TripGroupResponse } from '@/types';
 
@@ -13,8 +14,12 @@ export function TripList({ trips, prioritizeFirstImage = false }: TripListProps)
   if (trips.length === 0) {
     return (
       <div>
-        <h5 className={styles.emptyTitle} style={headingTextStyle}>WELCOME!</h5>
-        <p className={styles.emptyText} style={headingTextStyle}>No trips found!</p>
+        <Typography component="h5" variant="inherit" className={styles.emptyTitle} sx={HEADING_TEXT_SX}>
+          WELCOME!
+        </Typography>
+        <Typography component="p" variant="inherit" className={styles.emptyText} sx={HEADING_TEXT_SX}>
+          No trips found!
+        </Typography>
       </div>
     );
   }
