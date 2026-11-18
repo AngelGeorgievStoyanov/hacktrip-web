@@ -698,13 +698,13 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | File | Already centralized / confirmed | Still remaining | Current result |
 |---|---|---|---|
-| `src/components/points/PointCard.tsx` | Edit/Delete buttons consume `BUTTON_STYLES.primary` / `BUTTON_STYLES.danger`; card surface (background, border, radius, shadow) is inherited from the global `MuiCard` theme override; text inset and button margin consume named card presets. | Edit has no dedicated semantic preset (still generic primary); move-up/down IconButtons keep local `sx`; card geometry/padding and action-row layout remain local composition; description repeats inline `overflowWrap` rather than reusing the existing wrap preset; exact caller/visual-state verification remains. | PARTIAL — several visual responsibilities are centralized, file is NOT fully fixed. |
-| `src/components/points/PointForm.tsx` | Imports the shared `BackButton` and `BUTTON_STYLES`; primary action uses the shared button preset. | Local layout/spacing `sx` remains; inspect all form states and action consistency; verify BackButton caller contract and all remaining controls. | PARTIAL — not fully fixed. |
+| `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.primary`; Delete Point uses `BUTTON_STYLES.danger`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Edit has no dedicated semantic Edit role; Delete is the only current direct `danger` consumer found. Move-up/down IconButtons, card geometry/padding and action-row layout remain local; description wrapping and caller/state verification remain open. | PARTIAL — several responsibilities centralized, not fully fixed. |
+| `src/components/points/PointForm.tsx` | Uses `BUTTON_STYLES.primary` for map lookup and other primary form actions; shared `BackButton` handles Back/navigation. | Primary role is mixed with local width/margin geometry in a reusable sx constant and at the map lookup call site. BackButton has caller-specific layout/conditional behavior; remaining form fields, upload, icon and disabled/loading states remain open. | PARTIAL — not fully fixed. |
 | `src/components/points/PointActions.tsx` | Social actions are delegated to shared Like/Favorite/Report components and shared status component. | Wrapper layout `sx` is local; verify the nested social controls' visual contract and all callers. | PARTIAL — not fully fixed. |
 | `src/components/points/PointList.tsx` | Delegates each item to the shared `PointCard`. | List layout remains local; verify responsive/layout requirements and empty state typography. | PARTIAL — not fully fixed. |
-| `src/components/trips/TripCard.tsx` | Uses shared `BUTTON_STYLES`, `cardStyle`, and `CARD_TEXT_INSET_SX`; card surface is inherited from `MuiCard` theme. | Stepper Buttons are still direct MUI defaults; substantial card geometry and content composition remain in local `sx` constants; verify responsive variants and all card callers. | PARTIAL — not fully fixed. |
-| `src/components/trips/TripActions.tsx` | Uses named `tripAction` and `tripActionDanger` presets for trip actions. | Edit still shares generic tripAction rather than a semantic Edit role; verify parity with point/admin actions and all states. | PARTIAL — not fully fixed. |
-| `src/components/common/BackButton.tsx` | Shared component consumes `BUTTON_STYLES.back`. | `back` currently aliases `secondary`; public props still allow caller `sx` and broad MUI Button props; caller contract and semantic distinction need design. | PARTIAL — shared but contract incomplete. |
+| `src/components/trips/TripCard.tsx` | Details navigation uses `BUTTON_STYLES.primaryWide`; card surface uses `MuiCard`; content consumes shared card presets. | Details is navigation but uses generic primary-wide action styling. Stepper Buttons remain direct MUI defaults; substantial geometry/content sx and responsive/caller verification remain. | PARTIAL — not fully fixed. |
+| `src/components/trips/TripActions.tsx` | Three non-destructive actions (Add Next Day Trip, Add/Edit Points, Edit Day) use `BUTTON_STYLES.tripAction`; Delete Day and Delete Trip use `tripActionDanger`. | Edit/Add semantics are grouped under one trip-specific appearance; destructive actions share one role. Verify parity with point/admin action roles and loading/disabled/focus states. | PARTIAL — not fully fixed. |
+| `src/components/common/BackButton.tsx` | Shared Back action fixes MUI `variant="contained"` and applies `BUTTON_STYLES.back`; caller owns navigation behavior. | `back` is currently an alias of `secondary`. Caller `sx` is merged before the shared preset (shared overlapping properties win), while all non-overlapping layout overrides and broad Button props remain possible. Nine callers are mapped in Section 11.7; decide whether the public override surface is sufficiently constrained. | PARTIAL — shared but semantic contract incomplete. |
 | `src/theme/components/card.ts` | All MUI Cards receive `getSurfaceStyles` from the theme: paper background, divider border, theme radius and semantic surface shadow. | Verify non-MUI/custom card surfaces and every Card consumer; separate geometry/layout from surface styling. | PARTIAL — MUI Card surface contract exists; app-wide parity not yet proven. |
 | `src/theme/components/dialog.ts` | MUI Dialog Paper receives the same `getSurfaceStyles` contract. | Other standalone MUI Paper consumers are not yet proven to share this contract; inspect all Paper usages and custom surfaces. | PARTIAL — Dialog Paper is centralized; general Paper parity remains open. |
 | `src/theme/components/surface.ts` | Defines one shared surface contract for background, border, radius and shadow. | Confirm every intended surface uses it and that semantic variants (card, dialog, panel, popover) are covered without over-generalizing. | PARTIAL — shared primitive exists; adoption audit remains open. |
@@ -718,15 +718,15 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminReports.tsx` | Paper table uses shared admin table container preset. | Direct action and pagination Buttons need semantic contracts; verify row states. | CHANGE REQUIRED. |
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Uses AppImage and shared column layout preset. | Local zoom trigger geometry and direct upload/remove actions remain; verify image role. | CHANGE REQUIRED. |
-| `src/components/auth/ChangePasswordForm.tsx` | Uses shared account form field preset and primary button preset. | Local button spacing and remaining form states/callers need verification. | PARTIAL. |
-| `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and primary button preset. | Card content/heading sx and complete field/state contract need verification. | CHANGE REQUIRED. |
-| `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets and primary/secondary button presets. | TextField/Checkbox contract and locked-state treatment need verification; secondary semantic callers need mapping. | PARTIAL. |
-| `src/components/auth/ProfileForm.tsx` | Uses shared account field preset, BackButton and primary/secondary presets. | Multiple local field/heading sx and caller-level action layout remain. | CHANGE REQUIRED. |
+| `src/components/auth/ChangePasswordForm.tsx` | Password-change form consumes `BUTTON_STYLES.primary` for Save password. | The primary role is only a generic visual contract; local `alignSelf` and margin are merged into the same sx object. Field, pending/disabled and validation states remain part of the field/action audit. | PARTIAL. |
+| `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and `BUTTON_STYLES.primary` for the Go to login action. | The action is navigation but currently uses generic primary styling; Card content/heading sx and complete status/field state contract remain open. | CHANGE REQUIRED. |
+| `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets; primary Register action and two secondary actions consume `BUTTON_STYLES.primary` and a local alias of `BUTTON_STYLES.secondary`. | Secondary roles include navigation/alternate auth actions but currently share one generic secondary skin. TextField/Checkbox contract and locked-state treatment remain open. | PARTIAL. |
+| `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
 | `src/components/auth/ProfileImage.tsx` | Uses AppImage, Dialog and shared UI color/shadow tokens in some controls. | Local image frame dimensions/radii, IconButton positions, thumbnail sx and overlay states remain. | CHANGE REQUIRED. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Autocomplete. | Local inputSx/containerSx and direct action Button remain; establish a named map-field variant inheriting the base field contract. | PARTIAL. |
 | `src/components/maps/GoogleMapView.tsx` | Wrapper uses responsive grid/flex layout sx. | No button/field/surface styling surfaced in this inspection; verify only if later consumer tracing finds visual controls. | PARTIAL. |
-| `src/components/maps/PointLocationPicker.tsx` | Uses primary/secondary button presets. | Local map layout and position sx remain; verify map-specific action roles and states. | PARTIAL. |
-| `src/components/maps/TripLocationPicker.tsx` | Uses primary/secondary button presets. | Local layout/position sx and map field/action states remain. | CHANGE REQUIRED. |
+| `src/components/maps/PointLocationPicker.tsx` | Locate/search action consumes `BUTTON_STYLES.primary`; Clear/Remove Marker consumes `BUTTON_STYLES.secondary`. | Primary and secondary are generic roles despite distinct map semantics. Map geometry remains local; verify action pending/disabled/focus states and whether Clear Marker should use a destructive or neutral role. | PARTIAL. |
+| `src/components/maps/TripLocationPicker.tsx` | Locate action spreads `BUTTON_STYLES.primary`; Clear Marker spreads `BUTTON_STYLES.secondary`. | The clear action has additional local min-height/nowrap declarations; map layout and field/action states remain. Assess whether the clear action is neutral or destructive and define a dedicated map role only if its semantics require it. | CHANGE REQUIRED. |
 | `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
 | `src/components/CustomFileUploadButton.tsx` | Shared upload component boundary exists. | Raw IconButton and contained Button component=label remain; define upload and icon-action roles. | CHANGE REQUIRED. |
 | `src/components/images/AppImage.tsx` | Central AppImage abstraction selects named image presets and computes rendering style internally. | Audit every preset and caller; internal computed React style is an implementation detail of the approved image abstraction, not permission for consumer-level style props. Document and preserve this boundary. | PARTIAL. |
@@ -764,7 +764,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/ScrambleHeading.tsx` | Uses HOME_HEADING_STYLE as base typography preset. | Public style prop allows caller-provided React presentation style and is spread into the h1; replace with approved semantic class/variant or documented nonvisual runtime API, then audit all callers. | CHANGE REQUIRED. |
 
 | `app/(account)/layout.tsx` | Route shell currently applies ROUTE_CONTENT_PADDING through React style on main. | Replace presentation style prop with approved CSS class/preset/variable contract; preserve flex shell structure. | CHANGE REQUIRED. |
-| `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets and BUTTON_STYLES.createTrip. | CircularProgress local margin, Alert local width/maxWidth and heading style alias require mapping; audit all preset imports and empty/error/loading states. | CHANGE REQUIRED. |
+| `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets; empty-state CTA consumes `BUTTON_STYLES.createTrip` and links to trip creation. | The Create Trip role is still a one-off preset rather than a complete reusable semantic action contract. CircularProgress margin, Alert width/maxWidth and heading alias remain local. | CHANGE REQUIRED. |
 | `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations in route. | Ensure EditPointPage is independently represented in ledger and all its consumers are audited; route itself has no separate skin. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout; no direct visual declarations. | Ensure EditTripLayout is independently audited; route itself has no separate skin. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/failed-login-logs/page.tsx` | Route wrapper delegates to AdminFailedLogs; no direct visual declarations. | AdminFailedLogs owns table, selection, pagination and action UI and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
@@ -795,6 +795,15 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(public)/layout.tsx` | Shared Header/Footer composition; comment explains the flex-fill wrapper needed to keep Footer at the viewport bottom while pages own their `<main>`. | Wrapper uses React `style={{ flex: 1 }}`; move this structural shell rule to a semantic class/CSS Module or shared layout preset, preserving the shell behavior. | CHANGE REQUIRED. |
 | `app/(public)/privacy-policy/LegalPage.module.css` | Page/content surface, text, border, link and TOC radius use selected `--ht-*` variables; CSS Module appropriately owns legal-document layout and anchor scroll offsets. | Local padding/margins/gaps, fixed font-size/line-height, and Back-link padding/skin remain; classify reusable spacing/typography and migrate to tokens. The `.legalPageBack` anchor is a separate native Back visual contract that must align with shared Back semantics without losing link navigation. | CHANGE REQUIRED. |
 | `app/(public)/privacy-policy/page.tsx` | SEO metadata uses `buildSeoMetadata`; long-form terms/privacy content is data-driven through arrays and semantic sections; visual composition is delegated to `LegalPage.module.css`. | Native `.legalPageBack` anchor is the Back action consumer; verify its semantic consistency with shared BackButton while preserving href navigation. Check document headings/link typography against shared semantic typography; no React `style` or ad hoc `sx` found in this route. | CHANGE REQUIRED — native Back-link skin and typography parity remain. |
+
+| `src/components/admin/AdminUserForm.tsx` | Admin user edit form; Save consumes `BUTTON_STYLES.save` (alias of primary), Delete uses `dangerText`, and navigation uses `BackButton`. | Save and Delete currently use different levels of destructive emphasis (filled primary vs text-only danger); confirm this is intentional. Back caller adds `alignSelf`/margin through sx. Form fields, pending state, confirmation and role-specific actions remain open. | CHANGE REQUIRED. |
+| `src/components/auth/ForgotPasswordForm.tsx` | Forgot-password form; submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` rendered as a Next Link. | Back caller supplies local margin via sx; primary submit and navigation roles are distinct but Back still aliases generic secondary. Audit shared field, captcha, loading/disabled and feedback states. | CHANGE REQUIRED. |
+| `src/components/auth/LoginForm.tsx` | Login form uses `BUTTON_STYLES.primary` for Login and a local `SECONDARY_BUTTON_SX` alias of `BUTTON_STYLES.secondary` for three alternate/navigation actions (register and related auth actions). | One generic secondary skin is reused for multiple different secondary semantics; password reveal is a separate IconButton role. Audit fields, password visibility, disabled/loading and focus states. | CHANGE REQUIRED. |
+| `src/components/auth/ResendVerificationForm.tsx` | Resend verification submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Back caller adds local margin via sx; generic primary/secondary aliases do not encode the distinct submit/navigation roles. Audit captcha, fields, loading/disabled and feedback states. | CHANGE REQUIRED. |
+| `src/components/auth/ResetPasswordForm.tsx` | Reset password submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Generic primary and Back/secondary contracts remain; audit password fields, requirements, validation, loading/disabled and feedback states. | CHANGE REQUIRED. |
+| `src/components/trips/EditTripLayout.tsx` | Edit Trip action uses `BUTTON_STYLES.primary`; route navigation uses shared `BackButton`. | Edit currently looks like generic primary rather than a semantic Edit role. Verify action layout and pending/disabled states with the shared trip action family. | CHANGE REQUIRED. |
+| `src/components/trips/TripDetails.tsx` | Renders shared `BackButton` as a Next Link to `/trips`; supplies `TRIP_ACTION_BUTTON_LAYOUT_SX` for full-width/min-height layout. | Shared Back appearance is combined with trip-action geometry; confirm this role should remain visually secondary while preserving the full-width navigation affordance. | PARTIAL. |
+| `src/components/trips/TripForm.tsx` | Uses `dayDecrement`/`dayIncrement` for day-number IconButtons; primary for Add Trip/Add Next Day; `secondaryLightText` for Add Points; shared BackButton for navigation. | Several different semantics still map to generic primary/secondary roles. Day stepper preset owns geometry and hover but lacks a complete icon-action state contract; Back and action layout remain caller-composed. Audit all form fields and state variants. | CHANGE REQUIRED. |
 
 ## 11. Current status and exact next task
 
@@ -1619,6 +1628,154 @@ The earlier Section 11.5 count (157/72/85) was stale and its outstanding list in
 
 Continue from the exact 79-path outstanding list above, without re-opening already-ledgered files unless a later consumer trace requires it. Next inspect the remaining app shell/error/metadata files and the auth/common/admin components, selecting a coherent batch based on shared ownership and call-site dependencies. For every file, record what it contains, which layer currently owns each visual concern, what is already centralized, and exactly what remains. Keep Stage 1 IN PROGRESS until the repository-wide `.ht-button`, BackButton/ `BUTTON_STYLES.*`, Card/Paper/custom surface and field consumer maps are exhaustive. Do not migrate application source before inventory closure. Never run build, tests, lint, CI or browser validation without explicit user authorization.
 
+## 11.7 — Repository-wide action selector and BackButton consumer map (2026-11-18)
+
+### Mandatory preflight and scope
+- Re-read the approved CSS ownership chain, Styling API policy (Section 1.4), six-stage plan, Section 7 search matrix, Section 10.1 ledger and latest NEXT TASK before continuing.
+- Verified branch `feature/frontend-modernization` at HEAD `c9b94baa76dd5b4e8a0b6f1c2169a5e9b0a5a2bf`.
+- Re-fetched the current recursive tree and inspected all **246** TS/TSX/JS/JSX/CSS source files under `app/` and `src/` for literal `.ht-button` / `.ht-button--danger`, `BackButton` and `BUTTON_STYLES.*` references. The tree was not truncated.
+- Fetched and read the full definitions of `app/globals.css`, `src/components/common/BackButton.tsx`, `src/styles/presets/buttons.ts` and the relevant consumer call-site contexts.
+
+### Legacy native `.ht-button` trace
+- `app/globals.css` defines `.ht-button`, `.ht-button:hover` and `.ht-button--danger:hover`; the declarations consume the manually exposed `--ht-button-*` and semantic color/radius variables.
+- No literal `ht-button` class consumer was found in the 246 scanned application source/style files. The only literal class selectors are the definitions in `app/globals.css`.
+- This is a **zero-consumer result within the scanned scope**, not authorization to delete the rules. Before removal, check the full repository (including non-source templates/content and generated/server markup paths) and confirm no external integration or string composition supplies the class.
+
+### Exact BackButton definition and callers
+- Definition: `src/components/common/BackButton.tsx`. It fixes MUI `variant="contained"`, removes caller control of `variant` and `color`, defaults children to BACK, and applies `BUTTON_STYLES.back`.
+- Merge order: caller `sx` is placed first and `BUTTON_STYLES.back` last, so the shared preset wins overlapping keys; caller can still supply non-overlapping layout declarations and the remaining broad MUI Button props.
+- `BUTTON_STYLES.back` is currently a direct alias of `secondary`, so Back has no independently owned semantic appearance yet.
+- Exactly **9 call sites** found:
+  1. `src/components/admin/AdminUserForm.tsx:327` — navigates to `/admin/users`; caller sx adds align-self and top margin; includes ArrowBack icon.
+  2. `src/components/auth/ForgotPasswordForm.tsx:91` — Next Link to `/login`; caller sx adds margin.
+  3. `src/components/auth/ResendVerificationForm.tsx:91` — Next Link to `/login`; caller sx adds margin.
+  4. `src/components/auth/ResetPasswordForm.tsx:133` — Next Link to `/login`; shared auth back-action wrapper; no local sx override.
+  5. `src/components/auth/ProfileForm.tsx:126` — invokes `router.back()`; no local sx override.
+  6. `src/components/points/PointForm.tsx:353` — conditional form navigation; caller retains behavior and layout.
+  7. `src/components/trips/EditTripLayout.tsx:492` — invokes `router.back()`.
+  8. `src/components/trips/TripDetails.tsx:223` — Next Link to `/trips`; combines Back appearance with `TRIP_ACTION_BUTTON_LAYOUT_SX` full-width geometry.
+  9. `src/components/trips/TripForm.tsx:605` — invokes `router.back()`.
+- All nine callers share the component, but the navigation mechanisms differ (router back, fixed route and Link). Keep behavior caller-owned; the visual role should be centralized independently.
+
+### Exact BUTTON_STYLES property consumer map
+The exported properties and every direct property reference found in the 246-file scan:
+
+| Property | Direct consumer(s) | Current semantics / finding |
+|---|---|---|
+| `primary` | `ChangePasswordForm`, `ForgotPasswordForm`, `LoginForm`, `ProfileForm`, `RegisterForm`, `ResendVerificationForm`, `ResetPasswordForm`, `VerifyEmailForm`, `PointLocationPicker`, `TripLocationPicker`, `PointCard`, `PointForm` (2), `EditTripLayout`, `TripForm` (2) | Generic primary used for Save, submit, login, navigation-like success, map lookup, Edit Point, form lookup and Add Trip actions; semantics are not represented independently. |
+| `save` | `AdminUserForm` | Alias of `primary`; Save has no distinct role. |
+| `primaryWide` | `TripCard` | Details navigation uses primary-wide appearance. |
+| `danger` | `PointCard` | Delete Point uses filled danger hover variant. |
+| `dangerText` | `AdminUserForm` | Delete user is text-only danger treatment, different from PointCard Delete. |
+| `secondary` | `LoginForm` (local alias used by 3 controls), `ProfileForm`, `RegisterForm` (local alias used by 2 controls), `PointLocationPicker`, `TripLocationPicker` | One generic secondary skin spans alternate auth/navigation, change-password and map clear actions. |
+| `back` | `BackButton` | Alias of `secondary`; nine BackButton callers inherit it. |
+| `secondaryLightText` | `TripForm` | Add Points action. |
+| `createTrip` | `app/(account)/my-trips/page.tsx` | Dedicated Create Trip color/spacing treatment. |
+| `tripAction` | `TripActions` (3 controls) | Add Next Day Trip, Add/Edit Points and Edit Day share the same trip action style. |
+| `tripActionDanger` | `TripActions` (2 controls) | Delete Day and Delete Trip. |
+| `dayIncrement` | `TripForm` | Day-number increment IconButton. |
+| `dayDecrement` | `TripForm` | Day-number decrement IconButton. |
+
+- All 13 exported properties have at least one direct reference in the scanned source. There are **34 direct property references** including the internal `BackButton → back` reference; this count includes local aliases but does not multiply the three/two rendered controls behind the Login/Register aliases.
+- All consumer files above now have individual Section 10.1 ledger rows; newly added rows describe form composition, action roles, local overrides and outstanding field/state work.
+- Semantic gaps confirmed: `save === primary`, `back === secondary`; Edit shares primary/tripAction; Add shares primary/tripAction; Delete is split between filled danger and text danger; map clear actions use secondary; Details navigation uses primaryWide. Do not change visuals blindly; Stage 2/3 must define a deliberate role matrix.
+
+### Corrected live inventory after action consumer ledger updates
+- Candidate scope remains **163** files.
+- Individual Section 10.1 ledger rows before this action-map batch: **84**.
+- Newly added individual rows: **8**.
+- Individual ledger rows now: **92**.
+- Files still without an individual ledger row: **71**.
+- Remaining category breakdown: **app 10, components 37, UI tokens/hooks/SEO 9, presets 8, theme 7**.
+- Ledger rows are inventory only; no source migration is implied.
+
+### Exact remaining paths — 71
+
+**app — 10**
+- `app/api/og/trips/[id]/route.ts`
+- `app/error.tsx`
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/not-found.tsx`
+- `app/opengraph-image.tsx`
+- `app/providers.tsx`
+- `app/robots.ts`
+- `app/sitemap.ts`
+- `app/twitter-image.tsx`
+
+**components — 37**
+- `src/components/admin/AdminNavigation.tsx`
+- `src/components/admin/AdminUsers.tsx`
+- `src/components/admin/index.ts`
+- `src/components/auth/Captcha.tsx`
+- `src/components/auth/GuestOnly.tsx`
+- `src/components/auth/RequireAuth.tsx`
+- `src/components/auth/RequireRole.tsx`
+- `src/components/auth/RequireTripOwner.tsx`
+- `src/components/auth/index.ts`
+- `src/components/common/ConfirmDialog.tsx`
+- `src/components/common/NotFound.module.css`
+- `src/components/common/PasswordRequirements.tsx`
+- `src/components/common/TabSyncListener.tsx`
+- `src/components/home/HomeHero.tsx`
+- `src/components/home/HomeTrips.tsx`
+- `src/components/home/index.ts`
+- `src/components/images/ImageGallery.module.css`
+- `src/components/images/index.ts`
+- `src/components/layout/Footer.module.css`
+- `src/components/layout/Footer.tsx`
+- `src/components/layout/Header.tsx`
+- `src/components/placeholders/SocialObjectPlaceholder.tsx`
+- `src/components/placeholders/index.ts`
+- `src/components/placeholders/socialObjectPlaceholderAssets.ts`
+- `src/components/social/FavoriteButton.tsx`
+- `src/components/social/LikeAnimation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/ReportButton.tsx`
+- `src/components/social/SocialConfigStatus.tsx`
+- `src/components/tracking/index.ts`
+- `src/components/trips/PointsSection.tsx`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripDetailsView.tsx`
+- `src/components/trips/TripList.module.css`
+- `src/components/trips/TripList.tsx`
+- `src/components/trips/TripPagination.module.css`
+- `src/components/trips/TripPagination.tsx`
+
+**UI tokens / hooks / SEO — 9**
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/index.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
+
+**presets — 8**
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/typography.ts`
+
+**theme — 7**
+- `src/theme/components/button.ts`
+- `src/theme/components/text-field.ts`
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shadows.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
+
+### NEXT TASK
+Continue Stage 1 by completing the **Card / Paper / custom surface** consumer map, including standalone MUI Paper, Card, Dialog Paper, CSS surfaces, map/image overlays and all custom panel implementations. Then map all form controls (TextField, Select, Autocomplete, Checkbox, Radio, Switch, etc.) and their shared presets/theme overrides. Preserve the exact 71-path outstanding list above and add every inspected file to Section 10.1. Keep direct MUI Button/IconButton semantic role and state mapping open where it is not already captured by the BUTTON_STYLES/BackButton inventory. Do not begin application source migration until all mandatory Section 7 consumer maps are exhaustive. Stage 1 remains IN PROGRESS. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+
 ## 12. Audit log (append-only)
 
 ### 2026-11-18 — Dedicated CSS & Design System audit document created
@@ -1715,4 +1872,13 @@ Continue from the exact 79-path outstanding list above, without re-opening alrea
 - Inspected 12 previously unledgered auth/public route and stylesheet files and added an individual Section 10.1 row for each.
 - Recorded auth route wrappers as non-visual where appropriate, while identifying React style presentation in Auth layout, About image styles and Public layout; About and Legal CSS Modules retain local typography/spacing/back-link rules despite partial CSS-variable use.
 - Corrected the candidate inventory from 157 to 163 based on the current tree and the Section 10.1-only ledger count: 72 previously logged + 12 new = 84 logged; 79 remain without an individual row. Added the exact remaining path list and category breakdown in Section 11.6.
+- No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
+
+
+### 2026-11-18 — Repository-wide action selector / BackButton map
+- Re-read the architecture, styling API policy, approved stage plan, Section 7 matrix, ledger and latest NEXT TASK before the source scan.
+- Verified branch `feature/frontend-modernization` at HEAD `c9b94baa76dd5b4e8a0b6f1c2169a5e9b0a5a2bf`; scanned all 246 TS/TSX/JS/JSX/CSS files under app/src for literal ht-button selectors/classes, BackButton and BUTTON_STYLES property references.
+- Confirmed no literal ht-button consumer in the scanned scope; retained the CSS definitions pending broader repository/markup confirmation.
+- Recorded the complete nine-caller BackButton map, its prop/sx merge contract, all 13 BUTTON_STYLES exports and 34 direct property references. Added eight missing consumer files to Section 10.1 and updated existing rows with exact semantic roles and local overrides.
+- Reconciled the live 163-file candidate scope: 92 unique ledgered files, 71 without individual ledger rows. Added the exact 71-path list and category counts in Section 11.7.
 - No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
