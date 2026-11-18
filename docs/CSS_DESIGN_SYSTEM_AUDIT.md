@@ -3536,14 +3536,14 @@ No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconB
 - Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
 - No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
 
-**NEXT TASK — audit the remaining Auth route family (Section 11.19.F):**
+**NEXT TASK — deepen the seven PARTIAL Account page audits (Section 11.19.F):**
 
-1. Audit Forgot Password, Resend Verification, Reset Password and Verify Email from their route roots through form owners, shared fields, CAPTCHA/feedback, action roles and auth shell.
-2. Cross-reference the Login/Register contracts in Section 11.19; do not duplicate shared PasswordField, PasswordRequirements, Captcha, WelcomeHeading, Header/Footer or NotificationProvider audits.
-3. Record each route's own validation-state presentation, loading/disabled behavior, responsive layout, direct MUI/native controls and all React style/inline sx/CSS Module findings.
-4. Update the Section 11.19 route coverage matrix after the batch. A route is DETAILED only after its page-level composition and style/state ownership have been traced.
-5. Then deepen the seven PARTIAL Account pages, audit the seven Admin pages, and finish Not Found, in that order unless a newly discovered dependency requires a different sequence.
-6. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Keep the Favorites/My Trips source-correctness issue separate and do not change app source without authorization.
+1. Start with Favorites and My Trips, tracing their route roots, shared TripList/TripCard, empty/loading/error states, actions and pagination/navigation. Verify the known source-import/reference mismatch, but document only; do not fix application source.
+2. Continue Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point, tracing each route through form/layout owners, nested components, shared visual contracts and tokens.
+3. Reuse Sections 11.14–11.18 and 11.21; do not duplicate shared component audits. Record page-specific composition, state/responsive behavior, direct MUI/native controls, CSS Modules, React style and inline sx.
+4. Update Section 11.19.F after the Account batch. Keep any route PARTIAL until its page-level styling and state ownership is traced end-to-end.
+5. Then audit the seven Admin routes and finish Not Found/404.
+6. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Do not change application source without authorization.
 7. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
 8. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
@@ -3741,10 +3741,10 @@ Status definitions:
 | Account | Create Trip Point | app/(account)/trips/create/points/page.tsx | PARTIAL | Root/CreatePointPage/PointList/PointCard/map owners recorded |
 | Auth | Login | app/(auth)/login/page.tsx | DETAILED | Section 11.19.C; form, field, CAPTCHA and navigation states |
 | Auth | Register | app/(auth)/register/page.tsx | DETAILED | Section 11.19.D; fields, password feedback, terms, CAPTCHA and redirect |
-| Auth | Forgot Password | app/(auth)/forgot-password/page.tsx | NOT AUDITED | Form listed in route graph; page-level pass remains |
-| Auth | Resend Verification | app/(auth)/resend-verification/page.tsx | NOT AUDITED | Form listed in route graph; page-level pass remains |
-| Auth | Reset Password | app/(auth)/reset-password/page.tsx | NOT AUDITED | Password shared owners mapped; route/form page audit remains |
-| Auth | Verify Email | app/(auth)/verify-email/page.tsx | NOT AUDITED | Route/form page audit remains |
+| Auth | Forgot Password | app/(auth)/forgot-password/page.tsx | DETAILED | Section 11.21.B; email/CAPTCHA form, generic success response, submit/reset/error states |
+| Auth | Resend Verification | app/(auth)/resend-verification/page.tsx | DETAILED | Section 11.21.C; email/CAPTCHA form, generic success response, submit/reset/error states |
+| Auth | Reset Password | app/(auth)/reset-password/page.tsx | DETAILED | Section 11.21.D; query token, password requirements, validation, success and redirect states |
+| Auth | Verify Email | app/(auth)/verify-email/page.tsx | DETAILED | Section 11.21.E; query token, automatic verification, loading/success/error and redirect states |
 | Admin | Admin landing | app/(admin)/admin/page.tsx | NOT AUDITED | Native section/h1 route root only; do not assume AdminDashboard is used |
 | Admin | Users | app/(admin)/admin/users/page.tsx | NOT AUDITED | AdminUsers and image owners listed; page-level pass remains |
 | Admin | Edit User | app/(admin)/admin/users/[userId]/page.tsx | NOT AUDITED | AdminUserForm/password/image owners listed; page-level pass remains |
@@ -3756,19 +3756,16 @@ Status definitions:
 
 **Verified coverage count:**
 - 27 route roots total.
-- 8 DETAILED: Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register.
+- 12 DETAILED: Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register, Forgot Password, Resend Verification, Reset Password and Verify Email.
 - 7 PARTIAL: all 7 Account pages.
-- 12 NOT AUDITED: four remaining Auth pages, seven Admin pages and Not Found.
+- 8 NOT AUDITED: seven Admin pages and Not Found.
 - These counts describe route-page audit coverage only. They do not change the 163/163 candidate file inventory count and do not mean Stage 1 is complete.
 
 ### G. Next page-audit sequence
 
-1. Live Tracking — standalone full-screen route and LiveTracker ownership; keep Google Maps SDK UI separate from app-owned tracking controls.
-2. About + Privacy Policy — public static pages and their CSS Modules; reconcile with public shell and shared typography/layout tokens.
-3. Remaining Auth pages — Forgot Password, Resend Verification, Reset Password and Verify Email as one form-family audit, reusing the Login/Register owner map.
-4. Remaining Account pages — deepen all seven PARTIAL routes from root-only coverage into page-level style/state/responsive audits.
-5. Admin pages — Admin landing, Users, Edit User, Images, Failed Login Logs, Reports and Route Not Found Logs; trace AdminNavigation and shared table/action/dialog/image owners.
-6. Not Found — route shell plus NotFound.module.css and authorization fallback contexts.
+1. Remaining Account pages — deepen all seven PARTIAL routes from root-level coverage into page-level style/state/responsive audits.
+2. Admin pages — Admin landing, Users, Edit User, Images, Failed Login Logs, Reports and Route Not Found Logs; trace AdminNavigation and shared table/action/dialog/image owners.
+3. Not Found — route shell plus NotFound.module.css and authorization fallback contexts.
 
 ### H. Batch result
 
@@ -3947,3 +3944,157 @@ The route matrix in Section 11.19.F is the page-level status source of truth. Fi
 - Stage 1 remains IN PROGRESS.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.21 — Remaining Auth route family audit (2026-11-18)
+
+### A. Scope and preflight
+
+- Re-read the audit architecture, Styling API policy (Section 1.4), six-stage plan, Section 7 inventory, Section 10.1 file ledger, route matrix (Section 11.19.F), shared-owner audits (Sections 11.14–11.20) and current NEXT TASK.
+- Verified the current branch ref: feature/frontend-modernization. Audit document SHA before this batch: 23564a1f5f09fd3c63cb16efbda49e2186aca20b.
+- Audited all four remaining Auth routes and their page/form/shared dependencies against the exact branch ref. Existing Login/Register audits were used as shared-owner references, not repeated.
+- The four routes are intentionally small wrappers; the substantive work is in their form components and shared Auth shell, so the audit follows those dependencies end-to-end.
+- No application source changes, no branch creation, and no build/tests/lint/CI/browser validation.
+
+### B. Forgot Password — /forgot-password
+
+**Composition**
+- Route root app/(auth)/forgot-password/page.tsx sets title "Forgot password", NOINDEX and renders ForgotPasswordForm.
+- Auth layout wraps every Auth route with shared Header/Footer, a centered main element, a 480px maximum-width inner wrapper and GuestOnly. GuestOnly renders null while auth is loading or when already authenticated, then redirects authenticated users to /. It does not add a loading indicator.
+- ForgotPasswordForm → WelcomeHeading → AUTH_FORM_SX form panel → title → email TextField → hidden CAPTCHA form value → Captcha → primary submit Button → BackButton to /login.
+
+**Behavior and state**
+- React Hook Form uses forgotPasswordSchema and defaults email/captchaToken to empty strings. Email errors appear only after submit; helper text reserves a blank line before submission and when no error exists.
+- CAPTCHA token is held both in local component state and form state. Submit is disabled while submitting or while no CAPTCHA token exists. Captcha itself is disabled while submitting.
+- Submission calls authApi.forgotPassword with email and CAPTCHA token. Both success and failure use the global NotificationProvider; success uses the deliberately generic FORGOT_PASSWORD_SUCCESS_MESSAGE ("If an account exists for this email...") to avoid revealing account existence.
+- Finally always clears submitting, clears the CAPTCHA token in local/form state and increments resetKey so the CAPTCHA widget resets. The email TextField itself is not disabled while submitting.
+- BackButton is disabled while submitting and navigates to /login.
+
+**Styling**
+- No route-specific CSS Module or route-local style/sx. Shared AUTH_FORM_SX owns panel/surface and stack layout; AUTH_FORM_TITLE_SX owns title; AUTH_FORM_BACK_ACTION_SX owns the Back row; BUTTON_STYLES.primary and BackButton/BUTTON_STYLES.back own actions.
+- Email TextField uses MUI defaults and the global MuiTextField outlined/medium defaults; field visual defaults are centralized in theme/components/text-field.ts, but no additional Auth-only field variant is applied.
+- The shared auth layout's React style object (centered main with ROUTE_CONTENT_PADDING and flex:1) and 480px wrapper width are shared migration targets, not Forgot Password-specific styles.
+- AUTH_FORM_SX declares maxWidth 700px, but the Auth layout's 480px wrapper is the effective outer cap on this route and all other Auth pages.
+
+### C. Resend Verification — /resend-verification
+
+**Composition and behavior**
+- Route root app/(auth)/resend-verification/page.tsx sets title "Resend verification", NOINDEX and renders ResendVerificationForm inside the same Auth layout/GuestOnly boundary.
+- Composition matches Forgot Password: WelcomeHeading → AUTH_FORM_SX → title → email TextField → hidden CAPTCHA value → Captcha → primary submit → BackButton to /login.
+- Uses resendVerificationSchema, email/captcha defaults, submit-only email error display and reserved helper-text line.
+- Submission calls authApi.resendVerification. Success message is deliberately generic ("If an account exists and needs verification...") to avoid account enumeration; errors use getGenericErrorMessage and NotificationProvider.
+- The submit button is disabled while submitting or without a CAPTCHA token. Captcha is disabled while submitting; the email TextField remains enabled. Finally clears token/form state and resets the CAPTCHA widget, whether the request succeeds or fails.
+- BackButton is disabled while submitting.
+
+**Styling and reuse**
+- No route-specific CSS Module, React style or local sx object. It uses exactly the same AUTH_FORM_SX, AUTH_FORM_TITLE_SX, AUTH_FORM_BACK_ACTION_SX, BUTTON_STYLES.primary, BackButton and shared Auth layout as Forgot Password.
+- These are two page consumers of one shared auth-form contract, not two independent form styles. Future redesign should update the semantic auth form and field/action contracts once.
+
+### D. Reset Password — /reset-password
+
+**Route and token handling**
+- Route root app/(auth)/reset-password/page.tsx is an async server page. It awaits searchParams, accepts token only when query parameter token is a string, otherwise passes undefined; page metadata is NOINDEX.
+- The form receives optional token. A missing token is not rejected at the route root; on submit it emits "Missing reset token." and returns without calling the API.
+- Auth layout/GuestOnly behavior is shared with the other Auth routes.
+
+**Form behavior**
+- ResetPasswordForm uses resetPasswordSchema.pick({ password: true }) with React Hook Form mode/reValidateMode onChange. The API layer separately validates the full token+password request through resetPasswordSchema.
+- PasswordField is the shared common component, with visibility toggle, new-password autocomplete, disabled state while submitting, max length 72, and caller-owned error/helper text.
+- PasswordRequirements updates live from watched password; it uses shared password requirement logic and a local responsive one/two-column list layout.
+- Submit is disabled while submitting or until the password form is valid. The missing-token guard is in the submit handler. A valid request calls authApi.resetPassword({token,password}).
+- API errors are mapped with getTokenErrorMessage to the global error notification. Success shows a success notification and switches to a success panel with a Go to login action; an effect redirects to /login after AUTH_SUCCESS_REDIRECT_DELAY_MS. The redirect timer is cleaned up on unmount.
+- The BackButton to /login is disabled while submitting. The success panel uses a contained Button without an explicit BUTTON_STYLES preset; this is a semantic action styling gap to reconcile with the shared navigation/action role.
+
+**Styling**
+- Form and success panel use AUTH_FORM_SX; title uses AUTH_FORM_TITLE_SX; back row uses AUTH_FORM_BACK_ACTION_SX; submit uses BUTTON_STYLES.primary.
+- PasswordField and PasswordRequirements are shared with Register and Change Password / Admin user form consumers as mapped in Sections 11.17–11.18. Their internals are not re-audited here.
+- No page-specific CSS Module or React style. Layout uses shared sx presets, but the success panel's Go to login Button has only variant=contained and no named semantic preset.
+
+### E. Verify Email — /verify-email
+
+**Route and token handling**
+- Route root app/(auth)/verify-email/page.tsx awaits searchParams and passes token only if query parameter token is a string. Metadata is NOINDEX.
+- VerifyEmailForm starts in idle state. Its effect sets error and notifies when token is missing; otherwise it changes to loading and calls authApi.verifyEmail automatically without requiring a button click.
+- On success it sets success, shows LOGIN_EMAIL_VERIFIED_MESSAGE for AUTH_SUCCESS_REDIRECT_DELAY_MS, publishes the email-verified tab event (consumed by LoginForm's BroadcastChannel listener) and schedules router.replace('/login').
+- On failure it sets error and shows getTokenErrorMessage. Cleanup marks the request cancelled and clears any scheduled redirect timer.
+- The visible card shows a CircularProgress while loading. For both success and error it renders a Go to login button. The success/error message itself is delivered through the global notification; the card does not render distinct visible success/error text. Idle state renders neither spinner nor action.
+- The status state is a four-way union idle/loading/success/error. Preserve all four states and the automatic request/redirect behavior during any visual migration.
+
+**Styling**
+- The page has no route-specific CSS Module or React style. VerifyEmailForm owns a Card with a local sx object: COLUMN_STACK_SX plus centered alignment, width 100%, maxWidth 560, box sizing, auto horizontal margins, responsive padding xs=3/sm=4 and centered text.
+- Card heading uses a local inline sx fontWeight 700. Go to login uses BUTTON_STYLES.primary. Loading CircularProgress uses default MUI size.
+- Card surface itself is theme-owned through MuiCard, but local width, spacing, alignment and typography remain in the component. The Auth layout's 480px wrapper constrains the 560px Card max width in the actual route composition.
+
+### F. Shared Auth ownership and cross-page findings
+
+- Auth shell: app/(auth)/layout.tsx → Header → main → 480px wrapper → GuestOnly → route form → Footer. The main uses a React style object and wrapper uses a literal maxWidth 480; this is a shared shell migration target for all six Auth routes.
+- GuestOnly owns the auth access/redirect gate and loading suppression. It renders no spinner/skeleton while auth status is loading.
+- WelcomeHeading/ScrambleHeading are shared across Home, Trips, About and Auth. Their React style presentation, touch-triggered scramble and reduced-motion behavior are documented in Sections 11.14, 11.15 and 11.20; do not create Auth-specific heading styles.
+- Shared form contracts: AUTH_FORM_SX, AUTH_FORM_TITLE_SX, AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_ACTIONS_SX and PANEL_SX. AUTH_FORM_SX maxWidth 700 does not exceed the 480px Auth layout wrapper in practice.
+- Shared field owners: MuiTextField theme defaults, PasswordField, PasswordRequirements and Captcha. Captcha uses a fixed 78px minimum-height row, centered content and disabled opacity/pointer-events in local sx; missing site key renders a role=alert message.
+- Shared action owners: BUTTON_STYLES.primary, BackButton/BUTTON_STYLES.back, and unstyled contained navigation buttons in Reset Password and Verify Email success states. Those success navigation actions should be mapped to the shared semantic navigation action contract in a later migration.
+- Feedback: NotificationProvider owns global Snackbar/Alert severity, position, duration and close behavior. Auth form success/error content is toast-driven; avoid adding duplicate page-local feedback without a design decision.
+- Validation: src/validations/auth/index.ts owns email, opaque token, password and CAPTCHA constraints. src/api/auth/index.ts reparses request payloads before posting. Route pages only extract query tokens; no API or business logic was changed.
+- All four pages are NOINDEX. They should remain excluded from public SEO indexing.
+
+### G. Cross-route coverage and shared semantic roles
+
+| Shared owner / contract | Consumers in this batch | Existing audited consumers |
+|---|---|---|
+| Auth layout + GuestOnly | All four routes | Login, Register |
+| WelcomeHeading + ScrambleHeading | All four routes | Home, Trips, About, Login, Register |
+| AUTH_FORM_SX + AUTH_FORM_TITLE_SX | Forgot, Resend, Reset | Login, Register |
+| AUTH_FORM_BACK_ACTION_SX + BackButton | Forgot, Resend, Reset | Existing Account forms and other Auth routes |
+| Captcha | Forgot, Resend | Login, Register |
+| PasswordField + PasswordRequirements | Reset | Register, ChangePasswordForm, AdminUserForm |
+| NotificationProvider | All four routes | Global app shell and other feature flows |
+| MuiCard / MuiTextField defaults | Verify card / email fields | Other app routes |
+| BUTTON_STYLES.primary | All four routes | Login, Register and feature actions |
+
+- No new shared component owner is introduced by these pages. The important new dependency is the common Auth layout wrapper, which constrains all six Auth pages and should be treated as one shell owner.
+- Two generic contained "Go to login" success buttons do not use a named navigation preset (Reset Password and Verify Email). Record this as an action-role migration target; do not change behavior or semantics during audit.
+
+### H. Updated page coverage
+
+- Route roots: 27 total.
+- **12 DETAILED:** Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register, Forgot Password, Resend Verification, Reset Password and Verify Email.
+- **7 PARTIAL:** Favorites, My Trips, Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point.
+- **8 NOT AUDITED:** seven Admin routes and Not Found/404.
+- The four Auth route roots and their form owners are now detailed. The seven Account routes remain PARTIAL because their full page-specific style/state/responsive ownership is not yet exhaustive.
+- The 163/163 candidate file inventory count remains a separate metric; route-page coverage does not complete Stage 1.
+
+### I. Exact branch-ref source evidence
+
+- app/(auth)/forgot-password/page.tsx — 0b486fecfcd00bbdc585defbacb7e6a0475dd812
+- app/(auth)/resend-verification/page.tsx — 39dc17bf3d137886e68548cf17370d539bfa8e21
+- app/(auth)/reset-password/page.tsx — c791efe2589b1d7d6967634e2cf1b19830a8d92e
+- app/(auth)/verify-email/page.tsx — 0ae305c18851da9c567e769c53ec478713925e28
+- app/(auth)/layout.tsx — d82e17e9c7594f8a868d6a25362aaa77ff6fef6f
+- src/components/auth/GuestOnly.tsx — 90d052eb5fd3f1af2dfa4e513dac2905e5cbe0f9
+- src/components/auth/ForgotPasswordForm.tsx — 8b28ade0165a4f9dcf513b95cea6ed112f232ace
+- src/components/auth/ResendVerificationForm.tsx — 4991d43c588ecf13b1555845e1b946c61973df25
+- src/components/auth/ResetPasswordForm.tsx — e324344b05a9cc6de17afaebece7cf7a91c3ee25
+- src/components/auth/VerifyEmailForm.tsx — c1a2767840094c760e05971956d330a699b1a4c8
+- src/components/auth/Captcha.tsx — 6b174cb68ae038d540214da1c8383d4773660d48
+- src/components/common/PasswordField.tsx — b6488512ec4e31d555512724f61c55e73f28e61f
+- src/components/common/PasswordRequirements.tsx — ab814670e8ceba3c3257ed21bdf3425ca6e12cdf
+- src/components/common/WelcomeHeading.tsx — 179e7f685e3ca595fbed60c3447702c036b56ec1
+- src/components/common/BackButton.tsx — 1f78b4e652c6a3c0dd648e9166fdd9d9cf1bea95
+- src/components/common/NotificationProvider.tsx — 3a81f51a9e43fb78c498e75c4c0055ad04572dc5
+- src/styles/presets/forms.ts — b1de15957049dc1e583bbe3201135bb2b66b490b
+- src/styles/presets/buttons.ts — 2110bcf2a41d8ca81375682ebb9bb8ed88f48a2e
+- src/styles/presets/panels.ts — c9474242c747e8248e930f56a8c5c0f26089bb2c
+- src/constants/notifications.ts — 571f1ffc95ed8cd25ebe3fca4cb08d4cf6482c21
+- src/constants/ui/sizes.ts — 69e9fdeefc9ce4968e2a6c98a72b80a6f060d444
+- src/constants/ui/spacing.ts — 9e62ad85eeec73359723643861eb8d2eba8057d1
+- src/validations/auth/index.ts — 241a60fa42a4fc43c7b28f8f94d91d3601691812
+- src/api/auth/index.ts — 65de00aeddcf8184fc0606741a3139356faf6547
+- src/theme/index.ts — 2bbf22fb89a8a99269d19348c59270ac97cd5178
+- src/theme/components/text-field.ts — 4e3ed7529c7f5c219dbe0d05f4f74da0cdca84fa
+
+### J. Batch result and next task
+
+- Added detailed audits for all four remaining Auth routes, including the shared Auth shell and form dependencies.
+- Updated Section 11.19.F from 8 to 12 DETAILED and from 12 to 8 NOT AUDITED; the seven Account routes remain PARTIAL.
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+- Stage 1 remains IN PROGRESS.
