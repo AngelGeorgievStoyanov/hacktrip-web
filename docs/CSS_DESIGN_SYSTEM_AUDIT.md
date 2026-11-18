@@ -763,6 +763,19 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/JsonLd.tsx` | Emits JSON-LD script only; no rendered visual UI. | No visual migration target. | NON-VISUAL — no styling target. |
 | `src/components/common/ScrambleHeading.tsx` | Uses HOME_HEADING_STYLE as base typography preset. | Public style prop allows caller-provided React presentation style and is spread into the h1; replace with approved semantic class/variant or documented nonvisual runtime API, then audit all callers. | CHANGE REQUIRED. |
 
+| `app/(account)/layout.tsx` | Route shell currently applies ROUTE_CONTENT_PADDING through React style on main. | Replace presentation style prop with approved CSS class/preset/variable contract; preserve flex shell structure. | CHANGE REQUIRED. |
+| `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets and BUTTON_STYLES.createTrip. | CircularProgress local margin, Alert local width/maxWidth and heading style alias require mapping; audit all preset imports and empty/error/loading states. | CHANGE REQUIRED. |
+| `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations in route. | Ensure EditPointPage is independently represented in ledger and all its consumers are audited; route itself has no separate skin. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout; no direct visual declarations. | Ensure EditTripLayout is independently audited; route itself has no separate skin. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/failed-login-logs/page.tsx` | Route wrapper delegates to AdminFailedLogs; no direct visual declarations. | AdminFailedLogs owns table, selection, pagination and action UI and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/images/page.tsx` | Route wrapper delegates to AdminImages; no direct visual declarations. | AdminImages owns image table, preview dialog, upload and pagination controls and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/page.tsx` | Minimal semantic section wrapper. | Raw h1 has no explicit shared heading contract; determine whether parent Admin layout owns heading defaults or use a shared semantic heading role. | CHANGE REQUIRED. |
+| `app/(admin)/admin/reports/page.tsx` | Route delegates to AdminReports inside a semantic section. | AdminReports owns report action/table/pagination styles; raw h1 on route needs shared heading contract. | CHANGE REQUIRED. |
+| `app/(admin)/admin/route-not-found-logs/page.tsx` | Route wrapper delegates to AdminRouteNotFoundLogs; no direct visual declarations. | AdminRouteNotFoundLogs owns table/disclosure/pagination controls and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/users/[userId]/page.tsx` | Route delegates to AdminUserForm in a semantic section; no local style declaration. | AdminUserForm owns form fields/actions and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/users/page.tsx` | Route wrapper delegates to AdminUsers; no direct visual declarations. | AdminUsers owns user table, filters and actions and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/layout.tsx` | Admin route shell uses ROUTE_CONTENT_PADDING but applies it via React style prop on main. | Move shared shell spacing to approved styling API; verify AdminNavigation and page content composition under this layout. | CHANGE REQUIRED. |
+
 ### Surface / Paper clarification
 
 - MUI `Card` is already globally wired to `getSurfaceStyles` through `MuiCard`.
@@ -1329,6 +1342,151 @@ Continue only with the exact outstanding paths listed in this section; do not re
 - Findings include multiple route-level React style props, profile page local sx despite PANEL_SX, favorites progress/Alert sx, and ScrambleHeading exposing caller-supplied React style. Create routes are composition-only; RequireModeratorRedirect and JsonLd are non-visual.
 - No source code changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
 
+## 11.5 — Следващ пакет: account/admin route wrappers и shell (2026-11-18)
+
+### Проверка преди работа
+- Прочетени отново са Sections 1, 1.4, 6, 7, 10.1, 11.4 и точният NEXT TASK.
+- Branch: feature/frontend-modernization. HEAD преди тази документална промяна: 2c070a8802be4b9fbd5277d08182cbfc0a591c4f.
+- Използвана е актуалната recursive tree инвентаризация; tree.truncated=false.
+- Не са повтаряни файлове, които вече имат ред в Section 10.1. Този пакет съдържа 12 нови пътя от предишния outstanding списък.
+
+### Проверени файлове в този пакет — 12
+| Файл | Резултат |
+|---|---|
+| `app/(account)/layout.tsx` | Route shell currently applies ROUTE_CONTENT_PADDING through React style on main. Остава: Replace presentation style prop with approved CSS class/preset/variable contract; preserve flex shell structure. Статус: CHANGE REQUIRED. |
+| `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets and BUTTON_STYLES.createTrip. Остава: CircularProgress local margin, Alert local width/maxWidth and heading style alias require mapping; audit all preset imports and empty/error/loading states. Статус: CHANGE REQUIRED. |
+| `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations in route. Остава: Ensure EditPointPage is independently represented in ledger and all its consumers are audited; route itself has no separate skin. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout; no direct visual declarations. Остава: Ensure EditTripLayout is independently audited; route itself has no separate skin. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/failed-login-logs/page.tsx` | Route wrapper delegates to AdminFailedLogs; no direct visual declarations. Остава: AdminFailedLogs owns table, selection, pagination and action UI and must be tracked independently. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/images/page.tsx` | Route wrapper delegates to AdminImages; no direct visual declarations. Остава: AdminImages owns image table, preview dialog, upload and pagination controls and must be tracked independently. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/page.tsx` | Minimal semantic section wrapper. Остава: Raw h1 has no explicit shared heading contract; determine whether parent Admin layout owns heading defaults or use a shared semantic heading role. Статус: CHANGE REQUIRED. |
+| `app/(admin)/admin/reports/page.tsx` | Route delegates to AdminReports inside a semantic section. Остава: AdminReports owns report action/table/pagination styles; raw h1 on route needs shared heading contract. Статус: CHANGE REQUIRED. |
+| `app/(admin)/admin/route-not-found-logs/page.tsx` | Route wrapper delegates to AdminRouteNotFoundLogs; no direct visual declarations. Остава: AdminRouteNotFoundLogs owns table/disclosure/pagination controls and must be tracked independently. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/users/[userId]/page.tsx` | Route delegates to AdminUserForm in a semantic section; no local style declaration. Остава: AdminUserForm owns form fields/actions and must be tracked independently. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/admin/users/page.tsx` | Route wrapper delegates to AdminUsers; no direct visual declarations. Остава: AdminUsers owns user table, filters and actions and must be tracked independently. Статус: NON-VISUAL ROUTE — child owns UI. |
+| `app/(admin)/layout.tsx` | Admin route shell uses ROUTE_CONTENT_PADDING but applies it via React style prop on main. Остава: Move shared shell spacing to approved styling API; verify AdminNavigation and page content composition under this layout. Статус: CHANGE REQUIRED. |
+
+### Какво установих
+- Двата route shell-а (account/admin) подават shared ROUTE_CONTENT_PADDING чрез React style prop. Това нарушава одобрената styling API политика, въпреки че самият spacing token е централизиран.
+- My Trips вече използва semantic presets за layout и Create Trip, но loading/error/empty state съдържат допълнителни локални sx и трябва да се проверят за общи роли.
+- Повечето Admin route страници са composition-only wrappers. Реалната визуална отговорност е в AdminFailedLogs, AdminImages, AdminReports, AdminRouteNotFoundLogs, AdminUserForm и AdminUsers; тези компоненти са отделни ledger consumers и не се броят за приключени само заради route wrapper-а.
+- Admin home/reports route имат native h1 без изричен semantic heading contract; проверката трябва да установи дали parent layout/global defaults го покриват.
+- Edit Point и Edit Trip routes са presentation-free wrappers; съответните EditPointPage и EditTripLayout са отделни визуални компоненти.
+
+### Точна текуща сметка след този пакет
+- UI/design-system candidate scope: **157 файла**.
+- Индивидуални редове в Section 10.1 преди пакета: **60**.
+- Нови индивидуално прегледани и добавени файлове: **12**.
+- Индивидуални редове след пакета: **72**.
+- Файлове без индивидуален ред в Section 10.1: **85**.
+- Това е точният брой файлове, които остават за първична индивидуална инвентаризация. Не означава, че вече описаните 72 файла са мигрирани/напълно централизирани; PARTIAL и CHANGE REQUIRED остават отворени.
+- NON-VISUAL route wrappers са индивидуално проверени и описани, но техните child components остават самостоятелни targets.
+
+### Точен списък на оставащите файлове — 85
+**app — 19 файла**
+- `app/(auth)/forgot-password/page.tsx`
+- `app/(auth)/layout.tsx`
+- `app/(auth)/login/page.tsx`
+- `app/(auth)/register/page.tsx`
+- `app/(auth)/resend-verification/page.tsx`
+- `app/(auth)/reset-password/page.tsx`
+- `app/(auth)/verify-email/page.tsx`
+- `app/(public)/about/AboutPage.module.css`
+- `app/(public)/about/page.tsx`
+- `app/(public)/layout.tsx`
+- `app/(public)/privacy-policy/LegalPage.module.css`
+- `app/(public)/privacy-policy/page.tsx`
+- `app/error.tsx`
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/not-found.tsx`
+- `app/opengraph-image.tsx`
+- `app/providers.tsx`
+- `app/twitter-image.tsx`
+
+**components — 38 файла**
+- `src/components/admin/AdminNavigation.tsx`
+- `src/components/admin/AdminUserForm.tsx`
+- `src/components/admin/AdminUsers.tsx`
+- `src/components/auth/Captcha.tsx`
+- `src/components/auth/ForgotPasswordForm.tsx`
+- `src/components/auth/GuestOnly.tsx`
+- `src/components/auth/LoginForm.tsx`
+- `src/components/auth/RequireAuth.tsx`
+- `src/components/auth/RequireRole.tsx`
+- `src/components/auth/RequireTripOwner.tsx`
+- `src/components/auth/ResendVerificationForm.tsx`
+- `src/components/auth/ResetPasswordForm.tsx`
+- `src/components/common/ConfirmDialog.tsx`
+- `src/components/common/NotFound.module.css`
+- `src/components/common/PasswordRequirements.tsx`
+- `src/components/common/TabSyncListener.tsx`
+- `src/components/home/HomeHero.tsx`
+- `src/components/home/HomeTrips.tsx`
+- `src/components/images/ImageGallery.module.css`
+- `src/components/layout/Footer.module.css`
+- `src/components/layout/Footer.tsx`
+- `src/components/layout/Header.tsx`
+- `src/components/placeholders/SocialObjectPlaceholder.tsx`
+- `src/components/social/FavoriteButton.tsx`
+- `src/components/social/LikeAnimation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/ReportButton.tsx`
+- `src/components/social/SocialConfigStatus.tsx`
+- `src/components/trips/EditTripLayout.tsx`
+- `src/components/trips/PointsSection.tsx`
+- `src/components/trips/TripDetails.tsx`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripDetailsView.tsx`
+- `src/components/trips/TripForm.tsx`
+- `src/components/trips/TripList.module.css`
+- `src/components/trips/TripList.tsx`
+- `src/components/trips/TripPagination.module.css`
+- `src/components/trips/TripPagination.tsx`
+
+**tokens — 13 файла**
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/index.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
+- `src/hooks/useAuth.tsx`
+- `src/hooks/useBackground.tsx`
+- `src/lib/images/renderTripOgImage.tsx`
+- `src/seo/SiteStructuredData.tsx`
+
+**presets — 8 файла**
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/typography.ts`
+
+**theme — 7 файла**
+- `src/theme/components/button.ts`
+- `src/theme/components/text-field.ts`
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shadows.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
+
+### NEXT TASK
+Продължи от горния outstanding списък, без да отваряш отново файловете с индивидуален ledger ред, освен ако по-късна проверка на конкретен consumer не изисква повторна проверка. Следващият пакет започва от първите оставащи app/auth/public shell и CSS paths, после продължава към компонентите; всеки файл се проверява за всички области от Section 7, не само за бутони. При следващия update: добави точните файлове в Section 10.1, извади ги от outstanding списъка, пресметни оставащите от текущия recursive tree и запиши новия точен NEXT TASK. Stage 1 остава IN PROGRESS. Не изпълнявай build, tests, lint, CI или browser validation без изрично разрешение.
+### 2026-11-18 — Account/Admin route and shell inventory batch
+- Re-read architecture, styling API, approved six stages, complete Section 7 search matrix, detailed ledger and exact NEXT TASK before inspection.
+- Verified feature/frontend-modernization at HEAD 2c070a8802be4b9fbd5277d08182cbfc0a591c4f; recursive tree was not truncated.
+- Inspected 12 previously unledgered paths: account layout, My Trips, Edit Point/Edit Trip route wrappers, six Admin route wrappers/pages and Admin layout.
+- Added all 12 to Section 10.1 with individual findings and conservative statuses. The two route shells contain React style presentation props for shared route padding. My Trips combines shared presets with local loading/error/heading styles. Admin and edit routes are mostly composition-only and delegate actual visual ownership to separately audited child components.
+- Reconciled the exact outstanding register from the recursive tree: 157 candidate UI/design-system files; 72 unique files now have individual ledger entries; 85 remain without an individual entry. The exact remaining paths are enumerated in Section 11.5.
+- No application source changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
 ## 12. Audit log (append-only)
 
 ### 2026-11-18 — Dedicated CSS & Design System audit document created
