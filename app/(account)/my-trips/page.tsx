@@ -7,7 +7,8 @@ import { tripApi } from '@/api/trips';
 import { TripList } from '@/components/trips/TripList';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_EMPTY_STATE_SX, ACCOUNT_TRIPS_HEADING_SX, ACCOUNT_TRIPS_PAGE_SX } from '@/styles/presets/layouts';
+import { ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_EMPTY_STATE_SX, ACCOUNT_TRIPS_ERROR_SX, ACCOUNT_TRIPS_HEADING_SX, ACCOUNT_TRIPS_LOADING_SX, ACCOUNT_TRIPS_PAGE_SX } from '@/styles/presets/layouts';
+import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 
 export default function MyTripsPage() {
   const { data, isLoading, error } = useQuery({
@@ -18,21 +19,21 @@ export default function MyTripsPage() {
   const trips = data ?? [];
 
   return (
-    <Box component="section" sx={PAGE_SX}>
-      <Container maxWidth="lg" sx={CONTENT_SX}>
-        <Typography variant="h4" component="h1" sx={HEADING_SX}>
+    <Box component="section" sx={ACCOUNT_TRIPS_PAGE_SX}>
+      <Container maxWidth="lg" sx={ACCOUNT_TRIPS_CONTENT_SX}>
+        <Typography variant="h4" component="h1" sx={ACCOUNT_TRIPS_HEADING_SX}>
           These are your trips
         </Typography>
 
         {isLoading ? (
-          <CircularProgress size={32} sx={{ my: 4 }} aria-label="Loading your trips" />
+          <CircularProgress size={32} sx={ACCOUNT_TRIPS_LOADING_SX} aria-label="Loading your trips" />
         ) : error ? (
-          <Alert severity="error" sx={{ width: '100%', maxWidth: 560 }}>
+          <Alert severity="error" sx={ACCOUNT_TRIPS_ERROR_SX}>
             {getGenericErrorMessage(error)}
           </Alert>
         ) : trips.length === 0 ? (
-          <Box sx={EMPTY_STATE_SX}>
-            <Typography variant="h5" component="p" sx={headingTextStyle}>
+          <Box sx={ACCOUNT_TRIPS_EMPTY_STATE_SX}>
+            <Typography variant="h5" component="p" sx={HEADING_TEXT_SX}>
               You dont&apos;t have a published trip yet.
             </Typography>
             <Button
