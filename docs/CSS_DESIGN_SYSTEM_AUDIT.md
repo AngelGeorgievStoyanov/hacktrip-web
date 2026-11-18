@@ -2682,3 +2682,161 @@ No application source code was changed. No branch was created. No build, tests, 
 - Section 11.5 was translated into English; a full-document scan confirms zero Cyrillic characters.
 - This graph is a composition/import map. Property-level style ownership, interaction states and exact call-site closure remain open; Stage 1 remains IN PROGRESS.
 - No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+
+## 11.14 — Home route end-to-end style ownership audit (2026-11-18)
+
+### Scope and method
+
+- Re-read the approved styling architecture, Styling API policy, six-stage plan, Section 7 audit matrix, Section 10.1 ledger and Sections 11.12–11.13 before this batch.
+- Repository: `AngelGeorgievStoyanov/hacktrip-web`; branch: `feature/frontend-modernization`; starting HEAD: `7c2ca47ce696cfb16327f71771782ed31d253f17`.
+- Inspected the Home route entry, public route layout, every component in the Home composition chain, the shared TripList/TripCard subtree, image/placeholder dependencies, public Header/Footer, and the exact presets/tokens/theme files imported by those components.
+- No application source files were modified. This is a source-level ownership audit, not browser verification.
+
+### A. Exact Home render and ownership chain
+
+```text
+app/layout.tsx
+  └─ app/(public)/layout.tsx
+       ├─ Header
+       ├─ route content wrapper: <div style={{ flex: 1 }}>
+       ├─ app/(public)/page.tsx
+       │    └─ <main style={CENTERED_PAGE_MAIN_STYLE}>
+       │         └─ HomeHero
+       │              └─ WelcomeHeading
+       │                   ├─ MUI Box (touch handler + column layout)
+       │                   ├─ MUI Box (heading wrapper)
+       │                   ├─ ScrambleHeading (single-line OR split heading)
+       │                   └─ HomeHero paragraph
+       │                        └─ HOME_INTRO_STYLE + local maxWidth: 850
+       │              └─ HomeTrips
+       │                   ├─ h3 + HOME_HEADING_STYLE
+       │                   └─ TripList
+       │                        └─ ul + cardListStyle
+       │                             └─ li*
+       │                                  └─ TripCard
+       │                                       ├─ MUI Card + cardStyle + local sx geometry
+       │                                       ├─ AppImage (tripCard image preset)
+       │                                       │    └─ IMAGE_PRESETS.tripCard
+       │                                       ├─ SocialObjectPlaceholder (when no image)
+       │                                       ├─ MobileStepper + direct MUI Buttons
+       │                                       ├─ MUI Pagination/PaginationItem
+       │                                       ├─ FavoriteIcon + social counts
+       │                                       └─ Details MUI Button + BUTTON_STYLES.primaryWide
+       └─ Footer
+            └─ Footer.module.css
+```
+
+The Home route is a composition root, not the owner of all visual rules. The chain terminates in shared components, presets, theme overrides and tokens. Those shared owners affect other routes listed below.
+
+### B. File-by-file visual ownership
+
+| File | What it owns | Upstream owner / dependency | Audit finding |
+|---|---|---|---|
+| `app/(public)/page.tsx` | Home data request, semantic page content, centered main composition | `CENTERED_PAGE_MAIN_STYLE` → `styles/presets/layouts.ts` → `PAGE_CONTENT_PADDING` in `constants/ui/spacing.ts` | The page applies a shared CSSProperties preset through React `style`; prohibited by the approved Styling API. The page should consume a class or approved layout abstraction, not own the shared values. |
+| `app/(public)/layout.tsx` | Public shell order: Header, flexible route-content wrapper, Footer | Header and Footer shared components; global `.app-shell` in `app/globals.css` | The wrapper uses inline `style={{ flex: 1 }}`. Structural shell responsibility is valid, but the React style API is not approved. |
+| `src/components/home/HomeHero.tsx` | Home introduction copy and composition | `WelcomeHeading`; `HOME_INTRO_STYLE` → typography preset → UI color/typography tokens | Uses React `style` with a shared preset plus a local max-width override (850px). Content width is currently Home-specific; the presentation transport violates policy. |
+| `src/components/home/HomeTrips.tsx` | Home-specific TOP 5 heading and trip-list composition | `HOME_HEADING_STYLE`; `TripList` | Uses React `style` for heading presentation. This is a page-specific consumer of shared heading treatment. |
+| `src/components/common/WelcomeHeading.tsx` | Shared welcome-heading layout, touch-to-retrigger behavior and responsive one-line/two-line decision | `ScrambleHeading`; `BREAKPOINTS.homeHeading`; `HOME_HEADING_STYLE`; MUI Box | Shared component used by Home, Trips, About and auth forms. Local Box `sx` contains structural alignment plus hardcoded 25px horizontal padding and 16px bottom margin. The native h1 branch uses React `style`. The heading breakpoint is centralized at 550px. |
+| `src/components/common/ScrambleHeading.tsx` | Shared animated heading behavior and native h1 output | `HOME_HEADING_STYLE` → typography preset → UI tokens | Uses React `style` on h1 and exposes a caller `style` prop, which permits downstream visual overrides and conflicts with the approved API. Animation logic is behavior, not styling ownership. |
+| `src/styles/presets/typography.ts` | `headingTextStyle`, `HOME_HEADING_STYLE`, `HOME_INTRO_STYLE` | `UI_COLORS.text.inverse`, `UI_COLORS.decorative.headingShadow`, `TYPOGRAPHY.fontFamily` | Shared typography values are centralized here, but presets are typed as React CSSProperties and applied through `style`. They must be represented through an approved theme/preset/class contract in a later migration. |
+| `src/styles/presets/layouts.ts` | `CENTERED_PAGE_MAIN_STYLE`, `cardListStyle` and other layout presets | `PAGE_CONTENT_PADDING`, `UI_SPACING`, typography preset | Shared layout values are centralized, but the Home page and TripList pass CSSProperties via React `style`. |
+| `src/components/trips/TripList.tsx` | Shared list/empty-state composition and mapping to TripCard | `cardListStyle`, `headingTextStyle`, `TripList.module.css`, `TripCard` | Reused by Home, Trips, Favorites and My Trips. Uses React `style` for list and empty-state typography. |
+| `src/components/trips/TripList.module.css` | Empty-state title/text margins and font sizes | CSS Module consumed only by TripList | Contains literal 2px margins, 1.5rem/1rem font sizes and title weight. These values have no shared token/preset contract yet; decide whether they are a shared empty-state role or unique content typography. |
+| `src/components/trips/TripCard.tsx` | Shared trip-card content, image/day navigation, likes, details action | `cardStyle`, `CARD_TEXT_INSET_SX`, `BUTTON_STYLES.primaryWide`, MUI Card override, AppImage and SocialObjectPlaceholder | Reused by every TripList consumer. The surface is theme-owned; card geometry and many internal dimensions remain local sx constants/values. MobileStepper Buttons have no named semantic action preset; Pagination has local margin-only sx. |
+| `src/styles/presets/cards.ts` | Shared card layout preset and text insets | `UI_SIZES.cardTextInset`, `UI_SIZES.pointCardTextInset`; MUI Card surface override owns skin | `cardStyle` is React CSSProperties and mixes layout geometry (max width, margin, height, width, top padding). `CARD_TEXT_INSET_SX` is consumed by TripCard and must be checked against PointCard before changing the shared inset. |
+| `src/theme/components/card.ts` | Global MUI Card root surface contract | `getSurfaceStyles` → theme palette/divider/shape/shadow | Every MUI Card receives background, border, radius and shadow centrally. This is the owner of TripCard's surface skin, not TripCard itself. |
+| `src/theme/components/surface.ts` | Shared elevated surface contract | MUI theme background.paper, divider, shape.borderRadius and semantic surface shadow | Owns shared Card/Dialog surface values. It does not own TripCard's content geometry. |
+| `src/styles/presets/buttons.ts` | Semantic primary-wide action treatment | `UI_COLORS`, `UI_SPACING`, `UI_SIZES` | TripCard Details consumes `BUTTON_STYLES.primaryWide`. The MUI Button theme override separately owns global typography/radius. |
+| `src/theme/components/button.ts` | Global MUI Button typography and radius | `theme.typography.button`, `theme.shape.borderRadius` | Does not define complete semantic roles or all hover/focus/disabled/loading states. MobileStepper buttons use MUI defaults directly. |
+| `src/components/images/AppImage.tsx` | Shared image resolution, thumbnail fallback, loading/error behavior and Next Image rendering | `IMAGE_PRESETS` → `src/constants/images/presets.ts` | Used by TripCard and many unrelated page/component flows. It applies resolved preset style through React `style`; image rendering contract and layout ownership need to be separated. |
+| `src/constants/images/presets.ts` | Named image dimensions, sizes, fit and loading defaults | `AppImage` | `tripCard` owns 400×240 dimensions, responsive sizes and cover fit. This is a shared image-role owner, not a TripCard-local image constant. |
+| `src/components/placeholders/SocialObjectPlaceholder.tsx` | Shared no-image artwork, overlay and copy | `UI_COLORS.surface.socialPlaceholder`, `UI_COLORS.decorative.socialPlaceholderOverlay`; MUI Box/Typography | Used by TripCard and point/day/editing contexts. It still owns local geometry, typography and Next Image inline object-fit style. |
+| `src/components/layout/Header.tsx` | Shared public navigation, auth-aware links, mobile Drawer | `BREAKPOINTS.desktopNav/headerCompact`, `UI_SIZES.iconLarge`, MUI AppBar/Toolbar/Button/IconButton/Drawer | Shared across public, account, auth and admin layouts. Nav button spacing, Toolbar padding, Drawer paper height/elevation and nav semantic roles remain local. |
+| `src/components/layout/Footer.tsx` | Shared footer content and iOS landscape scroll behavior | `Footer.module.css` | Behavior is local; visual skin is in the CSS Module. |
+| `src/components/layout/Footer.module.css` | Footer layout/padding and semantic colors | `--ht-color-primary`, `--ht-color-text-inverse` from theme CSS-variable bridge → `UI_COLORS` | Colors are token-backed; 20px horizontal padding and flex composition remain local structural values. |
+
+### C. Cross-page reuse proven by this chain
+
+| Shared owner | Direct/known consumers | Routes affected |
+|---|---|---|
+| `Header` and `Footer` | Public, Account, Auth and Admin layouts | All route groups |
+| `WelcomeHeading` | `HomeHero`, Trips page, About page, LoginForm, RegisterForm, ForgotPasswordForm, ResendVerificationForm, ResetPasswordForm, VerifyEmailForm | Home, Trips, About and Auth |
+| `ScrambleHeading` | `WelcomeHeading` | Home, Trips, About and every auth route that renders WelcomeHeading |
+| `TripList` | `HomeTrips`, Trips page, Favorites page, My Trips page | `/`, `/trips`, `/favorites`, `/my-trips` |
+| `TripCard` | `TripList` | Same four routes |
+| `AppImage` | TripCard and shared image/gallery/profile/admin/editing components | Home, Trips, Trip Details, Profile, Admin and editing flows |
+| `SocialObjectPlaceholder` | TripCard, DayImagesGallery, PointSection, EditPointPage, EditTripLayout | Home, Trip Details, Create/Edit Point and Create/Edit Trip |
+| `cardStyle` | TripCard; related card layout family also includes PointCard consumers of card presets | Trip lists and point-card flows |
+| `HOME_HEADING_STYLE` / `headingTextStyle` | HomeTrips, WelcomeHeading/ScrambleHeading, TripList empty state and other heading/list consumers | Home, Trips, About, Auth and account trip lists |
+| `CENTERED_PAGE_MAIN_STYLE` | Home and public Trips route | Home and Trips |
+| `Footer.module.css` | Shared Footer | All route groups |
+
+### D. Concrete issues found in the Home dependency chain
+
+1. **React style policy violations:** Home page main, public layout wrapper, HomeHero paragraph, HomeTrips heading, WelcomeHeading h1, ScrambleHeading h1, TripList list/empty state, AppImage image/fallback and SocialObjectPlaceholder image all use React `style` for presentation.
+2. **Shared preset transport is not compliant:** typography/layout/card presets centralize values but are typed as `CSSProperties` and consumed via React `style`; centralization alone does not satisfy the approved styling API.
+3. **Shared component override leakage:** ScrambleHeading accepts arbitrary caller `style`; WelcomeHeading owns layout values locally; AppImage internally emits inline style from image presets.
+4. **TripCard is only partially centralized:** MUI Card surface is centralized; dimensions, image frame, header, social-count row, stepper spacing, content geometry and pagination spacing remain local.
+5. **Action-role gap:** TripCard Details has a named primary-wide preset, but MobileStepper Next/Back are direct MUI Buttons with default semantic/visual treatment.
+6. **Image and placeholder ownership:** named image dimensions are centralized, but image fit/layout and placeholder overlay typography/geometry still have local style declarations.
+7. **Header is a shared dependency, not Home-owned:** its navigation action roles and Drawer/Toolbar layout affect every route group and must be audited once as shared shell work.
+8. **Footer is already token-connected for its colors:** its CSS Module consumes theme-emitted semantic variables; its local layout/padding still needs classification under the CSS Module policy.
+
+### E. Source evidence and per-file ledger
+
+The following exact branch files were fetched and inspected in this batch:
+
+- `app/(public)/page.tsx` — `163b4ec101b6da856b613ef9a0297741b244b932`
+- `app/(public)/layout.tsx` — `de747f2fb78157660255e23047ea0347b3d80975`
+- `src/components/home/HomeHero.tsx` — `b136e51b70232dc4770754eb0292850132087d60`
+- `src/components/home/HomeTrips.tsx` — `9e9e0676417757de324f1b3575347d6364dfe8d7`
+- `src/components/common/WelcomeHeading.tsx` — `179e7f685e3ca595fbed60c3447702c036b56ec1`
+- `src/components/common/ScrambleHeading.tsx` — `6fbea0138e6eff5d6fd822171a93a94dfe0f3a69`
+- `src/components/trips/TripList.tsx` — `017930d3ccf03e7790c4361945ed86ec0041fece`
+- `src/components/trips/TripList.module.css` — `66233dc514151bddb8255a334f8c2d8ed828b21b`
+- `src/components/trips/TripCard.tsx` — `6ca299211ee78c0373d0cf6a28eafcf40f6ccc0d`
+- `src/components/images/AppImage.tsx` — `52d094dd76316c9404eba4efa66e43a1351d1520`
+- `src/components/placeholders/SocialObjectPlaceholder.tsx` — `0cacf84b5b51e1e93206fb85a184a49ddb1ff15c`
+- `src/components/layout/Header.tsx` — `1e36e6434c250f1b4f0b825d7d16304dd0583947`
+- `src/components/layout/Footer.tsx` — `88c0b2c7ee9f38c33b8d37a0f1ebe3b27231b6f2`
+- `src/components/layout/Footer.module.css` — `a2409cadb62f9576085b99a404717d3ee2ce38bc`
+- `src/styles/presets/cards.ts` — `1b3f437195cf8a97e96e607e6c6509d179c2f3ac`
+- `src/styles/presets/typography.ts` — `59803882f1c4357e8815f3afdc7c53939d14bacb`
+- `src/styles/presets/layouts.ts` — `4a0aec24e5feecf1ffaeadaf75ade4291658f820`
+- `src/styles/presets/buttons.ts` — `2110bcf2a41d8ca81375682ebb9bb8ed88f48a2e`
+- `src/constants/images/presets.ts` — `4d3ea1fe0a0eb9f137983542c99a43200e55cf2f`
+- `src/constants/ui/breakpoints.ts` — `9fb27ac76908e485970975bf4a714c581d822315`
+- `src/constants/ui/colors.ts` — `dce2b3d898c07cb7ba1b61a8ecf9608121ea8763`
+- `src/constants/ui/sizes.ts` — `69e9fdeefc9ce4968e2a6c98a72b80a6f060d444`
+- `src/constants/ui/spacing.ts` — `9e62ad85eeec73359723643861eb8d2eba8057d1`
+- `src/constants/ui/typography.ts` — `25a3b7ce5fc4dd9a3d664ed2874a01b50baa91f1`
+- `src/theme/index.ts` — `2bbf22fb89a8a99269d19348c59270ac97cd5178`
+- `src/theme/typography.ts` — `091f8933cf503a2db9a684c3d0eed314b8005db7`
+- `src/theme/palette.ts` — `8c0f64470afa9d7b6bef7ea59a3090e8115cfdc1`
+- `src/theme/components/button.ts` — `344522fde4f2c45fc223d876d9c568faabd41579`
+- `src/theme/components/card.ts` — `2c933219062e2e626304bc153234a4dbe5c3205b`
+- `src/theme/components/surface.ts` — `12caae3364e498c3032b42be696a7dea6ccc7722`
+
+Section 10.1 already contains individual inventory rows for the route, Home components, shared components and listed preset/theme/token files. This batch adds the missing relationship/property ownership detail rather than duplicating those rows. The existing statuses remain open; no file is marked migrated or complete.
+
+### F. Batch result and next task
+
+- Completed one end-to-end route trace: Home → shared public shell → shared heading components → shared trip list/card → image and placeholder primitives → preset/theme/token owners.
+- Confirmed multiple cross-page consumers. In particular, TripList/TripCard are not Home-only; WelcomeHeading/ScrambleHeading are not Home-only; AppImage and SocialObjectPlaceholder are used across several feature areas.
+- The Home composition graph is now linked to concrete style owners and specific local migration targets.
+- This does not close the entire Stage 1 dependency map. Other route roots and shared component call sites still require the same treatment.
+- Stage 1 remains IN PROGRESS. No source migration has started.
+
+**NEXT TASK — audit the Trips route and close the shared TripList/TripCard consumer edges:**
+
+1. Trace `app/(public)/trips/page.tsx` through TripFilters, WelcomeHeading, TripList, TripCard and TripPagination, including their nested controls and CSS.
+2. Compare the Trips consumers of WelcomeHeading, TripList and TripCard against the Home findings; record which style contracts are genuinely shared and which are route-specific.
+3. Follow the exact direct consumers of TripList and TripCard in Favorites and My Trips, and verify their loading/error/empty-state composition.
+4. Record exact Button, Pagination, Select/InputBase and form-control ownership in the Trips flow.
+5. Continue using this same audit document. Keep every Git change English-only.
+6. Do not modify application source code until the Stage 1 consumer-map gate is complete.
+7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
