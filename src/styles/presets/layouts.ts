@@ -93,3 +93,12 @@ export const COLUMN_STACK_SX = {
   flexDirection: 'column',
   gap: UI_SPACING.md,
 } as const;
+
+
+/** Vertical point-card collection used by the Create Point flow. */
+export const POINT_LIST_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  minWidth: 0,
+} as const;
