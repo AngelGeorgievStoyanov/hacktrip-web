@@ -64,3 +64,10 @@ export const AUTH_FORM_BACK_ACTION_SX = {
   justifyContent: 'center',
   mt: UI_SPACING.xs,
 } as const;
+
+
+/** Point form panel variant used below the map in the Create Point editor. */
+export const POINT_FORM_PANEL_WITH_TOP_MARGIN_SX = {
+  ...POINT_FORM_PANEL_SX,
+  mt: 2.5,
+} as const;
