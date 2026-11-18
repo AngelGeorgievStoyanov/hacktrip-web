@@ -913,6 +913,75 @@ Continue Stage 1 and finish the action consumer map. Prioritize the remaining re
 
 ---
 
+## 11.1 — CSS organization and current-branch consumer scan (2026-11-18)
+
+### Mandatory preflight performed
+- Re-read this document before work, including the target CSS architecture, styling API policy (Section 1.4), search matrix (Section 7), safe migration rules (Section 9), file ledger (Section 10.1) and exact NEXT TASK.
+- Verified branch: `feature/frontend-modernization`.
+- Verified current HEAD: `6384a2a923a925a7b40e254682d2538d03b8810c`.
+- Compared current HEAD with audit baseline `f77d0cff2f98298279273d0d15a27b7a236a2dd7`: 11 commits ahead, 0 behind; the only changed paths are `docs/ARCHITECTURE.md` and `docs/CSS_DESIGN_SYSTEM_AUDIT.md`. No application source changes have landed since the baseline.
+- Confirmed the current recursive tree contains 246 TS/TSX/JS/JSX/CSS paths under `app/` and `src/`; the nine CSS files in the stylesheet inventory were fetched and read from this branch.
+
+### CSS ownership architecture — verified against actual source
+The intended dependency direction remains correct and must be preserved:
+
+```text
+src/constants/ui/*                 # canonical semantic values
+        ↓
+src/theme/*                         # MUI defaults/overrides + selected --ht-* variables
+        ↓
+src/styles/presets/*                # reusable semantic sx/layout/typography contracts
+        ↓
+src/components/*                    # feature composition and unique layout only
+
+app/globals.css + *.module.css      # minimal shell / unique structure;
+                                    # shared visual values consume --ht-* variables
+```
+
+Confirmed implementation:
+- `src/theme/index.ts` builds one MUI theme from UI token modules and emits a manually selected set of `--ht-*` variables through `MuiCssBaseline`.
+- `src/theme/components/button.ts` owns shared MUI Button typography and radius; it does not yet define semantic button role variants/states.
+- `src/theme/components/card.ts` and `dialog.ts` use `getSurfaceStyles`; this proves MUI Card and Dialog Paper adoption only, not all Paper/custom surfaces.
+- `src/theme/components/text-field.ts` only sets TextField variant/size defaults. Field visuals and states are not yet a complete centralized contract.
+- `src/styles/presets/buttons.ts` currently defines `primary`, `save` (alias of primary), `primaryWide`, `danger`, `dangerText`, `secondary`, `back` (alias of secondary), `secondaryLightText`, `createTrip`, `tripAction`, `tripActionDanger`, `dayIncrement` and `dayDecrement`. The approved semantic roles Edit, Add, Remove, Cancel, Confirm, Navigation, generic Icon action and Pagination/stepper are not yet consistently represented. Do not flatten all roles into one visual preset.
+- `src/styles/presets/cards.ts` mixes reusable card content/layout geometry with some semantic text/action spacing; MUI surface skin remains in the theme. Separate layout from visual skin during later migration rather than blindly moving every property.
+- `src/styles/presets/layouts.ts` contains shared page/list/comment layouts and admin/account page composition. It also types some reusable style objects as React `CSSProperties`; consumers still need migration away from the React `style` prop under the approved policy.
+- `src/styles/presets/typography.ts` provides shared home/heading style objects, but these are still applied through React `style` in several consumers.
+- `src/constants/ui/spacing.ts`, `sizes.ts`, `shape.ts`, `shadows.ts`, `colors.ts` and `typography.ts` are canonical token modules, but CSS-variable exposure is partial. Some CSS Modules still contain independent visual literals.
+- MUI theme `cssVariables: true` is not enabled; current CSS interoperability uses a manually maintained `--ht-*` subset. Treat this as an architecture decision to evaluate in Stage 2, not as permission to introduce a second token source.
+
+### Stylesheet-by-stylesheet findings
+| Stylesheet | Confirmed ownership / remaining issue |
+|---|---|
+| `app/globals.css` | Owns app-shell geometry and a separate `.ht-button` / `.ht-button--danger:hover` skin. Button values consume selected `--ht-*` variables, but this remains a parallel native/server-rendered button path beside MUI Button presets. |
+| `app/(public)/about/AboutPage.module.css` | Layout and image-row composition are valid module responsibilities; heading font family, weights, responsive font sizes, margins and text shadow are still local visual values. Some colors/spacing already consume CSS variables. |
+| `app/(public)/privacy-policy/LegalPage.module.css` | Unique document layout is appropriate; page/content padding, heading/section margins, paragraph typography, TOC spacing and the `.legalPageBack` action skin remain local. The back skin consumes shared radius/color variables only partially. |
+| `src/components/common/NotFound.module.css` | `.homeButton` owns a separate CTA skin with literal padding/margin and no shared control/focus contract. |
+| `src/components/images/ImageGallery.module.css` | Gaps and radius consume shared variables; grid max-width, aspect ratio and structural positioning are role-specific geometry. Clickable image surfaces need common focus-visible/reset/hit-target treatment, not generic CTA styling. |
+| `src/components/layout/Footer.module.css` | Footer padding remains literal; background/text colors consume shared variables. |
+| `src/components/trips/TripDetailsView.module.css` | Primarily unique responsive/container/grid composition and should remain a CSS Module. Widths, grid tracks and ordering are structural; repeated margins/gaps should be classified against layout tokens before migration. |
+| `src/components/trips/TripList.module.css` | Empty-state typography and margins remain local visual values. |
+| `src/components/trips/TripPagination.module.css` | Pagination layout is structural; outer margin remains a literal spacing value. |
+
+### Additional current-branch findings
+- Direct route-shell React `style` props remain in `app/(account)/layout.tsx:16`, `app/(admin)/layout.tsx:18`, `app/(auth)/layout.tsx:16-17`, `app/(public)/layout.tsx:10` and `app/(public)/live-tracking/page.tsx:15`. These are layout composition and should move to shared layout contracts or CSS classes, not be converted into arbitrary local CSS.
+- Public route style props remain in `app/(public)/page.tsx:27`, `app/(public)/trips/[id]/page.tsx:85`, and `app/(public)/trips/page.tsx:99,113,131,133`. The About page has image style props at lines 47, 73, 92, 100, 119, 127 and 146; classify responsive image geometry separately from reusable image-role styling.
+- Further React `style` usage surfaced in `src/components/comments/CommentsSection.tsx:223`, `CommentsToggle.tsx:26`, `ScrambleHeading.tsx:84`, `WelcomeHeading.tsx:46`, `HomeHero.tsx:16`, `HomeTrips.tsx:10`, `AppImage.tsx:61,76`, `SocialObjectPlaceholder.tsx:42`, `TripList.tsx:16-23`, `TripDetails.tsx:106,121,124,139,143,147,152,200`, `PointSection.tsx:78`, `ReportButton.tsx:88,126,133`, `TripGroupSocialActions.tsx:199,204,209`, `useBackground.tsx:287`, and `src/lib/images/renderTripOgImage.tsx` (multiple Satori/OG markup styles). Do not bulk-replace these: dynamic image values, accessibility-hidden/error text, layout composition and Satori-generated image styles require separate classification. The Satori OG renderer is a candidate for a documented renderer-specific exception if its API requires inline style objects; verify before deciding.
+- `src/components/trips/PointSection.tsx:78` remains a direct policy violation candidate because it combines a shared text inset preset with an extra local margin through React `style`.
+- The current scan found direct MUI Buttons in `app/error.tsx`, `CustomFileUploadButton.tsx`, admin pagination/list actions, auth flows, map pickers, `LiveTracker.tsx`, `TripMapSection.tsx`, `TripForm.tsx`, `TripCard.tsx`, `ConfirmDialog.tsx` and other recorded components. Keep the exact semantic role map in Section 11; this batch does not close the action inventory.
+- Shared `BackButton` call sites confirmed in `AdminUserForm.tsx:327`, `ForgotPasswordForm.tsx:91`, `ResendVerificationForm.tsx:91`, `ResetPasswordForm.tsx:133`, `ProfileForm.tsx:126`, `EditTripLayout.tsx:492`, `TripForm.tsx:605`, `TripDetails.tsx:223` and `PointForm.tsx:353`. The shared component still exposes broad MUI props including caller `sx`; the public contract remains open.
+- `app/globals.css` contains the `.ht-button` selector, but no consumer was identified in the inspected public trip route/component files (`app/(public)/trips/page.tsx`, `app/(public)/trips/[id]/page.tsx`, `TripDetailsView.tsx`, `TripDetails.tsx`, `TripCard.tsx`). Do not mark the selector dead yet; complete a literal `ht-button` string search over every current-branch source file and document the result before removing or consolidating it.
+
+### Scope decision
+The efficient next unit is a **repository-wide component/role trace**, not arbitrary file-by-file migration: finish literal `ht-button` usage and shared action caller sets, then map Card/Paper/custom surfaces and TextField/Select/Autocomplete/Checkbox/Radio/Switch consumers. After those maps are complete, close Stage 1 and begin the approved Stage 2/3 foundation work. No source migration is authorized by this audit batch.
+
+### Status
+- Stage 1 remains **IN PROGRESS**.
+- No application source files changed.
+- No build, tests, lint, CI or browser checks were run.
+- No file is marked VERIFIED.
+- CSS architecture was reviewed before this batch and must be re-read before every future batch.
+
 ## 12. Audit log (append-only)
 
 ### 2026-11-18 — Dedicated CSS & Design System audit document created
@@ -976,4 +1045,16 @@ Continue Stage 1 and finish the action consumer map. Prioritize the remaining re
 - Identified further React `style` prop occurrences in `CommentsSection.tsx`, `CommentsToggle.tsx`, `ReportButton.tsx` and `TripDetails.tsx`, in addition to the previously recorded `PointSection.tsx` occurrence. All require behavior-aware classification before migration.
 - Added mandatory preflight wording to the NEXT TASK handoff: every future batch must re-read this document's target architecture and styling API policy, verify branch/HEAD and current file contents, choose and record the optimal scope, then make compliant changes and update the same document's ledger and NEXT TASK.
 - No application source files were changed. Stage 1 remains IN PROGRESS because the `.ht-button` consumer set, complete shared-component caller maps, remaining UI files, and Card/Paper/surface and form-field consumer maps are not yet exhaustive. No build, tests, lint, CI or browser verification was run.
-- NEXT TASK: finish the repository-wide `.ht-button` / `.ht-button--danger` consumer trace and exact BackButton / `BUTTON_STYLES.*` caller map, then complete Card/surface/Paper and form-field consumer maps before starting source migration.
+- NEXT TASK: complete the `.ht-button` / `.ht-button--danger` consumer trace using exact current-branch source (the global selector exists, but no consumer was identified in the public trip route/components inspected in the latest batch); verify the full BackButton and `BUTTON_STYLES.*` caller map; then finish the Card/surface/Paper and form-field consumer maps. Keep Stage 1 open until those maps and the remaining UI-file review are complete. Do not start source migration before the inventory is exhaustive.
+
+
+### 2026-11-18 — CSS organization and current-branch consumer scan
+- Mandatory preflight completed: read the target CSS architecture and styling API policy in this document before inspecting code; verified branch `feature/frontend-modernization` and HEAD `6384a2a923a925a7b40e254682d2538d03b8810c`.
+- Compared HEAD with baseline: 11 commits ahead, 0 behind; only `docs/ARCHITECTURE.md` and this audit document differ. No application-source changes since baseline.
+- Re-read all nine CSS files from the current branch and inspected the current token modules, MUI theme, button/card/layout/typography presets. Recorded the intended ownership chain and concrete stylesheet gaps in Section 11.1.
+- Expanded current-branch action and React `style` scan across route layouts/pages, common, auth, admin, comments, social, images, maps, points, trips, tracking, token/preset/theme files. Exact findings and file/line references are in Section 11.1.
+- Confirmed the current button preset API still aliases `back` to `secondary` and `save` to `primary`; semantic Edit/Add/Remove/Cancel/Confirm/Navigation/IconAction/Pagination roles remain incomplete.
+- Confirmed `.ht-button` and `.ht-button--danger` still exist in `app/globals.css`; no consumer was found in the specifically inspected public trip route/component files. A literal repository-wide consumer search is still required before removal.
+- Identified additional inline React `style` props and dynamic/Satori rendering cases; recorded exact locations and instructed behavior-aware classification rather than bulk replacement.
+- No application source files changed; no build/tests/lint/CI/browser verification run. Stage 1 remains IN PROGRESS.
+- NEXT TASK: finish literal `ht-button` consumer tracing and complete the BackButton/`BUTTON_STYLES.*` role/caller matrix, then map Card/Paper/custom surfaces and all form-field consumers. Re-read this document's CSS organization before the next batch.
