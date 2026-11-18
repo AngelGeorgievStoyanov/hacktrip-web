@@ -24,3 +24,18 @@ export const HOME_INTRO_SX: SxProps<Theme> = {
   ...HEADING_TEXT_SX,
   lineHeight: 1.6,
 };
+
+
+/** Empty TripList state typography; preserves the former module's dimensions. */
+export const TRIP_LIST_EMPTY_TITLE_SX = {
+  m: '2px',
+  fontSize: '1.5rem',
+  fontWeight: 500,
+  ...HEADING_TEXT_SX,
+} as const;
+
+export const TRIP_LIST_EMPTY_TEXT_SX = {
+  m: '2px',
+  fontSize: '1rem',
+  ...HEADING_TEXT_SX,
+} as const;
