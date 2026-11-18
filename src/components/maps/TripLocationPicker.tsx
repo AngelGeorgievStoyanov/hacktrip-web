@@ -8,13 +8,15 @@ import { useGoogleMapsLoader } from '@/hooks/useGoogleMapsLoader';
 import {
   MAP_DEFAULT_CENTER,
   MAP_GEOCODED_ZOOM,
-  MAP_POINT_PICKER_HEIGHT,
   MAP_POINT_PICKER_ZOOM,
 } from '@/constants/maps';
 import { formatCoordinate, type MapPosition } from '@/lib/maps';
-import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
+import {
+  MAP_ADDRESS_INPUT_SX,
+  TRIP_LOCATION_MAP_FRAME_SX,
+  TRIP_LOCATION_HINT_SX,
+} from '@/styles/presets/map-controls';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { UI_COLORS } from '@/constants/ui/colors';
 
 interface TripLocationPickerProps {
   latitude: string;
@@ -58,12 +60,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
   return (
     <Stack spacing={1}>
       <Box
-        sx={{
-          position: 'relative',
-          width: '100%',
-          height: MAP_POINT_PICKER_HEIGHT,
-          overflow: 'hidden',
-        }}
+        sx={TRIP_LOCATION_MAP_FRAME_SX}
       >
         <GoogleMapView
           center={center}
@@ -94,14 +91,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
         {!position ? (
           <Typography
             variant="caption"
-            sx={{
-              position: 'absolute',
-              bottom: 8,
-              left: 8,
-              bgcolor: UI_COLORS.map.pickerHintBackground,
-              px: 1,
-              py: 0.5,
-            }}
+            sx={TRIP_LOCATION_HINT_SX}
           >
             Click the map to place a marker.
           </Typography>
