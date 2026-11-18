@@ -909,7 +909,6 @@ This batch used the current branch's recursive Git tree and exact blob SHAs, the
 
 Continue Stage 1 and finish the action consumer map. Prioritize the remaining repository-wide `.ht-button` / `.ht-button--danger` consumer trace, exact BackButton and `BUTTON_STYLES.*` caller map, remaining UI-bearing files and nested shared-component callers. Then complete Card/surface/Paper and form-field consumer maps. Do not start application-source migration until the action inventory is exhaustive and recorded.
 
-Continue Stage 1: finish the repository-wide consumer search for BackButton, BUTTON_STYLES, Button, IconButton, native button, action-like anchors and especially `.ht-button` / `.ht-button--danger`. Trace every CSS selector to all consumers, inspect the remaining UI-bearing files, verify every shared component caller, and record exact paths/call sites before proposing the semantic component API.
 
 
 ---
