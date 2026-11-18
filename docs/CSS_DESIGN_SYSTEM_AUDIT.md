@@ -300,13 +300,13 @@ Confirmed local declarations:
 
 | File | Local declarations | Required action |
 |---|---|---|
-| `app/globals.css` | App shell + independent `.ht-button` skin | Keep reset/shell; remove parallel button skin after all consumers migrate |
+| `app/globals.css` | Reset and `.app-shell` use structural global CSS; `.ht-button` and danger hover remain a parallel native/server-rendered button skin consuming selected `--ht-*` variables. | Keep reset/shell only; retain `.ht-button` until every server-rendered consumer and template is exhaustively traced, then migrate to the shared semantic action contract. | PARTIAL — legacy global skin still exists. |
 | `app/(public)/about/AboutPage.module.css` | Space Mono, weights/clamp sizes, margins, text shadow | Consume typography tokens/CSS variables; keep layout/responsive rules |
 | `app/(public)/privacy-policy/LegalPage.module.css` | Page/content padding, typography, Back-link skin | Tokenize; Back link must use shared Back role |
 | `src/components/common/NotFound.module.css` | Home button skin | Use shared CTA role; keep page layout/background |
 | `src/components/images/ImageGallery.module.css` | Gallery structure; shared variables | Verify selectors/consumers; preserve structure |
 | `src/components/layout/Footer.module.css` | Literal horizontal padding | Use shared page/container gutter |
-| `src/components/trips/TripDetailsView.module.css` | Unique grid/container queries + literal widths/margins | Preserve geometry; tokenize repeated spacing |
+| `src/components/trips/TripDetailsView.module.css` | Unique responsive grid/flex, container query rearrangement and component-specific positioning; spacing partly uses `--ht-spacing-*`. | Literal max widths, grid tracks and `20px` content margins remain local geometry; classify which are truly unique and move repeated spacing to tokens. No card skin found. | PARTIAL — structural module with residual geometry literals. |
 | `src/components/trips/TripList.module.css` | Empty-state typography/margins | Use shared typography/spacing |
 | `src/components/trips/TripPagination.module.css` | Outer margin | Use shared pagination spacing |
 
@@ -315,82 +315,82 @@ Confirmed local declarations:
 | File | Finding | Required action |
 |---|---|---|
 | `src/components/common/BackButton.tsx` | Back preset, but callers can override `sx` | Enforce Back role; allow layout/accessibility props only |
-| `src/components/common/ConfirmDialog.tsx` | Direct MUI Confirm/Cancel buttons | Use shared Confirm/Cancel roles |
+| `src/components/common/ConfirmDialog.tsx` | MUI Dialog Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are both direct `contained` primary Buttons, so semantic action roles are indistinguishable; dialog spacing remains default/local composition. | PARTIAL — surface centralized, action roles missing. |
 | `src/components/common/NotFound.tsx` | Native button + CSS skin | Use shared CTA role |
 | `src/components/common/ExpandableText.tsx` | Direct Button + local `sx` | Use shared Expand/Collapse role |
 | `src/components/common/PasswordField.tsx` | TextField + IconButton defaults | Use common field/icon-control contract |
 | `src/components/common/PasswordRequirements.tsx` | Local row `sx` and conditional colors | Use feedback tokens + shared typography |
-| `src/components/common/NotificationProvider.tsx` | Snackbar/Alert local width `sx` | Verify notification surface/spacing |
-| `src/components/layout/Header.tsx` | Local NAV_BUTTON_SX, menu icon size, direct nav Button props | Use shared Navigation role; ensure desktop/drawer parity |
+| `src/components/common/NotificationProvider.tsx` | Shared Snackbar + Alert provider; severity and placement are data-driven from notification constants. | Alert width is local `sx`; no custom Card/Paper surface. Confirm consistent global Alert/Snackbar states in theme overrides. | PARTIAL — shared provider, small local presentation override. |
+| `src/components/layout/Header.tsx` | MUI AppBar/Toolbar and Drawer; drawer Paper uses local elevation 12 and height auto; breakpoint and menu icon size use shared constants. | Desktop and drawer navigation Buttons are direct MUI defaults; local `NAV_BUTTON_SX`, toolbar padding, Drawer Paper treatment and IconButton sizing lack semantic Navigation/Menu contracts. | CHANGE REQUIRED — navigation and Drawer surface parity incomplete. |
 | `src/components/layout/Footer.tsx` | CSS Module consumer | Use shared footer/page gutter |
 | `src/components/CustomFileUploadButton.tsx` | Raw IconButton and Button | Use shared Upload/Select and icon roles |
 | `src/components/images/AppImage.tsx` | Central preset resolver; no arbitrary style prop | Preserve boundary; define a named preset for each shared image role |
 | `src/components/images/ImageGallery.tsx` | CSS Module + local `sx` | Use shared image button/frame presets |
-| `src/components/images/ImageLightbox.tsx` | Local overlay-control `sx` | Use shared lightbox frame/overlay/icon controls |
+| `src/components/images/ImageLightbox.tsx` | MUI Dialog Paper inherits shared Dialog surface then intentionally overrides background with `UI_COLORS.surface.imageLightbox`; close/previous/next share local `controlSx`. | Overlay icon control appearance and three repeated position/z-index rules are local; caption and image-stage composition need named lightbox/overlay contracts. | PARTIAL — dedicated Dialog surface variant, overlay controls local. |
 | `src/components/images/ImageUploadField.tsx` | Local preview geometry/radius/objectFit + raw buttons | Use image-preview preset + Remove/Upload roles |
-| `src/components/auth/ProfileImage.tsx` | Local circle frame/shadow/lightbox + preview objectFit | Use shared profile frame, remove control, lightbox and preview |
+| `src/components/auth/ProfileImage.tsx` | Fullscreen preview uses MUI Dialog; image stage consumes `imageLightbox`/`imageControl` color tokens; image rendering delegates to AppImage presets. | Dialog Paper itself has shared Dialog surface but inner stage overrides it; circular frame, remove control, preview border/radius/shadow and close control remain local. | PARTIAL — image surface tokens exist, component geometry/actions remain local. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Local image button dimensions + raw Delete/Upload | Reuse profile-image/action roles |
-| `src/components/admin/AdminImages.tsx` | Raw pagination/action buttons, local row/cell `sx`, dialog | Use shared pagination/table/image actions/dialog |
+| `src/components/admin/AdminImages.tsx` | Preview uses MUI `Dialog` and inherits `MuiDialog.paper` surface; inventory tables use `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | Standalone Paper skin is not covered by general `MuiPaper` override; preview Dialog inherits shared surface but image-stage geometry/close control are local; selection, action and pagination controls remain direct MUI. | PARTIAL — Dialog surface centralized; Paper/table and actions need contracts. |
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Local overlay/text sizes/gradient | Use shared placeholder overlay tokens/typography |
 
 ### 5.5 Auth, profile and admin
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/auth/LoginForm.tsx` | Auth presets; raw IconButton | Normalize actions and fields |
-| `src/components/auth/RegisterForm.tsx` | Auth presets; local pointerEvents `sx` | Normalize fields/actions; keep interaction-only behavior |
-| `src/components/auth/ForgotPasswordForm.tsx` | Shared presets; Back caller margin override | Enforce Back role |
-| `src/components/auth/ResendVerificationForm.tsx` | Same Back margin override | Enforce Back role |
-| `src/components/auth/ResetPasswordForm.tsx` | Direct contained Button in success state + preset in form | Use the same semantic role in both states |
-| `src/components/auth/VerifyEmailForm.tsx` | Local Card `sx`/heading weight | Use shared panel/card/typography |
+| `src/components/auth/LoginForm.tsx` | Form wrapper consumes `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`; action row and title use presets. | Password visibility IconButton is raw MUI; TextField states and semantic Register/Forgot/Resend actions remain uncentralized. | PARTIAL — auth panel surface centralized. |
+| `src/components/auth/RegisterForm.tsx` | Form wrapper consumes `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`; action row/title use presets. | TextFields, PasswordField, Checkbox and disabled/validation states require form-control mapping; action roles remain generic. | PARTIAL — auth panel surface centralized. |
+| `src/components/auth/ForgotPasswordForm.tsx` | Form wrapper consumes `AUTH_FORM_SX`, which composes `PANEL_SX` → `getSurfaceStyles`; title/back action use named presets. | TextField visual states and submit action still depend on theme defaults/preset; Back caller margin override remains. | PARTIAL — auth panel surface centralized. |
+| `src/components/auth/ResendVerificationForm.tsx` | Form wrapper consumes `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`; title/back action use presets. | Field/submit states remain to map; Back caller margin override remains. | PARTIAL — auth panel surface centralized. |
+| `src/components/auth/ResetPasswordForm.tsx` | Form wrapper and success section consume `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`. | Both form and success branch need consistent semantic action roles; fields and validation/disabled states remain open. | PARTIAL — auth panel surface centralized in both branches. |
+| `src/components/auth/VerifyEmailForm.tsx` | Renders MUI Card, so base surface inherits `MuiCard` → `getSurfaceStyles`. | Local Card sizing/padding and heading weight remain; no dedicated semantic panel preset. | PARTIAL — base Card skin only. |
 | `src/components/auth/ChangePasswordForm.tsx` | Account field preset; local action spacing | Use shared field and Save/Submit |
 | `src/components/auth/ProfileForm.tsx` | Local title/field `sx`; primary/secondary buttons | Use shared field/heading/action roles |
 | `src/components/auth/ProfileImage.tsx` | See image findings | Use shared image/action roles |
 | `src/components/auth/Captcha.tsx` | Local CAPTCHA container `sx` | Keep integration geometry; tokenize spacing |
-| `src/components/admin/AdminUserForm.tsx` | Save/Danger presets but local panel/layout `sx` | Use shared form/panel/Delete |
-| `src/components/admin/AdminUsers.tsx` | Local Card/CardContent layout + raw Edit/Delete/pagination | Use common card surface/action roles |
+| `src/components/admin/AdminUserForm.tsx` | Imports and applies `PANEL_SX(theme)` to its rendered form panel; Save/Delete button presets are already used. | Panel caller still adds local layout/padding; field states and semantic Delete role need mapping. This is a direct rendered `PANEL_SX` consumer. | PARTIAL — shared panel skin composed with local geometry. |
+| `src/components/admin/AdminUsers.tsx` | User entries render MUI `Card` and inherit `MuiCard` → `getSurfaceStyles`; profile preview delegates to `ImageLightbox`. | Card content/grid geometry remains local; Edit/Delete are direct MUI Buttons with different raw props; pagination buttons and state are not semantic presets. | PARTIAL — base Card surface centralized only. |
 | `src/components/admin/AdminNavigation.tsx` | Local navigation layout and active/inactive styles | Use shared Navigation role |
 | `src/components/admin/AdminDashboard.tsx` | Link-based admin navigation | Verify link/button role parity |
-| `src/components/admin/AdminFailedLogs.tsx` | Local filter/action layout + raw pagination/delete | Use shared filter/action/pagination |
-| `src/components/admin/AdminReports.tsx` | Raw destructive and pagination buttons | Use shared Delete/Resolve/Pagination |
-| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Local expanded-row `sx` + raw buttons | Use shared table/details/pagination |
+| `src/components/admin/AdminFailedLogs.tsx` | Admin table uses `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | General `MuiPaper` surface override is absent; direct selection, retry/delete and pagination controls remain uncentralized. | PARTIAL — table layout preset, no shared Paper skin. |
+| `src/components/admin/AdminReports.tsx` | Admin table uses `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | General `MuiPaper` surface override is absent; Resolve/Delete and pagination actions remain raw MUI roles/states. | PARTIAL — table layout preset, no shared Paper skin. |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Admin table uses `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | General `MuiPaper` surface override is absent; expanded-row surface, raw action buttons and pagination remain local. | PARTIAL — table layout preset, no shared Paper skin. |
 
 ### 5.6 Points, trips, maps and tracking
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/points/CreatePointPage.tsx` | Local page/container `sx` + central panel | Use shared page shell and form panel |
-| `src/components/points/EditPointPage.tsx` | Many local `sx`, image controls/frame dimensions | Use shared point form, image frame and icon controls |
+| `src/components/points/CreatePointPage.tsx` | Renders MUI Card with `POINT_FORM_PANEL_SX`; Card inherits `MuiCard` → `getSurfaceStyles`. | Page/container geometry and panel offset remain local; `POINT_FORM_PANEL_SX` is a layout + field inset preset, not a `PANEL_SX` consumer. | PARTIAL — Card skin centralized, geometry local. |
+| `src/components/points/EditPointPage.tsx` | Renders MUI Card with `POINT_FORM_PANEL_SX`; Card inherits `MuiCard` → `getSurfaceStyles`. | Page layout and image control/frame states remain local; `POINT_FORM_PANEL_SX` is layout + field inset, not a `PANEL_SX` consumer. | PARTIAL — Card skin centralized, geometry local. |
 | `src/components/points/PointActions.tsx` | Local action-row layout `sx` | Use shared action row and Edit/Delete |
-| `src/components/points/PointCard.tsx` | Presets + local Card `sx`/icon controls/layout | Use common Card surface; Edit/Delete/icon roles |
+| `src/components/points/PointCard.tsx` | MUI Card inherits `MuiCard` → `getSurfaceStyles`; shared button/card presets are consumed. | Local Card geometry and move IconButtons remain; comments panel and image/social overlay responsibilities are delegated. | PARTIAL — base Card surface centralized only. |
 | `src/components/points/PointForm.tsx` | Local field/layout `sx` and stacked buttons | Use common fields and Create/Save/Cancel |
 | `src/components/points/PointList.tsx` | Local list/container composition | Use shared list/empty state if repeated |
 | `src/components/trips/TripActions.tsx` | Existing tripAction/tripActionDanger | Compare the same roles across all features |
-| `src/components/trips/TripCard.tsx` | Presets + local responsive geometry + raw stepper buttons | Use common card surface and stepper role |
-| `src/components/trips/TripDetails.tsx` | Local Card `sx`, inline NAME/LINE styles, raw icons | Use common card/content typography/actions |
+| `src/components/trips/TripCard.tsx` | Both Card render branches inherit `MuiCard` → `getSurfaceStyles`; shared card/button presets are consumed. | Responsive card geometry and stepper/navigation controls remain local; semantic action-role parity still open. | PARTIAL — base Card surface centralized only. |
+| `src/components/trips/TripDetails.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`. | Card geometry/content styles and direct icon/action controls remain local; map caller passes marker title only to SDK InfoWindow, not a custom app panel. | PARTIAL — base Card surface centralized only. |
 | `src/components/trips/TripDetailsView.tsx` | CSS Module layout + local overlay `sx` | Preserve layout; centralize overlay |
 | `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
-| `src/components/trips/TripForm.tsx` | Some stepper presets, local Card/field/layout | Use common card/field/action contracts |
-| `src/components/trips/EditTripLayout.tsx` | Many local `sx`, stepper and image actions | Migrate panel, fields, stepper, image actions, Save/Add/Cancel |
+| `src/components/trips/TripForm.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`; some stepper button presets already exist. | Card/field layout, remaining controls and Save/Add/Cancel semantic roles/states remain local. | PARTIAL — base Card surface centralized only. |
+| `src/components/trips/EditTripLayout.tsx` | Directly composes `PANEL_SX(theme)` into a rendered edit panel; panel surface comes from `getSurfaceStyles`. | Caller adds route-specific dimensions/spacing; stepper, image actions, fields and Save/Add/Cancel roles remain local. | PARTIAL — direct panel consumer with local composition. |
 | `src/components/trips/TripDaysNav.tsx` | Local page-item colors/spacing | Use shared day-navigation role/states |
-| `src/components/trips/TripMapSection.tsx` | Local Card + raw buttons | Use common card/map surface/actions |
-| `src/components/trips/PointSection.tsx` | Local style constants, Card layout, inline style, image geometry | Use common card/content/image presets |
+| `src/components/trips/TripMapSection.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`; map and SDK InfoWindow are delegated to GoogleMapView. | Card dimensions/mobile geometry remain local; MobileStepper Back/Next Buttons are direct MUI controls without semantic Navigation/Pagination roles. | PARTIAL — base Card surface centralized only. |
+| `src/components/trips/PointSection.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`. | `POINT_CARD_STYLE` still combines local card layout/content and visual responsibilities; image sizing and action controls need shared contracts. | PARTIAL — base Card surface centralized only. |
 | `src/components/trips/PointsSection.tsx` | No style matches in initial scan | Inspect full file/imports before marking VERIFIED |
 | `src/components/trips/DayImagesGallery.tsx` | Local image-wrapper geometry | Use named image-frame preset |
-| `src/components/trips/TripList.tsx` | CSS Module + local heading/list style constants | Use shared empty-state typography/list |
-| `src/components/trips/TripPagination.tsx` | CSS Module pagination structure | Use shared pagination role/spacing |
+| `src/components/trips/TripList.tsx` | Renders `TripCard`; list references `cardListStyle`, empty-state heading uses `headingTextStyle`. | Both presentation presets are applied through prohibited React `style`; empty-state typography and list composition need migration to approved sx/className/token consumers. | CHANGE REQUIRED — React style violations. |
+| `src/components/trips/TripPagination.tsx` | Crawlable `<nav>` with real Next links and `aria-current`; structural classes are in `TripPagination.module.css`. | No semantic pagination visual preset for link/active/disabled states; class module owns only list layout. | CHANGE REQUIRED — role styling missing. |
 | `src/components/trips/TripSelectField.tsx` | TextField usage | Use common field contract |
-| `src/components/maps/AddressAutocomplete.tsx` | Caller textFieldProps/`sx`/buttonSx + map preset | Enforce map variant; constrain overrides |
-| `src/components/maps/GoogleMapView.tsx` | Local loading/map-container geometry | Use shared spacing; map canvas remains integration-specific |
+| `src/components/maps/AddressAutocomplete.tsx` | Shared Autocomplete/TextField composition; accepts caller `inputSx`, `buttonSx`, `containerSx`, direction and `textFieldProps`. | Broad caller style injection allows feature-specific visual drift; define a constrained map-search variant and central field/button roles while preserving layout customization. | CHANGE REQUIRED — shared control has unrestricted visual overrides. |
+| `src/components/maps/GoogleMapView.tsx` | Shared Google Maps renderer; Box owns canvas/loading geometry; `InfoWindowF` is the SDK InfoWindow and receives caller-provided ReactNode. | SDK owns map controls and InfoWindow chrome; current trip map caller passes marker title only. No app Card/Paper/Dialog or custom surface is rendered here. Keep map canvas geometry integration-specific. | STRUCTURAL — no app-owned panel skin. |
 | `src/components/maps/PointLocationPicker.tsx` | Primary/secondary presets + local container/button `sx` | Use shared map field/action/panel |
-| `src/components/maps/TripLocationPicker.tsx` | Local primary color values + presets | Remove duplicate primary colors |
+| `src/components/maps/TripLocationPicker.tsx` | Map wrapper and autocomplete compose shared `MAP_ADDRESS_INPUT_SX` and `BUTTON_STYLES`; hint background uses `UI_COLORS.map.pickerHintBackground`. | Primary button re-declares `primary.main` and disabled colors before shared preset; hint padding and marker-clear sizing remain local. No Card/Paper panel. | PARTIAL — duplicate primary skin remains. |
 | `src/components/tracking/LiveTracker.tsx` | Local surface `sx` + raw Start/Stop/Reset/Follow buttons | Use shared panel and tracking action roles |
 
 ### 5.7 Comments and social
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/comments/CommentsSection.tsx` | Local COMMENTS_PANEL_SX / COMMENT_CARD_SX, local `sx`, raw Edit/Delete/Save/Cancel IconButtons | Centralize panel/comment-card surface and semantic icon/action roles |
+| `src/components/comments/CommentsSection.tsx` | Two MUI Cards render the comments panel and each comment item; both inherit `MuiCard` → `getSurfaceStyles`. | `COMMENTS_PANEL_SX` and `COMMENT_CARD_SX` duplicate local panel/card layout and possibly visual surface responsibilities; edit/delete/save/cancel IconButtons remain raw. | CHANGE REQUIRED — custom panel presets need separation into structure vs skin. |
 | `src/components/comments/CommentsToggle.tsx` | Native inline layout style + local typography margin | Use shared comments-toggle role/layout |
 | `src/components/comments/RepliesSection.tsx` | Local reply border/spacing, raw action IconButtons | Use shared nested-comment layout and action roles |
 | `src/components/social/LikeButton.tsx` | Shared badge preset + local conditional `sx` wrapper | Centralize Like icon states |
@@ -673,8 +673,8 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 
 | File | Status |
 |---|---|
-| `app/layout.tsx` | PARTIAL |
-| `app/providers.tsx` | PARTIAL |
+| `app/layout.tsx` | Root metadata, viewport theme color, `globals.css`, root `<html>/<body>` and `.app-shell` wrapper. | No independent surface skin; shell geometry is delegated to `.app-shell`. Keep metadata/layout concerns separate from design tokens. | STRUCTURAL — no local component skin. |
+| `app/providers.tsx` | Central `ThemeProvider` and `CssBaseline` wrap app providers; installs Query/Auth/Background/Notification/Confirm providers. | No surface declarations; provider order is composition, not visual styling. Verify theme/CSS-variable ownership in Stage 2. | STRUCTURAL — theme is mounted centrally. |
 | `app/(account)/layout.tsx` | CHANGE REQUIRED |
 | `app/(admin)/layout.tsx` | CHANGE REQUIRED |
 | `app/(auth)/layout.tsx` | CHANGE REQUIRED |
@@ -2050,3 +2050,58 @@ Continue Stage 1 by completing the **Card / Paper / custom surface** consumer ma
 5. Preserve the 163-file scope and reconcile the exact outstanding complement from the fresh branch tree after each batch.
 6. Stage 1 remains IN PROGRESS. Do not start application source migration until mandatory consumer maps are exhaustive. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
+
+
+## 11.10 — Repository surface consumer trace and panel preset follow-up (2026-11-18)
+
+### Preflight and scope
+- Re-read the approved ownership chain, Styling API policy (Section 1.4), six-stage plan (Section 6), full Section 7 search matrix, Section 10.1 ledger and previous NEXT TASK before inspecting source.
+- Verified branch `feature/frontend-modernization` at HEAD `e12da3a4f976e8ebe63fd0f58d387d56dfffe0ce`; recursive Git tree is complete (not truncated).
+- Current audit scope remains **163 candidate UI/design-system files**. Section 10.1 contains **158 unique ledger paths overall**, of which **144 belong to the 163-file candidate scope**. The exact complement is **19 outstanding candidate paths**; see current NEXT TASK below. The other 14 ledger paths are supporting/out-of-scope entries and do not reduce the candidate complement.
+- This batch updates existing ledger rows only; it adds no new candidate path. No application source file was changed.
+
+### Repository-wide surface findings
+- **MUI Card:** the base contract remains `MuiCard` → `getSurfaceStyles(theme)` (paper background, divider border, theme radius, semantic surface shadow). Confirmed rendered Card consumers include `AdminUsers`, `VerifyEmailForm`, `CommentsSection` (outer panel and each comment), `CreatePointPage`, `EditPointPage`, `PointCard`, `PointSection`, `TripCard` (both branches), `TripDetails`, `TripForm` and `TripMapSection`. This proves only the base Card skin; local geometry/content layouts remain per ledger.
+- **MUI Dialog:** current rendered consumers are `ConfirmDialog`, `AdminImages` image preview, `ImageLightbox`, `ProfileImage` fullscreen preview and `ReportButton`. Dialog Paper inherits `MuiDialog.paper` → `getSurfaceStyles`; ImageLightbox and ProfileImage intentionally override the inner image-stage background with semantic image-lightbox tokens. Dialog consumers still own their action roles and internal layout.
+- **Standalone Paper / admin tables:** no standalone `<Paper>` JSX surface was confirmed in the current branch scan. Four admin tables render `TableContainer component={Paper}`: `AdminFailedLogs`, `AdminImages`, `AdminReports`, `AdminRouteNotFoundLogs`. `ADMIN_TABLE_CONTAINER_SX` provides table container layout, but there is no general `MuiPaper` override; do not claim these Paper surfaces share the Card/Dialog surface contract.
+- **Drawer / Popover:** `Header` is the only confirmed Drawer consumer. Its Drawer Paper uses local elevation 12 and height auto; navigation actions and toolbar spacing are local. No MUI Popover JSX consumer was found in the inspected TSX scope. This is a current-source search result, not proof about third-party SDK-owned popups.
+- **Google Maps overlay:** `GoogleMapView` is the only app wrapper rendering `InfoWindowF`; it delegates InfoWindow chrome to Google Maps and accepts caller ReactNode content. Current trip map caller supplies only `marker.title`. No app-owned custom InfoWindow panel/surface was found in this call path.
+- **Custom panel preset trace:** `getSurfaceStyles(theme)` is defined in `src/theme/components/surface.ts` and is consumed by MUI Card/Dialog theme overrides and indirectly by `PANEL_SX`. Direct rendered `PANEL_SX(theme)` consumers confirmed: `AdminUserForm` and `EditTripLayout`. `AUTH_FORM_SX` composes `PANEL_SX` and is applied by `ForgotPasswordForm`, `LoginForm`, `RegisterForm`, `ResendVerificationForm` and `ResetPasswordForm` (the reset form applies it in both form and success branches). Thus these auth wrappers are rendered panel consumers, not layout-only aliases.
+- `POINT_FORM_PANEL_SX` is a separate layout/field-inset preset applied to MUI Cards in `CreatePointPage` and `EditPointPage`; it is not a direct `PANEL_SX` consumer. `CommentsSection` defines local `COMMENTS_PANEL_SX` and `COMMENT_CARD_SX` and applies them to MUI Cards, so it duplicates layout and potentially visual responsibilities that must be separated. `PANEL_SX` itself only supplies surface properties: background, border, radius and shadow; `AUTH_FORM_SX` adds column-stack layout, padding, max width, width, box sizing and centering.
+
+### CSS Modules and adjacent surface consumers
+- The current branch contains exactly eight CSS Modules: About, Privacy/Legal, NotFound, ImageGallery, Footer, TripDetailsView, TripList and TripPagination. Previous ledger batches inspected About/Legal, NotFound, ImageGallery and Footer; this batch re-inspected TripDetailsView and inspected TripList/TripPagination. No additional CSS Module was missed in the tree.
+- `TripList.module.css` owns empty-state title/text typography locally; `TripList.tsx` applies shared typography and list presets via React `style`, which violates the approved Styling API.
+- `TripPagination.module.css` owns nav/list geometry and consumes spacing variables, but the page links/current page have no semantic pagination appearance/state contract.
+- `TripDetailsView.module.css` is primarily unique grid/flex/container-query composition; remaining literal widths and margins need classification, not wholesale removal.
+- `Header`, `AddressAutocomplete`, map pickers, image lightbox/profile preview, admin tables and comment cards all retain local control/surface layout or role definitions as detailed in the updated Section 10.1 rows.
+
+### Updated NEXT TASK
+1. Complete the remaining Section 7 inventory against the exact **19 outstanding paths** from the latest recursive tree. The outstanding list is recalculated below; do not reopen already-ledgered files unless a newly discovered consumer requires it.
+2. Continue the form-control map across TextField, Select, Autocomplete, Checkbox, Radio, Switch, native inputs and all field states, correlating each consumer with `src/theme/components/text-field.ts`, other theme overrides and form presets. Include `AddressAutocomplete`'s broad style injection contract.
+3. Finish direct MUI Button/IconButton semantic role/state mapping beyond the existing `BUTTON_STYLES`/`BackButton` trace, including Drawer navigation, Confirm/Cancel, table actions, map controls, image overlay controls and pagination.
+4. Continue CSS variable/token and raw visual literal mapping across the outstanding paths; keep the CSS Modules inventory at eight and preserve structural composition.
+5. Stage 1 remains **IN PROGRESS**. Do not begin application source migration until all mandatory Section 7 consumer maps are exhaustive. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+### Exact outstanding candidate paths (19)
+```text
+app/api/og/trips/[id]/route.ts
+app/error.tsx
+app/not-found.tsx
+app/opengraph-image.tsx
+app/robots.ts
+app/sitemap.ts
+app/twitter-image.tsx
+src/components/admin/index.ts
+src/components/auth/GuestOnly.tsx
+src/components/auth/RequireAuth.tsx
+src/components/auth/RequireRole.tsx
+src/components/auth/RequireTripOwner.tsx
+src/components/auth/index.ts
+src/components/common/TabSyncListener.tsx
+src/components/home/index.ts
+src/components/images/index.ts
+src/components/placeholders/index.ts
+src/components/placeholders/socialObjectPlaceholderAssets.ts
+src/components/tracking/index.ts
+```
