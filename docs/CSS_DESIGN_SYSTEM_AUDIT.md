@@ -3536,15 +3536,14 @@ No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconB
 - Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
 - No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
 
-**NEXT TASK — audit the seven Admin route pages (Section 11.19.F):**
+**NEXT TASK — complete the remaining Not Found / 404 route audit:**
 
-1. Audit Admin landing, Users, Edit User, Images, Failed Login Logs, Reports and Route Not Found Logs from exact route roots through nested page components, tables, pagination, dialogs, image views and shared actions.
-2. Reuse existing component ownership maps and verify every consumer against exact branch-ref source. Do not duplicate completed shared component audits.
-3. Record route-specific data/loading/error/empty/selection/confirmation states, responsive behavior, CSS Modules, React style, inline sx, local constants and semantic action roles.
-4. Update Section 11.19.F after the Admin batch. Keep Stage 1 IN PROGRESS until mandatory consumer maps and state/responsive matrices are exhaustive.
-5. Then complete Not Found/404 and reconcile Section 10.1 only where new evidence or a genuinely missing path is found.
-6. Do not change application source without explicit authorization.
-7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+1. Trace `app/not-found.tsx` through the shared `NotFound` component, its CSS Module, tokens/presets, navigation actions and every relevant caller (including RequireRole unauthorized flow and other route/error fallbacks).
+2. Reuse existing shared-owner audits; do not duplicate the NotFound component audit where already complete. Verify exact current-branch consumers and responsive/error states.
+3. Update Section 11.19.F and reconcile Section 10.1 only where new evidence or a genuinely missing path is found.
+4. Keep Stage 1 IN PROGRESS until every mandatory Section 7 consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
+5. Do not change application source without explicit authorization.
+6. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
 
@@ -3744,20 +3743,20 @@ Status definitions:
 | Auth | Resend Verification | app/(auth)/resend-verification/page.tsx | DETAILED | Section 11.21.C; email/CAPTCHA form, generic success response, submit/reset/error states |
 | Auth | Reset Password | app/(auth)/reset-password/page.tsx | DETAILED | Section 11.21.D; query token, password requirements, validation, success and redirect states |
 | Auth | Verify Email | app/(auth)/verify-email/page.tsx | DETAILED | Section 11.21.E; query token, automatic verification, loading/success/error and redirect states |
-| Admin | Admin landing | app/(admin)/admin/page.tsx | NOT AUDITED | Native section/h1 route root only; do not assume AdminDashboard is used |
-| Admin | Users | app/(admin)/admin/users/page.tsx | NOT AUDITED | AdminUsers and image owners listed; page-level pass remains |
-| Admin | Edit User | app/(admin)/admin/users/[userId]/page.tsx | NOT AUDITED | AdminUserForm/password/image owners listed; page-level pass remains |
-| Admin | Images | app/(admin)/admin/images/page.tsx | NOT AUDITED | AdminImages subviews listed; page-level pass remains |
-| Admin | Failed Login Logs | app/(admin)/admin/failed-login-logs/page.tsx | NOT AUDITED | Table/selection/pagination/confirm route graph only |
-| Admin | Reports | app/(admin)/admin/reports/page.tsx | NOT AUDITED | Table/pagination/confirm route graph only |
-| Admin | Route Not Found Logs | app/(admin)/admin/route-not-found-logs/page.tsx | NOT AUDITED | Table/disclosure/pagination route graph only |
+| Admin | Admin landing | app/(admin)/admin/page.tsx | DETAILED | Section 11.24.B; bare heading route, AdminNavigation supplied by role-gated layout; Dashboard component is not composed here |
+| Admin | Users | app/(admin)/admin/users/page.tsx | DETAILED | Section 11.24.C; role-filtered cards, profile-image preview, deletion, pagination and query states |
+| Admin | Edit User | app/(admin)/admin/users/[userId]/page.tsx | DETAILED | Section 11.24.D; target lookup, role-scoped fields, optional password change, image CRUD, update/delete confirmation and feedback |
+| Admin | Images | app/(admin)/admin/images/page.tsx | DETAILED | Section 11.24.E; cloud/database/orphan/missing-thumbnail tabs, bounded selection, thumbnail generation and preview dialog |
+| Admin | Failed Login Logs | app/(admin)/admin/failed-login-logs/page.tsx | DETAILED | Section 11.24.F; multi-select bulk deletion, confirmation, table/query states and pagination |
+| Admin | Reports | app/(admin)/admin/reports/page.tsx | DETAILED | Section 11.24.G; per-report deletion confirmation, mutation/query feedback and pagination |
+| Admin | Route Not Found Logs | app/(admin)/admin/route-not-found-logs/page.tsx | DETAILED | Section 11.24.H; expandable request diagnostics, query states and pagination |
 | System | Not Found / 404 | app/not-found.tsx | NOT AUDITED | NotFound shared component/CSS is inventoried; route-level page pass remains |
 
 **Verified coverage count:**
 - 27 route roots total.
-- 19 DETAILED: all 6 Public pages, all 6 Auth pages, and all 7 Account pages.
-- 0 PARTIAL: all Account routes now have page-level audits.
-- 8 NOT AUDITED: seven Admin pages and Not Found.
+- 26 DETAILED: all 6 Public pages, all 6 Auth pages, all 7 Account pages and all 7 Admin pages.
+- 0 PARTIAL.
+- 1 NOT AUDITED: Not Found / 404.
 - These counts describe route-page audit coverage only. They do not change the 163/163 candidate file inventory count and do not mean Stage 1 is complete.
 
 ### G. Next page-audit sequence
@@ -4301,3 +4300,125 @@ No application source code was changed. No branch was created. No build, tests, 
 - Updated Section 11.19.F from 14 to 19 DETAILED and from five to zero PARTIAL; eight routes remain NOT AUDITED (seven Admin pages and Not Found).
 - No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
 - Stage 1 remains IN PROGRESS.
+## 11.24 — Admin route page audits (2026-11-18)
+
+### A. Preflight and scope
+
+- Re-read Sections 1.4 (Styling API), 6 (approved six-stage plan), 7 (mandatory search matrix), 10.1 (file ledger), 11.19.F (route coverage), and the relevant shared-owner sections before the batch.
+- Confirmed repository `AngelGeorgievStoyanov/hacktrip-web`, branch `feature/frontend-modernization`, pre-update audit document SHA `c727cc9aee0bf98b844e57675374332f88755f74`, and current branch commit `60df8ff6b2222c44c76dfb2ad41cca1941fd9f19`.
+- Audited all seven Admin route roots, Admin layout/role gate, navigation, nested page components and the Admin API surface. Reused existing image, dialog, table/pagination, button, theme and shared-layout ownership findings rather than repeating their global audits.
+- No application source was modified. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+### B. Admin landing — /admin
+
+- Route root `app/(admin)/admin/page.tsx` is a server component with NOINDEX metadata and renders only a native `<section>` containing `<h1>Admin</h1>`. It does not compose `AdminDashboard`.
+- `app/(admin)/layout.tsx` wraps all Admin routes in `RequireRole` for `MODERATOR_ROLES`, then renders Header, `<main>`, AdminNavigation, route content and Footer. `RequireRole` renders null while auth loads and returns the shared NotFound for unauthenticated or unauthorized users; backend authorization remains authoritative.
+- AdminNavigation is therefore the actual shared navigation owner in the Admin shell. AdminDashboard is separately exported and contains a second static list of the same five route links; it is not used by the audited Admin landing root. Avoid treating it as the landing page's current visual owner.
+- Styling: the Admin layout uses a React `style` prop for main padding/flex, which violates the approved Styling API and is a migration target. AdminNavigation uses local Box `sx` for flex/wrap/gap/margin/padding/border and direct Button variant/color for active/inactive route state. No Admin CSS Module was found in the Admin route/component subtree.
+
+### C. Users — /admin/users
+
+- Server route is a NOINDEX wrapper for `AdminUsers`. The component queries `adminApi.listUsers` with React Query key `['admin','users',page,ADMIN_PAGE_SIZE_DEFAULT]`, page size 50. It derives manager/admin capabilities from `useAuth` and `hasRole`; managers see only role `user`, admins see all returned users.
+- Query loading shows CircularProgress; query failure renders an Alert. User deletion has a separate mutation error Alert and ConfirmDialog; success invalidates the users query. Pagination appears only when totalPages > 1 and has disabled Previous/Next boundaries.
+- Users render as responsive auto-fill Cards (minimum 320px) with profile Avatar, identity/status, email verification, dates, log count and last login. Clicking an existing profile image opens ImageLightbox. Edit/Delete actions are role-filtered. If the visible list is empty, the component renders the generic text `WELCOME!` rather than a purpose-built empty state. There is no explicit no-data table/card skeleton or empty message for a zero-result dataset.
+- Styling: MuiCard supplies the shared surface skin, but card padding/flex/content geometry, 88px Avatar, overflow wrapping and centered action row remain local sx. Edit, Delete, Previous and Next are direct MUI Buttons with no consistent named semantic role. Pagination consumes ADMIN_PAGINATION_SX. Image rendering/lightbox reuse AppImage/ImageLightbox.
+
+### D. Edit User — /admin/users/[userId]
+
+- Server route awaits `params`, passes userId to AdminUserForm and has NOINDEX metadata. AdminUserForm queries `['admin','user',userId]`; `findUserById` scans the users endpoint page-by-page using ADMIN_PAGE_SIZE_MAX=100 until the id is found or totalPages are exhausted. Loading shows CircularProgress; query error or missing target renders `User not found`; manager role mismatch renders an access-denied Alert.
+- Admins can edit first/last name, email, email verification, role, status and optionally set a password. Managers can edit only first/last name, email verification and status for target users with role `user`. The form uses adminUserUpdateSchema plus confirmPassword refinement. Password controls are expandable and clear values when collapsed.
+- AdminUserProfileImage is embedded: fetches image, shows loading/error/no-image states, supports preview, upload/replace and confirmed delete; upload/delete mutations update the user image cache and invalidate users list. The parent form has separate server error state.
+- Save is disabled unless dirty or while update pending; update success invalidates users list, navigates to `/admin/users` and refreshes. Delete user is confirmed and disabled while delete pending; success also invalidates/navigates. BackButton navigates to users. No explicit success toast is shown in this component.
+- Styling: parent wrapper uses PANEL_SX + COLUMN_STACK_SX, local max width 760px and responsive padding. Form consumes COLUMN_STACK_SX, BUTTON_STYLES.save, BUTTON_STYLES.dangerText, UI_SIZES and BackButton, plus PasswordField/PasswordRequirements. Field spacing comes from stack layout, but role/status select, switch, password toggle, delete and back action geometry remain mixed local/default contracts. Back caller adds local alignSelf/margin. AdminUserProfileImage uses AppImage, ImageLightbox, ImageUploadField and COLUMN_STACK_SX but retains local Avatar geometry and direct Upload/Delete actions. No CSS Module or React style prop in these feature components.
+
+### E. Images — /admin/images
+
+- Server route is a NOINDEX wrapper for AdminImages. The component owns four local tabs: Cloud, Database, Orphans and Missing thumbnails. Each tab conditionally mounts its own query component and independent page state.
+- Cloud and Database tabs query paginated cloud/database image inventories and render dense Lists with explicit empty messages. Orphans queries the cloud/database comparison, displays Cloud only and Database only groups and their counts, and paginates while either source has another page. Query errors render Alerts and loading renders CircularProgress.
+- Missing thumbnails queries only records with missing thumbnails. It supports per-row and per-page selection, a hard client-side maximum of 100 selected IDs, selection-limit warning, result summary, query/mutation error Alerts, isFetching feedback, and a Generate selected mutation. Successful generation reports generated/already-existed/missing-original/not-found/failed counts, clears selection and invalidates the missing-thumbnail query.
+- Missing-thumbnail results render a Paper-backed table with selectable rows, raw image preview thumbnails, IDs and original URLs; empty results have an explicit table row. Clicking a preview opens a Dialog with a full-size image and locally positioned close IconButton. Pagination is disabled during fetching where appropriate.
+- Styling: `ADMIN_TABLE_CONTAINER_SX` and `ADMIN_PAGINATION_SX` are reused in the table and pagination areas, but a local IMAGE_PAGINATION_ROW_SX duplicates layout for Cloud/Database/Orphans. Tabs, List, Table, Checkbox, Dialog and IconButton mostly use MUI defaults with extensive local sx for status spacing, thumbnail size/border/radius, URL wrapping, preview image max dimensions, dialog content padding and close positioning. Raw `component="img"` is used instead of AppImage for original inventory URLs. No CSS Module or React style prop.
+
+### F. Failed Login Logs — /admin/failed-login-logs
+
+- Server route is a NOINDEX wrapper for AdminFailedLogs. Query key includes page and page size; query errors and mutation errors are shown as Alerts, loading uses CircularProgress.
+- Users can select individual log IDs or all IDs on the current page. Selected count and bulk Delete action appear only when selection is nonempty. Delete is confirmed, disabled while mutation is pending, clears selection on success and invalidates the failed-log query. Pagination uses server totalPages.
+- Table columns: date, email, IP, country, city and user agent. Date formatter returns an em dash for null/invalid dates. Empty `data.items` renders an empty table body with no explicit empty-state row. Selected IDs may remain selected when changing pages; selection is not scoped/reset on page change.
+- Styling: table Paper wrapper consumes ADMIN_TABLE_CONTAINER_SX; pagination consumes ADMIN_PAGINATION_SX. Table, Checkbox, selection toolbar, Alert and Buttons otherwise use direct MUI defaults/local Box sx. Delete and pagination actions have no named semantic presets. No CSS Module or React style prop.
+
+### G. Reports — /admin/reports
+
+- Server route is a NOINDEX wrapper and adds a native `h1` Reports before AdminReports, which itself renders another MUI `Typography` h4 Reports. This creates duplicate page headings with different semantic/styling systems.
+- AdminReports queries paginated reports; query and mutation errors render Alerts; loading renders CircularProgress. Each row shows ID, target type/id, reason, created date and Delete. Delete opens ConfirmDialog, is disabled while any delete mutation is pending, invalidates the reports query on success and shows a generic error on failure. Pagination uses totalPages.
+- Empty `data.items` renders no explicit empty-state row/message. The route's native h1 and component h4 are a duplicate heading/ownership issue.
+- Styling: Paper table wrapper uses ADMIN_TABLE_CONTAINER_SX; pagination uses ADMIN_PAGINATION_SX. Direct Delete/Previous/Next Buttons have no semantic action preset; Table cells/rows and heading rely on MUI defaults. No CSS Module or React style prop.
+
+### H. Route Not Found Logs — /admin/route-not-found-logs
+
+- Server route is a NOINDEX wrapper for AdminRouteNotFoundLogs. It queries paginated diagnostics; query errors render Alert, loading renders CircularProgress and pagination uses totalPages.
+- Rows display date, method, IP, user ID and email. Each row toggles an expandable Collapse containing request URL, headers, query, body and params. Diagnostic values are pretty-printed JSON when parseable, otherwise shown as raw text; null values render an em dash.
+- Empty `data.items` has no explicit empty-state row/message. Expanded state is stored by numeric row id and is not reset when page changes.
+- Styling: table wrapper and pagination use admin presets. Diagnostic field labels, preformatted block padding/background/radius/font, detail grid spacing, collapse row border and direct View/Hide/Pagination Buttons remain local/default styling. No CSS Module or React style prop.
+
+### I. Shared ownership and cross-route findings
+
+| Owner / contract | Admin consumers | Finding |
+|---|---|---|
+| RequireRole + MODERATOR_ROLES | All Admin routes | One shared route-level role gate in Admin layout; loading/unauthorized behavior belongs to RequireRole/NotFound |
+| AdminNavigation | All Admin routes | Shared nav, but active/inactive skin and geometry remain local; AdminDashboard duplicates route-link data |
+| MuiCard / ADMIN_PAGINATION_SX | Users | Card skin theme-backed; card content/action geometry local; pagination layout shared |
+| AdminUserForm + AdminUserProfileImage | Edit User | One form owner plus separate profile-image lifecycle; both share ConfirmDialog and query cache patterns |
+| AppImage / ImageLightbox / ImageUploadField | Users, Edit User, Images | Profile photos use AppImage/lightbox; edit image upload uses ImageUploadField; inventory preview uses raw img/Dialog |
+| ADMIN_TABLE_CONTAINER_SX / ADMIN_PAGINATION_SX | Images, Failed Logs, Reports, Route Not Found Logs | Shared wrapper/pagination layout only; not a complete table, empty-state or action contract |
+| ConfirmDialog | Users, Edit User, Failed Logs, Reports | Destructive operations share confirmation service, but their Button skins/actions differ |
+| adminApi + ADMIN_PAGE_SIZE_DEFAULT/MAX | All data pages | One API module and central pagination constants; UI components still duplicate query/loading/error/pagination presentation |
+
+**High-value migration targets (do not implement in this audit):**
+- Replace Admin layout React style with an approved layout preset/theme or CSS-variable-backed structural class.
+- Define semantic Admin navigation active/inactive contract; align it with global navigation role rather than per-route Button variant/color props.
+- Create shared admin data-table shell with consistent responsive overflow, header/row behavior, loading/error/empty states and pagination action roles.
+- Split semantic button skin from pagination/action-row geometry; remove repeated Previous/Next/Delete/Edit/Upload/Remove direct MUI defaults.
+- Centralize image preview/thumbnail frame and dialog close action; decide whether raw original `img` is intentional for full-resolution inventory.
+- Resolve Reports duplicate h1/h4 ownership and replace generic `WELCOME!` Users empty state with a meaningful empty state.
+- Keep role and authorization logic unchanged during styling migration; server/backend authorization remains authoritative.
+
+### J. Exact branch-ref source evidence
+
+- app/(admin)/layout.tsx — 5e4f19fce9cd9770695535c8a90840667c2b893e
+- app/(admin)/admin/page.tsx — 30f711a91fb24a2bc9e88a8bbbdf2bc4b2582c69
+- app/(admin)/admin/users/page.tsx — 8887efb269b911c76c9826018f93140cb1d3e75e
+- app/(admin)/admin/users/[userId]/page.tsx — cdb5d63c65d51b798f3bca4fc69de34903113b3d
+- app/(admin)/admin/images/page.tsx — 4d2242ce4b2751836262edd6501572cca299e021
+- app/(admin)/admin/failed-login-logs/page.tsx — c3c7c75b0bb149a34f21c599a6ef60831896d49a
+- app/(admin)/admin/reports/page.tsx — 3cfa04eeb161168ee29d901a86a17381f74e28d1
+- app/(admin)/admin/route-not-found-logs/page.tsx — 85bfcb5c9638f43edb4b33ddf6f610309719dc81
+- src/components/admin/AdminDashboard.tsx — 866d7ea17af8bdfec5fda22bd1868ddb1e2424ad
+- src/components/admin/AdminNavigation.tsx — 75ccf5cd47f702955193fb2d0512205aba2afaac
+- src/components/admin/AdminUsers.tsx — 61c674d78c6890b157cede9c166a5ffcc961b658
+- src/components/admin/AdminUserForm.tsx — 66ffd3cb2dfeb267aa4dc03bdeb9f43aba0e5e42
+- src/components/admin/AdminUserProfileImage.tsx — 738389ef0f0ac674db07e10f64694ce571cb9804
+- src/components/admin/AdminImages.tsx — 48dc92d8cc01881992dc388b4dd165c6b53a218f
+- src/components/admin/AdminFailedLogs.tsx — fc7ef5517fbdc17a139387887cdfd85ca8f251be
+- src/components/admin/AdminReports.tsx — c7312e4a6fcd2543a97205f60e7c7e3f4093ef72
+- src/components/admin/AdminRouteNotFoundLogs.tsx — 50e6d63c2de38e5da9a1a548396eb7ec9782366a
+- src/components/admin/index.ts — 3e485bbb37a7d1dc026b0f99e998dd3f771cf837
+- src/api/admin/index.ts — c8be20f7b48e9dfc51b9c1575b86e67d2e423ef3
+- src/constants/admin/index.ts — f06a0504c7808633c9bfed1b5d2cc1f011c21e8e
+- src/styles/presets/layouts.ts — 4a0aec24e5feecf1ffaeadaf75ade4291658f820
+- src/components/auth/RequireRole.tsx — c35e443eae3fa950711c70062577bd5948a3fb35
+- app/not-found.tsx was not modified or audited in this Admin batch.
+
+### K. Batch result and next task
+
+- Updated Section 11.19.F from 19 to 26 DETAILED and from eight to one NOT AUDITED; the sole remaining route is Not Found / 404.
+- The Admin file-level migration statuses in Section 10.1 remain unchanged: detailed audit coverage is not the same as centralization or migration completion.
+- Stage 1 remains IN PROGRESS. No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+**NEXT TASK — complete the remaining Not Found / 404 route audit:**
+
+1. Trace `app/not-found.tsx` through the shared `NotFound` component, its CSS Module, tokens/presets, navigation actions and every relevant caller (including RequireRole unauthorized flow and other route/error fallbacks).
+2. Reuse existing shared-owner audits; do not duplicate the NotFound component audit where already complete. Verify exact current-branch consumers and responsive/error states.
+3. Update Section 11.19.F and reconcile Section 10.1 only where new evidence or a genuinely missing path is found.
+4. Keep Stage 1 IN PROGRESS until every mandatory Section 7 consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
+5. Do not change application source without explicit authorization.
+6. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
