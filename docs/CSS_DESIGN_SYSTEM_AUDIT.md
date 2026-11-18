@@ -3536,13 +3536,13 @@ No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconB
 - Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
 - No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
 
-**NEXT TASK — continue route-page audits using the reconciled page coverage matrix (Section 11.19):**
+**NEXT TASK — audit the remaining Auth route family (Section 11.19.F):**
 
-1. Do not restart component-by-component enumeration. Select the next unaudited route family from Section 11.19 and trace each page from its route root through nested components to existing shared owners.
-2. Keep each page's own structural layout separate from shared visual ownership. Cross-reference Sections 11.12–11.18 instead of duplicating already established component maps.
-3. Audit the remaining route roots in cohesive groups: Live Tracking and public static pages; remaining Auth pages; remaining Account pages; then Admin pages and Not Found.
-4. For each page, record route file, layout/shell, composition tree, CSS Modules, React style/inline sx, presets/tokens, direct MUI/native controls, responsive rules, and state/error/loading/disabled/focus behavior.
-5. Update the page coverage matrix in Section 11.19 after every batch. A route is not COMPLETE merely because it appears in the route graph or uses a previously audited shared component.
+1. Audit Forgot Password, Resend Verification, Reset Password and Verify Email from their route roots through form owners, shared fields, CAPTCHA/feedback, action roles and auth shell.
+2. Cross-reference the Login/Register contracts in Section 11.19; do not duplicate shared PasswordField, PasswordRequirements, Captcha, WelcomeHeading, Header/Footer or NotificationProvider audits.
+3. Record each route's own validation-state presentation, loading/disabled behavior, responsive layout, direct MUI/native controls and all React style/inline sx/CSS Module findings.
+4. Update the Section 11.19 route coverage matrix after the batch. A route is DETAILED only after its page-level composition and style/state ownership have been traced.
+5. Then deepen the seven PARTIAL Account pages, audit the seven Admin pages, and finish Not Found, in that order unless a newly discovered dependency requires a different sequence.
 6. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Keep the Favorites/My Trips source-correctness issue separate and do not change app source without authorization.
 7. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
 8. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
@@ -3729,9 +3729,9 @@ Status definitions:
 | Public | Home | app/(public)/page.tsx | DETAILED | Section 11.14; nested Home/TripList/TripCard ownership |
 | Public | Trips | app/(public)/trips/page.tsx | DETAILED | Section 11.15; TripFilters/TripList/TripCard/Pagination |
 | Public | Trip Details | app/(public)/trips/[id]/page.tsx | DETAILED | Section 11.19.B; nested map/images/social/comments/points |
-| Public | Live Tracking | app/(public)/live-tracking/page.tsx | NOT AUDITED | Route graph only; LiveTracker page-level style/state audit remains |
-| Public | About | app/(public)/about/page.tsx | NOT AUDITED | Route/CSS owner listed in 11.13; page-level pass remains |
-| Public | Privacy Policy | app/(public)/privacy-policy/page.tsx | NOT AUDITED | Route/CSS owner listed in 11.13; page-level pass remains |
+| Public | Live Tracking | app/(public)/live-tracking/page.tsx | DETAILED | Section 11.20.B; moderator gate, live map, tracking controls, stats and browser-session state |
+| Public | About | app/(public)/about/page.tsx | DETAILED | Section 11.20.C; WelcomeHeading, seven images, CSS Module, responsive image rows and SEO |
+| Public | Privacy Policy | app/(public)/privacy-policy/page.tsx | DETAILED | Section 11.20.D; long-form terms/privacy sections, generated TOC, legal CSS and SEO |
 | Account | Favorites | app/(account)/favorites/page.tsx | PARTIAL | Route root/shared TripList recorded in 11.15–11.16; page styles/state not complete |
 | Account | My Trips | app/(account)/my-trips/page.tsx | PARTIAL | Route root/shared TripList/Create Trip action recorded; page styles/state not complete |
 | Account | Profile | app/(account)/profile/page.tsx | PARTIAL | Root/ProfileForm and shared profile/image/password owners recorded in 11.16–11.18 |
@@ -3756,9 +3756,9 @@ Status definitions:
 
 **Verified coverage count:**
 - 27 route roots total.
-- 5 DETAILED: Home, Trips, Trip Details, Login, Register.
+- 8 DETAILED: Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register.
 - 7 PARTIAL: all 7 Account pages.
-- 15 NOT AUDITED: Live Tracking, About, Privacy Policy, four remaining Auth pages, seven Admin pages and Not Found.
+- 12 NOT AUDITED: four remaining Auth pages, seven Admin pages and Not Found.
 - These counts describe route-page audit coverage only. They do not change the 163/163 candidate file inventory count and do not mean Stage 1 is complete.
 
 ### G. Next page-audit sequence
@@ -3777,5 +3777,173 @@ Status definitions:
 - Coverage is now 5 DETAILED, 7 PARTIAL and 15 NOT AUDITED.
 - The previously mapped shared owners are cross-referenced rather than duplicated. Section 10.1 remains the file-level ledger; this section is the route-page coverage ledger.
 - Stage 1 remains IN PROGRESS. No app source changes were made, no branch was created, and no build/tests/lint/CI/browser validation was run.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.20 — Live Tracking, About and Privacy Policy page audits (2026-11-18)
+
+### A. Preflight and scope
+
+- Re-read Sections 1.4, 2, 6, 7, 9 and 10.1, the design-system dependency map, route graph, previous page audits and the exact NEXT TASK before this batch.
+- Verified branch feature/frontend-modernization exists and fetched all implementation files below using that exact branch ref.
+- Audit document blob SHA before this batch: 05aef18b7714a5879e46b181431ed96f9e391b4a.
+- Previous audit commit: ebcf74e0120e27c4df4b9f5c2504188067543263.
+- Scope: three route-page ownership audits — Live Tracking, About and Privacy Policy. No application source migration, no new branch and no build/tests/lint/CI/browser validation.
+
+### B. Live Tracking — /live-tracking
+
+**Route and access composition**
+
+- Route root: app/(public)/live-tracking/page.tsx.
+- Shell: public layout → shared Header → flex-fill content wrapper → route → shared Footer.
+- Route metadata sets title "Live trip tracking" and robots NOINDEX; no public SEO indexing is intended.
+- The route is wrapped in RequireModeratorRedirect. The guard reads auth status/user, allows only authenticated moderators, renders null while auth is loading or access is denied, and redirects unauthorized users to / in an effect. The public Header/Footer remain outside the guard.
+- The route root owns a main with style={{ padding: ROUTE_CONTENT_PADDING }}, then a plain section, h1, intro paragraph and LiveTracker. This React style is a direct Section 1.4 migration target; the section currently has no dedicated CSS Module or named page-shell preset.
+
+**Composition and runtime state**
+
+PublicLayout → Header → flex-fill wrapper → LiveTrackingPage → RequireModeratorRedirect → main/section/heading/intro → LiveTracker → Google Map + route Polyline + current Marker; Start/Stop/Reset/Center actions; tracking status; eight GPS/session statistics → Footer.
+
+- LiveTracker uses the shared useGoogleMapsLoader entry point, but renders GoogleMap, MarkerF and PolylineF directly rather than using the app's GoogleMapView wrapper. This is a distinct implementation path: the live page needs current-location follow behavior and route stroke options. Do not replace it with GoogleMapView without comparing required behavior and map options.
+- The map frame is 100% width × MAP_CONTAINER_HEIGHT (400px). It has overflow hidden and a local TRACKING_SURFACE_SX (divider border, radius 1). Loading uses a centered grid Box and CircularProgress size 28.
+- The route polyline uses UI_COLORS.brand.primary, opacity 0.9 and weight 4; the current location uses a Google Maps marker. Google Maps owns the map canvas and built-in map controls; app-owned actions/stats remain in React/MUI.
+- Follow starts true. Dragging the map sets follow false; Center on my location sets it true and is disabled when no current point exists or follow is already active. The effect pans to current coordinates whenever follow/current changes.
+- The stats grid has eight entries: elapsed duration, distance, recorded point count, GPS timestamp, latitude, longitude, speed and altitude. Layout is two columns at xs and four at sm. Each stat cell repeats the same local surface contract and padding.
+- Start/Stop is a conditional contained MUI Button; Reset and Center are default text Buttons. Reset is disabled when there are no points and tracking is inactive. The live status uses Typography role=status. Tracking errors render a warning Alert.
+- The footer note states tracking data stays in the browser session and is never uploaded.
+
+**Hook behavior to preserve**
+
+- useLiveTracking owns points/current/tracking/error/start time/elapsed clock. It requests browser geolocation with high accuracy, 10-second timeout and no cached position.
+- Current position updates on each GPS event; a route point is appended only when movement from the last recorded point is at least 5 metres. Distance is calculated from recorded points.
+- Start begins watchPosition, starts elapsed timing once and attempts a screen Wake Lock when supported. Stop clears the geolocation watch and releases Wake Lock. Reset stops tracking and clears points/current/start time/error.
+- While tracking, a one-second interval updates elapsed time. Unmount clears the geolocation watch and releases Wake Lock. Wake Lock failure is silently tolerated.
+- Geolocation permission denied, unavailable, timeout and unsupported-browser paths are represented as warning messages. Preserve these state distinctions in any later visual migration.
+
+**Style ownership and outstanding targets**
+
+- Local TRACKING_SURFACE_SX is reused for both the map frame and each statistic cell, but the shared design system should own the semantic surface role. The map frame and statistic cells may retain different geometry/padding.
+- The stats grid's responsive two/four-column structure is unique composition; its gap, cell padding, border/radius and text hierarchy should consume shared tokens/presets.
+- Start, Stop, Reset and Center on my location are four distinct semantic actions. Start/Stop are state-switched controls; Reset is destructive session reset; Center is a map navigation/focus action. Do not map all four to generic primary/secondary.
+- Loading, warning/error, active/stopped status, disabled state and live statistic updates need explicit shared feedback/action state contracts.
+- The route has no page-specific CSS Module. The main padding is an inline React style. LiveTracker uses local sx objects for map/stat layout and repeated surface styling.
+- The route's use of GoogleMap directly is not a second SDK loader: useGoogleMapsLoader remains the single shared SDK loading boundary.
+
+### C. About — /about
+
+**Route and SEO**
+
+- Route root: app/(public)/about/page.tsx; public layout supplies shared Header/Footer and the flex-fill wrapper.
+- Metadata is built with buildSeoMetadata, canonical path /about, a page-specific title/description and no explicit NOINDEX override. This is an indexable public page.
+- The page renders main.aboutPage, then shared WelcomeHeading, then article.aboutPageContent. The article contains six semantic content sections, a final heading/contact paragraph and seven images in total.
+- The page has no page-local client state. The only interactive behavior comes from shared WelcomeHeading/ScrambleHeading: touch anywhere in the WelcomeHeading content can re-trigger the heading scramble; reduced-motion preference suppresses the animation.
+
+**Composition and image ownership**
+
+PublicLayout → Header → flex-fill wrapper → AboutPage → main.aboutPage → WelcomeHeading → responsive/scramble h1 → article.aboutPageContent → six content sections, seven Next/Image instances and two aboutPageImageRow compositions → Footer.
+
+- The first image is the local OG illustration /og/hacktrip-travel-planner.svg, rendered at 1200×630, priority/high fetch priority, with a page-local max-width override of 760px.
+- The other six images are remote GCS assets. Their width/height/sizes are taken from IMAGE_PRESETS.aboutIllustration (640×480; sizes switch at 820px). They share the page-local imageStyle object and are laid out either singly or in two-image rows.
+- The local imageStyle object sets block display, 100% width, auto height, max-width 640px by default, 20px vertical margin, 12px padding, border-box and object-fit contain. Call sites override max-width to 760px or 520px where needed. All seven images use the prohibited React style presentation API; the object is a page-local image preset and should be migrated to the approved image/frame contract.
+- The About illustration preset currently supplies intrinsic width/height/sizes only; it does not own the page's visible max-width, margin, padding or responsive row frame. Keep optimization hints separate from the visual frame contract.
+
+**CSS Module and typography ownership**
+
+- AboutPage.module.css owns centered flex page structure, 100% width, min-height 100vh and public page gutters. It consumes --ht-page-content-padding, --ht-page-mobile-content-padding, --ht-spacing-lg and --ht-spacing-xs for selected spacing.
+- aboutPageContent owns the 1100px max-width, centered text, inverse text color and decorative text shadow. The headings inside the article use local Space Mono font, weight 600 and clamp-based h2/h3 sizing; h3 line-height is 1.6. Links inherit text color and are underlined.
+- The image row is a unique two-column flex composition with a shared gap; at max-width 820px it stacks vertically, centers children and constrains images to 640px. This is valid page-specific responsive structure.
+- The CSS Module's aboutPageContent h1 rule does not style the WelcomeHeading h1 because that heading is rendered by WelcomeHeading before the article, as a sibling rather than a descendant. The actual h1 remains owned by HOME_HEADING_STYLE/ScrambleHeading. Keep this selector mismatch visible for migration; do not assume the page module controls the top heading.
+- The 820px breakpoint is repeated in the CSS Module and the about image sizes string; no named 820px breakpoint token currently exists in the inspected breakpoint constants.
+- WelcomeHeading and ScrambleHeading are shared with Home, Trips and Auth pages and are already audited in Sections 11.14–11.15 and 11.19. Their React style usage and animation behavior belong to the shared heading owner, not a new About-only component.
+
+**About outstanding migration targets**
+
+1. Replace all seven React style image presentations with an approved shared image/frame contract; preserve source dimensions, object-fit, priority, sizes and page-specific frame widths.
+2. Tokenize Space Mono/heading typography, clamp scale, line-height, margins and text shadow; preserve page copy hierarchy.
+3. Reconcile the unused aboutPageContent h1 selector with the actual WelcomeHeading ownership.
+4. Add/reuse a named 820px responsive threshold only if the full responsive audit confirms this value is a shared role; otherwise document it as page/image composition geometry.
+5. Keep the image row stacking and 1100px content width as unique structure unless another page uses the same composition.
+6. Preserve the SEO canonical/indexability and all image alt text/priority behavior during migration.
+
+### D. Privacy Policy — /privacy-policy
+
+**Route and SEO**
+
+- Route root: app/(public)/privacy-policy/page.tsx; public layout supplies Header/Footer and the flex-fill wrapper.
+- Metadata is built with buildSeoMetadata, canonical path /privacy-policy, page-specific title/description and no NOINDEX override. This is an indexable public page.
+- The route is a server-rendered static document with no client component, no local React state, no MUI controls, no React style prop and no inline sx.
+- Content is data-driven through terms and privacySections arrays. The Terms of Use section has a generated table of contents with native fragment anchors; the top navigation links to the Terms and Privacy Policy sections. Privacy sections render h3 headings, paragraphs and optional bullet lists.
+- The page includes an external hack-trip.com link, a contact mailto link and a native anchor back to /. The legal content includes a hard-coded last-updated date of 24.03.2023; content/legal review is outside this CSS audit and must not be changed as a styling cleanup.
+
+**CSS Module ownership**
+
+- LegalPage.module.css owns a centered long-form document: full-width/min-height shell, 1000px content max-width, responsive content padding via clamp, long-word wrapping, centered h1/h2, scroll-margin-top for h2/h3, paragraph/list typography, intro navigation, terms TOC, contact spacing and Back-link skin.
+- Page/content background and text colors, legal link color, TOC border and radius, and Back-link background/text colors consume --ht-* CSS variables.
+- Remaining local visual values include shell padding (24px 16px 48px), content max-width 1000px, clamp content padding (18px–42px), heading margins, 90px anchor scroll offsets, paragraph/list 1rem and 1.75 line-height, intro nav 1.2rem/600 weight, 10px gap, local margins/padding, and Back-link padding 10px 24px.
+- There is no page-specific media query; the content padding is fluid via clamp and the document naturally wraps. Do not mistake absence of a media query for a missing responsive layout.
+- The native legalPageBack anchor is the page's Back action. It preserves link navigation and should align with the shared Back semantic role, but it is not the BackButton React component. Its hover only changes text color to inverse; background hover behavior is not separately defined.
+- The legal page's content surface is intentionally a document surface, not a standard Card/Paper. Do not replace it with a generic card skin.
+
+**Privacy Policy outstanding migration targets**
+
+1. Tokenize recurring document typography, spacing and link/button values while retaining unique long-form document geometry.
+2. Align the native Back link with the shared Back visual contract while preserving its anchor semantics and destination.
+3. Review the 90px fragment scroll offset against the shared sticky Header dimensions; preserve anchor visibility.
+4. Preserve generated TOC IDs, native fragment navigation, external/contact links, content ordering and server rendering.
+5. Keep legal content/date changes outside the design-system migration scope.
+
+### E. Shared ownership and cross-page reconciliation
+
+- Shared public shell owners: Header, Footer and app/(public)/layout.tsx. Header navigation/auth states and responsive drawer are already described in Section 11.17; Footer's CSS Module and iOS landscape scroll behavior are cross-page shell behavior. The public layout's React style={{ flex: 1 }} is a shared shell migration target for every public page.
+- Shared heading owners: WelcomeHeading and ScrambleHeading. About is an additional consumer of the same heading contract; do not create an About-only heading skin.
+- Shared map SDK owner: useGoogleMapsLoader. LiveTracker uses the same loader but not GoogleMapView. The tracking map renderer is therefore a separate consumer of the SDK, not a separate loader.
+- Shared token owners: UI_COLORS.brand.primary, ROUTE_CONTENT_PADDING, MAP_CONTAINER_HEIGHT, MAP_TRACKING_ZOOM, MAP_DEFAULT_CENTER, GEOLOCATION_OPTIONS, IMAGE_PRESETS.aboutIllustration and CSS variables emitted by the MUI theme.
+- No new shared component owner was introduced. The page audits add route-specific context to already inventoried files and existing shared dependencies.
+
+### F. Refreshed route-page coverage matrix
+
+The 27 route roots remain the same. Status counts now reflect Sections 11.14–11.16 and 11.19–11.20:
+
+- **8 DETAILED:** Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register.
+- **7 PARTIAL:** Favorites, My Trips, Profile, Edit Point, Edit Trip, Create Trip, Create Trip Point.
+- **12 NOT AUDITED:** Forgot Password, Resend Verification, Reset Password, Verify Email, Admin landing, Users, Edit User, Images, Failed Login Logs, Reports, Route Not Found Logs and Not Found/404.
+
+The route matrix in Section 11.19.F is the page-level status source of truth. File-level candidate inventory coverage (163/163) remains a separate metric. Stage 1 is still IN PROGRESS.
+
+### G. Exact branch-ref source evidence
+
+- app/(public)/live-tracking/page.tsx — 7eaf11ecfa6e8b8baf6585720214fa42bbfb8d26
+- src/components/tracking/LiveTracker.tsx — eb353d870c36f51ff9e1daf2373ac4ec289ec3d7
+- src/hooks/useLiveTracking.ts — e446cd1099ef06f77e05b162e4f0fb6cee77aae9
+- src/hooks/useGoogleMapsLoader.ts — c104f40436828e2fdb1fd37962427f44e29d1858
+- src/constants/maps/index.ts — 077e28c9452823e36b9cf5f81ecf81971758386f
+- src/components/auth/RequireModeratorRedirect.tsx — 2cc26aa0ff3379adb39204439b86825dd0d11407
+- app/(public)/about/page.tsx — 5bd6e5f5fa54d180ffd373177b8718482dccaab2
+- app/(public)/about/AboutPage.module.css — 609bc668af08d4d029844cbcf0debdfbbd3513fe
+- app/(public)/privacy-policy/page.tsx — 8ff442e740a531f8ff86fe609a7261fcbfdd5a90
+- app/(public)/privacy-policy/LegalPage.module.css — 066738729d55c0e8e4898188e36a6f301186dde8
+- app/(public)/layout.tsx — de747f2fb78157660255e23047ea0347b3d80975
+- src/components/layout/Header.tsx — 1e36e6434c250f1b4f0b825d7d16304dd0583947
+- src/components/layout/Footer.tsx — 88c0b2c7ee9f38c33b8d37a0f1ebe3b27231b6f2
+- src/components/layout/Footer.module.css — a2409cadb62f9576085b99a404717d3ee2ce38bc
+- src/components/common/WelcomeHeading.tsx — 179e7f685e3ca595fbed60c3447702c036b56ec1
+- src/components/common/ScrambleHeading.tsx — 6fbea0138e6eff5d6fd822171a93a94dfe0f3a69
+- src/constants/ui/spacing.ts — 9e62ad85eeec73359723643861eb8d2eba8057d1
+- src/constants/ui/breakpoints.ts — 9fb27ac76908e485970975bf4a714c581d822315
+- src/constants/ui/colors.ts — dce2b3d898c07cb7ba1b61a8ecf9608121ea8763
+- src/constants/images/presets.ts — 4d3ea1fe0a0eb9f137983542c99a43200e55cf2f
+- src/styles/presets/layouts.ts — 4a0aec24e5feecf1ffaeadaf75ade4291658f820
+- src/styles/presets/typography.ts — 59803882f1c4357e8815f3afdc7c53939d14bacb
+- app/globals.css — 6c89565f0c9ca041f74f9e4b8b9b54c273977289
+- src/theme/index.ts — 2bbf22fb89a8a99269d19348c59270ac97cd5178
+
+### H. Batch result and next task
+
+- Added detailed page-level audits for Live Tracking, About and Privacy Policy.
+- Updated the Section 11.19.F route matrix from 5 to 8 DETAILED pages and from 15 to 12 NOT AUDITED pages; the seven Account pages remain PARTIAL.
+- No new candidate ledger paths were added. The existing 163/163 file inventory remains unchanged; supporting map constants and hooks are cited as dependencies.
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+- Stage 1 remains IN PROGRESS.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
