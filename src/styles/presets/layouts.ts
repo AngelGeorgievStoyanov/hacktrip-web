@@ -1,4 +1,5 @@
 import { PAGE_CONTENT_PADDING, ROUTE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 
 /** Shared layout presets used where the same page/list layout is required. */
@@ -102,3 +103,46 @@ export const POINT_LIST_SX = {
   alignItems: 'center',
   minWidth: 0,
 } as const;
+
+
+/** Create Point route composition; responsive columns remain feature-specific. */
+export const CREATE_POINT_PAGE_SX = {
+  width: '100%',
+  maxWidth: UI_SIZES.contentMaxWidth,
+  mx: 'auto',
+  px: { xs: 1, sm: 2 },
+  py: 2,
+} as const;
+
+export const CREATE_POINT_GRID_SX = {
+  display: 'grid',
+  gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 1fr)' },
+  '@media (min-width:1021px)': {
+    gridTemplateColumns: 'minmax(250px, 0.75fr) minmax(0, 1.6fr)',
+  },
+  alignItems: 'start',
+  gap: { xs: 2, md: 3 },
+} as const;
+
+export const CREATE_POINT_LIST_COLUMN_SX = {
+  minWidth: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+} as const;
+
+export const CREATE_POINT_EDITOR_COLUMN_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
+  minWidth: 0,
+} as const;
+
+export const CREATE_POINT_LOADING_SX = {
+  display: 'flex',
+  justifyContent: 'center',
+  py: 4,
+} as const;
+
+export const CREATE_POINT_ERROR_ALERT_SX = { mb: 2 } as const;
