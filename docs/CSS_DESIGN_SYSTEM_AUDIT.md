@@ -783,6 +783,19 @@ This ledger is the operational source for answering "what is actually fixed in e
 - This does **not** prove that every standalone `Paper`, custom panel, CSS surface or image/map overlay is centralized. A repository-wide Paper/surface consumer audit is still required.
 - Therefore: Card background/border/radius/shadow are centralized at the MUI Card level; general Paper parity is **not yet complete or verified**.
 
+| `app/(auth)/forgot-password/page.tsx` | Route metadata (`title`, `NOINDEX`) and delegation to `ForgotPasswordForm`; no route-owned visual declarations. | Audit the child form's field, button, loading/error and Back roles in its own ledger entry; route itself has no styling migration. | NON-VISUAL ROUTE — form owns UI. |
+| `app/(auth)/layout.tsx` | Composes shared Header, Footer and GuestOnly auth gate; uses the canonical `ROUTE_CONTENT_PADDING` token. | `<main>` and inner width wrapper use React `style` props (`display`, centering, padding, flex, width, max-width); migrate presentation to approved CSS Module/preset/token consumers. Preserve the 480px auth content constraint as a named dimension if it recurs. | CHANGE REQUIRED. |
+| `app/(auth)/login/page.tsx` | Route metadata (`Login`, `NOINDEX`) and Suspense boundary around `LoginForm`. | No route-level visual rules; `LoginForm` owns fields, password reveal, submit, errors and loading states and must be audited separately. | NON-VISUAL ROUTE — form owns UI. |
+| `app/(auth)/register/page.tsx` | Route metadata and composition of `GuestOnly` with `RegisterForm`. | No route-level visual declarations; inspect the child form's shared field/checkbox/action contracts. The route-level GuestOnly boundary is behavioral, not a styling contract. | NON-VISUAL ROUTE — form owns UI. |
+| `app/(auth)/resend-verification/page.tsx` | Route metadata (`NOINDEX`) and delegation to `ResendVerificationForm`. | No route-owned visual declarations; the child form owns fields, Back action, submit and feedback states. | NON-VISUAL ROUTE — form owns UI. |
+| `app/(auth)/reset-password/page.tsx` | Route metadata and async `searchParams` handling; passes only a string token to `ResetPasswordForm`. | No route-level visual declarations; child form owns password fields, requirements, submit/Back actions and feedback states. | NON-VISUAL ROUTE — form owns UI. |
+| `app/(auth)/verify-email/page.tsx` | Route metadata and async `searchParams` handling; passes only a string token to `VerifyEmailForm`. | No route-level visual declarations; child form owns Card surface, status/feedback and action styling. | NON-VISUAL ROUTE — form owns UI. |
+| `app/(public)/about/AboutPage.module.css` | Page/container and image-row structure; page padding, colors, image-row gaps and decorative heading shadow already consume selected `--ht-*` variables; responsive stacking is unique layout. | Local Space Mono family, font weights, clamp font sizes, heading margins and text-shadow declaration still own typography/visual treatment; replace shared values with typography tokens/semantic editorial variant and CSS variables. Verify the remaining selectors against all About content. | CHANGE REQUIRED. |
+| `app/(public)/about/page.tsx` | SEO metadata uses `buildSeoMetadata`; content hierarchy uses semantic sections; page imports `WelcomeHeading` and the named `aboutIllustration` image preset for image dimensions/sizes. | Defines local `imageStyle` and passes React `style` props to every Next Image (display, dimensions, max-width, margin, padding, object-fit); migrate to AppImage/named image role or CSS Module structure plus shared image tokens. Audit direct Next Image use and preserve responsive sizing, spacing and image rendering. | CHANGE REQUIRED. |
+| `app/(public)/layout.tsx` | Shared Header/Footer composition; comment explains the flex-fill wrapper needed to keep Footer at the viewport bottom while pages own their `<main>`. | Wrapper uses React `style={{ flex: 1 }}`; move this structural shell rule to a semantic class/CSS Module or shared layout preset, preserving the shell behavior. | CHANGE REQUIRED. |
+| `app/(public)/privacy-policy/LegalPage.module.css` | Page/content surface, text, border, link and TOC radius use selected `--ht-*` variables; CSS Module appropriately owns legal-document layout and anchor scroll offsets. | Local padding/margins/gaps, fixed font-size/line-height, and Back-link padding/skin remain; classify reusable spacing/typography and migrate to tokens. The `.legalPageBack` anchor is a separate native Back visual contract that must align with shared Back semantics without losing link navigation. | CHANGE REQUIRED. |
+| `app/(public)/privacy-policy/page.tsx` | SEO metadata uses `buildSeoMetadata`; long-form terms/privacy content is data-driven through arrays and semantic sections; visual composition is delegated to `LegalPage.module.css`. | Native `.legalPageBack` anchor is the Back action consumer; verify its semantic consistency with shared BackButton while preserving href navigation. Check document headings/link typography against shared semantic typography; no React `style` or ad hoc `sx` found in this route. | CHANGE REQUIRED — native Back-link skin and typography parity remain. |
+
 ## 11. Current status and exact next task
 
 ### Current stage
@@ -1487,6 +1500,125 @@ Continue only with the exact outstanding paths listed in this section; do not re
 - Added all 12 to Section 10.1 with individual findings and conservative statuses. The two route shells contain React style presentation props for shared route padding. My Trips combines shared presets with local loading/error/heading styles. Admin and edit routes are mostly composition-only and delegate actual visual ownership to separately audited child components.
 - Reconciled the exact outstanding register from the recursive tree: 157 candidate UI/design-system files; 72 unique files now have individual ledger entries; 85 remain without an individual entry. The exact remaining paths are enumerated in Section 11.5.
 - No application source changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
+
+## 11.6 — Auth routes and public-page shell/CSS inventory (2026-11-18)
+
+- Mandatory preflight: re-read Sections 1.2–1.4 and 2 (CSS ownership and styling API), the approved six-stage plan, Section 7 search matrix, Section 10.1 ledger and the previous NEXT TASK before source inspection.
+- Verified branch `feature/frontend-modernization`, HEAD `c8cc6c9d3a3c3f9e3194f622ea607f7578473195`; recursive tree was not truncated.
+- Inspected the next 12 previously unledgered files: all seven auth route files/layout, About CSS Module and page, public layout, and Privacy Policy CSS Module and page.
+- Auth route pages are primarily metadata/behavioral wrappers; their actual visual owners are the separately tracked auth form components. The Auth layout has two React style presentation objects, including route padding and a local 480px content width.
+- About page uses a local image style object spread into several Next Image React style props; its CSS Module mixes structural responsive layout with local typography and text-shadow values. These are concrete styling API / centralization migration targets.
+- Public layout uses React style for the flex-fill shell wrapper; preserve its footer positioning behavior while moving the rule to the approved class/preset API.
+- Privacy Policy page is content/data composition with no React style or sx; its CSS Module already consumes several `--ht-*` variables, but still owns local spacing/typography and a native Back-link skin that must align with the shared Back semantic role.
+- No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
+
+### Corrected inventory after reconciling the current recursive tree
+
+The earlier Section 11.5 count (157/72/85) was stale and its outstanding list included files now present in the Section 10.1 ledger. Recomputed from the current, non-truncated recursive tree and **Section 10.1 only**:
+
+- UI/design-system candidate scope: **163 files**.
+- Files with individual Section 10.1 ledger rows before this batch: **72**.
+- Files inspected and added in this batch: **12**.
+- Files with individual ledger rows now: **84**.
+- Files still without an individual ledger row: **79**.
+- The 84 ledger rows are inventory records, **not 84 migrated files**. PARTIAL and CHANGE REQUIRED remain open until implementation and consumer verification.
+- Remaining breakdown: **app 10, components 45, UI tokens/hooks/SEO 9, presets 8, theme 7**.
+
+### Exact remaining paths — 79
+
+**app — 10**
+- `app/api/og/trips/[id]/route.ts`
+- `app/error.tsx`
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/not-found.tsx`
+- `app/opengraph-image.tsx`
+- `app/providers.tsx`
+- `app/robots.ts`
+- `app/sitemap.ts`
+- `app/twitter-image.tsx`
+
+**components — 45**
+- `src/components/admin/AdminNavigation.tsx`
+- `src/components/admin/AdminUserForm.tsx`
+- `src/components/admin/AdminUsers.tsx`
+- `src/components/admin/index.ts`
+- `src/components/auth/Captcha.tsx`
+- `src/components/auth/ForgotPasswordForm.tsx`
+- `src/components/auth/GuestOnly.tsx`
+- `src/components/auth/LoginForm.tsx`
+- `src/components/auth/RequireAuth.tsx`
+- `src/components/auth/RequireRole.tsx`
+- `src/components/auth/RequireTripOwner.tsx`
+- `src/components/auth/ResendVerificationForm.tsx`
+- `src/components/auth/ResetPasswordForm.tsx`
+- `src/components/auth/index.ts`
+- `src/components/common/ConfirmDialog.tsx`
+- `src/components/common/NotFound.module.css`
+- `src/components/common/PasswordRequirements.tsx`
+- `src/components/common/TabSyncListener.tsx`
+- `src/components/home/HomeHero.tsx`
+- `src/components/home/HomeTrips.tsx`
+- `src/components/home/index.ts`
+- `src/components/images/ImageGallery.module.css`
+- `src/components/images/index.ts`
+- `src/components/layout/Footer.module.css`
+- `src/components/layout/Footer.tsx`
+- `src/components/layout/Header.tsx`
+- `src/components/placeholders/SocialObjectPlaceholder.tsx`
+- `src/components/placeholders/index.ts`
+- `src/components/placeholders/socialObjectPlaceholderAssets.ts`
+- `src/components/social/FavoriteButton.tsx`
+- `src/components/social/LikeAnimation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/ReportButton.tsx`
+- `src/components/social/SocialConfigStatus.tsx`
+- `src/components/tracking/index.ts`
+- `src/components/trips/EditTripLayout.tsx`
+- `src/components/trips/PointsSection.tsx`
+- `src/components/trips/TripDetails.tsx`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripDetailsView.tsx`
+- `src/components/trips/TripForm.tsx`
+- `src/components/trips/TripList.module.css`
+- `src/components/trips/TripList.tsx`
+- `src/components/trips/TripPagination.module.css`
+- `src/components/trips/TripPagination.tsx`
+
+**UI tokens / hooks / SEO — 9**
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/index.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
+
+**presets — 8**
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/typography.ts`
+
+**theme — 7**
+- `src/theme/components/button.ts`
+- `src/theme/components/text-field.ts`
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shadows.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
+
+### NEXT TASK
+
+Continue from the exact 79-path outstanding list above, without re-opening already-ledgered files unless a later consumer trace requires it. Next inspect the remaining app shell/error/metadata files and the auth/common/admin components, selecting a coherent batch based on shared ownership and call-site dependencies. For every file, record what it contains, which layer currently owns each visual concern, what is already centralized, and exactly what remains. Keep Stage 1 IN PROGRESS until the repository-wide `.ht-button`, BackButton/ `BUTTON_STYLES.*`, Card/Paper/custom surface and field consumer maps are exhaustive. Do not migrate application source before inventory closure. Never run build, tests, lint, CI or browser validation without explicit user authorization.
+
 ## 12. Audit log (append-only)
 
 ### 2026-11-18 — Dedicated CSS & Design System audit document created
@@ -1575,3 +1707,12 @@ Continue only with the exact outstanding paths listed in this section; do not re
 - Updated the file-level ledger for the inspected files and preserved conservative PARTIAL / CHANGE REQUIRED statuses.
 - No application source files changed. No build, tests, lint, CI or browser validation was run, as explicitly instructed by the user.
 - NEXT TASK: finish the current-branch literal ht-button search and exact BackButton / BUTTON_STYLES.* import/property/call-site matrix; then continue Card/Paper/custom surface and form-field consumer mapping. Re-read the CSS organization and this document before the next batch.
+
+
+### 2026-11-18 — Auth routes and public shell/CSS inventory
+- Re-read the CSS ownership chain, styling API policy, approved stage plan, mandatory search matrix, Section 10.1 ledger and previous NEXT TASK before the batch.
+- Verified current branch `feature/frontend-modernization` at HEAD `c8cc6c9d3a3c3f9e3194f622ea607f7578473195`; recursive tree was not truncated.
+- Inspected 12 previously unledgered auth/public route and stylesheet files and added an individual Section 10.1 row for each.
+- Recorded auth route wrappers as non-visual where appropriate, while identifying React style presentation in Auth layout, About image styles and Public layout; About and Legal CSS Modules retain local typography/spacing/back-link rules despite partial CSS-variable use.
+- Corrected the candidate inventory from 157 to 163 based on the current tree and the Section 10.1-only ledger count: 72 previously logged + 12 new = 84 logged; 79 remain without an individual row. Added the exact remaining path list and category breakdown in Section 11.6.
+- No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
