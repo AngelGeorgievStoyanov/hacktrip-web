@@ -724,19 +724,19 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
 | `src/components/auth/ProfileImage.tsx` | Uses AppImage, Dialog and shared UI color/shadow tokens in some controls. | Local image frame dimensions/radii, IconButton positions, thumbnail sx and overlay states remain. | CHANGE REQUIRED. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Autocomplete. | Local inputSx/containerSx and direct action Button remain; establish a named map-field variant inheriting the base field contract. | PARTIAL. |
-| `src/components/maps/GoogleMapView.tsx` | Map canvas wrapper uses Box grid/flex layout and accepts size/height from callers; Google Maps owns map canvas and native map controls. | No MUI Card/Paper/Dialog or custom panel skin found in this file. Audit Google Maps built-in controls/InfoWindow separately from app-owned overlay surfaces; wrapper layout remains caller-owned. | PARTIAL — map canvas wrapper, not a shared surface implementation. |
-| `src/components/maps/PointLocationPicker.tsx` | Map is rendered by `GoogleMapView`; address field consumes `MAP_ADDRESS_INPUT_SX`; Locate uses `BUTTON_STYLES.primary`; Clear Marker uses `BUTTON_STYLES.secondary`. | Map/action wrapper geometry and responsive sizing remain local sx; GPS action is a direct outlined Button; semantic roles and disabled/loading/focus states remain incomplete. No app-owned Card/Paper surface. | PARTIAL — field/action presets are partial; map composition remains local. |
-| `src/components/maps/TripLocationPicker.tsx` | Map is rendered by `GoogleMapView`; address field consumes `MAP_ADDRESS_INPUT_SX`; Locate uses `BUTTON_STYLES.primary`; Clear Marker uses `BUTTON_STYLES.secondary`. | Hint overlay uses a local positioned Typography with `UI_COLORS.map.pickerHintBackground`; button height/background/disabled appearance are composed locally; map wrapper and responsive geometry remain local. No Card/Paper panel. | CHANGE REQUIRED — map hint and action composition are not fully centralized. |
+| `src/components/maps/GoogleMapView.tsx` | Shared renderer owns Google Maps SDK loading, map canvas wrapper, markers, path, InfoWindow, fit-bounds/focus behavior and map events; feature controls/state remain with callers. | Direct consumers: PointLocationPicker, TripLocationPicker, TripMapSection, PointCard. Local Box geometry and loading CircularProgress size remain; Google Maps SDK controls are not MUI theme components. | PARTIAL — renderer ownership mapped; loading/canvas geometry contract open. |
+| `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | Local responsive action row/sx; GPS and clear-marker actions use different generic roles; local Snackbar+Alert error state; findInMapTrigger is externally forwarded by page owner. | CHANGE REQUIRED — semantic Search/Locate/Remove/Navigation and feedback states. |
+| `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; local map hint, frame, button height/disabled skin and responsive composition. No GPS action/find trigger. | CHANGE REQUIRED — shared visual roles after behavior comparison; do not merge behavior blindly. |
 | `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
-| `src/components/CustomFileUploadButton.tsx` | Shared upload component boundary exists. | Raw IconButton and contained Button component=label remain; define upload and icon-action roles. | CHANGE REQUIRED. |
-| `src/components/images/AppImage.tsx` | Central AppImage abstraction selects named image presets and computes rendering style internally. | Audit every preset and caller; internal computed React style is an implementation detail of the approved image abstraction, not permission for consumer-level style props. Document and preserve this boundary. | PARTIAL. |
-| `src/components/images/ImageGallery.tsx` | Uses AppImage named image presets and CSS Module for gallery structure; engagement controls delegate to shared `EngagementBar`. | Grid column count is runtime structural sx; native button focus-visible outline is locally specified; verify all image frame presets and overlay interaction states. No Card/Paper panel. | PARTIAL — image rendering and gallery structure are partly shared. |
-| `src/components/images/ImageLightbox.tsx` | MUI Dialog Paper inherits shared Dialog surface contract; AppImage uses the `lightbox` image preset; image-control colors use semantic `UI_COLORS.surface.imageControl*`. | Dialog Paper background is overridden to `imageLightbox`; three IconButtons share `controlSx` but each repeats position/z-index geometry; caption and image stage use local overlay layout. Lightbox surface variant and icon-action role/state contract remain uncentralized. | CHANGE REQUIRED — base Dialog surface reused, image-specific overlay is a deliberate variant with local controls. |
+| `src/components/CustomFileUploadButton.tsx` | Shared upload trigger used by generic image upload and profile-image selection; supports camera IconButton and text Button modes, max-count/disabled gating, accept/multiple and file-change forwarding. | Two distinct raw action renderings (IconButton vs contained Button) and local 30ch wrapper; no semantic Upload role or centralized icon-action state. Direct consumers: ImageUploadField, ProfileImage/ProfileImageUpload. | CHANGE REQUIRED — shared Upload action contract. |
+| `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback. Direct consumers: ProfileImage, ImageGallery, ImageLightbox, AdminUserProfileImage, AdminUsers, EditPointPage, TripCard, EditTripLayout. | Preset rendering is centralized but still passed through React style to Next Image/fallback; audit actual caller frames and preset sizing before migration. | CHANGE REQUIRED — prohibited style transport and preset/frame parity. |
+| `src/components/images/ImageGallery.tsx` | Direct consumers: PointSection and DayImagesGallery. Owns gallery index state, empty-array null path, row/stack/grid composition, image open trigger and ImageLightbox; delegates images to AppImage and engagement overlay to EngagementBar. | CSS Module owns structural variants; runtime grid columns and focus-visible outline remain local sx. Image frame/preset ratios and overlay stacking/responsive states need explicit parity map. | PARTIAL — state and direct consumers mapped; frame/overlay visual contract open. |
+| `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage, AdminUsers. Owns fullscreen Dialog open state via nullable index, close, previous/next wraparound, keyboard arrows and touch swipe; AppImage fills a contain-fit stage. | Local control colors are semantic tokens but positions/z-index/caption/stage geometry and IconButton role remain local. Invalid/empty image index closes by current image undefined. | CHANGE REQUIRED — shared lightbox surface and Close/Previous/Next icon-action contracts. |
 | `src/components/images/ImageUploadField.tsx` | Shared upload field and AppImage usage. | Local thumbnail dimensions/objectFit/radii, layout sx, raw remove/delete-all IconButtons and upload Button remain. | CHANGE REQUIRED. |
 | `src/components/common/ExpandableText.tsx` | Shared disclosure component exists. | Direct disclosure Button and local sx require a shared expand/collapse role and state contract. | PARTIAL. |
 | `src/components/common/NotFound.tsx` | Uses a CSS Module boundary. | Native Home button must be mapped to a shared navigation/action role; inspect paired NotFound.module.css skin. | CHANGE REQUIRED. |
 | `src/components/common/NotificationProvider.tsx` | Uses MUI notification primitives. | Only a width sx surfaced in this pass; inspect Alert/Snackbar global state and theme parity before marking complete. | PARTIAL. |
-| `src/components/common/PasswordField.tsx` | Uses MUI TextField. | Password reveal IconButton is local; must consume the shared icon-action contract and base field states. | PARTIAL. |
+| `src/components/common/PasswordField.tsx` | Shared TextField owner with local visibility state and reveal/hide IconButton; forwards react-hook-form registration, error/helperText, disabled, maxLength and autocomplete. | Direct consumers: RegisterForm, ResetPasswordForm, ChangePasswordForm, AdminUserForm. Reveal/hide IconButton has no semantic icon-action preset; field states depend on TextField defaults and theme. | PARTIAL — consumer graph closed; icon-action and field state contract open. |
 | `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_STYLE preset and MUI typography. | React style prop on h1 and local padding/heading sx violate styling API policy; migrate after inventory. | CHANGE REQUIRED. |
 | `src/components/comments/CommentsSection.tsx` | Uses shared comments panel/card and social action presets; MUI Card surface is theme-backed. | React style prop on list, local comment/card spacing and many IconButtons/TextFields remain; map all edit/delete/reply/report states. | CHANGE REQUIRED. |
 | `src/components/comments/CommentsToggle.tsx` | Uses MUI IconButton for comments disclosure. | React style prop on wrapper and local heading margin remain; disclosure state should use shared contract. | CHANGE REQUIRED. |
@@ -808,7 +808,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminNavigation.tsx` | MUI Box nav wrapper and direct MUI Buttons; active/inactive navigation is expressed by local variant/color props. No shared navigation-action role is consumed. | Navigation role/state contract and local spacing/layout sx remain; map with header navigation consumers. | PARTIAL — visual role remains MUI defaults plus local composition. |
 | `src/components/admin/AdminUsers.tsx` | MUI Card/CardContent surfaces inherit MuiCard; Avatar, Divider, Stack and shared admin pagination layout preset are used. | Card content geometry and avatar dimensions remain local; Edit/Delete and Previous/Next are direct Buttons with inconsistent role props; all states remain to map. | PARTIAL — surface base centralized, action and content contracts incomplete. |
 | `src/components/auth/Captcha.tsx` | Uses MUI Box for the external CAPTCHA container; no custom panel or field preset. | Container min-height, disabled opacity and pointer-events are local runtime presentation; third-party widget owns its internal appearance. | PARTIAL — external widget boundary; wrapper state styling remains local. |
-| `src/components/common/PasswordRequirements.tsx` | Semantic success/secondary/disabled colors use MUI palette; password rules are sourced from shared validation logic. | Grid/list spacing, icon state treatment and responsive columns remain component-local; map with field helper/error states. | PARTIAL — semantic colors theme-backed, layout/state contract incomplete. |
+| `src/components/common/PasswordRequirements.tsx` | Shared password rule feedback derives from getPasswordRequirements; success/secondary/disabled colors use palette semantics. | Direct consumers: RegisterForm, ResetPasswordForm, ChangePasswordForm, AdminUserForm. Local list/grid spacing and responsive two-column layout remain in sx; success/invalid icon treatment has no named feedback preset. | PARTIAL — behavior shared; layout/feedback visual contract remains local. |
 | `src/components/common/NotFound.module.css` | Text colors and spacing partially consume --ht-* CSS variables. | Home CTA still defines local background, padding, margin and border; page background image/position/cover and layout are unique composition but need documented ownership. | CHANGE REQUIRED — shared action visual values are partly local. |
 | `src/components/home/HomeHero.tsx` | WelcomeHeading is shared; introductory typography consumes HOME_INTRO_STYLE preset. | Uses prohibited React style prop and adds local maxWidth 850; migrate to approved preset/class composition after inventory. | CHANGE REQUIRED — React style presentation violates policy 1.4. |
 | `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_STYLE preset; trip listing delegates to shared TripList. | Uses prohibited React style prop for heading; heading semantic HTML and spacing ownership need review. | CHANGE REQUIRED — React style presentation violates policy 1.4. |
@@ -3354,5 +3354,196 @@ All files below were fetched by `feature/frontend-modernization` ref during this
 6. Continue Section 7 consumer searches, reconcile against exact branch-ref files and update Section 10.1 only for genuinely missing entries. Do not treat default-branch code search alone as branch proof.
 7. Keep Stage 1 IN PROGRESS until all mandatory owner-to-consumer edges and state/responsive matrices are exhaustive. No app-source migration before that gate.
 8. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.18 — Shared upload/password/map/image contracts and MUI theme coverage (2026-11-18)
+
+### A. Mandatory preflight and scope
+
+- Re-read Sections 1.4, 2, 6, 7, 9 and 10.1, plus Sections 11.12–11.17 and the exact previous NEXT TASK.
+- Verified feature/frontend-modernization exists and compared it with the last recorded branch commit: current branch HEAD remains 8a2facbbcf8543d372d7788371abb4cf8e75ccc3 (identical).
+- Audit document blob SHA before this batch: db1fa6b2ee41d041823c68bf0133dbea239da684.
+- All implementation files listed in this batch were fetched by the exact branch ref. GitHub code search was used only to discover candidate callers; caller relationships below were checked against branch-ref source.
+- Scope is dependency/consumer mapping only. No application source changes, no new branch, no build/tests/lint/CI/browser validation.
+
+### B. Shared upload trigger: CustomFileUploadButton
+
+Public API: handleFilesChange, images, fileSelected, iconFotoCamera, disabled, maxImages, accept and multiple.
+
+- The component computes disabled state from images.length + fileSelected.length >= maxImages or the caller's disabled flag.
+- It has two distinct visual modes: camera mode uses Tooltip + IconButton + hidden file input; standard mode uses a 30ch Box + contained Button + hidden file input.
+- Both modes forward the same accept/multiple/file-change behavior. Neither mode exposes a semantic Upload role or shared icon-action contract.
+- Exact direct consumers:
+  - ImageUploadField — generic multi-image selection; forwards current image URLs, selected files, upload handler, processing/limit disabled state, max count, accepted MIME types and multiple selection.
+  - ProfileImage.tsx / ProfileImageUpload — separate single-file profile selection; uses camera mode and single-file constraints.
+- Ownership: this component owns the upload trigger and file-input interaction; ImageUploadField/ProfileImageUpload own previews, validation, processing and remove actions. Do not move preview/remove behavior into this trigger.
+
+### C. Password field and requirement owners
+
+#### PasswordField
+
+- Public API: label, autocomplete, disabled, maxLength, error, helperText and react-hook-form registration.
+- Owns TextField type switching and local visible state; reveal/hide is an IconButton with dynamic accessible label and Show/Hide icons.
+- Exact direct consumers confirmed from branch files: RegisterForm, ResetPasswordForm, ChangePasswordForm and AdminUserForm.
+- Form registration is spread onto TextField; maxLength is applied to htmlInput; helper/error/disabled/autocomplete are explicit. The reveal action is not exposed to callers.
+- Open visual contract: shared TextField states plus semantic password-visibility IconAction; no ad hoc per-caller styling API is exposed.
+
+#### PasswordRequirements
+
+- Public API: password, optional minLength/maxLength. Requirement logic is delegated to getPasswordRequirements in validations/shared.
+- Exact direct consumers: the same four form owners above.
+- Owns a UL/list grid with local list reset, negative top margin, left margin, responsive one/two-column grid and gap. Requirement rows use local flex/gap. Success and secondary/disabled colors are palette-backed, but icon/feedback treatment is not a named preset.
+- This is shared validation feedback, not a form-field owner. Its responsive grid must be migrated as a named feedback/layout contract without moving form spacing into each caller.
+
+### D. Google Maps renderer and map-control ownership
+
+#### GoogleMapView
+
+- Exact direct consumers: PointLocationPicker, TripLocationPicker, TripMapSection and PointCard.
+- Owns Maps SDK loading through useGoogleMapsLoader, map wrapper/canvas dimensions, marker/path rendering, marker selection/drag, map click coordinate conversion, InfoWindow rendering, fitBounds and focus-marker behavior.
+- It deliberately does not own feature controls or selection state. Those remain with the four consumers.
+- Loading state is a local Box + CircularProgress (size 28); map wrapper uses local flex/minWidth/width/height sx. The underlying Google Maps canvas and built-in map controls are SDK-owned, not MUI Button/IconButton instances.
+- Consumer-specific frame geometry:
+  - PointLocationPicker supplies point-picker constants and map height.
+  - TripLocationPicker wraps the map in a positioned fixed-height frame and passes height 100%.
+  - TripMapSection supplies trip map dimensions and a theme-backed Card; its MobileStepper owns Back/Next navigation.
+  - PointCard embeds a compact 150px map in a point card and has an explicit no-marker text fallback.
+- Do not centralize these different frame dimensions as one fixed map size. Centralize shared renderer/loading behavior and keep feature frame geometry with each consumer or a named geometry preset.
+
+#### Map action matrix
+
+| Owner | Action / role | State and current implementation | Direct consumer / open contract |
+|---|---|---|---|
+| AddressAutocomplete | Search | Search Button; disabled until Maps loaded, not searching and query length meets minimum; CircularProgress while searching; info Alert for invalid/no-result/failure | PointForm, PointLocationPicker, TripLocationPicker; caller sx escape hatches remain |
+| PointLocationPicker | Locate | GPS Button; locating state disables action and shows CircularProgress; geolocation permission/unsupported errors use local Snackbar+Alert | CreatePointPage, EditPointPage; currently generic outlined Button, no Locate role |
+| PointLocationPicker | Remove marker | Clears coordinates/address and resets center; generic secondary Button | CreatePointPage, EditPointPage; semantic Remove role needed |
+| PointLocationPicker | Find in map | findInMapTrigger responds to external coordinate changes and pans/zooms map | Edit/Create point page flow; this is a navigation/focus action, not a map search button |
+| TripLocationPicker | Search | AddressAutocomplete search/Places selection; info Alert | TripForm, EditTripLayout |
+| TripLocationPicker | Remove marker | Clears coordinates/address and recenters map; generic secondary Button passed as extraAction | TripForm, EditTripLayout |
+| TripMapSection | Navigation | MobileStepper Back/Next Buttons navigate only across points with coordinates; overview is step 0 | TripDetails map; needs semantic Navigation/Pagination action contract |
+| GoogleMapView | Map interaction | map click, marker click/drag, InfoWindow close; no app-owned button surface | Four direct consumers; SDK map controls remain separate |
+
+Important behavior distinction: PointLocationPicker has GPS locate and external find-in-map trigger; TripLocationPicker does not. Their similar address/map UI does not make their feature behavior interchangeable.
+
+### E. ImageGallery, ImageLightbox and preset/frame audit
+
+#### Consumer graph
+
+ImageGallery
+- PointSection
+- DayImagesGallery
+
+ImageLightbox
+- ImageGallery
+- AdminUserProfileImage
+- AdminUsers
+
+AppImage
+- ProfileImage
+- ImageGallery
+- ImageLightbox
+- AdminUserProfileImage
+- AdminUsers
+- EditPointPage
+- TripCard
+- EditTripLayout
+
+The consumer paths above are implementation consumers; barrel exports are not counted as rendered call sites.
+
+#### Gallery and lightbox state contract
+
+- ImageGallery returns null for an empty image array. Otherwise it owns index: number | null; clicking an image sets its array position, and closing sets null.
+- ImageGallery supports row/stack/grid CSS Module variants. Grid columns are computed from the number of images (capped at three). The first image may receive priority/eager/high fetch priority through explicit props.
+- ImageLightbox opens only when the current indexed image exists. It owns the full-screen Dialog shell, close action, image counter, previous/next controls, keyboard ArrowLeft/ArrowRight and touch-swipe navigation. Previous/next wrap around the array.
+- The lightbox stage uses AppImage preset lightbox, fill and contain fit through the preset. The stage is full-size with responsive padding; image controls are absolutely positioned.
+- AdminUserProfileImage opens a one-image lightbox at index 0 and closes via its own boolean state; AdminUsers opens a selected image/alt pair and passes a selected index. These are separate state owners sharing the same lightbox visual component.
+- Missing-image paths:
+  - ImageGallery: empty list renders nothing (no empty gallery placeholder).
+  - AppImage: a thumbnail failure retries the full image URL once when available; final error or missing URL renders an empty div with role=img and aria-label, retaining preset style/className.
+  - SocialObjectPlaceholder is a separate parent-selected fallback, not automatically rendered by AppImage.
+  - Admin profile-image flows distinguish loading, query error, no image and existing image.
+- Open issue: keyboard listener, touch handling, image index and responsive control hit areas require final state/focus verification; this audit did not run browser interaction checks.
+
+#### Preset-to-frame comparison
+
+| Preset | Declared intrinsic contract | Observed consumer/frame implication | Audit result |
+|---|---|---|---|
+| hero | 1200×630, priority, 100vw | Public/OG and hero use needs separate call-site confirmation | Keep open; do not assume every hero is an in-page frame |
+| tripCard | 400×240, cover, card sizes | TripCard card image frame; caller CSS/layout controls visible frame | Aspect ratio is 5:3; verify caller frame exactly |
+| gallery | 240×180, thumbnail | ImageGallery row/stack image; CSS Module owns frame geometry | 4:3 intrinsic; verify module ratio and responsive widths |
+| galleryGrid | 240×180, thumbnail, cover | ImageGallery grid uses fill and CSS Module grid frame | Intrinsic props are overridden by fill; verify frame ratio and crop |
+| lightbox | fill, contain | Fullscreen stage is parent-sized and padded | Correctly frame-driven; stage dimensions own visible size |
+| profile | 160×160, cover | Avatar frames observed at 88×88 in admin; profile frame is circular | Intrinsic 160px is a source-size hint; fill consumers override dimensions |
+| profileLightbox | 1600×1200, contain, max-height 85vh style | Profile fullscreen preview has its own Dialog implementation | React style transport remains prohibited; inspect frame parity in migration |
+| tripPointThumb / editorDayThumb / editorPointThumb | 200×150 / 120×90 / 80×60 | Trip/editing consumers use small fixed thumbnail frames | All 4:3; caller dimensions and objectFit must be checked per usage |
+| aboutIllustration | 640×480, responsive sizes | About page illustration frame | 4:3; confirm caller sizing in public-page pass |
+
+Finding: preset dimensions are not a complete visual frame contract. Some callers override dimensions with fill; CSS Modules/Avatar/parent containers determine actual visible geometry. Keep intrinsic optimization hints, crop behavior and frame geometry as separate concepts. profileLightbox.style and AppImage's computed style transport remain explicit Section 1.4 migration targets.
+
+### F. MUI theme override coverage — exact current branch
+
+The current src/theme/index.ts registers exactly these MUI component overrides:
+
+| MUI component | Current override | What is actually centralized | Still not centrally owned here |
+|---|---|---|---|
+| MuiButton | buttonOverrides | Typography and border radius | Semantic variants, color/hover/focus/active/disabled states and icon-action size/hit area |
+| MuiCard | cardOverrides | Default elevation and shared surface via getSurfaceStyles | Feature content geometry |
+| MuiDialog | dialogOverrides | Dialog Paper surface via getSurfaceStyles | Dialog action roles, full-screen image variant and inner layout |
+| MuiTextField | textFieldOverrides | Default variant=outlined and size=medium | InputBase/InputLabel/helper/error/focus/disabled details beyond MUI defaults |
+
+No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconButton, MuiCircularProgress, MuiInputBase, MuiInputLabel, MuiFormControl, MuiSelect, MuiMenuItem, MuiCheckbox, MuiSwitch, MuiAutocomplete, MuiMobileStepper or MuiPagination in this theme entry.
+
+- This is a verified absence from the current theme registration, not a claim that MUI has no built-in default styles.
+- Button typography/shape is centralized, but color/state behavior is left to palette + MUI variant defaults and per-consumer presets/sx.
+- Dialog Paper surface is centralized; ConfirmDialog button roles and image-lightbox control/inner-stage contracts are not.
+- TextField defaults are centralized, but PasswordField's reveal IconButton, field error/focus states and raw Select/InputBase families still need a cross-consumer state matrix.
+- Alert/Snackbar behavior has notification constants and local/provider props, but no MUI theme override; map/upload inline Alerts are separate local feedback owners.
+- Google Maps built-in controls are external SDK UI; app-owned map search/locate/remove/navigation controls must use the app semantic action system.
+
+### G. Exact branch-ref source evidence
+
+- src/components/CustomFileUploadButton.tsx — a82da64c73fd449677dedbc301e857fc4b7fe0a8
+- src/components/common/PasswordField.tsx — b6488512ec4e31d555512724f61c55e73f28e61f
+- src/components/common/PasswordRequirements.tsx — ab814670e8ceba3c3257ed21bdf3425ca6e12cdf
+- src/components/maps/GoogleMapView.tsx — ca8a1a707b7c6be5fb67c2690c9b2e5195ea3d67
+- src/components/maps/PointLocationPicker.tsx — 64f24d4bff2c414e9bf0f2c57d63f59b4390da97
+- src/components/maps/TripLocationPicker.tsx — ebfb1a7cf123485aaed0dd2b4157412642ad5673
+- src/components/trips/TripMapSection.tsx — f7d06017eff44dc3f421c43d8eb144e53c241c40
+- src/components/points/PointCard.tsx — 86ecd774f4ff3aa0e7a3b8f68b8fea2c4eb8dab2
+- src/components/images/ImageGallery.tsx — ae0cde0384ce5ae02d0a2de35e91059bc45cc800
+- src/components/images/ImageLightbox.tsx — 4ca3dd6bce407f6c74d489d9a637735c85fbe571
+- src/components/images/AppImage.tsx — 52d094dd76316c9404eba4efa66e43a1351d1520
+- src/components/auth/RegisterForm.tsx — ffbe8b0310a0af09243e6efb32087e2ac9c7d1a1
+- src/components/auth/ResetPasswordForm.tsx — e324344b05a9cc6de17afaebece7cf7a91c3ee25
+- src/components/auth/ChangePasswordForm.tsx — 6fe468e3574686a2ce77f281e9451e8714aed128
+- src/components/admin/AdminUserForm.tsx — 66ffd3cb2dfeb267aa4dc03bdeb9f43aba0e5e42
+- src/components/auth/ProfileForm.tsx — 53753f979947457c028f7541450f207e90ca9b03
+- src/theme/index.ts — 2bbf22fb89a8a99269d19348c59270ac97cd5178
+- src/theme/components/button.ts — 344522fde4f2c45fc223d876d9c568faabd41579
+- src/theme/components/card.ts — 2c933219062e2e626304bc153234a4dbe5c3205b
+- src/theme/components/dialog.ts — d65a4a628f1b3e5021635d3a5d8558588734804e
+- src/theme/components/text-field.ts — 4e3ed7529c7f5c219dbe0d05f4f74da0cd84fa
+- src/constants/images/presets.ts — 4d3ea1fe0a0eb9f137983542c99a43200e55cf2f
+
+### H. Batch result and next task
+
+- Completed direct-consumer mapping for CustomFileUploadButton, PasswordField, PasswordRequirements, GoogleMapView, ImageGallery and ImageLightbox.
+- Recorded app-owned map action distinctions: Search, Locate, Remove Marker, Find in Map and point navigation are different semantic roles; PointLocationPicker and TripLocationPicker do not have identical behavior.
+- Completed exact MUI theme registration audit: only Button, Card, Dialog and TextField have explicit overrides in the current theme.
+- Updated existing Section 10.1 rows for shared upload/password/map/image owners; no new candidate ledger path was required.
+- Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
+- No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
+
+**NEXT TASK — finish semantic action and form owner matrix, then close remaining Section 7 search gaps:**
+
+1. Map exact direct consumers and prop forwarding for BackButton, BUTTON_STYLES and icon-action presets; classify every Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm/Secondary/Navigation/Retry action, including raw anchors and native buttons.
+2. Finish semantic action mapping for ConfirmDialog, ImageUploadField/ProfileImageUpload, ProfileForm, ChangePasswordForm, TripForm and PointForm. Do not merge distinct Upload, Replace, Delete, Remove, Search, Locate, Find-in-Map and Save actions.
+3. Trace every shared image preset export to every consumer and compare actual caller frame dimensions, aspect ratios, fill behavior, objectFit and responsive breakpoints. Include CSS Module frame declarations and all missing-image paths.
+4. Complete Section 7 consumer searches for MUI fields/surfaces/alerts, CSS variables, token exports, preset properties, React style, inline sx, raw visual literals, responsive and interaction states. Reconcile every result against exact branch-ref source.
+5. Reconcile all findings with Section 10.1 and update only existing rows or genuinely missing paths. Keep source correction for Favorites/My Trips separate and explicitly authorized.
+6. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. No application source migration before that gate.
+7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
