@@ -19,7 +19,12 @@ import {
   type MapPosition,
 } from '@/lib/maps';
 import { getPointNameFromMapAddress } from '@/lib/pointName';
-import { MAP_ADDRESS_INPUT_SX } from '@/styles/presets/map-controls';
+import {
+  MAP_ADDRESS_INPUT_SX,
+  POINT_LOCATION_PICKER_STACK_SX,
+  POINT_LOCATION_ACTIONS_SX,
+  MAP_PICKER_SNACKBAR_SX,
+} from '@/styles/presets/map-controls';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface PointLocationPickerProps {
@@ -107,7 +112,7 @@ export function PointLocationPicker({
   }
 
   return (
-    <Stack spacing={1} sx={{ width: '100%', maxWidth: 600, minWidth: 0, mx: 'auto' }}>
+    <Stack spacing={1} sx={POINT_LOCATION_PICKER_STACK_SX}>
       <GoogleMapView
         center={center}
         zoom={MAP_POINT_PICKER_ZOOM}
@@ -128,21 +133,7 @@ export function PointLocationPicker({
         direction={{ xs: 'column', sm: 'row' }}
         spacing={1}
         alignItems={{ xs: 'stretch', sm: 'center' }}
-        sx={{
-          width: '100%',
-          maxWidth: 600,
-          minWidth: 0,
-          mx: 'auto',
-          justifyContent: 'space-around',
-          boxSizing: 'border-box',
-          '& > .MuiButton-root': {
-            width: { xs: '100%', sm: 'auto' },
-            minHeight: 40,
-            maxWidth: { xs: 420, sm: 'none' },
-            alignSelf: { xs: 'center', sm: 'auto' },
-            boxSizing: 'border-box',
-          },
-        }}
+        sx={POINT_LOCATION_ACTIONS_SX}
       >
         <AddressAutocomplete
           value={address}
@@ -191,7 +182,7 @@ export function PointLocationPicker({
         open={Boolean(notice)}
         autoHideDuration={10000}
         onClose={() => setNotice(null)}
-        sx={{ position: 'relative', left: 0, right: 0 }}
+        sx={MAP_PICKER_SNACKBAR_SX}
       >
         <Alert onClose={() => setNotice(null)} severity="error">
           {notice}
