@@ -129,7 +129,7 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
         <Box component="main" sx={CENTERED_PAGE_MAIN_SX}>
           {intro}
           <Typography component="p" sx={[HOME_INTRO_SX, { maxWidth: 900 }]}>Trips are temporarily unavailable. Please try again later.</Typography>
-        </main>
+        </Box>
       </>
     );
   }
