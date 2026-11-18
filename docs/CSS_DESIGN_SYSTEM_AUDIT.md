@@ -805,6 +805,20 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/TripDetails.tsx` | Renders shared `BackButton` as a Next Link to `/trips`; supplies `TRIP_ACTION_BUTTON_LAYOUT_SX` for full-width/min-height layout. | Shared Back appearance is combined with trip-action geometry; confirm this role should remain visually secondary while preserving the full-width navigation affordance. | PARTIAL. |
 | `src/components/trips/TripForm.tsx` | Uses `dayDecrement`/`dayIncrement` for day-number IconButtons; primary for Add Trip/Add Next Day; `secondaryLightText` for Add Points; shared BackButton for navigation. | Several different semantics still map to generic primary/secondary roles. Day stepper preset owns geometry and hover but lacks a complete icon-action state contract; Back and action layout remain caller-composed. Audit all form fields and state variants. | CHANGE REQUIRED. |
 
+| `src/components/admin/AdminNavigation.tsx` | MUI Box nav wrapper and direct MUI Buttons; active/inactive navigation is expressed by local variant/color props. No shared navigation-action role is consumed. | Navigation role/state contract and local spacing/layout sx remain; map with header navigation consumers. | PARTIAL — visual role remains MUI defaults plus local composition. |
+| `src/components/admin/AdminUsers.tsx` | MUI Card/CardContent surfaces inherit MuiCard; Avatar, Divider, Stack and shared admin pagination layout preset are used. | Card content geometry and avatar dimensions remain local; Edit/Delete and Previous/Next are direct Buttons with inconsistent role props; all states remain to map. | PARTIAL — surface base centralized, action and content contracts incomplete. |
+| `src/components/auth/Captcha.tsx` | Uses MUI Box for the external CAPTCHA container; no custom panel or field preset. | Container min-height, disabled opacity and pointer-events are local runtime presentation; third-party widget owns its internal appearance. | PARTIAL — external widget boundary; wrapper state styling remains local. |
+| `src/components/common/PasswordRequirements.tsx` | Semantic success/secondary/disabled colors use MUI palette; password rules are sourced from shared validation logic. | Grid/list spacing, icon state treatment and responsive columns remain component-local; map with field helper/error states. | PARTIAL — semantic colors theme-backed, layout/state contract incomplete. |
+| `src/components/common/NotFound.module.css` | Text colors and spacing partially consume --ht-* CSS variables. | Home CTA still defines local background, padding, margin and border; page background image/position/cover and layout are unique composition but need documented ownership. | CHANGE REQUIRED — shared action visual values are partly local. |
+| `src/components/home/HomeHero.tsx` | WelcomeHeading is shared; introductory typography consumes HOME_INTRO_STYLE preset. | Uses prohibited React style prop and adds local maxWidth 850; migrate to approved preset/class composition after inventory. | CHANGE REQUIRED — React style presentation violates policy 1.4. |
+| `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_STYLE preset; trip listing delegates to shared TripList. | Uses prohibited React style prop for heading; heading semantic HTML and spacing ownership need review. | CHANGE REQUIRED — React style presentation violates policy 1.4. |
+| `src/components/images/ImageGallery.module.css` | Spacing, radius and some dimensions consume --ht-spacing-* and --ht-shape-border-radius. | Structural grid/flex geometry is component-specific; button reset, clipping and image frame behavior need cross-check with image/lightbox surfaces. | PARTIAL — shared tokens used, component structure remains local. |
+| `src/components/layout/Footer.module.css` | Text color uses inherit; footer primary/inverse colors consume --ht-* variables. | Horizontal padding and footer spacing remain hardcoded; verify footer/header surface and shell visual role consistency. | PARTIAL — colors centralized through CSS variables, spacing incomplete. |
+| `src/components/layout/Footer.tsx` | Uses Footer CSS Module; behavior is isolated to iOS landscape scroll compatibility. | No visual declarations beyond class composition; footer CSS Module owns appearance and needs token review. | PARTIAL — component delegates visuals to module. |
+| `src/components/layout/Header.tsx` | Uses BREAKPOINTS/mediaDown and UI_SIZES for responsive behavior and menu icon size; MUI AppBar/Drawer/Toolbar primitives. | Navigation buttons, welcome action, drawer Paper elevation/height and toolbar padding are mostly direct MUI props/local sx; no semantic nav/action presets. | CHANGE REQUIRED — navigation and drawer surface roles not fully centralized. |
+| `src/components/placeholders/SocialObjectPlaceholder.tsx` | Placeholder colors consume UI_COLORS semantic tokens; image asset selection is data/state driven. | Overlay gradient, typography sizes, image object-fit style and geometry are local; React style on Next Image is a presentation exception candidate requiring approved abstraction. | PARTIAL — color tokens used, overlay contract remains local. |
+| `src/components/trips/PointsSection.tsx` | Pure composition wrapper delegates selected point rendering to PointSection. | No visual skin of its own; selected-point section wrapper is semantic structure only. Child surface is owned by PointSection. | PARTIAL — composition only; consumer trace required. |
+| `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
 ## 11. Current status and exact next task
 
 ### Current stage
@@ -1882,3 +1896,52 @@ Continue Stage 1 by completing the **Card / Paper / custom surface** consumer ma
 - Recorded the complete nine-caller BackButton map, its prop/sx merge contract, all 13 BUTTON_STYLES exports and 34 direct property references. Added eight missing consumer files to Section 10.1 and updated existing rows with exact semantic roles and local overrides.
 - Reconciled the live 163-file candidate scope: 92 unique ledgered files, 71 without individual ledger rows. Added the exact 71-path list and category counts in Section 11.7.
 - No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
+
+
+## 11.8 — Card / Paper / custom surface audit and additional component inventory (2026-11-18)
+
+### Mandatory preflight
+- Re-read the CSS ownership chain, Styling API policy, six-stage plan, Section 7 consumer matrix, Section 10.1 ledger and current NEXT TASK before inspecting source.
+- Verified branch `feature/frontend-modernization` at HEAD `c8724a5cfb187d4376359a75facedd294dc0d79b`; recursive tree was not truncated.
+- Reconciled the live scope from the branch tree: **163 candidate files**, **92 individually ledgered**, **71 outstanding** before this batch. The previous historical 79-path snapshot is superseded by Section 11.7's corrected 71-path list.
+
+### Surface contract findings (current source)
+- `src/theme/components/surface.ts` defines `getSurfaceStyles(theme)`: theme paper background, divider border, theme radius and semantic surface shadow.
+- `src/theme/components/card.ts` applies that contract to **all MUI Card roots** through `MuiCard.styleOverrides.root`; default elevation is 1. This proves the base MUI Card skin only, not uniform card geometry/content layout.
+- `src/theme/components/dialog.ts` applies the same contract only to `MuiDialog.paper`. Its comment explicitly preserves other Paper usages; there is no general `MuiPaper` override in this module.
+- `src/styles/presets/panels.ts` exports `PANEL_SX` as a wrapper around `getSurfaceStyles`; `src/styles/presets/forms.ts` composes it into `AUTH_FORM_SX`. This is an explicit custom panel adoption path, but every consumer still needs tracing.
+- `src/styles/presets/cards.ts` is mixed: it contains trip-card layout dimensions, card text insets, action spacing and text treatments. The file comment assigns background/border/radius/shadow to MUI theme, but its exported `cardStyle` is typed as React `CSSProperties`; policy 1.4 prohibits using React style for presentation. It is not a pure semantic surface preset.
+- `PointCard` and `TripCard` consume MUI Card and therefore inherit the global Card surface contract; both still define substantial local geometry/content sx. `AdminUsers` is another Card consumer found in this batch, with local content geometry.
+- `ConfirmDialog` uses MUI Dialog and therefore inherits the Dialog Paper contract; its Cancel/Confirm buttons are direct MUI Buttons with identical `color=primary` and `variant=contained`, not distinct semantic action roles.
+- `NotFound.module.css`, `ImageGallery.module.css`, `Footer.module.css` and the social placeholder define/compose non-MUI surfaces or image surfaces. Some values consume `--ht-*` / `UI_COLORS`, but local backgrounds, padding, gradients, clipping and geometry remain.
+- This batch does **not** close the Card/Paper/custom-surface map. All MUI `Paper` imports/usages, Dialog variants, Popover/Drawer surfaces, CSS module surface selectors, map overlays, image overlays and all `PANEL_SX` consumers still need a repository-wide current-branch trace.
+
+### Additional files inspected and ledgered
+- Admin navigation: direct MUI Button active/inactive props; no semantic navigation preset.
+- Admin users: MUI Card surface is inherited; card geometry and Edit/Delete/Pagination controls remain local/direct.
+- CAPTCHA: external widget wrapper has local min-height and disabled visual state; third-party internals are outside app theme control.
+- Password requirements: semantic palette colors are theme-backed; responsive list/grid and icon state styling remain local.
+- Home hero and Home trips: both use shared typography presets but apply them through prohibited React `style` props; HomeHero also adds local max-width.
+- Header: consumes breakpoint/size tokens but navigation buttons, drawer Paper and toolbar spacing remain direct MUI props/local sx.
+- Social object placeholder: uses semantic color tokens but retains local gradient, typography, image fit and geometry; Next Image `style` needs policy-compliant treatment.
+- PointsSection is composition-only and delegates its visual surface to PointSection.
+- TripDetailsView owns composition/sticky shell layout; child surfaces are delegated to trip, image, comments and map components.
+- Individual per-file findings are in Section 10.1 rows added by this batch.
+
+### Live inventory after this batch
+- Candidate scope: **163**.
+- Individual Section 10.1 ledger rows: **106** unique.
+- Files still without an individual ledger row: **57**.
+- This is file-level inventory progress only; it is not migration progress and does not prove all consumer maps exhaustive.
+- Remaining category counts and exact paths are listed below.
+
+**app — 10**\n- `app/api/og/trips/[id]/route.ts`\n- `app/error.tsx`\n- `app/globals.css`\n- `app/layout.tsx`\n- `app/not-found.tsx`\n- `app/opengraph-image.tsx`\n- `app/providers.tsx`\n- `app/robots.ts`\n- `app/sitemap.ts`\n- `app/twitter-image.tsx`\n\n**src/components — 23**\n- `src/components/admin/index.ts`\n- `src/components/auth/GuestOnly.tsx`\n- `src/components/auth/RequireAuth.tsx`\n- `src/components/auth/RequireRole.tsx`\n- `src/components/auth/RequireTripOwner.tsx`\n- `src/components/auth/index.ts`\n- `src/components/common/ConfirmDialog.tsx`\n- `src/components/common/TabSyncListener.tsx`\n- `src/components/home/index.ts`\n- `src/components/images/index.ts`\n- `src/components/placeholders/index.ts`\n- `src/components/placeholders/socialObjectPlaceholderAssets.ts`\n- `src/components/social/FavoriteButton.tsx`\n- `src/components/social/LikeAnimation.tsx`\n- `src/components/social/LikeButton.tsx`\n- `src/components/social/ReportButton.tsx`\n- `src/components/social/SocialConfigStatus.tsx`\n- `src/components/tracking/index.ts`\n- `src/components/trips/TripDetailsView.module.css`\n- `src/components/trips/TripList.module.css`\n- `src/components/trips/TripList.tsx`\n- `src/components/trips/TripPagination.module.css`\n- `src/components/trips/TripPagination.tsx`\n\n**src/constants/ui — 9**\n- `src/constants/ui/breakpoints.ts`\n- `src/constants/ui/colors.ts`\n- `src/constants/ui/index.ts`\n- `src/constants/ui/shadows.ts`\n- `src/constants/ui/shape.ts`\n- `src/constants/ui/sizes.ts`\n- `src/constants/ui/spacing.ts`\n- `src/constants/ui/typography.ts`\n- `src/constants/ui/z-index.ts`\n\n**src/styles/presets — 8**\n- `src/styles/presets/buttons.ts`\n- `src/styles/presets/cards.ts`\n- `src/styles/presets/forms.ts`\n- `src/styles/presets/layouts.ts`\n- `src/styles/presets/map-controls.ts`\n- `src/styles/presets/panels.ts`\n- `src/styles/presets/social.ts`\n- `src/styles/presets/typography.ts`\n\n**src/theme — 7**\n- `src/theme/components/button.ts`\n- `src/theme/components/text-field.ts`\n- `src/theme/index.ts`\n- `src/theme/palette.ts`\n- `src/theme/shadows.ts`\n- `src/theme/shape.ts`\n- `src/theme/typography.ts`
+
+### NEXT TASK
+1. Continue the Card / Paper / custom surface consumer map before moving to field controls: trace every current-branch import and JSX usage of `Card`, `Paper`, `Dialog`, `Drawer`, `Popover`, `getSurfaceStyles`, `PANEL_SX`, and CSS custom panel/surface selectors. Include map controls, map overlays, image/lightbox surfaces and all CSS Modules.
+2. Inspect every `PANEL_SX` consumer and determine whether it actually renders a panel or merely composes layout.
+3. Then map all form controls (TextField, Select, Autocomplete, Checkbox, Radio, Switch, native inputs) against theme overrides and form presets.
+4. Keep direct MUI Button/IconButton semantic role/state mapping open where not already captured.
+5. Preserve the exact remaining-path complement above; add each inspected file to Section 10.1 and reconcile counts against the fresh branch tree after every batch.
+6. Stage 1 remains IN PROGRESS. Do not start application source migration until the mandatory consumer maps are exhaustive. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
