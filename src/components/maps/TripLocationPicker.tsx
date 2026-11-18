@@ -17,6 +17,7 @@ import {
   TRIP_LOCATION_HINT_SX,
 } from '@/styles/presets/map-controls';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 interface TripLocationPickerProps {
   latitude: string;
