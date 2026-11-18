@@ -968,3 +968,13 @@ Continue Stage 1: finish the repository-wide consumer search for BackButton, BUT
 - No application source changes, build, tests, lint, CI or browser verification were performed. Stage 1 remains IN PROGRESS; action inventory is still not exhaustive.
 - NEXT TASK remains: continue the exact Stage 1 repository-wide semantic action inventory, tracing every current-branch BackButton/BUTTON_STYLES/Button/IconButton/native button/action-like anchor and every `.ht-button` consumer. Then complete card/surface/Paper and form-field consumer maps before closing Stage 1.
 
+
+### 2026-11-18 — Repository-wide semantic action inventory, additional inspection batch
+
+- Mandatory preflight: re-read this audit document and verified current branch `feature/frontend-modernization`, HEAD `567d82963d5c8c6bf116c23a161e31a389c14eda`; inspected the current-branch recursive Git tree and fetched exact blob contents for the additional files recorded in Section 11.
+- Expanded action consumer mapping across Admin, Comments/Replies, Common, Header/Footer, Social, Images/Uploads, Maps, Trips/Points and Auth. Exact paths and line numbers, semantic classifications and remaining gaps are recorded in the new Section 11 batch.
+- Confirmed repeated direct admin pagination Buttons, direct header/admin navigation, map search, disclosure, upload actions, distinct social/comment/reply/image icon actions and multiple BackButton callers. These must be modeled as distinct semantic roles over shared base control contracts, not flattened into one generic Button style.
+- Identified further React `style` prop occurrences in `CommentsSection.tsx`, `CommentsToggle.tsx`, `ReportButton.tsx` and `TripDetails.tsx`, in addition to the previously recorded `PointSection.tsx` occurrence. All require behavior-aware classification before migration.
+- Added mandatory preflight wording to the NEXT TASK handoff: every future batch must re-read this document's target architecture and styling API policy, verify branch/HEAD and current file contents, choose and record the optimal scope, then make compliant changes and update the same document's ledger and NEXT TASK.
+- No application source files were changed. Stage 1 remains IN PROGRESS because the `.ht-button` consumer set, complete shared-component caller maps, remaining UI files, and Card/Paper/surface and form-field consumer maps are not yet exhaustive. No build, tests, lint, CI or browser verification was run.
+- NEXT TASK: finish the repository-wide `.ht-button` / `.ht-button--danger` consumer trace and exact BackButton / `BUTTON_STYLES.*` caller map, then complete Card/surface/Paper and form-field consumer maps before starting source migration.
