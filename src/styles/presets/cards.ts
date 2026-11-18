@@ -18,6 +18,20 @@ export const TRIP_CARD_SX = {
 
 /** Fixed geometry and internal layout contracts for the shared TripCard. */
 export const TRIP_CARD_HEIGHT = '540px';
+export const TRIP_CARD_CONTAINER_SX = {
+  width: '352px',
+  maxWidth: 'calc(100vw - 40px)',
+  height: TRIP_CARD_HEIGHT,
+  minHeight: TRIP_CARD_HEIGHT,
+  maxHeight: TRIP_CARD_HEIGHT,
+  boxSizing: 'border-box',
+  overflow: 'hidden',
+} as const;
+export const getTripCardEmptyContainerSx = (isMobile: boolean) => ({
+  height: isMobile ? 'fit-content' : 'auto',
+  maxHeight: '500px',
+});
+export const TRIP_CARD_TITLE_SX = { textAlign: 'center' } as const;
 export const TRIP_CARD_HEADER_SX = {
   display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
   width: '100%', height: '105px', minHeight: '105px', boxSizing: 'border-box', overflow: 'hidden',
