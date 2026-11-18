@@ -2442,3 +2442,243 @@ No application source code was changed in this map-creation batch. No build, tes
 - Added Section 11.12 to this same audit document. It establishes the central source-to-screen dependency graph, records verified ownership edges, groups known consumer families, defines migration gates and records the exact next dependency-mapping tasks.
 - The map distinguishes confirmed edges from open consumer searches; it does not claim that the 163-file inventory is a completed migration or that all consumer edges are exhaustive.
 - No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+
+## 11.13 — Route-to-component dependency graph and cross-page reuse map (2026-11-18)
+
+### Preflight and scope
+
+- Re-read Sections 1, 1.4, 2, 6, 7, 10.1, 11.11 and 11.12, plus repository AGENTS.md.
+- Repository: AngelGeorgievStoyanov/hacktrip-web; branch: feature/frontend-modernization; HEAD: 76016b33feece8109881ddee14bc574c20835fca.
+- Recursive tree is complete (tree.truncated=false): 275 tracked files, 31 app route/layout TS/TSX files, 88 src/components TS/TSX files.
+- The 88 component files include visible UI, route guards, providers/listeners, barrels and asset-only support files; they are not 88 independent visible widgets.
+- This is a route composition/import graph. It is not yet a property-level audit of every style declaration, state selector or responsive rule.
+
+### A. Global root and shared provider chain
+
+```text
+app/layout.tsx
+  ├─ app/globals.css
+  ├─ SiteStructuredData
+  └─ Providers (app/providers.tsx)
+       ├─ AppRouterCacheProvider
+       ├─ ThemeProvider(src/theme) + CssBaseline
+       ├─ QueryClientProvider
+       ├─ AuthProvider
+       ├─ BackgroundProvider
+       ├─ NotificationProvider
+       ├─ ConfirmDialogProvider
+       └─ TabSyncListener
+            └─ route tree
+```
+
+- app/layout.tsx owns document root, global stylesheet import, metadata/viewport and app-shell wrapper.
+- app/globals.css owns global reset, document/font rules, app shell and CSS-variable bridge.
+- app/providers.tsx composes providers; src/theme/index.ts owns the theme passed to ThemeProvider.
+- NotificationProvider owns notification context and Snackbar/Alert rendering. ConfirmDialog owns confirmation context and Dialog rendering.
+- TabSyncListener is behavior-only. SiteStructuredData is structured-data output, not a page skin.
+
+### B. Route groups and composition roots
+
+#### B1. Public — app/(public)/layout.tsx renders Header → route content → Footer
+
+| Route | Entry file | Direct UI root | Nested graph |
+|---|---|---|---|
+| Home / | app/(public)/page.tsx | HomeHero | HomeHero → WelcomeHeading → ScrambleHeading; HomeHero children → HomeTrips → TripList → TripCard. |
+| Trips /trips | app/(public)/trips/page.tsx | TripFilters, WelcomeHeading, TripList, TripPagination | TripList → TripCard; WelcomeHeading → ScrambleHeading; TripFilters uses AppBar/Toolbar/FormControl/Select and styled InputBase/search composition. |
+| Trip details /trips/[id] | app/(public)/trips/[id]/page.tsx | JsonLd, TripDetailsView | TripDetailsView → TripDaysNav, TripGroupSocialActions, TripDetails, DayImagesGallery, CommentsSection, TripMapSection, PointsSection. |
+| Live tracking /live-tracking | app/(public)/live-tracking/page.tsx | RequireModeratorRedirect, LiveTracker | LiveTracker owns tracking UI and app-side route controls; it uses Google Maps primitives directly, not GoogleMapView. |
+| About /about | app/(public)/about/page.tsx | WelcomeHeading, Next Image | WelcomeHeading → ScrambleHeading; AboutPage.module.css and a local image style object also belong to this route. |
+| Privacy Policy /privacy-policy | app/(public)/privacy-policy/page.tsx | Native legal-content markup | LegalPage.module.css; no shared feature component in the route body. |
+
+#### B2. Account — app/(account)/layout.tsx renders RequireAuth → Header → route content → Footer
+
+| Route | Entry file | Direct UI root | Nested graph |
+|---|---|---|---|
+| Favorites /favorites | app/(account)/favorites/page.tsx | TripList and loading/error/empty MUI composition | TripList → TripCard. |
+| My Trips /my-trips | app/(account)/my-trips/page.tsx | Create Trip action and TripList | TripList → TripCard; Create Trip consumes BUTTON_STYLES. |
+| Profile /profile | app/(account)/profile/page.tsx | ProfileForm inside PANEL_SX | ProfileForm → ProfileImage, ProfileImageUpload, ChangePasswordForm, BackButton; ProfileImage → AppImage/Dialog/confirmation/notification; ProfileImageUpload → CustomFileUploadButton. |
+| Edit Point /points/edit/[pointId] | app/(account)/points/edit/[pointId]/page.tsx | EditPointPage | EditPointPage → PointForm, PointLocationPicker, AppImage, SocialObjectPlaceholder, ConfirmDialog; PointForm → AddressAutocomplete, ImageUploadField, BackButton; PointLocationPicker → AddressAutocomplete, GoogleMapView. |
+| Edit Trip /trips/[id]/edit | app/(account)/trips/[id]/edit/page.tsx | RequireTripOwner → EditTripLayout | EditTripLayout → TripLocationPicker, TripSelectField, ImageUploadField, AppImage, SocialObjectPlaceholder, ConfirmDialog, BackButton; TripLocationPicker → AddressAutocomplete, GoogleMapView. |
+| Create Trip /trips/create | app/(account)/trips/create/page.tsx | TripForm | TripForm → TripLocationPicker, TripSelectField, ImageUploadField, BackButton; TripLocationPicker → AddressAutocomplete, GoogleMapView. |
+| Create Trip Point /trips/create/points | app/(account)/trips/create/points/page.tsx | CreatePointPage | CreatePointPage → PointList, PointLocationPicker, PointForm, ConfirmDialog; PointList → PointCard → GoogleMapView; PointForm → AddressAutocomplete, ImageUploadField, BackButton. |
+
+#### B3. Auth — app/(auth)/layout.tsx renders Header → GuestOnly → route content → Footer
+
+| Route | Entry file | Direct UI root | Nested graph |
+|---|---|---|---|
+| Login /login | app/(auth)/login/page.tsx | LoginForm | WelcomeHeading → ScrambleHeading; PasswordField/icon controls, Captcha, notifications and button presets. |
+| Register /register | app/(auth)/register/page.tsx | GuestOnly → RegisterForm | WelcomeHeading → ScrambleHeading; PasswordField, PasswordRequirements, Captcha, notifications and button presets. |
+| Forgot Password /forgot-password | app/(auth)/forgot-password/page.tsx | ForgotPasswordForm | WelcomeHeading → ScrambleHeading; Captcha, BackButton, notifications and button presets. |
+| Resend Verification /resend-verification | app/(auth)/resend-verification/page.tsx | ResendVerificationForm | WelcomeHeading → ScrambleHeading; Captcha, BackButton, notifications and button presets. |
+| Reset Password /reset-password | app/(auth)/reset-password/page.tsx | ResetPasswordForm | WelcomeHeading → ScrambleHeading; PasswordField, PasswordRequirements, BackButton and notifications. |
+| Verify Email /verify-email | app/(auth)/verify-email/page.tsx | VerifyEmailForm | MUI Card/feedback/button composition; shared NotificationProvider. |
+
+#### B4. Admin — app/(admin)/layout.tsx renders RequireRole → Header → AdminNavigation → route content → Footer
+
+| Route | Entry file | Direct UI root | Nested graph |
+|---|---|---|---|
+| Admin landing /admin | app/(admin)/admin/page.tsx | Native section and h1 | Does not currently render AdminDashboard; do not assume that file owns the route. |
+| Users /admin/users | app/(admin)/admin/users/page.tsx | AdminUsers | User cards, Avatar/AppImage, ImageLightbox and action controls. |
+| Edit User /admin/users/[userId] | app/(admin)/admin/users/[userId]/page.tsx | AdminUserForm | AdminUserProfileImage, PasswordField, PasswordRequirements, ConfirmDialog, BackButton and fields; AdminUserProfileImage → AppImage, ImageUploadField, ImageLightbox. |
+| Images /admin/images | app/(admin)/admin/images/page.tsx | AdminImages | CloudImages, DatabaseImages, OrphanImages, MissingThumbnails local views; Dialog, image controls and pagination. |
+| Failed Login Logs /admin/failed-login-logs | app/(admin)/admin/failed-login-logs/page.tsx | AdminFailedLogs | Table, selection, pagination and ConfirmDialog/action controls. |
+| Reports /admin/reports | app/(admin)/admin/reports/page.tsx | AdminReports | Table, pagination and ConfirmDialog/action controls; route also has native h1. |
+| Route Not Found Logs /admin/route-not-found-logs | app/(admin)/admin/route-not-found-logs/page.tsx | AdminRouteNotFoundLogs | Table, disclosure/collapse and pagination controls. |
+
+### C. Nested feature dependency graph
+
+#### C1. Trip Details
+
+```text
+TripDetailsView
+  ├─ TripDaysNav
+  ├─ TripGroupSocialActions → SocialConfigStatus, CommentsToggle, LikeAnimation behavior
+  ├─ TripDetails → TripActions, FavoriteButton, BackButton, EngagementBar
+  │    └─ EngagementBar → LikeButton, FavoriteButton, ReportButton, SocialConfigStatus, CommentsSection
+  ├─ DayImagesGallery → ImageGallery → AppImage, EngagementBar overlay, SocialConfigStatus, ImageLightbox → AppImage
+  │    └─ SocialObjectPlaceholder
+  ├─ CommentsSection → LikeButton, FavoriteButton, ReportButton, SocialConfigStatus, RepliesSection
+  │    └─ RepliesSection → LikeButton, FavoriteButton, ReportButton
+  ├─ TripMapSection → GoogleMapView
+  └─ PointsSection → PointSection
+       ├─ ImageGallery, SocialObjectPlaceholder, ExpandableText
+       ├─ PointActions → LikeButton, FavoriteButton, ReportButton, SocialConfigStatus
+       └─ CommentsToggle
+```
+
+Social controls and image components are reused in trip, day, point, image and comment contexts. Their visual contract belongs to the shared component/preset, not to each page; only semantic variants such as inline versus image-overlay may differ.
+
+#### C2. Forms, maps and uploads
+
+```text
+PointForm → AddressAutocomplete, ImageUploadField → CustomFileUploadButton, BackButton
+PointLocationPicker → AddressAutocomplete, GoogleMapView
+TripLocationPicker → AddressAutocomplete, GoogleMapView
+TripForm / EditTripLayout → TripLocationPicker, TripSelectField, ImageUploadField → CustomFileUploadButton, BackButton
+EditTripLayout additionally → AppImage, SocialObjectPlaceholder
+ProfileForm → ProfileImage → AppImage, CustomFileUploadButton; ChangePasswordForm → PasswordField, PasswordRequirements; BackButton
+AdminUserForm → AdminUserProfileImage → AppImage, ImageUploadField → CustomFileUploadButton, ImageLightbox; PasswordField, PasswordRequirements, ConfirmDialog, BackButton
+```
+
+#### C3. Shared/common dependencies
+
+- WelcomeHeading → ScrambleHeading; WelcomeHeading is reused by Home, Trips and five auth forms, not only Home.
+- BackButton → MUI Button + BUTTON_STYLES.back; nine direct callers remain recorded in Section 11.7.
+- ConfirmDialog is globally mounted by Providers and consumed through its confirmation context by admin, profile, points and social flows.
+- NotificationProvider is globally mounted by Providers and consumed by auth/profile, image and social flows.
+- PasswordField and PasswordRequirements are shared auth/profile form primitives.
+- NotFound is used by the not-found route and authorization fallback; JsonLd is used by Trip Details; ExpandableText is used by point content.
+- CustomFileUploadButton is shared by profile-image and general image-upload flows.
+
+### D. Cross-page reuse index — one record per shared component
+
+| Shared component | Consumers | Routes affected |
+|---|---|---|
+| Header, Footer | Public, account, auth and admin layouts | All four route groups |
+| TripList | HomeTrips, Trips page, Favorites, My Trips | /, /trips, /favorites, /my-trips |
+| TripCard | TripList | Same four routes as TripList |
+| WelcomeHeading | HomeHero, Trips page, ForgotPasswordForm, LoginForm, RegisterForm, ResendVerificationForm, ResetPasswordForm | Home, Trips and five auth forms |
+| ScrambleHeading | WelcomeHeading | Every route using WelcomeHeading |
+| BackButton | Nine direct callers in Section 11.7 | Admin user edit, auth, profile, point/trip forms and Trip Details |
+| AddressAutocomplete | PointForm, PointLocationPicker, TripLocationPicker | Create/Edit Point, Create/Edit Trip and map picker flows |
+| GoogleMapView | PointCard, PointLocationPicker, TripLocationPicker, TripMapSection | Point cards, point/trip forms and Trip Details |
+| AppImage | TripCard, ImageGallery, ImageLightbox, ProfileImage, AdminUserProfileImage, AdminUsers, EditPointPage, EditTripLayout and related image compositions | Home, Trips, Trip Details, Account, Admin and editing flows |
+| ImageGallery | DayImagesGallery, PointSection | Trip Details |
+| ImageLightbox | ImageGallery, AdminUserProfileImage, AdminUsers | Trip Details and Admin |
+| ImageUploadField | PointForm, EditTripLayout, AdminUserProfileImage | Point, trip and Admin editing |
+| CustomFileUploadButton | ImageUploadField, ProfileImageUpload | Point/trip/Admin upload and Profile |
+| SocialObjectPlaceholder | TripCard, DayImagesGallery, PointSection, EditPointPage, EditTripLayout | Home, Trips, Trip Details and editing flows |
+| ConfirmDialog | AdminUserForm, AdminFailedLogs, AdminReports, CreatePointPage, EditPointPage, ProfileImage and social/report flows | Admin, Profile, points and social |
+| NotificationProvider | Global provider; auth/profile, image and social consumers | App-wide |
+| LikeButton, FavoriteButton, ReportButton, SocialConfigStatus | EngagementBar, CommentsSection, RepliesSection, PointActions, TripGroupSocialActions | Trip, day, point, image and comment contexts |
+| EngagementBar | TripDetails, ImageGallery | Trip Details and image overlays |
+| CommentsSection | EngagementBar and TripDetailsView | Trip Details and nested social overlays |
+| RepliesSection | CommentsSection | Trip Details comments |
+| CommentsToggle | PointSection, TripGroupSocialActions | Point and trip-group details |
+| PointForm | CreatePointPage, EditPointPage | Create/Edit Point |
+| PointList, PointCard | CreatePointPage → PointList → PointCard | Create Trip Points |
+| TripSelectField, TripLocationPicker | TripForm, EditTripLayout | Create/Edit Trip |
+| PointLocationPicker | PointForm and Create/Edit Point composition | Create/Edit Point |
+| ProfileImage, ChangePasswordForm | ProfileForm | Profile |
+| AdminUserProfileImage | AdminUserForm | Admin user edit |
+
+Reuse rule: do not create one visual implementation per route for any row above. Migrate the shared component/preset once, then verify every listed route consumer and caller-specific semantic variant.
+
+### E. Complete component-file enumeration — all 88 current files
+
+- Root/shared upload (1): CustomFileUploadButton.tsx.
+- Admin (10): AdminDashboard.tsx, AdminFailedLogs.tsx, AdminImages.tsx, AdminNavigation.tsx, AdminReports.tsx, AdminRouteNotFoundLogs.tsx, AdminUserForm.tsx, AdminUserProfileImage.tsx, AdminUsers.tsx, index.ts.
+- Auth (16): Captcha.tsx, ChangePasswordForm.tsx, ForgotPasswordForm.tsx, GuestOnly.tsx, LoginForm.tsx, ProfileForm.tsx, ProfileImage.tsx, RegisterForm.tsx, RequireAuth.tsx, RequireModeratorRedirect.tsx, RequireRole.tsx, RequireTripOwner.tsx, ResendVerificationForm.tsx, ResetPasswordForm.tsx, VerifyEmailForm.tsx, index.ts.
+- Comments (3): CommentsSection.tsx, CommentsToggle.tsx, RepliesSection.tsx.
+- Common (11): BackButton.tsx, ConfirmDialog.tsx, ExpandableText.tsx, JsonLd.tsx, NotFound.tsx, NotificationProvider.tsx, PasswordField.tsx, PasswordRequirements.tsx, ScrambleHeading.tsx, TabSyncListener.tsx, WelcomeHeading.tsx.
+- Home (3): HomeHero.tsx, HomeTrips.tsx, index.ts.
+- Images (5): AppImage.tsx, ImageGallery.tsx, ImageLightbox.tsx, ImageUploadField.tsx, index.ts.
+- Layout (2): Footer.tsx, Header.tsx.
+- Maps (4): AddressAutocomplete.tsx, GoogleMapView.tsx, PointLocationPicker.tsx, TripLocationPicker.tsx.
+- Placeholders (3): SocialObjectPlaceholder.tsx, index.ts, socialObjectPlaceholderAssets.ts.
+- Points (6): CreatePointPage.tsx, EditPointPage.tsx, PointActions.tsx, PointCard.tsx, PointForm.tsx, PointList.tsx.
+- Social (7): EngagementBar.tsx, FavoriteButton.tsx, LikeAnimation.tsx, LikeButton.tsx, ReportButton.tsx, SocialConfigStatus.tsx, TripGroupSocialActions.tsx.
+- Tracking (2): LiveTracker.tsx, index.ts.
+- Trips (15): DayImagesGallery.tsx, EditTripLayout.tsx, PointSection.tsx, PointsSection.tsx, TripActions.tsx, TripCard.tsx, TripDaysNav.tsx, TripDetails.tsx, TripDetailsView.tsx, TripFilters.tsx, TripForm.tsx, TripList.tsx, TripMapSection.tsx, TripPagination.tsx, TripSelectField.tsx.
+
+### F. CSS Modules and global stylesheet ownership
+
+| Stylesheet | Owner | Route/component scope |
+|---|---|---|
+| app/(public)/about/AboutPage.module.css | About page | About route |
+| app/(public)/privacy-policy/LegalPage.module.css | Legal page | Privacy Policy route |
+| src/components/common/NotFound.module.css | NotFound | Not-found/error fallback |
+| src/components/images/ImageGallery.module.css | ImageGallery | Trip/day/point galleries |
+| src/components/layout/Footer.module.css | Footer | Public, account, auth and admin layouts |
+| src/components/trips/TripDetailsView.module.css | TripDetailsView | Public Trip Details |
+| src/components/trips/TripList.module.css | TripList | Home, Trips, Favorites and My Trips |
+| src/components/trips/TripPagination.module.css | TripPagination | Public Trips list |
+
+app/globals.css is above all route groups and must remain the global reset/shell/CSS-variable bridge, not a second feature-component styling system.
+
+### G. Confirmed local styling targets exposed by this map
+
+These are observed examples, not the complete raw-style inventory:
+
+- Home route uses style={CENTERED_PAGE_MAIN_STYLE}; the value is shared, but React style is prohibited by the approved Styling API policy.
+- Public layout uses an inline flex wrapper style.
+- HomeHero applies HOME_INTRO_STYLE through React style and adds a local maxWidth delta.
+- HomeTrips applies HOME_HEADING_STYLE through React style.
+- WelcomeHeading and ScrambleHeading expose/use React style props while also defining local MUI sx layout.
+- Account, auth and admin layouts apply route-shell presentation through React style.
+- About page defines a local image style object while also using its CSS Module.
+- TripList uses React style for heading/list presentation and also consumes TripList.module.css.
+- TripDetailsView consumes its CSS Module plus MUI sx; shared visual values still require property-level review.
+- ImageGallery combines its CSS Module, MUI sx and shared AppImage/image presets.
+- Social/comment components contain local sx and, in some cases, local style constants alongside shared social presets.
+- AddressAutocomplete exposes inputSx, buttonSx, containerSx and textFieldProps; all callers and forwarded TextField styling must be traced before narrowing this API.
+- Components use MUI primitives directly (Button, IconButton, Card, Dialog, TextField, Select, Alert, Table, Drawer, etc.). The route graph does not imply these are already covered by a shared semantic role.
+
+### H. Completeness assessment and next task
+
+**Covered:** all 31 route/layout files have direct composition roots; all 88 component files have been enumerated and their imports, JSX references and styling API markers inspected; route groups are connected to terminal screens; major cross-page reuse is consolidated; all eight CSS Modules are assigned to owners and route consumers.
+
+**Still open:** this is a composition/import map, not proof that all styling is centralized. Exact direct/transitive call-site closure remains open for ConfirmDialog, AppImage, ImageUploadField, SocialObjectPlaceholder and icon/action wrappers. Component-local sx, React style props, CSS Module declarations, token property references, MUI overrides and interaction/responsive states have not been reconciled property by property. Google Maps/vendor-owned canvas and controls must remain separate from HackTrip-owned overlays. The unused status of any component, including AdminDashboard, requires repository-wide search before dead-code classification.
+
+**NEXT TASK — complete the style-owner graph:**
+1. For every route root, record exact component file, nested children, CSS Module, local sx/React style declarations, imported presets/tokens and direct MUI/native controls.
+2. Build exact call-site indexes for every shared component and preset; distinguish direct consumers from transitive route consumers.
+3. Complete each owner chain: route → feature component → shared component → preset/override → theme/CSS variable → canonical token. Record exceptions and migration targets.
+4. Complete field, button, surface, image, social and map state/responsive matrices against Section 7.
+5. Update Section 10.1 for each inspected file. Keep Stage 1 IN PROGRESS until all required searches are exhaustive.
+6. Do not start application source migration before the Stage 1 consumer-map gate is closed.
+7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+### 2026-11-18 — Route-to-component dependency graph recorded
+
+- Re-read the audit architecture, Styling API policy, six-stage plan, mandatory search matrix, file ledger and current dependency/ownership map.
+- Re-read repository AGENTS.md and inspected current route/layout and component source files.
+- Recorded route-group composition, nested feature dependencies, cross-page reuse, all 88 component paths and all eight CSS Module ownership links in Section 11.13.
+- Section 11.5 was translated into English; a full-document scan confirms zero Cyrillic characters.
+- This graph is a composition/import map. Property-level style ownership, interaction states and exact call-site closure remain open; Stage 1 remains IN PROGRESS.
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
