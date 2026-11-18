@@ -4660,3 +4660,43 @@ No application source code was changed. No branch was created. No build, tests, 
 - Bounded shared-heading migration: **SOURCE CHANGES APPLIED**.
 - Stage 1 global inventory and consumer maps: **IN PROGRESS**; this batch does not mark the global audit complete.
 - Next: continue with the next already-audited owner family in the existing migration order. Do not reopen the completed heading batch unless validation or a newly discovered consumer requires it.
+
+
+## 11.29 — Trip listing and page-shell preset migration (2026-11-18)
+
+### Scope
+- Continued directly from the existing ownership and route maps in Sections 11.12–11.15 and the preset findings in Section 11.26.
+- Migrated the shared trip-list/card/page-shell path from its preset owner through the audited Home and Trips route consumers.
+- No new route inventory or broad audit was performed.
+
+### Source changes
+1. `src/styles/presets/layouts.ts`
+   - Replaced the legacy `cardListStyle` CSSProperties object with `CARD_LIST_SX`.
+   - Replaced `CENTERED_PAGE_MAIN_STYLE` with `CENTERED_PAGE_MAIN_SX`, composed from `PAGE_BACKGROUND_SX`.
+   - Updated the account heading preset to consume the renamed `HEADING_TEXT_SX` owner.
+2. `src/styles/presets/cards.ts`
+   - Replaced the `cardStyle` CSSProperties preset with `TRIP_CARD_SX`.
+   - Preserved the card layout geometry and spacing values; surface skin remains owned by the MUI Card theme.
+3. `src/components/trips/TripList.tsx`
+   - Replaced the styled native list with MUI `Box component="ul"` and `CARD_LIST_SX`.
+4. `src/components/trips/TripCard.tsx`
+   - Migrated both normal and empty-day Card variants to `TRIP_CARD_SX`.
+   - Removed the now-unused React CSSProperties type import.
+5. `app/(public)/page.tsx`
+   - Migrated the Home page main wrapper to MUI Box and `CENTERED_PAGE_MAIN_SX`.
+6. `app/(public)/trips/page.tsx`
+   - Migrated both success and error main wrappers to the same page-shell preset.
+   - Migrated the intro and temporary-unavailable message to MUI Typography and `HOME_INTRO_SX`; removed the obsolete `HOME_INTRO_STYLE` dependency.
+
+### Result
+- **6 source files changed** across the preset owner, shared list/card components and both public route consumers.
+- The same named layout contracts now flow from the preset owner through TripList/TripCard to Home and Trips.
+- Preserved the existing card dimensions, list flex wrapping/alignment, page padding, content alignment, intro width and copy.
+- No API, data, backend or business logic changes.
+- The old `commentListStyle` and other unrelated legacy layout presets were deliberately left untouched; their consumers belong to separate workstreams.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status
+- Trip listing / Home / Trips bounded migration: **SOURCE CHANGES APPLIED**.
+- Stage 1 global consumer maps remain **IN PROGRESS**, but did not block this bounded migration.
+- Next: continue through the existing audit's shared card/surface and account trip page ownership map. Do not repeat the completed Home/Trips route audit.
