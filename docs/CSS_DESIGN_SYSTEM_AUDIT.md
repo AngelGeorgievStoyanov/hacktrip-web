@@ -4748,3 +4748,69 @@ No application source code was changed. No branch was created. No build, tests, 
 - Shared TripCard geometry is now centralized for Home, public Trips, My Trips and Favorites.
 - Next: continue with the next already-audited shared card/surface owner family; trace its preset/theme owner through every audited consumer before changing or removing any legacy export.
 - Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
+
+
+## 11.31 — Google Maps renderer, point editor and all direct map consumers (2026-11-18)
+
+### Scope and preflight
+- Continued from the exact direct-consumer graph and behavior constraints in Sections 11.17 and 11.18; re-read the styling API policy in Section 1.4 and the owner-layer findings in Section 11.26.
+- Confirmed branch: `feature/frontend-modernization`; used the latest branch-ref source files before each update.
+- Reused the existing audit map. No new broad audit was started.
+- Verified the GoogleMapView direct-consumer set against the existing audit and repository search: PointLocationPicker, TripLocationPicker, TripMapSection and PointCard. Each consumer was fetched from the target branch.
+
+### Ownership rules preserved
+- GoogleMapView owns SDK loading placeholder geometry, renderer wrapper geometry, markers, paths, InfoWindows and map events.
+- PointLocationPicker retains its GPS locate, remove-marker, address search and external find-in-map behavior.
+- TripLocationPicker retains its separate address state, remove-marker behavior and map hint.
+- TripMapSection retains its route overview, marker selection, point navigation, sticky-header scroll correction and responsive map frame.
+- PointCard retains its compact 150px map, point actions and reorder controls.
+- The two location pickers are not consolidated; their behavior remains distinct. Different map dimensions remain feature-owned.
+
+### Source changes
+1. `src/styles/presets/map-controls.ts`
+   - Added parameterized renderer and loading-frame presets so loading and loaded states share the same dimensions.
+   - Added named point-picker action-row, wrapper and Snackbar layout presets.
+   - Added TripLocationPicker map-frame and hint presets.
+   - Added TripMapSection shell and stepper presets, preserving its small-phone breakpoint.
+2. `src/components/maps/GoogleMapView.tsx`
+   - Replaced both local renderer/loading sx objects with the shared parameterized presets.
+   - Kept map SDK lifecycle, event handling, marker/path rendering and fit/focus behavior unchanged.
+3. `src/components/maps/PointLocationPicker.tsx`
+   - Replaced local outer Stack, responsive action-row and Snackbar layout objects with named presets.
+   - Kept address autocomplete overrides, GPS state, coordinate synchronization and actions unchanged.
+4. `src/components/maps/TripLocationPicker.tsx`
+   - Replaced local map frame and map hint sx objects with named presets.
+   - Kept its distinct address field/button overrides, marker state and remove-marker behavior unchanged.
+5. `src/components/trips/TripMapSection.tsx`
+   - Replaced local map Card and MobileStepper geometry with named map presets.
+   - Kept route fitting, marker selection, navigation and sticky-header scrolling unchanged.
+6. `src/styles/presets/cards.ts`
+   - Added the full PointCard wrapper/card/action-row/reorder-button contracts and named compact map height.
+7. `src/components/points/PointCard.tsx`
+   - Replaced component-local wrapper, card, reorder-button, action-row and description-wrap sx with shared presets.
+   - Reused the existing point text-wrap preset for both name and description.
+8. `src/styles/presets/layouts.ts`
+   - Added the Create Point page shell, responsive grid, list/editor columns and loading/error spacing contracts.
+   - Added the PointList vertical collection layout.
+9. `src/styles/presets/typography.ts`
+   - Added the PointList empty-state typography contract.
+10. `src/components/points/PointList.tsx`
+    - Replaced local list layout and empty-state presentation with named presets.
+11. `src/styles/presets/forms.ts`
+    - Added a named Point form panel variant with the existing top margin.
+12. `src/components/points/CreatePointPage.tsx`
+    - Replaced page shell, loading, grid, list/editor columns, error spacing and form-panel composition sx objects with named presets.
+    - Preserved route state, API calls, reorder/delete/save flows, map-coordinate synchronization and navigation.
+
+### Result
+- **12 source files changed** across the map renderer, all four direct map consumers, PointCard/PointList, the Create Point route composition and their preset owners.
+- The GoogleMapView loading and loaded frames now share one dimension contract.
+- Point creation now follows the complete owner chain: UI constants/theme-backed map colors → map/layout/card/form/typography presets → GoogleMapView and map pickers → PointCard/PointList → CreatePointPage.
+- No API, backend, data, query, permission, map interaction or business logic changes.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- Google Maps renderer + direct consumer migration: **SOURCE CHANGES APPLIED**.
+- PointCard/PointList/CreatePointPage style migration: **SOURCE CHANGES APPLIED**.
+- Next: continue through the next already-audited owner family and trace the shared owner to every direct consumer before changing legacy styles.
+- Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
