@@ -3128,3 +3128,231 @@ Section 10.1 already has individual inventory entries for the route roots and co
 7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.17 — Shared map, image, upload, profile and feedback owners (2026-11-18)
+
+### A. Preflight
+
+- Re-read the audit architecture, Styling API policy, six-stage plan, Section 7 matrix, Section 10.1 ledger and the latest NEXT TASK in 11.16.
+- Fetched all implementation files below by the exact `feature/frontend-modernization` branch ref. GitHub code search is used only as a discovery aid; its result URLs point to the last recorded commit and are not treated as branch-scoped proof. Every listed implementation and caller file was then fetched from the named branch before its local content was used.
+- Audit document SHA before this append: `6364d8080dd8818bfe1c4abebe5322503f12707c`.
+- No application source changes. No branch creation. No build, tests, lint, CI or browser validation.
+
+### B. Address and map component ownership
+
+#### `AddressAutocomplete` — reusable field owner
+
+Public props include:
+- Behavior: `value`, `isLoaded`, `onChange`, `onLocationSelect`, `showSearchButton`, `extraAction`.
+- Semantic field configuration: `label`, `size`, `buttonVariant`, `direction`, `textFieldProps`.
+- Styling escape hatches: `inputSx`, `buttonSx`, `containerSx`.
+
+It owns the TextField, optional Google Places Autocomplete wrapper, search Button, extra-action wrapper and informational Alert. It currently has local Stack spacing, field wrapper geometry, search-button responsive width/white-space rules, and Alert composition. `textFieldProps` can forward most TextField props except controlled value/onChange/type, while the three sx props allow caller-level visual overrides.
+
+Direct consumer graph confirmed from the fetched branch files:
+
+```text
+PointForm
+  └─ AddressAutocomplete
+       ├─ inputSx: MAP_ADDRESS_INPUT_SX + local width/minWidth
+       ├─ textFieldProps: error/helperText
+       └─ default search button disabled (showSearchButton=false)
+
+PointLocationPicker
+  └─ AddressAutocomplete
+       ├─ inputSx: MAP_ADDRESS_INPUT_SX + local width/minWidth
+       ├─ buttonSx: local responsive sizing
+       ├─ containerSx: local width
+       └─ search button / extra action behavior
+
+TripLocationPicker
+  └─ AddressAutocomplete
+       ├─ inputSx: MAP_ADDRESS_INPUT_SX + local margin
+       ├─ buttonSx: local sizing
+       └─ containerSx: width 100%
+```
+
+**Ownership conclusion:** the shared field visual contract belongs in the AddressAutocomplete owner plus shared MUI field/button contracts. Callers should pass semantic configuration and only unique composition/layout. Current caller sx props mean that contract is not yet enforced.
+
+#### `PointLocationPicker` and `TripLocationPicker` — map composition owners
+
+- `PointLocationPicker` accepts latitude, longitude, onChange, optional onAddressSelect and findInMapTrigger. It has no public sx/style/className prop. It owns a 600px centered Stack, map frame/controls, AddressAutocomplete arrangement, current-location/find-in-map actions and an inline Snackbar/Alert error state.
+- `TripLocationPicker` accepts only latitude, longitude and onChange. It has no public sx/style/className prop. It owns map frame/controls, a separate address state and info Alert, plus its own AddressAutocomplete configuration.
+- Both use `useGoogleMapsLoader`, `GoogleMapView` and shared map constants. They have similar responsibilities but are separate implementations with duplicated visual and interaction composition; do not assume one is a wrapper around the other.
+- Direct route/component consumers:
+  - PointLocationPicker: `CreatePointPage`, `EditPointPage`.
+  - TripLocationPicker: `TripForm`, `EditTripLayout`.
+  - AddressAutocomplete: `PointForm`, `PointLocationPicker`, `TripLocationPicker`.
+
+**Migration ownership:** map canvas dimensions/controls and map-related feedback need shared map contracts; route-specific map/form grid remains with CreatePointPage/EditPointPage/TripForm/EditTripLayout. The duplicated picker implementations need a separate behavior/feature comparison before any consolidation proposal. No consolidation is authorized or implied by this audit.
+
+### C. Image rendering and placeholder ownership
+
+#### `AppImage`
+
+Public props: `image`, `src`, `alt`, `preset`, `useThumbnail`, `fill`, `width`, `height`, `sizes`, `priority`, `loading`, `fetchPriority`, `className`. There is no public sx/style prop.
+
+- It resolves image rendering behavior from `IMAGE_PRESETS`, image DTO/URL selection and thumbnail fallback state.
+- It builds a style object from preset style/objectFit and passes it to Next Image; the missing-image fallback div receives the same React `style`.
+- This is a shared owner but still transports presentation through the prohibited React style API. Preset values are centralized in `src/constants/images/presets.ts`, yet the transport mechanism remains non-compliant with Section 1.4.
+- Direct consumer files found and then fetched from the branch: `ProfileImage.tsx`, `ImageGallery.tsx`, `ImageLightbox.tsx`, `AdminUserProfileImage.tsx`, `AdminUsers.tsx`, `EditPointPage.tsx`, `TripCard.tsx`, `EditTripLayout.tsx`. The `src/components/images/index.ts` barrel re-exports it and is not a rendered consumer.
+
+#### `SocialObjectPlaceholder`
+
+- Has no props and no public styling API. It chooses a decorative SVG asset client-side and renders a full-size image with an overlay and two Typography lines.
+- Its outer Box, overlay Box and Typography use local sx; the Next Image uses inline React style for width/height/objectFit. Background and overlay colors come from UI_COLORS.
+- The placeholder is a visual component owner. Its parent controls the aspect ratio/frame; the placeholder fills that frame. Do not move parent aspect-ratio geometry into the shared placeholder.
+- Direct consumer files confirmed: `PointSection.tsx`, `DayImagesGallery.tsx`, `TripCard.tsx`, `EditPointPage.tsx`, `EditTripLayout.tsx`. Barrel `src/components/placeholders/index.ts` is an export, not a rendered consumer.
+
+#### Image ownership graph
+
+```text
+IMAGE_PRESETS
+  └─ AppImage
+       ├─ ProfileImage
+       ├─ ImageGallery → ImageLightbox (also renders AppImage)
+       ├─ AdminUserProfileImage
+       ├─ AdminUsers
+       ├─ EditPointPage
+       ├─ TripCard
+       └─ EditTripLayout
+
+SocialObjectPlaceholder
+  ├─ PointSection
+  ├─ DayImagesGallery
+  ├─ TripCard
+  ├─ EditPointPage
+  └─ EditTripLayout
+```
+
+The same TripCard/EditPointPage/EditTripLayout compositions may select AppImage or SocialObjectPlaceholder based on image availability. Keep the shared frame owner and fallback owner distinct.
+
+### D. Image upload field ownership and consumer graph
+
+`ImageUploadField` public props are only `files`, `setFiles`, optional `existingCount` and optional `maxImages`. It has no public sx/style/className or render-slot prop.
+
+- It owns the upload row, CustomFileUploadButton integration, processing indicator, uploaded count, max-image warning, compression/error warning, preview list, remove-one and remove-all controls.
+- Current visual composition is largely local sx: flex layout, preview scroll container, preview row border/radius/padding, fixed 55×45 preview image, text overflow and remove controls.
+- Its error state is a local warning Alert; processing state disables file selection/removal and displays CircularProgress; max-count state displays inline error Typography.
+- It delegates actual file input/button behavior to `CustomFileUploadButton`. That child is a separate shared visual owner and must be included in the later action/upload field matrix.
+- Direct consumers confirmed from exact branch-ref fetches: `PointForm.tsx`, `TripForm.tsx`, `EditTripLayout.tsx`, `AdminUserProfileImage.tsx`. Profile image upload does not use ImageUploadField; it has a separate single-file `ProfileImageUpload` implementation in `ProfileImage.tsx`.
+
+**Ownership conclusion:** do not pass route-specific styling into ImageUploadField. Centralize upload field visuals at this owner and its CustomFileUploadButton child; keep surrounding form spacing with each caller. Compare the separate profile upload flow before designing a common upload contract.
+
+### E. Profile image and password subflows
+
+#### Profile image
+
+`ProfileForm` composes `ProfileImage` (existing image display/delete/fullscreen view) and `ProfileImageUpload` (selected new file preview/selection), then the profile data fields and `ChangePasswordForm`.
+
+- `ProfileImage` owns loading/no-image/image-present/deleting/fullscreen states. It uses AppImage presets `profile` and `profileLightbox`, local circular image/button geometry, local dialog content surface and icon controls.
+- Delete action uses shared `useConfirm`; success/error uses shared `useNotification`.
+- `ProfileImageUpload` is not the generic ImageUploadField. It validates a single selected file, owns object URL lifecycle and preview/remove controls, and delegates selection to CustomFileUploadButton.
+- The existing image and pending upload are distinct states and should not be collapsed into one component without preserving the current behavior.
+
+#### Change password
+
+- `ChangePasswordForm` is conditionally rendered only when expanded. It owns submitting state, three PasswordField instances, PasswordRequirements and a Save password Button.
+- It consumes `ACCOUNT_FORM_FIELDS_SX` and `BUTTON_STYLES.primary`, but still adds local top margin, button alignment and margin.
+- Field error/helper text is provided by PasswordField props. Shared password field visual ownership is separate from ChangePasswordForm layout.
+
+### F. Global confirmation and notification owners
+
+Provider nesting in `app/providers.tsx`:
+
+```text
+ThemeProvider / CssBaseline
+  └─ QueryClientProvider
+      └─ AuthProvider
+          └─ BackgroundProvider
+              └─ NotificationProvider
+                  └─ ConfirmDialogProvider
+                      └─ application
+```
+
+#### ConfirmDialogProvider
+
+- One global provider mounted in app/providers; consumers use `useConfirm()` and receive a Promise<boolean>.
+- The provider owns open/message/title state and a single Dialog with DialogTitle, DialogContent, DialogActions and two Buttons ("No"/"Yes").
+- It currently relies on MUI defaults and raw Button props (`color="primary"`, `variant="contained"`) without named semantic cancel/confirm presets. The two actions currently share the same primary role visually, despite opposite semantic outcomes.
+- Direct consumers found: ProfileImage, AdminReports, TripActions, AdminFailedLogs, AdminUsers, AdminUserProfileImage, EditPointPage, AdminUserForm, CreatePointPage, RepliesSection, EditTripLayout and CommentsSection. All must share one dialog contract.
+
+#### NotificationProvider
+
+- One global provider mounted above the application. Consumers use `useNotification()` for success/error/warning/info.
+- It owns one Snackbar and one Alert, maps severity to default duration, position and variant from `NOTIFICATION_DEFAULTS`, ignores clickaway close and supports onClose callbacks.
+- Only explicit local sx in its rendered feedback is Alert width 100%; visual Alert/Snackbar defaults otherwise depend on MUI theme defaults and component styles.
+- It is used by ProfileForm, ChangePasswordForm, ProfileImage/ProfileImageUpload, PointForm, TripForm, auth forms, social actions, report actions and other API workflows. The provider is the visual owner; consumers should not create independent backend-operation Snackbars/Alerts.
+- Inline Alerts in map pickers and ImageUploadField are local component feedback, not NotificationProvider notifications. They must be compared by semantic role before consolidation; they are not automatically duplicates.
+
+### G. Shared state and responsive ownership matrix
+
+| Owner | State(s) observed | Visual owner / current treatment | Open contract work |
+|---|---|---|---|
+| AddressAutocomplete | loading/searching, info notice, disabled search | TextField/Button/Alert in shared component; caller sx overrides | Field focus/error/disabled, button variants, info feedback and caller override removal |
+| PointLocationPicker | maps loading, locating, map/address selection, error notice | Map frame, Buttons, Snackbar/Alert local sx | Shared map controls, loading/disabled/error states and responsive arrangement |
+| TripLocationPicker | maps loading, address search, map selection, info notice | Separate map/address implementation | Compare with point picker; unify visual contracts without assuming behavior equivalence |
+| ImageUploadField | processing, error, image limit, previews, remove-one/remove-all | Local preview/list/upload layout and warning Alert | Shared upload row, preview, remove action, processing/disabled and warning states |
+| AppImage | loading delegated to Next Image, thumbnail fallback, error/placeholder | IMAGE_PRESETS + inline style transport | Preset rendering contract and fallback frame contract without React style |
+| SocialObjectPlaceholder | asset pending/selected | Local Box/Image/overlay/Typography | Shared placeholder surface/overlay/typography; parent owns aspect ratio |
+| ProfileImage | loading, empty, image, deleting, fullscreen | Local circular image controls and Dialog | Shared avatar/image frame, icon action, dialog surface, disabled/loading |
+| ProfileImageUpload | selected file, validation error, preview, remove | Local upload/preview controls | Compare with generic ImageUploadField; one shared file-selection contract if behavior permits |
+| ChangePasswordForm | collapsed/expanded, validation, submitting | Shared fields/button presets plus local margins | Password field and form-action contracts |
+| ConfirmDialogProvider | closed/open, confirm/cancel | Global MUI Dialog and two raw Buttons | Semantic Confirm vs Cancel action presets and shared dialog surface |
+| NotificationProvider | hidden/visible, four severities, duration/position | Global Snackbar + Alert; defaults from notification constants | Shared severity/variant/placement/close contracts and theme ownership |
+
+Hover/focus states are not exhaustively recorded by this batch. Do not infer that a component has no hover/focus state merely because its local file does not declare one; MUI theme defaults and native controls may supply them. The final state matrix must inspect both component-local rules and theme overrides.
+
+### H. Exact source evidence
+
+All files below were fetched by `feature/frontend-modernization` ref during this batch:
+
+- `src/components/maps/AddressAutocomplete.tsx` — `f53c09e6196a8f980b2e2700884a9aeb62b2b116`
+- `src/components/maps/PointLocationPicker.tsx` — `64f24d4bff2c414e9bf0f2c57d63f59b4390da97`
+- `src/components/maps/TripLocationPicker.tsx` — `ebfb1a7cf123485aaed0dd2b4157412642ad5673`
+- `src/components/images/ImageUploadField.tsx` — `78923c1529132c880e9465e33b774ca6f2b0525b`
+- `src/components/images/AppImage.tsx` — `52d094dd76316c9404eba4efa66e43a1351d1520`
+- `src/components/placeholders/SocialObjectPlaceholder.tsx` — `0cacf84b5b51e1e93206fb85a184a49ddb1ff15c`
+- `src/components/auth/ProfileImage.tsx` — `f544741c9a71e6ae5142c5cae763eb12947bbf24`
+- `src/components/auth/ChangePasswordForm.tsx` — `6fe468e3574686a2ce77f281e9451e8714aed128`
+- `src/components/common/ConfirmDialog.tsx` — `8f228d8b846b9ee532650fa82c94797da54f0bb6`
+- `src/components/common/NotificationProvider.tsx` — `3a81f51a9e43fb78c498e75c4c0055ad04572dc5`
+- `src/constants/images/presets.ts` — `4d3ea1fe0a0eb9f137983542c99a43200e55cf2f`
+- `src/constants/notifications.ts` — `571f1ffc95ed8cd25ebe3fca4cb08d4cf6482c21`
+- `src/components/trips/PointSection.tsx` — `3ffe0753576bda870302dd8c6680e6882bc34314`
+- `src/components/trips/DayImagesGallery.tsx` — `f2165d093671e0b14f6651cd323cde451899cecf`
+- `src/components/trips/TripCard.tsx` — `6ca299211ee78c0373d0cf6a28eafcf40f6ccc0d`
+- `src/components/admin/AdminUserProfileImage.tsx` — `738389ef0f0ac674db07e10f64694ce571cb9804`
+- `src/components/admin/AdminUsers.tsx` — `61c674d78c6890b157cede9c166a5ffcc961b658`
+- `src/components/points/EditPointPage.tsx` — `2ee94d01320853d8408b54b6c697308c839e5207`
+- `src/components/trips/EditTripLayout.tsx` — `c86c23108089bec5169ffe2d8361b44db715bbe0`
+- `src/components/points/CreatePointPage.tsx` — `34704fd35ef58c086f8401d961e33e47c8e8e2b2`
+- `src/components/trips/TripForm.tsx` — `5a1d13e045eb0060e77e6eccaf2bff5bb3f9a272`
+- `src/components/points/PointForm.tsx` — `e0580d770ce3a0d113086c752dc99313d87e90d4`
+- `src/components/images/ImageGallery.tsx` — `ae0cde0384ce5ae02d0a2de35e91059bc45cc800`
+- `src/components/images/ImageLightbox.tsx` — `4ca3dd6bce407f6c74d489d9a637735c85fbe571`
+- `src/components/auth/ProfileForm.tsx` — `53753f979947457c028f7541450f207e90ca9b03`
+- `app/providers.tsx` — `77534e6899f68aa1e215cc3eedee9a27bfeace27`
+
+### I. Batch result and next task
+
+- Closed the property-level styling API and primary state ownership for AddressAutocomplete, PointLocationPicker, TripLocationPicker, ImageUploadField, AppImage, SocialObjectPlaceholder, ProfileImage/ProfileImageUpload, ChangePasswordForm, ConfirmDialogProvider and NotificationProvider.
+- Recorded direct consumer graphs for map, image, placeholder and upload components. Cross-route owners (AppImage, ImageUploadField, ConfirmDialogProvider and NotificationProvider) must be migrated once and verified against every route group, not patched independently at account call sites.
+- Confirmed several explicit Styling API migration targets: AppImage React style transport, SocialObjectPlaceholder Next Image React style, ImageUploadField local sx, map component local sx and AddressAutocomplete caller-provided sx API.
+- The account upload/profile flows are not the same component: generic multi-image upload and single profile-image upload have different behavior and constraints.
+- No app source changed. No branch created. No build/tests/lint/CI/browser run.
+- Stage 1 remains IN PROGRESS; candidate inventory 163/163 is not exhaustive consumer-map completion.
+
+**NEXT TASK — complete shared field/action contracts and exact cross-route consumers:**
+
+1. Trace `CustomFileUploadButton`, PasswordField, PasswordRequirements, GoogleMapView and shared map-control components as owners, including all exact direct consumers and prop forwarding.
+2. Trace all AppImage/ImageGallery/ImageLightbox consumers and state/responsive contracts, including lightbox open/close/navigation and missing-image paths; compare image presets against actual dimensions and caller frame geometry.
+3. Complete the semantic action matrix for ConfirmDialog, BackButton, upload/remove controls, map search/current-location/find-in-map controls, ProfileForm/ChangePasswordForm, TripForm and PointForm. Distinguish Confirm, Cancel, Delete, Remove, Upload, Search, Locate, Navigation and Save roles.
+4. Trace MUI theme overrides for TextField, Button, Alert, Snackbar, Dialog, IconButton, CircularProgress and map-related controls; do not assume theme defaults are centralized merely because a component omits sx.
+5. Resolve Favorites/My Trips source-correctness inconsistency only in a separately authorized source-correction task; no source edits during this audit.
+6. Continue Section 7 consumer searches, reconcile against exact branch-ref files and update Section 10.1 only for genuinely missing entries. Do not treat default-branch code search alone as branch proof.
+7. Keep Stage 1 IN PROGRESS until all mandatory owner-to-consumer edges and state/responsive matrices are exhaustive. No app-source migration before that gate.
+8. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
