@@ -4517,3 +4517,76 @@ No application source code was changed. No branch was created. No build, tests, 
 4. Update Section 10.1 only when new evidence changes an existing row or a genuinely missing path is discovered. Keep the 163/163 candidate inventory metric separate from consumer-map completeness.
 5. Keep Stage 1 IN PROGRESS until all mandatory Section 7 consumer maps and state/responsive matrices are exhaustive. Do not begin application source migration before that gate.
 6. No app source changes, no branch creation, and no build/tests/lint/CI/browser validation without explicit user authorization.
+
+
+## 11.26 — Design-system owner-layer audit: tokens, theme and presets (2026-11-18)
+
+### Scope and method
+- Re-read Sections 1.4, 6 and 7, plus the ownership map in Section 11.12, before inspecting source.
+- Confirmed branch: `feature/frontend-modernization`.
+- Confirmed HEAD before this documentation update: `07a30a9b1be2cc7503a9151cb5369052a147d0aa`.
+- Inspected the current-branch source of 27 owner-layer files: 9 UI token files, 10 theme files and 8 preset files. This is a focused owner-layer audit, not the exhaustive Stage 1 consumer map.
+- No source files were changed. No build, tests, lint, CI or browser validation was run.
+
+### Files inspected
+
+**UI tokens (9)**
+- `src/constants/ui/index.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
+
+**Theme (10)**
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
+- `src/theme/shadows.ts`
+- `src/theme/components/button.ts`
+- `src/theme/components/card.ts`
+- `src/theme/components/dialog.ts`
+- `src/theme/components/surface.ts`
+- `src/theme/components/text-field.ts`
+
+**Presets (8)**
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/typography.ts`
+
+### Findings from the inspected source
+
+1. **The owner chain already exists, but is incomplete as a contract.** UI tokens feed the MUI palette, shape, typography, spacing and z-index. Theme overrides consume shared surface/button/field owners. Presets consume tokens and theme. This is a usable foundation; replacing it wholesale would create unnecessary churn.
+
+2. **Token file contains both true design tokens and feature-specific values.** Examples include `UI_COLORS.map.*`, `UI_COLORS.legal.*`, `UI_COLORS.action.createTrip*`, `UI_SHAPE.legalTocRadius`, `UI_SHAPE.mapAddressInputRadius`, and page-specific spacing constants. These may be valid semantic exceptions, but must be traced to all consumers before moving or renaming them.
+
+3. **Spacing and breakpoint contracts are mixed.** `UI_SPACING` is an 8px MUI multiplier scale, while `PAGE_CONTENT_PADDING`, `ROUTE_CONTENT_PADDING` and `ABOUT_PAGE_MOBILE_PADDING` are separate literal layout contracts. `MUI_BREAKPOINTS` and the legacy feature thresholds coexist intentionally. Do not collapse these scales without checking every consumer and responsive behavior.
+
+4. **React CSSProperties remain in reusable presets.** `cards.ts`, `layouts.ts` and `typography.ts` export presentation/layout objects typed as `CSSProperties`; `social.ts` also exports `socialErrorTextStyle` as `CSSProperties`. Under Section 1.4 these are migration targets, not a reason to introduce more React `style` usage. Their consumers must be migrated as a coherent group.
+
+5. **Preset responsibilities are mixed.** `cards.ts` combines card layout geometry, spacing and text treatment; `layouts.ts` combines CSSProperties layout presets with MUI `sx` presets; `forms.ts` combines field geometry, panel composition and auth layout. Separate visual skin from geometry only after property-level consumer tracing.
+
+6. **Theme surface ownership is already centralized for MUI Card and Dialog.** Both call `getSurfaceStyles`; `PANEL_SX` delegates to the same owner. Do not create a second card/panel visual owner. Paper and custom Box/native surfaces remain to be traced.
+
+7. **Button and field contracts are only partial.** Button theme override centralizes typography and radius, while color/state/semantic roles remain in palette and presets. TextField defaults set only outlined/medium; this does not establish a complete contract for Select, Autocomplete, InputBase, FormControl, Checkbox, Radio, Switch or native inputs.
+
+8. **CSS-variable bridge is selective, not a complete token export.** `src/theme/index.ts` emits a chosen subset of `--ht-*` variables. The complete declaration-to-consumer map is still required before adding, renaming or removing variables.
+
+9. **No preset barrel was found at `src/styles/presets/index.ts` (GitHub returned 404).** Imports must therefore be traced to determine whether the project intentionally uses direct-file imports or whether a barrel is missing. Do not create one without checking import conventions and duplicate exports.
+
+### Status and next action
+- Owner-layer inspection: **27/27 listed files read**.
+- Exhaustive token/preset/CSS-variable consumer mapping: **OPEN**.
+- Exhaustive `sx` / `style` / raw visual-literal mapping: **OPEN**.
+- Shared component call-site verification: **OPEN**.
+- Stage 1: **IN PROGRESS**; no file is marked VERIFIED by this batch.
+- Next bounded workstream: trace every exported token, CSS variable and preset property to exact consumers and call sites, starting with the React `CSSProperties` exports and the shared surface/button/field contracts. Record exact search scope, counts and paths before any source migration.
