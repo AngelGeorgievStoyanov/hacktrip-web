@@ -982,6 +982,68 @@ The efficient next unit is a **repository-wide component/role trace**, not arbit
 - No file is marked VERIFIED.
 - CSS architecture was reviewed before this batch and must be re-read before every future batch.
 
+
+## 11.2 — CSS architecture preflight and current-branch action role follow-up (2026-11-18)
+
+### Mandatory preflight and repository state
+- Re-read Sections 1-3 (target architecture and ownership), Section 1.4 (styling API policy), Section 6 (approved stages), Section 7 (search matrix), Section 9 (safe migration rules), Section 10.1 (file-level ledger), the current Stage 1 status and exact NEXT TASK before inspecting source.
+- Verified branch: feature/frontend-modernization.
+- Verified current HEAD: 5ec9164a6071f37feff3141cd1f3a38f1f5e90a1.
+- Confirmed the user instruction: do not run build, tests, lint, CI or browser validation unless the user explicitly authorizes it. This restriction remains active.
+- Reconfirmed the intended code organization from the current source and audit: src/constants/ui/* owns canonical values → src/theme/* owns MUI defaults/overrides and CSS-variable exposure → src/styles/presets/* owns reusable semantic/layout contracts → feature components consume those contracts. app/globals.css should remain limited to reset/shell and CSS-variable consumers; CSS Modules should own unique structure/responsive composition, not parallel visual skins.
+- This batch deliberately chose a cross-component semantic role review rather than a file-by-file migration because the next Stage 1 task is to establish shared action contracts and their consumers. No application source was edited.
+
+### Current-branch files re-fetched and reviewed
+- src/components/common/BackButton.tsx
+- src/styles/presets/buttons.ts
+- src/components/common/ConfirmDialog.tsx
+- src/components/admin/AdminNavigation.tsx
+- src/components/admin/AdminUsers.tsx
+- src/components/trips/TripActions.tsx
+- src/components/auth/LoginForm.tsx
+- src/components/social/ReportButton.tsx
+- app/(account)/my-trips/page.tsx
+- app/error.tsx
+
+### Additional exact findings
+| File / call site | Observed role | Current implementation / remaining work |
+|---|---|---|
+| app/(account)/my-trips/page.tsx:29-35 | Create trip CTA | Uses BUTTON_STYLES.createTrip; confirms this preset has at least one route-level consumer. The page also imports shared layout presets, but its local alias declarations/call sites still need complete source verification before marking it centralized. |
+| app/error.tsx:14-16 | Retry / recovery action | Direct contained MUI Button with no named semantic recovery role. Add to the action role map; do not automatically equate Retry with Primary/Submit. |
+| src/components/common/BackButton.tsx:7-17 | Shared Back role | BackButtonProps is Omit<ButtonProps, 'variant' | 'color'>, so caller sx and broad MUI Button props remain exposed. The component fixes variant="contained" and appends BUTTON_STYLES.back after caller sx, so the preset wins overlapping sx keys. Back is still an alias of Secondary in the preset module. The role API is not yet semantically isolated. |
+| src/styles/presets/buttons.ts:6-64 | Central button preset API | Confirmed exported BUTTON_STYLES: primary, save alias, primaryWide, danger, dangerText, secondary, back alias, secondaryLightText, createTrip, tripAction, tripActionDanger, dayIncrement and dayDecrement. There are no dedicated Edit, Add, Remove, Cancel, Confirm, Navigation, Retry, Upload, Disclosure, Pagination or generic IconAction roles. Day increment/decrement currently share the same dayNumberButton object. |
+| src/components/common/ConfirmDialog.tsx:54-59 | Cancel / Confirm pair | “No” and “Yes” both use direct contained primary buttons. This remains a semantic mismatch; cancel and confirm must receive distinct shared roles while preserving dialog behavior. |
+| src/components/admin/AdminNavigation.tsx:22-48 | Active/inactive navigation | Direct MUI Button variants and colors are selected per item; active/inactive state should be a shared navigation variant/state, not a local duplicate. |
+| src/components/admin/AdminUsers.tsx | Admin row actions / pagination / surface | The file imports Card and direct Button; prior matrix has the exact observed lines. The Card surface is theme-backed, but its local geometry and nested actions still need consumer-level verification. |
+| src/components/trips/TripActions.tsx:67-137 | Add trip day / edit day / delete day / delete trip | Uses trip-specific presets for add/edit navigation and destructive trip actions. Edit still shares tripAction with Add; semantic intent is not expressed as distinct preset roles. |
+| src/components/auth/LoginForm.tsx:110-154 | Password reveal, submit, secondary navigation | Primary submit uses BUTTON_STYLES.primary; Register/Forgot/Resend use secondary. Password reveal uses raw IconButton. This confirms the base icon-action contract and secondary navigation roles are separate gaps. |
+| src/components/social/ReportButton.tsx:88-134 | Report / withdraw report / Cancel / Submit | Raw IconButton handles report state; Cancel and Submit use direct Buttons; wrapper and status text use React style. Preserve report-state semantics while later centralizing icon control, dialog actions and the style-prop replacements. |
+
+### Updated action-role conclusions
+- The button preset module is a single shared file, but it is not yet a complete semantic role API. Existing aliases (save → primary, back → secondary) hide semantic differences and should be revisited in Stage 3 rather than blindly duplicated during Stage 1.
+- BackButton is shared but not a closed semantic API because callers can pass arbitrary MUI props and sx. Keep its navigation destination caller-owned; centralize only the visual role contract.
+- ConfirmDialog is a high-value shared flow: fix its Cancel/Confirm visual distinction centrally, without changing its Promise<boolean> behavior.
+- Admin navigation, global error recovery, trip management, authentication secondary actions and report controls represent different semantic roles. They should share base control states and tokens, not be flattened into one generic style.
+- The current exact BackButton call-site set and all BUTTON_STYLES property consumers remain subject to a final exhaustive cross-repository check. The earlier call-site list is still useful evidence but must not be treated as complete.
+- ht-button / ht-button--danger consumer tracing is still not proven exhaustive. The selector is known in app/globals.css; retain it until a current-branch literal consumer search has conclusively established whether it has consumers outside that stylesheet.
+
+### File ledger updates
+- src/components/common/BackButton.tsx — PARTIAL; API and preset precedence re-confirmed; semantic alias and unrestricted caller sx remain.
+- src/styles/presets/buttons.ts — PARTIAL; current exports re-confirmed; semantic role coverage remains incomplete.
+- src/components/common/ConfirmDialog.tsx — PARTIAL; Cancel/Confirm mismatch re-confirmed.
+- src/components/admin/AdminNavigation.tsx — PARTIAL; active/inactive styles remain direct MUI props.
+- src/components/trips/TripActions.tsx — PARTIAL; Edit/Add semantic distinction remains incomplete.
+- src/components/auth/LoginForm.tsx — PARTIAL; submit/secondary presets used, password IconButton remains raw.
+- src/components/social/ReportButton.tsx — PARTIAL; report icon and dialog action roles remain raw; React style props remain.
+- app/(account)/my-trips/page.tsx — PARTIAL; Create trip preset consumer confirmed; full layout and call-site verification remains.
+- app/error.tsx — CHANGE REQUIRED; direct Retry Button needs a named shared recovery role during migration.
+- No file is marked VERIFIED.
+
+### Status and next task
+- Stage 1 remains IN PROGRESS. No application source files changed.
+- No build, tests, lint, CI or browser validation was run, in accordance with the user's explicit instruction.
+- Next: finish the current-branch literal search for ht-button, then produce the complete import/property/call-site map for BackButton and every BUTTON_STYLES.* property. After that, continue the Card/Paper/custom-surface and form-field consumer maps. Do not begin application source migration until the action inventory and the remaining Stage 1 search matrix are complete.
+
 ## 12. Audit log (append-only)
 
 ### 2026-11-18 — Dedicated CSS & Design System audit document created
@@ -1058,3 +1120,15 @@ The efficient next unit is a **repository-wide component/role trace**, not arbit
 - Identified additional inline React `style` props and dynamic/Satori rendering cases; recorded exact locations and instructed behavior-aware classification rather than bulk replacement.
 - No application source files changed; no build/tests/lint/CI/browser verification run. Stage 1 remains IN PROGRESS.
 - NEXT TASK: finish literal `ht-button` consumer tracing and complete the BackButton/`BUTTON_STYLES.*` role/caller matrix, then map Card/Paper/custom surfaces and all form-field consumers. Re-read this document's CSS organization before the next batch.
+
+
+### 2026-11-18 — CSS architecture preflight and action role follow-up
+- Read the audit's architecture, styling API policy, approved stage plan, mandatory search matrix, safe migration rules, file ledger and exact NEXT TASK before source review.
+- Verified current branch feature/frontend-modernization and HEAD 5ec9164a6071f37feff3141cd1f3a38f1f5e90a1.
+- Reconfirmed code ownership: UI tokens → MUI theme/CSS variables → shared semantic/layout presets → feature components; globals and CSS Modules must consume shared visual values and retain only shell/unique structural responsibilities.
+- Chose a cross-component role review because the outstanding task concerns shared semantic action contracts and all their consumers.
+- Re-fetched and reviewed BackButton.tsx, buttons.ts, ConfirmDialog.tsx, AdminNavigation.tsx, AdminUsers.tsx, TripActions.tsx, LoginForm.tsx, ReportButton.tsx, app/(account)/my-trips/page.tsx and app/error.tsx from the current branch.
+- Added exact new role evidence: route-level Create Trip preset consumer; direct Retry action; BackButton sx API/precedence; actual button preset exports and semantic aliases; ConfirmDialog Cancel/Confirm mismatch; AdminNavigation direct active/inactive props; TripActions Add/Edit semantic overlap; Login password reveal IconButton; ReportButton report/cancel/submit and React style usage.
+- Updated the file-level ledger for the inspected files and preserved conservative PARTIAL / CHANGE REQUIRED statuses.
+- No application source files changed. No build, tests, lint, CI or browser validation was run, as explicitly instructed by the user.
+- NEXT TASK: finish the current-branch literal ht-button search and exact BackButton / BUTTON_STYLES.* import/property/call-site matrix; then continue Card/Paper/custom surface and form-field consumer mapping. Re-read the CSS organization and this document before the next batch.
