@@ -39,3 +39,9 @@ export const TRIP_LIST_EMPTY_TEXT_SX = {
   fontSize: '1rem',
   ...HEADING_TEXT_SX,
 } as const;
+
+
+/** Empty PointList prompt. */
+export const POINT_LIST_EMPTY_SX = {
+  textAlign: 'center',
+} as const;
