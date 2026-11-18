@@ -1,6 +1,6 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { TripCard } from './TripCard';
-import { cardListStyle } from '@/styles/presets/layouts';
+import { CARD_LIST_SX } from '@/styles/presets/layouts';
 import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 import styles from './TripList.module.css';
 import type { TripGroupResponse } from '@/types';
@@ -25,12 +25,12 @@ export function TripList({ trips, prioritizeFirstImage = false }: TripListProps)
   }
 
   return (
-    <ul style={cardListStyle}>
+    <Box component="ul" sx={CARD_LIST_SX}>
       {trips.map((tripGroup, index) => (
         <li key={tripGroup.id}>
           <TripCard tripGroup={tripGroup} prioritizeImage={prioritizeFirstImage && index === 0} />
         </li>
       ))}
-    </ul>
+    </Box>
   );
 }
