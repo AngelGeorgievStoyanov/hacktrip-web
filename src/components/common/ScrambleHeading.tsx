@@ -9,7 +9,6 @@ import {
   type Ref,
 } from 'react';
 import { Typography } from '@mui/material';
-import type { SxProps, Theme } from '@mui/material/styles';
 import { HOME_HEADING_SX } from '@/styles/presets/typography';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -25,14 +24,13 @@ interface ScrambleHeadingProps {
   text: string;
   /** Exposed so a parent can re-trigger the effect from a wider touch area. */
   ref?: Ref<ScrambleHeadingHandle>;
-  sx?: SxProps<Theme>;
 }
 
 /**
  * Reproduces the legacy scramble effect: every 30 ms one more leading character is
  * revealed, with the remaining characters reset to random A–Z letters.
  */
-export function ScrambleHeading({ text, ref, sx }: ScrambleHeadingProps) {
+export function ScrambleHeading({ text, ref }: ScrambleHeadingProps) {
   const [display, setDisplay] = useState(text);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -84,7 +82,7 @@ export function ScrambleHeading({ text, ref, sx }: ScrambleHeadingProps) {
       variant="inherit"
       aria-label={text}
       onMouseOver={scramble}
-      sx={sx ? [HOME_HEADING_SX, sx] : HOME_HEADING_SX}
+      sx={HOME_HEADING_SX}
     >
       <span aria-hidden="true">{display}</span>
     </Typography>
