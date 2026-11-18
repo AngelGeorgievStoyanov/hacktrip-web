@@ -1936,15 +1936,71 @@ Continue Stage 1 by completing the **Card / Paper / custom surface** consumer ma
 - This is file-level inventory progress only; it is not migration progress and does not prove all consumer maps exhaustive.
 - Remaining category counts and exact paths are listed below.
 
-**app — 10**\n- `app/api/og/trips/[id]/route.ts`\n- `app/error.tsx`\n- `app/globals.css`\n- `app/layout.tsx`\n- `app/not-found.tsx`\n- `app/opengraph-image.tsx`\n- `app/providers.tsx`\n- `app/robots.ts`\n- `app/sitemap.ts`\n- `app/twitter-image.tsx`
+**app — 10**
+- `app/api/og/trips/[id]/route.ts`
+- `app/error.tsx`
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/not-found.tsx`
+- `app/opengraph-image.tsx`
+- `app/providers.tsx`
+- `app/robots.ts`
+- `app/sitemap.ts`
+- `app/twitter-image.tsx`
 
-**src/components — 22**\n- `src/components/admin/index.ts`\n- `src/components/auth/GuestOnly.tsx`\n- `src/components/auth/RequireAuth.tsx`\n- `src/components/auth/RequireRole.tsx`\n- `src/components/auth/RequireTripOwner.tsx`\n- `src/components/auth/index.ts`\n- `src/components/common/TabSyncListener.tsx`\n- `src/components/home/index.ts`\n- `src/components/images/index.ts`\n- `src/components/placeholders/index.ts`\n- `src/components/placeholders/socialObjectPlaceholderAssets.ts`\n- `src/components/social/FavoriteButton.tsx`\n- `src/components/social/LikeAnimation.tsx`\n- `src/components/social/LikeButton.tsx`\n- `src/components/social/ReportButton.tsx`\n- `src/components/social/SocialConfigStatus.tsx`\n- `src/components/tracking/index.ts`\n- `src/components/trips/TripDetailsView.module.css`\n- `src/components/trips/TripList.module.css`\n- `src/components/trips/TripList.tsx`\n- `src/components/trips/TripPagination.module.css`\n- `src/components/trips/TripPagination.tsx`
+**src/components — 22**
+- `src/components/admin/index.ts`
+- `src/components/auth/GuestOnly.tsx`
+- `src/components/auth/RequireAuth.tsx`
+- `src/components/auth/RequireRole.tsx`
+- `src/components/auth/RequireTripOwner.tsx`
+- `src/components/auth/index.ts`
+- `src/components/common/TabSyncListener.tsx`
+- `src/components/home/index.ts`
+- `src/components/images/index.ts`
+- `src/components/placeholders/index.ts`
+- `src/components/placeholders/socialObjectPlaceholderAssets.ts`
+- `src/components/social/FavoriteButton.tsx`
+- `src/components/social/LikeAnimation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/ReportButton.tsx`
+- `src/components/social/SocialConfigStatus.tsx`
+- `src/components/tracking/index.ts`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripList.module.css`
+- `src/components/trips/TripList.tsx`
+- `src/components/trips/TripPagination.module.css`
+- `src/components/trips/TripPagination.tsx`
 
-**src/constants/ui — 9**\n- `src/constants/ui/breakpoints.ts`\n- `src/constants/ui/colors.ts`\n- `src/constants/ui/index.ts`\n- `src/constants/ui/shadows.ts`\n- `src/constants/ui/shape.ts`\n- `src/constants/ui/sizes.ts`\n- `src/constants/ui/spacing.ts`\n- `src/constants/ui/typography.ts`\n- `src/constants/ui/z-index.ts`
+**src/constants/ui — 9**
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/index.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
 
-**src/styles/presets — 8**\n- `src/styles/presets/buttons.ts`\n- `src/styles/presets/cards.ts`\n- `src/styles/presets/forms.ts`\n- `src/styles/presets/layouts.ts`\n- `src/styles/presets/map-controls.ts`\n- `src/styles/presets/panels.ts`\n- `src/styles/presets/social.ts`\n- `src/styles/presets/typography.ts`
+**src/styles/presets — 8**
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/typography.ts`
 
-**src/theme — 7**\n- `src/theme/components/button.ts`\n- `src/theme/components/text-field.ts`\n- `src/theme/index.ts`\n- `src/theme/palette.ts`\n- `src/theme/shadows.ts`\n- `src/theme/shape.ts`\n- `src/theme/typography.ts`
+**src/theme — 7**
+- `src/theme/components/button.ts`
+- `src/theme/components/text-field.ts`
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shadows.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
 
 ### NEXT TASK
 1. Continue the Card / Paper / custom surface consumer map before moving to field controls: trace every current-branch import and JSX usage of `Card`, `Paper`, `Dialog`, `Drawer`, `Popover`, `getSurfaceStyles`, `PANEL_SX`, and CSS custom panel/surface selectors. Include map controls, map overlays, image/lightbox surfaces and all CSS Modules.
