@@ -692,6 +692,33 @@ Page wrappers without visual declarations are not automatically migration target
 
 ---
 
+## 10.1 File-level implementation ledger — explicit completed vs remaining work
+
+This ledger is the operational source for answering "what is actually fixed in each file?". A file marked PARTIAL or inspected is **not** considered fixed. "Centralized" below means the source currently consumes an existing shared contract; it does not mean the entire file has been migrated or visually verified.
+
+| File | Already centralized / confirmed | Still remaining | Current result |
+|---|---|---|---|
+| `src/components/points/PointCard.tsx` | Edit/Delete buttons consume `BUTTON_STYLES.primary` / `BUTTON_STYLES.danger`; card surface (background, border, radius, shadow) is inherited from the global `MuiCard` theme override; text inset and button margin consume named card presets. | Edit has no dedicated semantic preset (still generic primary); move-up/down IconButtons keep local `sx`; card geometry/padding and action-row layout remain local composition; description repeats inline `overflowWrap` rather than reusing the existing wrap preset; exact caller/visual-state verification remains. | PARTIAL — several visual responsibilities are centralized, file is NOT fully fixed. |
+| `src/components/points/PointForm.tsx` | Imports the shared `BackButton` and `BUTTON_STYLES`; primary action uses the shared button preset. | Local layout/spacing `sx` remains; inspect all form states and action consistency; verify BackButton caller contract and all remaining controls. | PARTIAL — not fully fixed. |
+| `src/components/points/PointActions.tsx` | Social actions are delegated to shared Like/Favorite/Report components and shared status component. | Wrapper layout `sx` is local; verify the nested social controls' visual contract and all callers. | PARTIAL — not fully fixed. |
+| `src/components/points/PointList.tsx` | Delegates each item to the shared `PointCard`. | List layout remains local; verify responsive/layout requirements and empty state typography. | PARTIAL — not fully fixed. |
+| `src/components/trips/TripCard.tsx` | Uses shared `BUTTON_STYLES`, `cardStyle`, and `CARD_TEXT_INSET_SX`; card surface is inherited from `MuiCard` theme. | Stepper Buttons are still direct MUI defaults; substantial card geometry and content composition remain in local `sx` constants; verify responsive variants and all card callers. | PARTIAL — not fully fixed. |
+| `src/components/trips/TripActions.tsx` | Uses named `tripAction` and `tripActionDanger` presets for trip actions. | Edit still shares generic tripAction rather than a semantic Edit role; verify parity with point/admin actions and all states. | PARTIAL — not fully fixed. |
+| `src/components/common/BackButton.tsx` | Shared component consumes `BUTTON_STYLES.back`. | `back` currently aliases `secondary`; public props still allow caller `sx` and broad MUI Button props; caller contract and semantic distinction need design. | PARTIAL — shared but contract incomplete. |
+| `src/theme/components/card.ts` | All MUI Cards receive `getSurfaceStyles` from the theme: paper background, divider border, theme radius and semantic surface shadow. | Verify non-MUI/custom card surfaces and every Card consumer; separate geometry/layout from surface styling. | PARTIAL — MUI Card surface contract exists; app-wide parity not yet proven. |
+| `src/theme/components/dialog.ts` | MUI Dialog Paper receives the same `getSurfaceStyles` contract. | Other standalone MUI Paper consumers are not yet proven to share this contract; inspect all Paper usages and custom surfaces. | PARTIAL — Dialog Paper is centralized; general Paper parity remains open. |
+| `src/theme/components/surface.ts` | Defines one shared surface contract for background, border, radius and shadow. | Confirm every intended surface uses it and that semantic variants (card, dialog, panel, popover) are covered without over-generalizing. | PARTIAL — shared primitive exists; adoption audit remains open. |
+| `src/components/trips/PointSection.tsx` | Card surface inherits the shared MUI Card theme; text inset references the shared card preset. | Contains a React `style` prop for the text wrapper (must be migrated under policy 1.4); local Card/content layout and multiple local `sx` values remain. | CHANGE REQUIRED. |
+| `src/components/points/EditPointPage.tsx` | Uses MUI Card theme surface for its Card. | Local layout `sx`, local IconButton styling and other page composition remain; inspect against shared point form/action roles. | CHANGE REQUIRED. |
+| `src/components/points/CreatePointPage.tsx` | Uses MUI Card theme surface for its Card and central size token for content width. | Local layout `sx` and page composition remain; verify all nested form and action consumers. | PARTIAL — not fully fixed. |
+
+### Surface / Paper clarification
+
+- MUI `Card` is already globally wired to `getSurfaceStyles` through `MuiCard`.
+- MUI `Dialog`'s `paper` slot also uses the same `getSurfaceStyles`.
+- This does **not** prove that every standalone `Paper`, custom panel, CSS surface or image/map overlay is centralized. A repository-wide Paper/surface consumer audit is still required.
+- Therefore: Card background/border/radius/shadow are centralized at the MUI Card level; general Paper parity is **not yet complete or verified**.
+
 ## 11. Current status and exact next task
 
 ### Current stage
@@ -847,3 +874,16 @@ Continue Stage 1: finish the repository-wide consumer search for BackButton, BUT
 - Re-read the current global stylesheet and all CSS Modules listed in the baseline stylesheet inventory, including TripDetailsView.module.css.
 - Recorded the independent `.ht-button` contract, NotFound Home CTA, legal Back link and clickable ImageGallery surface, including their known consumers and outstanding consumer-tracing requirements.
 - Stage 1 remains IN PROGRESS. No source changes and no validation commands were run.
+
+### 2026-11-18 — Branch-current file-level status and action inventory follow-up
+
+- Re-read this audit document and verified current branch `feature/frontend-modernization`, HEAD `1ae13c711721ff4d4ed0b9b4025ffba093a619d5`. The audit's previous file manifest was too coarse to answer per-file "what is fixed vs what remains"; added Section 10.1 as an explicit implementation ledger. This does not create a second audit document.
+- Re-fetched current-branch source (not default-branch search excerpts) for PointCard, PointForm, PointActions, PointList, TripCard, TripActions, BackButton, Card/Dialog/surface theme overrides, PointSection, CreatePointPage and EditPointPage.
+- Confirmed PointCard's Edit/Delete actions already consume shared button presets and its Card receives the centralized MUI Card surface contract. This is partial centralization only: move IconButtons and layout remain local, Edit has no dedicated semantic preset, and one description style duplicates an existing wrap preset.
+- Confirmed `MuiCard` and `MuiDialog.paper` both use `getSurfaceStyles`. Do not claim all Paper surfaces are centralized: standalone Paper and custom surface consumers remain to be inventoried.
+- Found a policy violation in `src/components/trips/PointSection.tsx`: React `style` prop is used on a div (around line 78 in the inspected current file); record for safe migration after inventory.
+- Inspected `app/error.tsx`: direct MUI contained Button remains. Inspected auth guard wrappers and AdminDashboard: no button/action styling surfaced in those files.
+- `src/constants/ui/styles.ts` does not exist on the current branch; current button presets are in `src/styles/presets/buttons.ts`. Treat old/default-branch search excerpts as non-authoritative; all branch decisions must use explicit branch refs.
+- No application source changes, build, tests, lint, CI or browser verification were performed. Stage 1 remains IN PROGRESS; action inventory is still not exhaustive.
+- NEXT TASK remains: continue the exact Stage 1 repository-wide semantic action inventory, tracing every current-branch BackButton/BUTTON_STYLES/Button/IconButton/native button/action-like anchor and every `.ht-button` consumer. Then complete card/surface/Paper and form-field consumer maps before closing Stage 1.
+
