@@ -81,3 +81,35 @@ export const CARD_HEADING_TEXT_STYLE = {
   ...CARD_TEXT_BLOCK_STYLE,
   fontWeight: 500,
 } as const;
+
+
+/** PointCard structure and action geometry; its surface skin remains MUI theme-owned. */
+export const POINT_CARD_WRAPPER_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+} as const;
+
+export const POINT_CARD_CONTAINER_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: 'min(300px, calc(100vw - 32px))',
+  minWidth: { xs: 0, sm: 290 },
+  maxWidth: 300,
+  my: '10px',
+  p: '15px 0',
+} as const;
+
+export const getPointCardMoveButtonSx = (visible: boolean) => ({
+  visibility: visible ? 'visible' : 'hidden',
+  p: 0.25,
+} as const);
+
+export const POINT_CARD_ACTION_ROW_SX = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+} as const;
+
+export const POINT_CARD_MAP_HEIGHT = 150;
