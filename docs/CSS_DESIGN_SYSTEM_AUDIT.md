@@ -3536,16 +3536,15 @@ No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconB
 - Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
 - No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
 
-**NEXT TASK — deepen the seven PARTIAL Account page audits (Section 11.19.F):**
+**NEXT TASK — deepen the five remaining PARTIAL Account page audits (Section 11.19.F):**
 
-1. Start with Favorites and My Trips, tracing their route roots, shared TripList/TripCard, empty/loading/error states, actions and pagination/navigation. Verify the known source-import/reference mismatch, but document only; do not fix application source.
-2. Continue Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point, tracing each route through form/layout owners, nested components, shared visual contracts and tokens.
-3. Reuse Sections 11.14–11.18 and 11.21; do not duplicate shared component audits. Record page-specific composition, state/responsive behavior, direct MUI/native controls, CSS Modules, React style and inline sx.
-4. Update Section 11.19.F after the Account batch. Keep any route PARTIAL until its page-level styling and state ownership is traced end-to-end.
-5. Then audit the seven Admin routes and finish Not Found/404.
-6. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Do not change application source without authorization.
-7. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
-8. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+1. Audit Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point, tracing each route through form/layout owners, nested components, shared visual contracts and tokens.
+2. Reuse Sections 11.14–11.18, 11.21 and 11.22; do not duplicate shared component audits. Record page-specific composition, state/responsive behavior, direct MUI/native controls, CSS Modules, React style and inline sx.
+3. Update Section 11.19.F after the Account batch. Keep any route PARTIAL until its page-level styling and state ownership is traced end-to-end.
+4. Then audit the seven Admin routes and finish Not Found/404.
+5. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Do not change application source without authorization.
+6. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
+7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
 
@@ -3732,8 +3731,8 @@ Status definitions:
 | Public | Live Tracking | app/(public)/live-tracking/page.tsx | DETAILED | Section 11.20.B; moderator gate, live map, tracking controls, stats and browser-session state |
 | Public | About | app/(public)/about/page.tsx | DETAILED | Section 11.20.C; WelcomeHeading, seven images, CSS Module, responsive image rows and SEO |
 | Public | Privacy Policy | app/(public)/privacy-policy/page.tsx | DETAILED | Section 11.20.D; long-form terms/privacy sections, generated TOC, legal CSS and SEO |
-| Account | Favorites | app/(account)/favorites/page.tsx | PARTIAL | Route root/shared TripList recorded in 11.15–11.16; page styles/state not complete |
-| Account | My Trips | app/(account)/my-trips/page.tsx | PARTIAL | Route root/shared TripList/Create Trip action recorded; page styles/state not complete |
+| Account | Favorites | app/(account)/favorites/page.tsx | DETAILED | Section 11.22.B; query states, empty/error/loading branches, shared TripList and unresolved style identifiers |
+| Account | My Trips | app/(account)/my-trips/page.tsx | DETAILED | Section 11.22.C; query states, empty/create action, shared TripList and unresolved style identifiers |
 | Account | Profile | app/(account)/profile/page.tsx | PARTIAL | Root/ProfileForm and shared profile/image/password owners recorded in 11.16–11.18 |
 | Account | Edit Point | app/(account)/points/edit/[pointId]/page.tsx | PARTIAL | Root/PointForm/PointLocationPicker and shared map/image owners recorded |
 | Account | Edit Trip | app/(account)/trips/[id]/edit/page.tsx | PARTIAL | Root/EditTripLayout/TripLocationPicker/upload/image owners recorded |
@@ -4057,8 +4056,8 @@ No application source code was changed. No branch was created. No build, tests, 
 ### H. Updated page coverage
 
 - Route roots: 27 total.
-- **12 DETAILED:** Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register, Forgot Password, Resend Verification, Reset Password and Verify Email.
-- **7 PARTIAL:** Favorites, My Trips, Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point.
+- **14 DETAILED:** Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register, Forgot Password, Resend Verification, Reset Password, Verify Email, Favorites and My Trips.
+- **5 PARTIAL:** Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point.
 - **8 NOT AUDITED:** seven Admin routes and Not Found/404.
 - The four Auth route roots and their form owners are now detailed. The seven Account routes remain PARTIAL because their full page-specific style/state/responsive ownership is not yet exhaustive.
 - The 163/163 candidate file inventory count remains a separate metric; route-page coverage does not complete Stage 1.
@@ -4096,5 +4095,103 @@ No application source code was changed. No branch was created. No build, tests, 
 
 - Added detailed audits for all four remaining Auth routes, including the shared Auth shell and form dependencies.
 - Updated Section 11.19.F from 8 to 12 DETAILED and from 12 to 8 NOT AUDITED; the seven Account routes remain PARTIAL.
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+- Stage 1 remains IN PROGRESS.
+
+
+## 11.22 — Favorites and My Trips account page audits (2026-11-18)
+
+### A. Preflight and scope
+
+- Re-read the architecture, Styling API policy (Section 1.4), six-stage plan, Section 7 inventory, Section 10.1 file ledger, route coverage matrix (Section 11.19.F), and latest page audits including Sections 11.20–11.21.
+- Verified repository branch ref: feature/frontend-modernization. Audit document SHA before this batch: 8a617db09e4c6cfbcf5b18efd374341c9b2aba5e.
+- Scope: Favorites and My Trips route roots, Account shell, query-driven page states, shared TripList/TripCard contracts, and their shared layout/style presets.
+- The two route roots are short, but both consume the same list and visual contracts. Shared owners already deeply audited in Sections 11.14–11.19 are cross-referenced rather than duplicated.
+- No application source changes, no branch creation, and no build/tests/lint/CI/browser validation.
+
+### B. Favorites — /favorites
+
+**Composition and data states**
+- Route root: app/(account)/favorites/page.tsx, client component.
+- Account shell: RequireAuth → Header → main with shared ROUTE_CONTENT_PADDING and flex fill → route → Footer. Account layout metadata is NOINDEX.
+- React Query uses query key ['me','favorites'] and tripApi.listMyFavorites(). The result is normalized with data ?? [].
+- Render precedence: loading → error → empty favorites → TripList. Loading uses CircularProgress size 32 with an accessible label; error uses MUI Alert severity=error and getGenericErrorMessage; empty state uses a heading; populated state delegates to shared TripList.
+- There is no explicit retry action, refetch control, pagination or route-local mutation. Query behavior/retry defaults are React Query-owned and not customized in this route.
+- The page has no local state, effects or responsive breakpoint logic.
+
+**Styling ownership**
+- Root Box section, Container, heading, empty-state Box and error Alert use MUI sx; there is no route CSS Module or React style prop.
+- Intended shared layout owners are ACCOUNT_TRIPS_PAGE_SX, ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_HEADING_SX and ACCOUNT_TRIPS_EMPTY_STATE_SX from src/styles/presets/layouts.ts. Those presets centralize full-width page shell, centered vertical content, responsive vertical padding, heading alignment/spacing/typography and centered empty-state layout.
+- The loading spinner has route-local my=4; the error Alert has route-local width 100% and maxWidth 560. These are local visual values to reconcile with shared loading/feedback and content-width contracts in a later migration.
+- Empty-state Typography intends to use shared headingTextStyle from src/styles/presets/typography.ts, but the symbol is not imported in this route.
+- Critical source consistency finding: the route imports the four ACCOUNT_TRIPS_* identifiers but JSX references PAGE_SX, CONTENT_SX, HEADING_SX and EMPTY_STATE_SX. No declarations for those names exist in the fetched file. This is an unresolved identifier/import mismatch and likely causes TypeScript compilation failure. The route also references headingTextStyle without importing it. Documented only; no source correction performed.
+
+### C. My Trips — /my-trips
+
+**Composition and data states**
+- Route root: app/(account)/my-trips/page.tsx, client component.
+- Uses the same Account shell and NOINDEX metadata as Favorites.
+- React Query key is ['me','trips']; query function is tripApi.listMyTrips(); result is normalized with data ?? [].
+- Render precedence matches Favorites: loading CircularProgress → error Alert with getGenericErrorMessage → empty state → shared TripList.
+- Empty state includes a Create Trip action linking to /trips/create. It uses MUI Button, Next Link, variant=contained and BUTTON_STYLES.createTrip.
+- There is no explicit retry, refetch, pagination or local state. No responsive breakpoint logic is defined in the route.
+- Unlike Favorites, My Trips has a distinct empty-state call to action; preserve this behavior when consolidating the two page layouts.
+
+**Styling ownership**
+- Uses the same intended ACCOUNT_TRIPS_PAGE_SX, ACCOUNT_TRIPS_CONTENT_SX, ACCOUNT_TRIPS_HEADING_SX and ACCOUNT_TRIPS_EMPTY_STATE_SX presets as Favorites.
+- The Create Trip action is already connected to the named BUTTON_STYLES.createTrip contract. Its color/hover treatment is token-backed through UI_COLORS and spacing through UI_SPACING.
+- Loading margin my=4, Alert width/maxWidth, and empty-state heading usage are still route-local or unresolved, as on Favorites.
+- Critical source consistency finding: imports ACCOUNT_TRIPS_* identifiers but references PAGE_SX, CONTENT_SX, HEADING_SX and EMPTY_STATE_SX in JSX. These names are not declared in the fetched source. headingTextStyle is also referenced without an import. Likely TypeScript compilation failure; documented only.
+
+### D. Shared list ownership and cross-page reuse
+
+- TripList is a shared owner consumed by Home, public Trips, Favorites and My Trips. It returns an empty welcome/no-results presentation for an empty array; Favorites and My Trips do not reach that branch because their route roots render their own empty state before mounting TripList.
+- For non-empty data, TripList renders a semantic ul with cardListStyle and one li/TripCard per trip group. The list layout is a React CSSProperties preset, not a CSS Module.
+- TripList.module.css owns only the two empty-state text classes (margins and font sizes). The heading text treatment is supplied by the shared headingTextStyle React style preset. This module's empty branch is currently not used by these two account routes.
+- TripCard is the actual populated-list visual/interaction owner and is already traced in Sections 11.15 and 11.19. It owns the shared MUI Card surface, fixed card dimensions, header/image/social/stepper/content geometry, image placeholder behavior, image carousel swipe state, day pagination, like counts and Details navigation. Favorites and My Trips do not provide distinct TripCard variants.
+- TripCard's internal sx objects include repeated fixed dimensions and layout values; MobileStepper's Next/Back Buttons do not consume named action presets, and Pagination owns a local margin preset. These are shared TripCard migration targets, not duplicated route-level findings.
+- The four route consumers must continue to share one TripList/TripCard visual contract; do not fork a separate account-only card appearance unless a documented product requirement emerges.
+
+### E. Cross-route ownership summary
+
+| Owner / contract | Favorites | My Trips | Shared consumers / notes |
+|---|---|---|---|
+| Account layout + RequireAuth | Yes | Yes | All Account routes |
+| ACCOUNT_TRIPS_PAGE/CONTENT/HEADING/EMPTY_STATE presets | Intended | Intended | Shared in src/styles/presets/layouts.ts |
+| React Query + tripApi | listMyFavorites | listMyTrips | Separate query keys and API calls |
+| Loading CircularProgress / error Alert | Local route usage | Local route usage | Candidate shared feedback presentation |
+| Empty-state headingTextStyle | Referenced, missing import | Referenced, missing import | Shared typography preset |
+| TripList + cardListStyle | Populated state | Populated state | Home and public Trips too |
+| TripCard | Shared | Shared | Home, Trips, Favorites, My Trips |
+| BUTTON_STYLES.createTrip | — | Empty-state CTA | Named semantic action preset |
+
+### F. Coverage and migration implications
+
+- Both route roots have now been traced through their Account shell, query states, empty/error/loading branches, layout presets and shared list/card owners.
+- Favorites and My Trips are DETAILED at the route-page audit level; this does not mean their shared TripCard internals or all React Query/browser behaviors are newly revalidated.
+- The source identifier mismatch is a code correctness issue, not a design-system migration. Keep it separate from styling remediation and do not silently rename imports or JSX during the audit.
+- Shared Account trip-list layout should be migrated once through the existing ACCOUNT_TRIPS_* presets. Do not duplicate styles or create page-specific variants for Favorites and My Trips.
+- Stage 1 remains IN PROGRESS. No application source code was changed.
+
+### G. Exact branch-ref source evidence
+
+- app/(account)/favorites/page.tsx — 22399b5e98c3f8c006ff1bd95e29911cac4b810a
+- app/(account)/my-trips/page.tsx — 477050cfe2d688de9f3a1d2cee17222532ac1a54
+- app/(account)/layout.tsx — 3ab4f092e7dc6053be4f0ca6f3f68cff31971b90
+- src/components/trips/TripList.tsx — 017930d3ccf03e7790c4361945ed86ec0041fece
+- src/components/trips/TripCard.tsx — 6ca299211ee78c0373d0cf6a28eafcf40f6ccc0d
+- src/components/trips/TripList.module.css — 66233dc514151bddb8255a334f8c2d8ed828b21b
+- src/styles/presets/layouts.ts — 4a0aec24e5feecf1ffaeadaf75ade4291658f820
+- src/styles/presets/typography.ts — 59803882f1c4357e8815f3afdc7c53939d14bacb
+- src/styles/presets/buttons.ts — 2110bcf2a41d8ca81375682ebb9bb8ed88f48a2e
+- src/constants/ui/spacing.ts — 9e62ad85eeec73359723643861eb8d2eba8057d1
+- src/constants/ui/breakpoints.ts — 9fb27ac76908e485970975bf4a714c581d822315
+- src/theme/components/card.ts — 2c933219062e2e626304bc153234a4dbe5c3205b
+- src/theme/components/button.ts — 344522fde4f2c45fc223d876d9c568faabd41579
+
+### H. Batch result and next task
+
+- Added detailed page-level audits for Favorites and My Trips, including shared Account shell, query states, empty states and TripList/TripCard ownership cross-references.
+- Updated Section 11.19.F from 12 to 14 DETAILED and from 7 to 5 PARTIAL; eight routes remain NOT AUDITED (seven Admin routes and Not Found).
 - No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
 - Stage 1 remains IN PROGRESS.
