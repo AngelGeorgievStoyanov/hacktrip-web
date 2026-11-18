@@ -12,8 +12,15 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse, TripPoint } from '@/types';
-import { UI_SIZES } from '@/constants/ui/sizes';
-import { POINT_FORM_PANEL_SX } from '@/styles/presets/forms';
+import { POINT_FORM_PANEL_WITH_TOP_MARGIN_SX } from '@/styles/presets/forms';
+import {
+  CREATE_POINT_PAGE_SX,
+  CREATE_POINT_GRID_SX,
+  CREATE_POINT_LIST_COLUMN_SX,
+  CREATE_POINT_EDITOR_COLUMN_SX,
+  CREATE_POINT_LOADING_SX,
+  CREATE_POINT_ERROR_ALERT_SX,
+} from '@/styles/presets/layouts';
 
 export function CreatePointPage() {
   const router = useRouter();
@@ -168,7 +175,7 @@ export function CreatePointPage() {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+      <Box sx={CREATE_POINT_LOADING_SX}>
         <CircularProgress />
       </Box>
     );
@@ -183,25 +190,17 @@ export function CreatePointPage() {
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: UI_SIZES.contentMaxWidth, mx: 'auto', px: { xs: 1, sm: 2 }, py: 2 }}>
+    <Box sx={CREATE_POINT_PAGE_SX}>
       {error ? (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert severity="error" sx={CREATE_POINT_ERROR_ALERT_SX} onClose={() => setError(null)}>
           {error}
         </Alert>
       ) : null}
 
       <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 1fr)' },
-          '@media (min-width:1021px)': {
-            gridTemplateColumns: 'minmax(250px, 0.75fr) minmax(0, 1.6fr)',
-          },
-          alignItems: 'start',
-          gap: { xs: 2, md: 3 },
-        }}
+        sx={CREATE_POINT_GRID_SX}
       >
-        <Box sx={{ minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={CREATE_POINT_LIST_COLUMN_SX}>
           <PointList
             points={selectedDay.points}
             onEdit={(point) => router.push(`/points/edit/${point.id}`)}
@@ -212,13 +211,7 @@ export function CreatePointPage() {
         </Box>
 
         <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            minWidth: 0,
-          }}
+          sx={CREATE_POINT_EDITOR_COLUMN_SX}
         >
           <PointLocationPicker
             latitude={pointLatitude}
@@ -234,7 +227,7 @@ export function CreatePointPage() {
           />
 
           <Card
-            sx={{ ...POINT_FORM_PANEL_SX, mt: 2.5 }}
+            sx={POINT_FORM_PANEL_WITH_TOP_MARGIN_SX}
           >
             <PointForm
               tripGroupId={tripGroup.id}
