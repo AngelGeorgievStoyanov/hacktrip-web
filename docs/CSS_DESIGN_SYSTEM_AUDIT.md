@@ -826,7 +826,88 @@ The following current-branch stylesheets were read again for action-like selecto
 - `src/components/layout/Footer.module.css`, `src/components/trips/TripList.module.css`, `src/components/trips/TripPagination.module.css` and `src/components/trips/TripDetailsView.module.css`: no dedicated action-button selector was found in the inspected stylesheet source.
 - The `.ht-button` consumer search is still pending. The five server/public trip-related files inspected in this pass (`app/(public)/trips/[id]/page.tsx`, `src/lib/images/renderTripOgImage.tsx`, `src/seo/modules/trip/buildContent.ts`, `src/lib/share.ts`, `src/components/trips/TripDetailsView.module.css`) did not expose a direct `ht-button` match; that is not proof that no other consumer exists.
 
+#### Repository-wide action inventory — additional current-branch inspection batch
+
+This batch used the current branch's recursive Git tree and exact blob SHAs, then inspected the source files directly. The branch HEAD at inspection time was `567d82963d5c8c6bf116c23a161e31a389c14eda`. These are observed matches, not a claim that Stage 1 is complete.
+
+**Additional direct MUI Button / IconButton / native control call sites**
+
+- Admin:
+  - `src/components/admin/AdminFailedLogs.tsx:88,143,149` — direct action and previous/next pagination Buttons.
+  - `src/components/admin/AdminImages.tsx:72,76,103,109,142,146,249,256,352,359` — pagination plus image/admin actions; `:372` raw IconButton close action. Also local layout and Dialog sx remain.
+  - `src/components/admin/AdminNavigation.tsx:36` — direct navigation Button; active/inactive appearance remains locally decided, with wrapper sx at `:22`.
+  - `src/components/admin/AdminReports.tsx:88,113,119` — direct action and repeated pagination Buttons.
+  - `src/components/admin/AdminRouteNotFoundLogs.tsx:127,158,164` — direct row action and pagination Buttons.
+  - `src/components/admin/AdminUserForm.tsx:248,306,312-313,327` — direct action, shared save/danger presets and BackButton; local wrapper sx remains.
+  - `src/components/admin/AdminUsers.tsx:169,174,205,211` — direct user edit/action and repeated pagination Buttons.
+  - The admin route page files inspected (`app/(admin)/admin/{failed-login-logs,images,reports,route-not-found-logs,users,users/[userId]}/page.tsx`) did not contain direct action controls; actual controls are in the imported admin components above.
+- Comments and replies:
+  - `src/components/comments/CommentsSection.tsx:276,286,365,379,410,475,491` — multiple raw IconButtons for distinct comment/reply actions. Also React `style` on the list at `:223`; local visual sx is present throughout the component.
+  - `src/components/comments/CommentsToggle.tsx:36` — raw IconButton; React `style` wrapper at `:26`.
+  - `src/components/comments/RepliesSection.tsx:169,179,225,239,289,300` — raw IconButtons for reply actions.
+- Common/layout:
+  - `src/components/common/ConfirmDialog.tsx:54,57` — No/Yes are both direct contained-primary Buttons; semantic Cancel vs Confirm remains unresolved.
+  - `src/components/common/ExpandableText.tsx:54` — disclosure Button.
+  - `src/components/common/NotFound.tsx:50` — native Home CTA button, with CSS Module skin.
+  - `src/components/common/PasswordField.tsx:43` — reveal/hide password adornment IconButton.
+  - `src/components/layout/Header.tsx:87,99,109,142,148,181` — direct navigation/account Buttons; `:119` raw IconButton; local `NAV_BUTTON_SX` and layout sx remain.
+- Social and image controls:
+  - `src/components/social/LikeButton.tsx:81`, `FavoriteButton.tsx:63`, `EngagementBar.tsx:169` — raw social IconButtons; preserve social-specific interaction states while sharing the base icon-control contract.
+  - `src/components/social/TripGroupSocialActions.tsx:111,140,164,191` — several raw IconButtons for separate group social roles.
+  - `src/components/social/ReportButton.tsx:89,117-118` — report IconButton and Cancel/Submit dialog Buttons; React `style` spans at `:88,126,133`.
+  - `src/components/images/ImageLightbox.tsx:76,98,112` — close/previous/next or zoom-style overlay IconButtons; overlay geometry is specialized, but base hit target/focus/disabled semantics should be shared.
+  - `src/components/images/ImageUploadField.tsx:277,295,307` — image remove/reorder and upload actions.
+  - `src/components/CustomFileUploadButton.tsx:35,58` — upload adornment IconButton and Button-as-label upload action.
+- Trips and maps:
+  - `src/components/maps/AddressAutocomplete.tsx:153` — direct map-search Button.
+  - `src/components/maps/PointLocationPicker.tsx:171,179` and `TripLocationPicker.tsx:134` — map picker actions use shared primary/secondary presets, with additional local sx composition.
+  - `src/components/trips/TripCard.tsx:259,265` — direct MUI Stepper previous/next Buttons; `:300` shared primary action.
+  - `src/components/trips/TripActions.tsx:76,84,101,111,129` — trip action Buttons use trip-specific and danger presets.
+  - `src/components/trips/TripForm.tsx:405,414,574,583,594,605` — day increment/decrement, primary/secondary and BackButton roles.
+  - `src/components/trips/EditTripLayout.tsx:342,351,361,481,492,543` — direct and shared action controls plus a raw IconButton.
+  - `src/components/trips/TripDetails.tsx:130,177,223` — currency-info and another icon action, plus shared BackButton. React `style` props occur at `:106,121,124,139,143,147,152,200`; these are policy-audit targets and must be classified/migrated safely, not mechanically rewritten.
+  - `src/components/points/EditPointPage.tsx:222` — raw IconButton; page-level local sx remains.
+- Auth:
+  - `src/components/auth/ChangePasswordForm.tsx:129` — primary submit action.
+  - `ForgotPasswordForm.tsx:81,91`, `ResendVerificationForm.tsx:81,91`, `ResetPasswordForm.tsx:90,123,133` — submit/navigation actions and BackButton; ResetPassword's success Button at `:90` is direct contained.
+  - `LoginForm.tsx:110,132,142,145,153` — reveal IconButton, primary and secondary/navigation Buttons.
+  - `ProfileForm.tsx:117,126,127` — primary, Back and secondary actions.
+  - `RegisterForm.tsx:215,225,234` — primary and secondary/navigation actions.
+  - `VerifyEmailForm.tsx:85` — primary action.
+- No direct Button/IconButton/native button match was found in the four map picker/view files other than AddressAutocomplete and the two picker action files above, or in GoogleMapView.
+
+**Additional React `style` policy violations / migration targets**
+
+- `src/components/comments/CommentsSection.tsx:223` — inline list style object.
+- `src/components/comments/CommentsToggle.tsx:26` — inline wrapper layout style.
+- `src/components/social/ReportButton.tsx:88,126,133` — inline span/error/visually-hidden styles; classify semantic/accessibility styling before migration.
+- `src/components/trips/TripDetails.tsx:106,121,124,139,143,147,152,200` — shared-looking typography/line styles expressed via React `style`; move to approved typography/layout tokens or presets after confirming exact consumers.
+- Previously recorded: `src/components/trips/PointSection.tsx` has a React `style` prop around line 78.
+- These are newly confirmed occurrences, not an exhaustive repository-wide `style=` audit. Do not bulk-replace runtime or accessibility-sensitive styling without understanding its behavior.
+
+**Inventory status and decisions**
+
+- This batch expands the action inventory across admin, comments/replies, auth, header, image overlays/uploads, maps, trips and points.
+- It confirms the same semantic action families are implemented by direct MUI Buttons, raw IconButtons, native buttons, shared presets and CSS Modules. The design-system API must distinguish semantic role (e.g. Cancel vs Confirm, Edit vs Delete, Back vs Secondary, Upload vs Primary, Disclosure vs Navigation) from the underlying MUI control.
+- Repeated admin pagination Buttons are a clear candidate for one named pagination action contract; do not change them until all admin pagination consumers and disabled/loading/focus states are mapped.
+- The full `.ht-button` / `.ht-button--danger` consumer set is still not established. Keep the selectors and do not claim CSS-backed action inventory complete.
+- Card/Paper/surface and form-field consumer maps remain open. Stage 1 remains IN PROGRESS; no application source was changed and no validation commands were run.
+
+#### Mandatory start-of-batch instruction for every future NEXT TASK
+
+**Before touching source code, the next AI/developer MUST:**
+
+1. Re-read `docs/CSS_DESIGN_SYSTEM_AUDIT.md` in full or at minimum the target architecture, styling API policy, relevant file ledger entries, current stage, latest audit log and exact `NEXT TASK`.
+2. Explicitly inspect the target architecture in Sections 1-3 and the relevant contracts in Sections 7-9. Do not begin edits based only on the task title or a remembered summary.
+3. Confirm current branch and HEAD; compare with the last recorded HEAD and re-fetch every target file from the current branch.
+4. Decide whether the optimal scope is a whole-app component/call-site search, one end-to-end flow, or file-by-file migration. Record the chosen scope and why in the audit log.
+5. Only then make changes that conform to the documented token/theme/preset/CSS Module ownership rules and styling API policy. Never introduce ad hoc `sx`, React `style`, duplicate CSS values or a second visual contract.
+6. After the batch, update this same document's file-level ledger, findings, verification status and `NEXT TASK`. The next task must repeat this mandatory preflight instruction before any subsequent work.
+7. Do not create another audit document, branch, or parallel plan. Do not run build/tests/lint/CI unless the user explicitly authorizes them.
+
 #### NEXT TASK
+
+Continue Stage 1 and finish the action consumer map. Prioritize the remaining repository-wide `.ht-button` / `.ht-button--danger` consumer trace, exact BackButton and `BUTTON_STYLES.*` caller map, remaining UI-bearing files and nested shared-component callers. Then complete Card/surface/Paper and form-field consumer maps. Do not start application-source migration until the action inventory is exhaustive and recorded.
 
 Continue Stage 1: finish the repository-wide consumer search for BackButton, BUTTON_STYLES, Button, IconButton, native button, action-like anchors and especially `.ht-button` / `.ht-button--danger`. Trace every CSS selector to all consumers, inspect the remaining UI-bearing files, verify every shared component caller, and record exact paths/call sites before proposing the semantic component API.
 
