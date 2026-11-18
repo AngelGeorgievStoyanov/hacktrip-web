@@ -47,7 +47,33 @@ Only genuinely unique structure or geometry that is not shared: a unique grid co
 
 CSS Modules are allowed for structural layout and page-specific responsive rules. They must not become a second repository for colors, radius, shadows, typography, or recurring component skins.
 
-### 1.4 Do not change visual values blindly
+### 1.4 Styling API policy — mandatory project standard
+
+Use a deliberately restricted styling API so the repository has one visual source of truth. The objective is not to ban CSS or MUI styling tools; it is to prevent feature components from inventing or duplicating visual rules.
+
+| Mechanism | Allowed responsibility | Mandatory constraints |
+|---|---|---|
+| Design tokens / CSS custom properties | Shared colors, spacing, dimensions, radius, shadows, typography, breakpoints and layering | Define each shared value once. Expose values needed by CSS through theme-generated CSS variables. |
+| MUI Theme and component overrides | Global defaults and shared states for MUI components | Own the baseline appearance and interaction states for each standard MUI component family. |
+| Shared components and named presets | Semantic roles such as Back, Edit, Save, Delete, Card, Field and IconAction | Feature components select a role; they do not redefine its visual contract. |
+| MUI sx | Styling MUI components when a shared component is not appropriate | Consume named presets, theme values or tokens only. Do not author local visual literals or repeat shared declarations in inline sx objects. Prefer a shared component/preset when the same treatment recurs. |
+| CSS Modules / className | Unique structure and composition: grid/flex geometry, page-specific positioning, responsive rearrangement and component-specific layout | Shared visual values must come from tokens/CSS variables. Do not create local skins for recurring buttons, cards, fields or other shared roles. |
+| React style prop | NOT part of the approved styling API | Do not use the React style prop for visual styling, including one-off colors, spacing, dimensions, typography, borders, shadows or states. Use tokens/theme/presets, sx under the constraints above, or CSS Modules for structure. |
+| Dynamic visual values | Values that genuinely depend on runtime data | Prefer semantic state classes, data attributes, CSS variables set through an approved shared abstraction, or component variants. A direct React style prop is not an acceptable shortcut. Any exceptional need must be documented and approved before use. |
+
+#### Non-negotiable implementation rules
+
+1. **Do not use React style props for presentation.** Remove existing uses during the relevant migration batch after checking their behavior and consumers. Do not introduce new ones.
+2. **Do not write ad hoc visual objects in sx.** This includes inline sx objects containing local colors, spacing, dimensions, radius, shadows, typography or interaction-state declarations.
+3. **Use sx as a consumer, not an owner.** Allowed examples include a named button preset, a card-content preset, or a theme/token reference where appropriate. The referenced preset/token must itself have a central owner.
+4. **Use className with CSS Modules for structure, not duplicated design.** A CSS Module may define a unique grid or responsive layout; its shared visual values must reference central CSS variables.
+5. **Prefer semantic shared components for recurring patterns.** If the same role appears more than once, give it one shared component or named preset rather than repeating equivalent sx or CSS declarations.
+6. **Do not ban CSS Modules, className, or sx globally.** They remain valid tools within their responsibilities above.
+7. **Exceptions are exceptional.** If a third-party API or a genuinely runtime-only rendering constraint appears to require an inline style, document the exact file, reason, alternative analysis and approval. Do not silently weaken the rule.
+
+When auditing, search for React style props and inline sx objects separately. Classify each occurrence as a migration target, structural/runtime case, or documented exception. Do not mark the styling API migration complete until all occurrences and their consumers have been checked.
+
+### 1.5 Do not change visual values blindly
 
 Preserve the current blue/white design during the architecture migration. When values conflict, first identify all consumers and document current behavior. Do not choose arbitrary colors or dimensions, and do not perform a redesign without approval.
 
@@ -806,6 +832,15 @@ Continue Stage 1: finish the repository-wide consumer search for BackButton, BUT
 - Read the additional common, auth, maps, trips, points, layout, route-layout and public-page files listed in Section 11.
 - Added the legal-page native Back anchor, map-search Button, ExpandableText disclosure Button and PasswordField reveal/hide IconButton to the role analysis.
 - No source files changed. Stage 1 remains IN PROGRESS; the complete repository-wide action inventory and CSS action-link scan are still pending.
+
+### 2026-11-18 — Styling API policy approved
+
+- Added the mandatory styling API standard to Section 1.4 following the user's approval.
+- React style props are prohibited for presentation and must not be introduced. Existing occurrences must be inventoried and migrated safely; any technically unavoidable exception requires explicit documentation and approval.
+- MUI sx remains allowed only as a consumer of centralized presets, theme values or tokens; ad hoc inline visual objects are prohibited.
+- CSS Modules / className remain allowed for unique structure and responsive composition, while shared visual values must come from central CSS variables/tokens.
+- Clarified the distinct responsibilities of tokens, MUI Theme overrides, shared components/presets, sx, CSS Modules and runtime-dependent visual values.
+- This is an architecture-policy update only. No application source files were changed. Stage 1 remains IN PROGRESS; the current NEXT TASK remains the repository-wide action consumer inventory, including .ht-button tracing.
 
 ### 2026-11-18 — CSS-backed action scan, first pass
 
