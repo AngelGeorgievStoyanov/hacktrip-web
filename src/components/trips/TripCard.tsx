@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type CSSProperties, type ChangeEvent } from 'react';
+import { useRef, useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import {
   Box,
@@ -26,7 +26,7 @@ import {
 } from '@/constants/ui';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { cardStyle, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
+import { TRIP_CARD_SX, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse } from '@/types';
 
@@ -173,7 +173,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   // Keep the legacy empty-day state for pagination gaps.
   if (!selectedDay) {
     return (
-      <Card sx={[cardStyle, { height: isMobile ? 'fit-content' : 'auto', maxHeight: '500px' }]}>
+      <Card sx={[TRIP_CARD_SX, { height: isMobile ? 'fit-content' : 'auto', maxHeight: '500px' }]}>
         <Box sx={{ ...HEAD_BLOCK_SX, height: isMobile ? 'auto' : '-webkit-fill-available' }}>
           <Typography gutterBottom variant="h5" sx={CARD_TEXT_INSET_SX}>
             No trip on {dayNumber} day
@@ -199,7 +199,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   return (
     <Card
       sx={[
-        cardStyle,
+        TRIP_CARD_SX,
         {
           width: '352px',
           maxWidth: 'calc(100vw - 40px)',
