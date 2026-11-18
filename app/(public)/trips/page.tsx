@@ -98,7 +98,7 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
         Discover destinations, photos and experiences shared by the HackTrip community. Explore
         interesting places and personal recommendations from around the world, then share your own
         discoveries.
-      </p>
+      </Typography>
     </WelcomeHeading>
   );
 
