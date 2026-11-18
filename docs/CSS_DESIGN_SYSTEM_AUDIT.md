@@ -4700,3 +4700,51 @@ No application source code was changed. No branch was created. No build, tests, 
 - Trip listing / Home / Trips bounded migration: **SOURCE CHANGES APPLIED**.
 - Stage 1 global consumer maps remain **IN PROGRESS**, but did not block this bounded migration.
 - Next: continue through the existing audit's shared card/surface and account trip page ownership map. Do not repeat the completed Home/Trips route audit.
+
+
+## 11.30 — Account trip pages and shared TripCard end-to-end migration (2026-11-18)
+
+### Scope and source of truth
+- Continued from the existing ownership maps in Sections 11.16, 11.22 and 11.23 and the shared trip-list/card findings in Sections 11.14–11.15.
+- Used the existing audit findings; no new broad audit was started.
+- Followed the ownership chain from shared constants/preset owners through the account shell, route roots, TripList and the shared TripCard consumers.
+- Preserved the existing query keys, API calls, loading/error/empty-state precedence, Favorites/My Trips copy, Create Trip action, card geometry, image behavior, swipe handling, pagination, likes and Details navigation.
+
+### Source changes
+1. `src/styles/presets/layouts.ts`
+   - Added `ACCOUNT_LAYOUT_MAIN_SX` for the authenticated route shell.
+   - Added `ACCOUNT_TRIPS_LOADING_SX` and `ACCOUNT_TRIPS_ERROR_SX`.
+   - Reused the existing account page/content/heading/empty-state contracts.
+2. `app/(account)/layout.tsx`
+   - Replaced the React `style` prop on the shared account main element with MUI Box and `ACCOUNT_LAYOUT_MAIN_SX`.
+   - Kept RequireAuth, Header/Footer order and the original 2rem padding/flex behavior.
+3. `app/(account)/favorites/page.tsx` and `app/(account)/my-trips/page.tsx`
+   - Corrected the concrete unresolved JSX identifiers to the already-imported `ACCOUNT_TRIPS_*` preset exports.
+   - Added the missing `HEADING_TEXT_SX` import.
+   - Centralized loading and error presentation in the new shared presets.
+   - Preserved the distinct empty-state content and My Trips Create Trip CTA.
+4. `src/styles/presets/cards.ts`
+   - Moved TripCard's shared header, image frame, social counts/rows, stepper, content, pagination and description geometry into named presets.
+   - Centralized the 540px card height and the responsive empty-day header contract.
+5. `src/components/trips/TripCard.tsx`
+   - Replaced component-local visual preset declarations with the shared card contracts.
+   - Kept only runtime interaction/state logic in the component.
+6. `src/styles/presets/typography.ts`
+   - Added shared empty TripList title/body typography presets while preserving the previous module values.
+7. `src/components/trips/TripList.tsx`
+   - Replaced CSS Module typography classes with the named typography presets.
+8. `src/components/trips/TripList.module.css`
+   - Removed the now-unreferenced module after migrating its only consumer.
+
+### Result
+- **9 files changed** across the shared preset owners, account route shell, Favorites/My Trips route roots, TripList and TripCard; this includes removal of the obsolete TripList CSS Module.
+- Ownership now flows from centralized layout/card/typography presets to all relevant account and shared-list consumers.
+- Corrected the previously documented Favorites/My Trips identifier and missing-import inconsistencies in the actual source.
+- No API, backend, data, query behavior or business logic changes.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- Account Trips + Favorites route/style migration: **SOURCE CHANGES APPLIED**.
+- Shared TripCard geometry is now centralized for Home, public Trips, My Trips and Favorites.
+- Next: continue with the next already-audited shared card/surface owner family; trace its preset/theme owner through every audited consumer before changing or removing any legacy export.
+- Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
