@@ -1,10 +1,10 @@
 'use client';
 
 import { useRef, type ReactNode } from 'react';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { ScrambleHeading, type ScrambleHeadingHandle } from '@/components/common/ScrambleHeading';
 import { BREAKPOINTS, minWidthQuery } from '@/constants/ui';
-import { HOME_HEADING_STYLE } from '@/styles/presets/typography';
+import { HOME_HEADING_SX } from '@/styles/presets/typography';
 
 interface WelcomeHeadingProps {
   /**
@@ -43,7 +43,9 @@ export function WelcomeHeading({ children }: WelcomeHeadingProps) {
           <ScrambleHeading ref={headingRef} text="Welcome in Hack Trip!" />
         ) : (
           <>
-            <h1 style={HOME_HEADING_STYLE}>Welcome in</h1>
+            <Typography component="h1" variant="inherit" sx={HOME_HEADING_SX}>
+              Welcome in
+            </Typography>
             <ScrambleHeading ref={headingRef} text="Hack Trip!" />
           </>
         )}
