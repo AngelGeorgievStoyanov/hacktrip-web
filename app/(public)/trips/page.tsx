@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Box, Typography } from '@mui/material';
 import { tripApi, type TripListQuery } from '@/api/trips';
 import { TripFilters } from '@/components/trips/TripFilters';
 import { TripList } from '@/components/trips/TripList';
@@ -15,15 +16,12 @@ import {
   type TripSort,
 } from '@/constants/trips';
 import { PAGE_MAX } from '@/constants/pagination';
-import { CENTERED_PAGE_MAIN_STYLE } from '@/styles/presets/layouts';
-import { HOME_INTRO_STYLE } from '@/styles/presets/typography';
+import { CENTERED_PAGE_MAIN_SX } from '@/styles/presets/layouts';
+import { HOME_INTRO_SX } from '@/styles/presets/typography';
 
 interface TripsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
-
-
-const INTRO_STYLE = { ...HOME_INTRO_STYLE, maxWidth: 900 };
 
 function first(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
@@ -96,7 +94,7 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
 
   const intro = (
     <WelcomeHeading>
-      <p style={INTRO_STYLE}>
+      <Typography component="p" sx={[HOME_INTRO_SX, { maxWidth: 900 }]}>
         Discover destinations, photos and experiences shared by the HackTrip community. Explore
         interesting places and personal recommendations from around the world, then share your own
         discoveries.
@@ -110,7 +108,7 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
     return (
       <>
         {filters}
-        <main style={CENTERED_PAGE_MAIN_STYLE}>
+        <Box component="main" sx={CENTERED_PAGE_MAIN_SX}>
           {intro}
           <TripList trips={trips} />
           <TripPagination
@@ -121,16 +119,16 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
             transport={query.transport}
             sort={query.sort}
           />
-        </main>
+        </Box>
       </>
     );
   } catch {
     return (
       <>
         {filters}
-        <main style={MAIN_STYLE}>
+        <Box component="main" sx={CENTERED_PAGE_MAIN_SX}>
           {intro}
-          <p style={INTRO_STYLE}>Trips are temporarily unavailable. Please try again later.</p>
+          <Typography component="p" sx={[HOME_INTRO_SX, { maxWidth: 900 }]}>Trips are temporarily unavailable. Please try again later.</Typography>
         </main>
       </>
     );
