@@ -3750,13 +3750,13 @@ Status definitions:
 | Admin | Failed Login Logs | app/(admin)/admin/failed-login-logs/page.tsx | DETAILED | Section 11.24.F; multi-select bulk deletion, confirmation, table/query states and pagination |
 | Admin | Reports | app/(admin)/admin/reports/page.tsx | DETAILED | Section 11.24.G; per-report deletion confirmation, mutation/query feedback and pagination |
 | Admin | Route Not Found Logs | app/(admin)/admin/route-not-found-logs/page.tsx | DETAILED | Section 11.24.H; expandable request diagnostics, query states and pagination |
-| System | Not Found / 404 | app/not-found.tsx | NOT AUDITED | NotFound shared component/CSS is inventoried; route-level page pass remains |
+| System | Not Found / 404 | app/not-found.tsx | DETAILED | Section 11.25; global 404 composition, countdown/redirect, CSS Module, direct consumers, RequireRole privacy fallback and route-level notFound() call sites |
 
 **Verified coverage count:**
 - 27 route roots total.
-- 26 DETAILED: all 6 Public pages, all 6 Auth pages, all 7 Account pages and all 7 Admin pages.
+- 27 DETAILED: all 6 Public pages, all 6 Auth pages, all 7 Account pages, all 7 Admin pages and the System Not Found / 404 route.
 - 0 PARTIAL.
-- 1 NOT AUDITED: Not Found / 404.
+- 0 NOT AUDITED.
 - These counts describe route-page audit coverage only. They do not change the 163/163 candidate file inventory count and do not mean Stage 1 is complete.
 
 ### G. Next page-audit sequence
@@ -4422,3 +4422,98 @@ No application source code was changed. No branch was created. No build, tests, 
 4. Keep Stage 1 IN PROGRESS until every mandatory Section 7 consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
 5. Do not change application source without explicit authorization.
 6. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+## 11.25 — Not Found / 404 route audit (2026-11-18)
+
+### A. Preflight and scope
+
+- Re-read the approved architecture, Styling API policy (Section 1.4), six-stage plan (Section 6), mandatory search matrix (Section 7), file-level ledger (Section 10.1), route-page matrix (Section 11.19.F), dependency/route maps (Sections 11.12–11.13) and the latest NEXT TASK in Section 11.24.
+- Verified branch `feature/frontend-modernization`; branch HEAD before this documentation update: `82d52b3d1d788db8452bf1e44276774b4863e892`.
+- Audit document blob SHA before this batch: `166f9a972099bd52b737f750c41e99c740c7e6dd`.
+- Audited the global `app/not-found.tsx` route, shared `NotFound` component and CSS Module, direct consumers, Admin role-denial behavior, route-level Next.js `notFound()` call sites and the separate global error boundary.
+- Reused the existing Section 10.1 entries for NotFound, its CSS Module, app/not-found and RequireRole. No new candidate inventory path was discovered; the file-level ledger remains the source of truth and its existing entries were not duplicated.
+- No application source changes, no branch creation, and no build, tests, lint, CI or browser validation.
+
+### B. Global Not Found route — `/not-found`
+
+**Composition and ownership**
+
+- Route entry: `app/not-found.tsx`. It is a minimal server component that renders the shared `src/components/common/NotFound.tsx`; it has no local styling, controls or route-specific metadata.
+- The shared NotFound component is a client component because it owns countdown state, interval/timeout lifecycle and client-side navigation.
+- The 404 screen renders its own full-viewport `main`; it does not compose the standard Header/Footer itself. The root app shell remains the outer application boundary. Exact browser rendering of nested layouts for thrown `notFound()` calls was not validated.
+- The page uses a full-screen photographic background and centered vertical content: “PAGE NOT FOUND 404”, “WRONG WAY!”, a live seconds message and a HOME action.
+- Heading hierarchy currently uses h3, h4, then h3; there is no h1 in this page. This is a semantic/typography consistency target, not a reason to change copy during the audit.
+
+**Runtime behavior and states**
+
+- Countdown starts at `COUNTDOWN_START = 10`. An interval decrements displayed state once per second, clamped at zero.
+- A separate timeout calls `router.replace('/')` after ten seconds. The HOME button immediately calls the same route replacement.
+- Both timers are cleared on unmount. Clicking HOME clears both timers before navigation, preventing the scheduled timeout from firing afterward.
+- There is no loading, query, mutation, retry, or error-feedback state in this component. The relevant states are initial 10-second display, each countdown value, zero/redirect boundary, immediate HOME action and unmount cleanup.
+- The changing countdown is not explicitly marked as a live region. Review its announcement behavior during a later accessibility pass; do not add announcements as part of this CSS audit.
+- No reduced-motion behavior is present or required by the current CSS animation model; the page uses no CSS animation or transition.
+
+### C. CSS Module and styling ownership
+
+- `NotFound.module.css` owns the unique full-screen composition: min-height 100vh, remote background image, centered cover positioning, no-repeat, flex column alignment/centering and centered text.
+- Text color and the page gap already consume `--ht-color-text-inverse` and `--ht-spacing-xs`.
+- The HOME button is a native `button` with local CSS skin: inverse text, `--ht-color-action-contrast-background`, literal `10px 30px` padding, literal `25px` margin, pointer cursor and no border.
+- The HOME control is a navigation action but does not consume a named semantic navigation/action preset or shared button component. Preserve its imperative `router.replace('/')` behavior when migrating.
+- The background image URL is a page-specific external Unsplash asset. Background positioning/cover and full-screen centering are unique page composition; do not move them into a generic Card/surface contract. Asset ownership/performance is separate from the CSS contract.
+- No React `style` prop or inline `sx` occurs in the NotFound component or route wrapper. The CSS Module contains no media query; the composition naturally centers and wraps content at available viewport widths. No responsive browser verification was run.
+- Existing Section 10.1 statuses remain CHANGE REQUIRED for `NotFound.tsx` and `NotFound.module.css`, STRUCTURAL for `app/not-found.tsx` and `RequireRole.tsx`. Detailed route audit coverage does not mean these files are migrated or VERIFIED.
+
+### D. Direct consumers and authorization fallback
+
+| Consumer | Relationship | Behavior / ownership |
+|---|---|---|
+| `app/not-found.tsx` | Direct consumer of `NotFound` | Global Next.js 404 route entry; delegates all visible UI to the shared component |
+| `src/components/auth/RequireRole.tsx` | Direct consumer of `NotFound` | Returns the same 404 UI when a visitor is not authenticated/authorized for the requested role |
+| `app/(admin)/layout.tsx` | Consumer of `RequireRole` | Applies `MODERATOR_ROLES`; because RequireRole wraps Header/main/AdminNavigation/Footer, its unauthorized NotFound branch replaces that wrapped shell rather than rendering the admin navigation |
+| Public Trip Details route | Calls Next.js `notFound()` | Invalid trip ID, API not-found result or missing resolved day enters the framework not-found path |
+| Account Edit Trip route | Calls Next.js `notFound()` | Invalid trip ID/day ID, missing trip or day not belonging to the trip enters the framework not-found path |
+
+- Exact direct import search found two consumers of `@/components/common/NotFound`: `app/not-found.tsx` and `src/components/auth/RequireRole.tsx`. Both were fetched and verified from the target branch, rather than relying on default-branch code-search snippets.
+- Exact `notFound()` route call sites were found in `app/(public)/trips/[id]/page.tsx` and `app/(account)/trips/[id]/edit/page.tsx`. The public Trip Details route has three guards: invalid route ID, backend trip-not-found and missing resolved day. Edit Trip has guards for invalid trip ID, backend trip-not-found, invalid dayId and dayId not belonging to the trip.
+- `RequireRole` returns null while auth status is loading. Once resolved, unauthorized/unauthenticated users receive the shared NotFound component, deliberately hiding the existence and role requirement of Admin routes. Backend authorization remains authoritative.
+- `app/error.tsx` is a separate route error boundary, not a 404 consumer: it renders “Something went wrong”, an error Alert and a Try again action using MUI Box/Button/Typography. Do not merge this error state into NotFound or treat it as another NotFound caller.
+- Admin Route Not Found Logs is an administrative diagnostic page for recorded unmatched API routes; it is not the user-facing 404 screen and is not a NotFound component consumer.
+
+### E. Migration targets and constraints
+
+1. Migrate the HOME action to the shared semantic Navigation action contract (or an approved shared component) without changing the immediate `router.replace('/')` behavior or timer cancellation.
+2. Move the HOME button's shared visual skin values to the shared action contract; keep only page-specific placement/geometry local if the full consumer map confirms it is unique.
+3. Keep the photographic background and full-viewport centered composition as a distinct 404 page layout, while ensuring any shared colors/spacing continue to come from tokens/CSS variables.
+4. Review heading semantic hierarchy and countdown announcement behavior in the appropriate accessibility/typography pass.
+5. Preserve the ten-second countdown, immediate HOME navigation, route replacement semantics, timer cleanup and the authorization privacy behavior.
+6. Keep `app/error.tsx` as a distinct error-boundary design and keep Admin diagnostic logs distinct from the user-facing 404.
+7. Do not mark the NotFound component or CSS Module migrated/VERIFIED merely because this route audit is now DETAILED.
+
+### F. Exact branch-ref source evidence
+
+- `app/not-found.tsx` — a26b90087136d75721f8ddb3e36b2fa413ebff73
+- `src/components/common/NotFound.tsx` — fdb748f384e6895a6b5b143969d8c185c827bd60
+- `src/components/common/NotFound.module.css` — 44b9725085174e8e0321b3fdc9de37fa54d9f2dc
+- `src/components/auth/RequireRole.tsx` — c35e443eae3fa950711c70062577bd5948a3fb35
+- `app/(admin)/layout.tsx` — 5e4f19fce9cd9770695535c8a90840667c2b893e
+- `app/(public)/trips/[id]/page.tsx` — 807f760ff224d686942f779c5e604d4b86f4959c
+- `app/(account)/trips/[id]/edit/page.tsx` — cb0a66d1fa19710362603b12cb4120485130c9fc
+- `app/error.tsx` — 5504213aa5e25e64d49bc7aa879673a9b93c8aae
+- `app/(public)/layout.tsx` — de747f2fb78157660255e23047ea0347b3d80975
+
+### G. Batch result and next task
+
+- Completed detailed page-level audit coverage for the final Not Found / 404 route and its direct consumers/fallback call sites.
+- Updated Section 11.19.F from 26 to 27 DETAILED, from one to zero NOT AUDITED; PARTIAL remains zero. All 27 route roots now have DETAILED page-level coverage.
+- The 163/163 candidate inventory count and 178 unique Section 10.1 ledger paths are separate file-level measures. No new candidate path was needed for this batch.
+- Stage 1 remains IN PROGRESS. The mandatory Section 7 token/preset/CSS/inline-style/semantic-action/surface/field/image/state/responsive consumer maps are not yet exhaustive. Completing all route roots does not close Stage 1.
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+**NEXT TASK — close Stage 1 mandatory dependency and consumer maps (not another route inventory):**
+
+1. Re-read Sections 1.4, 2, 6, 7, 9, 10.1, Sections 11.12–11.13 and the latest audit log before each batch.
+2. Continue from the Section 11.12 dependency graph and Section 7 matrix. Select one remaining owner family at a time (semantic actions/buttons, surfaces/cards, fields, tokens/CSS variables, presets, images, social, maps or state/responsive behavior).
+3. For every search, record exact query/scope, result count and exact branch-ref consumer paths; follow each declaration/import to all call sites. Do not rely on default-branch code search as branch proof.
+4. Update Section 10.1 only when new evidence changes an existing row or a genuinely missing path is discovered. Keep the 163/163 candidate inventory metric separate from consumer-map completeness.
+5. Keep Stage 1 IN PROGRESS until all mandatory Section 7 consumer maps and state/responsive matrices are exhaustive. Do not begin application source migration before that gate.
+6. No app source changes, no branch creation, and no build/tests/lint/CI/browser validation without explicit user authorization.
