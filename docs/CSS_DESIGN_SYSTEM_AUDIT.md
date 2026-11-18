@@ -820,6 +820,27 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/PointsSection.tsx` | Pure composition wrapper delegates selected point rendering to PointSection. | No visual skin of its own; selected-point section wrapper is semantic structure only. Child surface is owned by PointSection. | PARTIAL — composition only; consumer trace required. |
 | `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
 | `src/components/common/ConfirmDialog.tsx` | Uses MUI Dialog; its Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are direct MUI Buttons with the same primary/contained props; semantic roles, button states and dialog content spacing remain uncentralized. | PARTIAL — Dialog surface is centralized, action roles and layout remain. |
+| `app/api/og/trips/[id]/route.ts` | Server route parses trip/day parameters, loads OG data and delegates image generation to `renderTripOgImage`; sets immutable cache headers. | No UI or CSS declarations in the route. Visual implementation is in the supporting renderer `src/lib/images/renderTripOgImage.tsx`; route cache/data behavior is not a styling concern. | STRUCTURAL — server image endpoint only. |
+| `app/error.tsx` | Uses MUI Box, Typography and Alert; error message semantics are delegated to MUI primitives. | Local Box `sx` owns flex layout, gap, alignment and padding; retry is a direct contained MUI Button without the shared Retry/Navigation semantic role. No shared error-panel preset is consumed. | CHANGE REQUIRED — local error-screen composition and direct Retry action. |
+| `app/not-found.tsx` | Delegates the entire not-found experience to the existing `src/components/common/NotFound`. | No local styles or controls; visual work belongs to `NotFound.tsx` and `NotFound.module.css`, already inventoried. | STRUCTURAL — route wrapper only. |
+| `app/opengraph-image.tsx` | Uses centralized SEO image dimensions and delegates rendering to `renderTripOgImage`; exports Next metadata-image properties. | No local visual declarations. The shared renderer owns the OG composition and its Satori/ImageResponse styles; review that dependency separately. | STRUCTURAL — metadata image entry point. |
+| `app/robots.ts` | Uses centralized site URL and emits crawler rules plus sitemap/host references. | No UI, CSS, tokens or visual state. | STRUCTURAL — SEO metadata route, not a styling consumer. |
+| `app/sitemap.ts` | Uses SEO constants, API data, trip indexability builder and absolute URL helper; includes public static routes and indexable trip URLs. | No UI or CSS declarations; sitemap data generation is outside the visual system. | STRUCTURAL — SEO metadata route, not a styling consumer. |
+| `app/twitter-image.tsx` | Uses centralized SEO image dimensions and delegates rendering to the same `renderTripOgImage` implementation as Open Graph. | No local visual declarations; shared renderer owns the visual output. | STRUCTURAL — metadata image entry point. |
+| `src/components/admin/index.ts` | Barrel exports seven admin feature components (dashboard, users, user form, failed logs, route-not-found logs, images and reports). | No component implementation, style declaration or runtime wrapper. Styling consumers remain the exported component files, already individually inventoried. | STRUCTURAL — export surface only. |
+| `src/components/auth/GuestOnly.tsx` | Auth guard checks auth status, redirects authenticated users and renders children only for guests. Used by the auth route layout. | Returns null during loading/authenticated redirect; no visual wrapper or local styling. | STRUCTURAL — access guard only. |
+| `src/components/auth/RequireAuth.tsx` | Auth guard redirects anonymous/account-error visitors to login with a return path and renders children only when authenticated; used by account layout. | Returns null while unauthenticated/loading; no visual wrapper or local styling. | STRUCTURAL — access guard only. |
+| `src/components/auth/RequireRole.tsx` | Role guard checks authenticated permissions and delegates unauthorized rendering to shared `NotFound`; used by admin layout. | No local styles; unauthorized surface is owned by the already-inventoried NotFound component/module. | STRUCTURAL — access guard with delegated NotFound UI. |
+| `src/components/auth/RequireTripOwner.tsx` | Uses auth state, query of the current user's trips, moderator role and redirect to trip details when ownership is not allowed; wraps children only after access is resolved. | No loading panel, card or local visual styles; returns null until allowed. | STRUCTURAL — authorization/UI-visibility guard only. |
+| `src/components/auth/index.ts` | Barrel exports auth guards, forms, profile image and CAPTCHA components. Account/admin layouts import guards through this module. | No rendered component or visual declaration; note `GuestOnly` is imported directly by the auth layout and is not re-exported here. | STRUCTURAL — export surface only. |
+| `src/components/common/TabSyncListener.tsx` | Subscribes to cross-tab events and redirects to login after email verification; mounted behavior only. | Returns null and declares no UI, CSS or visual state. | STRUCTURAL — side-effect listener only. |
+| `src/components/home/index.ts` | Barrel exports `HomeHero`; consumers receive the existing feature component. | No rendered UI or styling declarations; visual implementation is in the already-inventoried `HomeHero.tsx`. | STRUCTURAL — export surface only. |
+| `src/components/images/index.ts` | Barrel exports `AppImage`, `ImageLightbox` and `ImageGallery`. | No rendered UI or style declarations; image presets and the three exported implementations are inventoried separately. | STRUCTURAL — export surface only. |
+| `src/components/placeholders/index.ts` | Barrel exports `SocialObjectPlaceholder`. | No rendered UI or styling declarations; visual implementation is in the already-inventoried placeholder component. | STRUCTURAL — export surface only. |
+| `src/components/placeholders/socialObjectPlaceholderAssets.ts` | Central list of five public SVG placeholder asset paths (mountain, beach, city, garden and fields); component selects from this data. | Contains asset references only, not SVG markup, colors, sizing or component styling. Visual treatment remains in `SocialObjectPlaceholder.tsx` and the SVG files themselves are outside this TS/CSS candidate filter. | DATA — asset registry, not a style owner. |
+| `src/components/tracking/index.ts` | Barrel exports `LiveTracker`. | No rendered UI or style declarations; visual implementation and action controls are in the already-inventoried `LiveTracker.tsx`. | STRUCTURAL — export surface only. |
+| `src/lib/images/renderTripOgImage.tsx` | Supporting dependency outside the 163-file candidate filter; centralizes OG/Twitter image composition and consumes `SEO_BRAND`, OG dimensions and image validation/fetch limits. | Uses inline `style` objects for Next `ImageResponse`/Satori rendering, with many local geometry/typography literals. This is not an ordinary DOM consumer: record as a renderer-specific Styling API exception candidate and assess whether Satori's style-object contract requires it; no exception approval or source change made in this audit batch. | SUPPORTING DEPENDENCY — OG image renderer; separate review required. |
+
 ## 11. Current status and exact next task
 
 ### Current stage
@@ -2105,3 +2126,43 @@ src/components/placeholders/index.ts
 src/components/placeholders/socialObjectPlaceholderAssets.ts
 src/components/tracking/index.ts
 ```
+
+## 11.11 — Completion of the 19 outstanding file records (2026-11-18)
+
+### Preflight and reconciliation
+- Re-read the architecture ownership chain, Styling API policy (Section 1.4), six-stage plan, Section 7 search matrix, Section 10.1 and the prior NEXT TASK before inspecting source.
+- Verified branch `feature/frontend-modernization` at HEAD `cfeae849079a489fe32d511c415c8afcf8341cf2`; recursive tree is complete (not truncated).
+- Recomputed the exact candidate filter: **163 files**. Before this batch, 144 candidate paths had individual Section 10.1 rows and 19 did not. This batch inspected and added records for all exact 19 paths; candidate inventory coverage is now **163/163 (100%)**, with **0 candidate paths lacking an individual ledger row**.
+- The Section 10.1 ledger now contains **177 unique in-scope + supporting/out-of-scope paths before adding the OG renderer**, and one additional supporting dependency row for `src/lib/images/renderTripOgImage.tsx`; this supporting renderer is not part of the 163-file candidate count. (The existing 14 non-candidate ledger paths remain outside the candidate scope.)
+- Inventory coverage means every candidate path has a description; it does **not** mean all Section 7 consumer searches, semantic-role maps, CSS literal tracing, migrations or visual QA are complete. Stage 1 remains **IN PROGRESS**.
+
+### Files inspected — all 19 formerly outstanding paths
+- `app/api/og/trips/[id]/route.ts` — dynamic Node route obtains trip/day data, delegates to the OG renderer and sets immutable caching; no local UI.
+- `app/error.tsx` — actual new visual consumer: local Box layout/padding/gap in `sx`, Alert and a direct contained Retry Button. It needs a shared error-screen composition and semantic Retry role.
+- `app/not-found.tsx` — wrapper only; delegates to the already-inventoried NotFound component.
+- `app/opengraph-image.tsx`, `app/twitter-image.tsx` — metadata image entry points; both delegate to the shared OG renderer and central SEO dimensions.
+- `app/robots.ts`, `app/sitemap.ts` — crawler directives and sitemap data generation; no visual styling.
+- `src/components/admin/index.ts`, `src/components/auth/index.ts`, `src/components/home/index.ts`, `src/components/images/index.ts`, `src/components/placeholders/index.ts`, `src/components/tracking/index.ts` — barrel exports only; visual consumers remain in the exported implementation files already present in Section 10.1.
+- `src/components/auth/GuestOnly.tsx`, `RequireAuth.tsx`, `RequireRole.tsx`, `RequireTripOwner.tsx` — access/visibility guards; render children or null, with RequireRole delegating unauthorized output to shared NotFound. No independent local visual skin.
+- `src/components/common/TabSyncListener.tsx` — cross-tab event listener and redirect; returns null.
+- `src/components/placeholders/socialObjectPlaceholderAssets.ts` — five SVG path constants only; no visual declarations. The consuming placeholder component was already inventoried.
+
+### Supporting renderer dependency discovered
+- Followed the Open Graph/Twitter route imports into `src/lib/images/renderTripOgImage.tsx` and `src/lib/images/tripOgData.ts`. The data loader is presentation-free. The renderer centralizes the social-preview composition and uses `SEO_BRAND` for brand colors, but it also contains inline Satori/ImageResponse style objects and literal dimensions, spacing and typography.
+- These styles are generated through Next's `ImageResponse` rendering API rather than ordinary DOM component styling. They are recorded as a renderer-specific exception candidate, not silently approved and not migrated in this batch. A later pass must confirm the Satori API constraints and centralize reusable visual values where feasible.
+
+### Findings and impact
+- Of the 19 files, **1 is a direct styling migration target** (`app/error.tsx`); the other 18 are metadata/data/route wrappers, barrel exports, auth guards, a listener or asset registry and do not own a visual skin.
+- The not-found screen and placeholder UI are delegated to existing audited components; these wrappers must not duplicate their styling.
+- No application source code was changed. Only the single audit document was updated.
+- No build, tests, lint, CI or browser validation was run, in accordance with the standing restriction.
+
+### Updated NEXT TASK
+1. Candidate file inventory has no remaining unrecorded paths. Do not reopen these 19 files unless a new consumer or dependency is discovered.
+2. Continue the mandatory Section 7 consumer map for form controls: TextField, Select, Autocomplete, InputBase, FormControl, Checkbox, Radio, Switch, native inputs and every hover/focus/error/disabled/read-only/loading state. Correlate all consumers with the text-field theme override and form presets; include `AddressAutocomplete`'s broad style-injection API.
+3. Complete the direct MUI Button/IconButton and native-button role/state map beyond `BUTTON_STYLES`/BackButton, including Drawer navigation, Confirm/Cancel, table actions, map controls, image overlay controls, pagination and the new Retry action in `app/error.tsx`.
+4. Continue repository-wide CSS-variable/token and raw visual-literal trace. Review the OG renderer exception candidate and its `SEO_BRAND` ownership; preserve the eight CSS Modules as structural composition where appropriate.
+5. Stage 1 remains **IN PROGRESS** until these consumer maps and all Section 7 searches are exhaustive. Do not begin application source migration before that gate. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+### Outstanding candidate paths
+**0 — all 163 candidate paths now have an individual Section 10.1 record.** This is inventory completion only, not migration completion.
