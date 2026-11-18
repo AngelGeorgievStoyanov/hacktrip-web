@@ -26,7 +26,12 @@ import {
 } from '@/constants/ui';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { TRIP_CARD_SX, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
+import {
+  TRIP_CARD_SX, CARD_TEXT_INSET_SX, TRIP_TRIP_CARD_HEIGHT, TRIP_CARD_HEADER_SX,
+  getTripCardEmptyHeaderSx, TRIP_CARD_TRIP_CARD_IMAGE_FRAME_SX, TRIP_CARD_TRIP_CARD_SOCIAL_COUNTS_SX,
+  TRIP_CARD_TRIP_CARD_STEPPER_SPACE_SX, TRIP_TRIP_CARD_CONTENT_SX, TRIP_CARD_SOCIAL_ROW_SX,
+  TRIP_CARD_TRIP_CARD_PAGINATION_SX, TRIP_CARD_TRIP_CARD_DESCRIPTION_SX, TRIP_CARD_STEPPER_SX,
+} from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse } from '@/types';
 
@@ -34,74 +39,6 @@ interface TripCardProps {
   tripGroup: TripGroupResponse;
   prioritizeImage?: boolean;
 }
-
-const CARD_HEIGHT = '540px';
-
-const HEAD_BLOCK_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  height: '105px',
-  minHeight: '105px',
-  boxSizing: 'border-box',
-  overflow: 'hidden',
-} as const;
-
-const IMAGE_FRAME_SX = {
-  position: 'relative',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  height: '200px',
-  minHeight: '200px',
-  overflow: 'hidden',
-  bgcolor: 'action.hover',
-} as const;
-
-const SOCIAL_COUNTS_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  gap: 0.5,
-  width: '100%',
-  height: '58px',
-  minHeight: '58px',
-  px: 2,
-  boxSizing: 'border-box',
-} as const;
-
-const STEPPER_SPACE_SX = {
-  height: '20px',
-  minHeight: '20px',
-  width: '100%',
-} as const;
-
-const CARD_CONTENT_SX = {
-  display: 'flex',
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: 0,
-  py: 1,
-  '&:last-child': { pb: 1 },
-} as const;
-
-const SOCIAL_COUNT_ROW_SX = { display: 'flex', alignItems: 'center', gap: 1 } as const;
-
-const PAGINATION_SX = { marginTop: 2 } as const;
-
-const DESCRIPTION_SX = {
-  display: '-webkit-box',
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 2,
-  overflow: 'hidden',
-  textAlign: 'center',
-} as const;
 
 /**
  * One shared card serves the home, trips, my trips and favorites lists.
@@ -174,12 +111,12 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   if (!selectedDay) {
     return (
       <Card sx={[TRIP_CARD_SX, { height: isMobile ? 'fit-content' : 'auto', maxHeight: '500px' }]}>
-        <Box sx={{ ...HEAD_BLOCK_SX, height: isMobile ? 'auto' : '-webkit-fill-available' }}>
+        <Box sx={getTripCardEmptyHeaderSx(isMobile)}>
           <Typography gutterBottom variant="h5" sx={CARD_TEXT_INSET_SX}>
             No trip on {dayNumber} day
           </Typography>
         </Box>
-        <CardContent sx={CARD_CONTENT_SX}>
+        <CardContent sx={TRIP_CARD_CONTENT_SX}>
           {days.length > 1 ? (
             <Pagination
               count={days.length}
@@ -188,7 +125,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
               page={Math.max(selectedPage, 1)}
               onChange={handleDayChange}
               renderItem={renderPaginationItem}
-              sx={PAGINATION_SX}
+              sx={TRIP_CARD_PAGINATION_SX}
             />
           ) : null}
         </CardContent>
@@ -203,27 +140,27 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
         {
           width: '352px',
           maxWidth: 'calc(100vw - 40px)',
-          height: CARD_HEIGHT,
-          minHeight: CARD_HEIGHT,
-          maxHeight: CARD_HEIGHT,
+          height: TRIP_CARD_HEIGHT,
+          minHeight: TRIP_CARD_HEIGHT,
+          maxHeight: TRIP_CARD_HEIGHT,
           boxSizing: 'border-box',
           overflow: 'hidden',
         },
       ]}
     >
-      <Box sx={HEAD_BLOCK_SX}>
+      <Box sx={TRIP_CARD_HEADER_SX}>
         <Typography gutterBottom variant="h5" sx={[CARD_TEXT_INSET_SX, { textAlign: 'center' }]}>
           Title: {title}
         </Typography>
         {description ? (
-          <Typography variant="body2" sx={[DESCRIPTION_SX, CARD_TEXT_INSET_SX]}>
+          <Typography variant="body2" sx={[TRIP_CARD_DESCRIPTION_SX, CARD_TEXT_INSET_SX]}>
             Description: {description}
           </Typography>
         ) : null}
       </Box>
 
       <Box
-        sx={IMAGE_FRAME_SX}
+        sx={TRIP_CARD_IMAGE_FRAME_SX}
         onTouchStart={(event) => {
           touchEndX.current = null;
           touchStartX.current = event.touches[0].clientX;
@@ -254,7 +191,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           steps={maxSteps}
           position="static"
           activeStep={activeStep}
-          sx={{ width: '-webkit-fill-available', flexGrow: 1, maxHeight: '20px' }}
+          sx={TRIP_CARD_STEPPER_SX}
           nextButton={
             <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
               Next
@@ -268,11 +205,11 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           }
         />
       ) : (
-        <Box sx={STEPPER_SPACE_SX} />
+        <Box sx={TRIP_CARD_STEPPER_SPACE_SX} />
       )}
 
-      <Box aria-label="Trip and day likes" sx={SOCIAL_COUNTS_SX}>
-        <Box sx={SOCIAL_COUNT_ROW_SX}>
+      <Box aria-label="Trip and day likes" sx={TRIP_CARD_SOCIAL_COUNTS_SX}>
+        <Box sx={TRIP_CARD_SOCIAL_ROW_SX}>
           <Typography component="span" variant="body2">
             Trip:
           </Typography>
@@ -283,7 +220,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             </Typography>
           ) : null}
         </Box>
-        <Box sx={SOCIAL_COUNT_ROW_SX}>
+        <Box sx={TRIP_CARD_SOCIAL_ROW_SX}>
           <Typography component="span" variant="body2">
             Day:
           </Typography>
@@ -296,7 +233,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
         </Box>
       </Box>
 
-      <CardContent sx={CARD_CONTENT_SX}>
+      <CardContent sx={TRIP_CARD_CONTENT_SX}>
         <Button
           component={Link}
           href={detailsHref}
@@ -314,7 +251,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             page={selectedPage}
             onChange={handleDayChange}
             renderItem={renderPaginationItem}
-            sx={PAGINATION_SX}
+            sx={TRIP_CARD_PAGINATION_SX}
           />
         ) : null}
       </CardContent>
