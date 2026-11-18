@@ -41,6 +41,11 @@ export const ADMIN_PAGINATION_SX = {
 } as const;
 
 /** Shared layout for the account trip and favorites listing pages. */
+export const ACCOUNT_LAYOUT_MAIN_SX = {
+  p: '2rem',
+  flex: 1,
+} as const;
+
 export const ACCOUNT_TRIPS_PAGE_SX = { width: '100%' } as const;
 
 export const ACCOUNT_TRIPS_CONTENT_SX = {
@@ -54,6 +59,15 @@ export const ACCOUNT_TRIPS_HEADING_SX = {
   textAlign: 'center',
   mb: { xs: UI_SPACING.md, md: UI_SPACING.lg },
   ...HEADING_TEXT_SX,
+} as const;
+
+export const ACCOUNT_TRIPS_LOADING_SX = {
+  my: UI_SPACING.lg,
+} as const;
+
+export const ACCOUNT_TRIPS_ERROR_SX = {
+  width: '100%',
+  maxWidth: 560,
 } as const;
 
 export const ACCOUNT_TRIPS_EMPTY_STATE_SX = {
