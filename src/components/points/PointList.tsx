@@ -3,6 +3,8 @@
 import { Box, Typography } from '@mui/material';
 import { PointCard } from '@/components/points/PointCard';
 import type { TripPoint } from '@/types';
+import { POINT_LIST_SX } from '@/styles/presets/layouts';
+import { POINT_LIST_EMPTY_SX } from '@/styles/presets/typography';
 
 interface PointListProps {
   points: TripPoint[];
@@ -18,11 +20,11 @@ export function PointList({ points, onEdit, onDelete, onMove, disabled = false }
   );
 
   if (sortedPoints.length === 0) {
-    return <Typography variant="h5">ADD YOUR FIRST POINT</Typography>;
+    return <Typography variant="h5" sx={POINT_LIST_EMPTY_SX}>ADD YOUR FIRST POINT</Typography>;
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 0 }}>
+    <Box sx={POINT_LIST_SX}>
       {sortedPoints.map((point) => (
         <PointCard
           key={point.id}
