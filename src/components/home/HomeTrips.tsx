@@ -1,5 +1,6 @@
+import { Typography } from '@mui/material';
 import { TripList } from '@/components/trips/TripList';
-import { HOME_HEADING_STYLE } from '@/styles/presets/typography';
+import { HOME_HEADING_SX } from '@/styles/presets/typography';
 import type { TripGroupResponse } from '@/types';
 
 export function HomeTrips({ trips }: { trips: TripGroupResponse[] }) {
@@ -7,7 +8,9 @@ export function HomeTrips({ trips }: { trips: TripGroupResponse[] }) {
 
   return (
     <>
-      <h3 style={HOME_HEADING_STYLE}>These are our TOP 5 most liked in Hack Trips!</h3>
+      <Typography component="h3" variant="inherit" sx={HOME_HEADING_SX}>
+        These are our TOP 5 most liked in Hack Trips!
+      </Typography>
       <TripList trips={trips} prioritizeFirstImage />
     </>
   );
