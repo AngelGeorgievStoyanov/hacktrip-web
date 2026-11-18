@@ -2840,3 +2840,155 @@ Section 10.1 already contains individual inventory rows for the route, Home comp
 7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.15 — Trips route and shared TripList / TripCard consumer audit (2026-11-18)
+
+### A. Scope and preflight
+
+- Re-read the target ownership architecture, Styling API policy (Section 1.4), approved six-stage plan, Section 7 mandatory search matrix, Section 10.1 file ledger, Sections 11.12–11.14 and the exact previous NEXT TASK.
+- Verified the target branch: `feature/frontend-modernization`. The current branch head observed during this batch was `05910ee557ea7768675218c4704afdbea8d6b0b5`.
+- Re-fetched the audit document before editing. Its source blob SHA before this update was `f33ff61c7d5789aa6bb7534c876672196a25a7d5`.
+- Reviewed the Trips route, filters, pagination, shared list/card, heading, Favorites and My Trips callers, account shell, CSS Modules, presets, theme and relevant UI tokens.
+- Section 10.1 already contains individual ledger rows for every path inspected below. This batch adds the route-level ownership and consumer relationships; it does not duplicate those rows.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+### B. Exact route and component graph
+
+```text
+Public layout (Header + route content + Footer)
+  └─ app/(public)/trips/page.tsx
+       ├─ TripFilters
+       │    ├─ AppBar / Toolbar
+       │    ├─ FormControl + InputLabel + Select (group)
+       │    ├─ FormControl + InputLabel + Select (transport)
+       │    ├─ FormControl + InputLabel + Select (sort)
+       │    └─ Search / SearchIconWrapper / native SearchButton / StyledInputBase
+       └─ main (CENTERED_PAGE_MAIN_STYLE)
+            ├─ WelcomeHeading
+            │    ├─ responsive one-line / two-line heading
+            │    ├─ ScrambleHeading
+            │    └─ route-specific intro paragraph (INTRO_STYLE)
+            ├─ TripList
+            │    ├─ empty state (headingTextStyle + TripList.module.css)
+            │    └─ ul (cardListStyle)
+            │         └─ TripCard[]
+            │              ├─ MUI Card surface (theme override)
+            │              ├─ local card/header/image/social/content sx
+            │              ├─ AppImage or SocialObjectPlaceholder
+            │              ├─ MobileStepper + direct MUI Buttons
+            │              ├─ MUI Pagination / PaginationItem
+            │              └─ Details Button (BUTTON_STYLES.primaryWide)
+            └─ TripPagination
+                 └─ nav / ul / Previous, page and Next anchors
+                      └─ TripPagination.module.css
+
+AccountLayout (RequireAuth + Header + main + Footer)
+  ├─ FavoritesPage
+  │    ├─ loading / error / dedicated empty state
+  │    └─ TripList only when non-empty
+  └─ MyTripsPage
+       ├─ loading / error / dedicated empty state + Create Trip action
+       └─ TripList only when non-empty
+
+Home route
+  └─ HomeTrips
+       └─ TripList
+            └─ same TripCard
+```
+
+### C. Route-specific ownership: Trips page and filters
+
+| File / owner | Exact responsibility and observed styling | Audit conclusion |
+|---|---|---|
+| `app/(public)/trips/page.tsx` | Server route parses query parameters, renders filters, heading, list and crawlable pagination. Uses `CENTERED_PAGE_MAIN_STYLE` through React `style`. Defines `INTRO_STYLE` by spreading `HOME_INTRO_STYLE` and adding `maxWidth: 900`; the intro is passed to `WelcomeHeading` through a React `style` prop. The catch branch also uses React `style`. | Route composition is local; shared page padding and intro typography are already represented by presets but are transported through the prohibited React style API. The 900px intro width is route-specific geometry and should be represented by an approved structural/layout contract, not another typography skin. |
+| `src/components/trips/TripFilters.tsx` | Owns the Trips-only filter toolbar. Uses MUI AppBar/Toolbar, three Select controls, FormControl/InputLabel/MenuItem, InputBase and a native button. Defines three styled components (`Search`, `SearchIconWrapper`, `StyledInputBase`), a native `SearchButton`, `SELECT_BOX_SX`, `FILTER_LABEL_SX` and `FILTER_SELECT_SX`. Search background uses alpha(white, 0.15/0.25); Select labels and values use `UI_COLORS.text.inverse`; the responsive stack uses `BREAKPOINTS.tripsFilters` (670px). | This is a distinct filter-toolbar role, but it currently owns a local visual system. The search surface, native icon button, input focus/width transition, select sizing/margins and inverse-text treatment need explicit named contracts. Do not mistake its route-specific arrangement for a reusable global AppBar skin. |
+| `src/constants/ui/breakpoints.ts` | Owns `BREAKPOINTS.tripsFilters = 670`. | The breakpoint value is centralized; the responsive consumer is TripFilters. Keep the value until responsive behavior is deliberately re-audited. |
+| `src/constants/ui/colors.ts` | Owns semantic `text.inverse`; TripFilters consumes it for Select labels and values. | Color value is token-backed, but only part of the filter appearance is centralized. |
+| `src/theme/index.ts` | Registers MuiButton, MuiCard, MuiDialog and MuiTextField overrides. It does not register application overrides for MuiSelect, MuiInputBase, MuiFormControl, MuiInputLabel, MuiMenuItem, MuiAppBar, MuiToolbar, MuiPagination or MuiMobileStepper. | Trips filter controls rely substantially on MUI defaults plus local component styles. A central field/control contract is not yet complete. |
+| `src/theme/components/button.ts` | MuiButton root owns typography and border radius only. | It does not provide a semantic native SearchButton contract, nor the complete Button interaction states. |
+| `src/components/trips/TripPagination.tsx` | Server-rendered navigation with real Next links; Previous/Next and numbered links, current page via `aria-current`. | Correct semantic/crawlable structure; its link visual role is not connected to a shared pagination/action component. |
+| `src/components/trips/TripPagination.module.css` | Owns flex alignment and centered navigation; outer margin is literal 20px; list gap consumes `--ht-spacing-sm`. | Structural layout is appropriate for a CSS Module; the 20px margin needs classification/tokenization. The file does not define a complete shared pagination link/current/hover/focus contract. No other consumer was found in this route trace. |
+| `src/components/trips/TripList.module.css` | Owns empty title/text margins, font sizes and title weight. | It is consumed only by TripList. The typography and spacing need a shared empty-state contract if they recur elsewhere; do not automatically globalize a genuinely unique message layout. |
+
+No `TripFilters.module.css` file exists at the inspected path; TripFilters styles are defined in its TypeScript component through styled components and sx constants.
+
+### D. Shared heading, list and card contracts
+
+| Shared owner | Consumers and current contract | Required follow-up |
+|---|---|---|
+| `WelcomeHeading.tsx` | Trips, Home, About and Auth forms. It owns the heading composition, touch-to-retrigger behavior and 550px one/two-line breakpoint. | Its layout sx still contains local padding (25px) and bottom margin (16px); the heading is coupled to `HOME_HEADING_STYLE`. Keep route-specific child content outside the shared heading skin. |
+| `ScrambleHeading.tsx` | Rendered through WelcomeHeading across those routes. It emits the heading using React `style={{ ...HOME_HEADING_STYLE, ...style }}` and exposes arbitrary caller style injection. | The React style violation and unrestricted style prop are shared-component API issues, not Trips-only issues. |
+| `typography.ts` preset | `HOME_HEADING_STYLE`, `HOME_INTRO_STYLE` and `headingTextStyle` centralize typography values. | The values have a central owner, but CSSProperties + React style consumption violates Section 1.4. Migrate the contract to theme/semantic class or approved sx/CSS-variable consumers. |
+| `layouts.ts` preset | `CENTERED_PAGE_MAIN_STYLE` and `cardListStyle` centralize page/list composition; account trip page presets also live here. | `CENTERED_PAGE_MAIN_STYLE` and `cardListStyle` are CSSProperties consumed via React style. Separate structural layout contracts from the React style transport. |
+| `TripList.tsx` | Shared by HomeTrips, Trips, Favorites and My Trips. It renders its own welcome/no-results state when `trips.length === 0`; otherwise it renders the shared ul and TripCard items. | One shared list/card implementation serves all four routes. Its empty state is not the same as the dedicated account empty states. Its React style props on the empty headings and ul remain migration targets. |
+| `TripCard.tsx` | Reached through TripList on Home, Trips, Favorites and My Trips. | It is not a Trips-only card. Do not fork it or tune its base skin only for the Trips route. |
+| `cards.ts` preset | `cardStyle` owns trip-card layout geometry; `CARD_TEXT_INSET_SX` is shared with the trip/point card family. | The preset mixes card geometry and CSSProperties. Preserve the MUI Card surface as theme-owned and audit the PointCard consumer before changing the shared text inset. |
+| `theme/components/card.ts` and `surface.ts` | MUI Card surface is centrally resolved through the shared surface contract. | This is the correct owner for TripCard's base surface (background, border, radius and shadow); it does not own TripCard's internal layout. |
+| `buttons.ts` and `theme/components/button.ts` | TripCard Details uses `BUTTON_STYLES.primaryWide`; global MUI Button override owns typography/radius. | Details is partly centralized. MobileStepper Next/Back remain direct MUI Buttons without named semantic action roles. |
+| MUI Pagination | TripCard uses outlined/rounded Pagination and PaginationItem for day selection; `PAGINATION_SX` adds local margin-top. | The route-level TripPagination is a separate native-link implementation. These two pagination patterns need one documented semantic family with appropriate variants, not identical markup. No MUI Pagination theme override is registered. |
+
+### E. Favorites and My Trips state composition
+
+| Route | Loading | Error | Empty | Non-empty |
+|---|---|---|---|---|
+| Favorites | CircularProgress, size 32, local `my: 4` sx | MUI Alert, local width 100% / max-width 560 | Account-specific Box preset and heading text | Shared TripList → TripCard |
+| My Trips | CircularProgress, size 32, local `my: 4` sx | MUI Alert, local width 100% / max-width 560 | Account-specific Box preset, heading and Create Trip button using `BUTTON_STYLES.createTrip` | Shared TripList → TripCard |
+| Trips | No dedicated loading UI in the server route; data is awaited | Catch branch renders route-specific unavailable message | TripList's shared “No trips found” state | Shared TripList → TripCard |
+
+- `app/(account)/layout.tsx` owns the authenticated shell and applies `ROUTE_CONTENT_PADDING` through React `style`; Header and Footer remain shared shell dependencies.
+- Account page layout/empty-state presets are centralized in `src/styles/presets/layouts.ts`, but the loading and error sx fragments remain local to both pages.
+- Favorites and My Trips intentionally bypass TripList for their empty states; do not force the public “No trips found” copy into the account experience.
+- **Separate source-correctness observation:** the inspected Favorites and My Trips files import `ACCOUNT_TRIPS_PAGE_SX`, `ACCOUNT_TRIPS_CONTENT_SX`, `ACCOUNT_TRIPS_HEADING_SX` and `ACCOUNT_TRIPS_EMPTY_STATE_SX`, but their JSX references `PAGE_SX`, `CONTENT_SX`, `HEADING_SX` and `EMPTY_STATE_SX`. They also reference `headingTextStyle` without an import in the fetched file contents. This is not a CSS ownership conclusion and was not changed; it should be checked as a separate source-correctness item before those files are migrated. No build/typecheck was run.
+
+### F. Exact source evidence
+
+Files fetched from `feature/frontend-modernization` during this batch:
+
+- `app/(public)/trips/page.tsx` — `0103e8887ab598479418891fee32710d284b81c9`
+- `src/components/trips/TripFilters.tsx` — `9de6c9dc203ef187d4d47f8cd6fd9229925e79f9`
+- `src/components/trips/TripPagination.tsx` — `43f7feabe01411f6c2a8daa5e77076a7834aac88`
+- `src/components/trips/TripPagination.module.css` — `fc1a52d1bc9f42fd8781bd4f53836be4a79ced34`
+- `src/components/trips/TripList.tsx` — `017930d3ccf03e7790c4361945ed86ec0041fece`
+- `src/components/trips/TripList.module.css` — `66233dc514151bddb8255a334f8c2d8ed828b21b`
+- `src/components/trips/TripCard.tsx` — `6ca299211ee78c0373d0cf6a28eafcf40f6ccc0d`
+- `src/components/common/WelcomeHeading.tsx` — `179e7f685e3ca595fbed60c3447702c036b56ec1`
+- `src/components/common/ScrambleHeading.tsx` — `6fbea0138e6eff5d6fd822171a93a94dfe0f3a69`
+- `app/(account)/favorites/page.tsx` — `22399b5e98c3f8c006ff1bd95e29911cac4b810a`
+- `app/(account)/my-trips/page.tsx` — `477050cfe2d688de9f3a1d2cee17222532ac1a54`
+- `app/(account)/layout.tsx` — `3ab4f092e7dc6053be4f0ca6f3f68cff31971b90`
+- `src/styles/presets/layouts.ts` — `4a0aec24e5feecf1ffaeadaf75ade4291658f820`
+- `src/styles/presets/typography.ts` — `59803882f1c4357e8815f3afdc7c53939d14bacb`
+- `src/styles/presets/buttons.ts` — `2110bcf2a41d8ca81375682ebb9bb8ed88f48a2e`
+- `src/styles/presets/cards.ts` — `1b3f437195cf8a97e96e607e6c6509d179c2f3ac`
+- `src/theme/index.ts` — `2bbf22fb89a8a99269d19348c59270ac97cd5178`
+- `src/theme/components/button.ts` — `344522fde4f2c45fc223d876d9c568faabd41579`
+- `src/constants/ui/breakpoints.ts` — `9fb27ac76908e485970975bf4a714c581d822315`
+- `src/constants/ui/spacing.ts` — `9e62ad85eeec73359723643861eb8d2eba8057d1`
+- `src/constants/ui/colors.ts` — `dce2b3d898c07cb7ba1b61a8ecf9608121ea8763`
+
+The Section 7 search matrix was applied to this dependency chain. Exact GitHub code-search results for the relevant symbol searches were cross-checked against the route imports and fetched branch files:
+- TripList direct route/component consumers: HomeTrips, Trips page, Favorites page and My Trips page.
+- TripCard direct component consumer: TripList; it therefore inherits the same four route consumers.
+- WelcomeHeading consumers include HomeHero, Trips, About and Auth forms.
+- TripPagination is consumed by the Trips page only in the inspected search results.
+
+### G. Batch result and next task
+
+- Completed the Trips route style-ownership trace and closed the direct TripList/TripCard route edges for Home, Trips, Favorites and My Trips.
+- Identified the Trips-only filter toolbar as a local style owner; the route pagination has structural CSS but no complete semantic link/state contract.
+- Confirmed that shared TripList/TripCard/WelcomeHeading styling issues must be migrated once at their shared owners, not patched independently per route.
+- Identified a separate source-correctness concern in Favorites and My Trips for follow-up; no source changes were made.
+- The Stage 1 candidate inventory count is unchanged: 163/163 candidate files have individual ledger rows. This does not mean all Section 7 consumer maps are exhaustive or that Stage 1 is complete.
+- Stage 1 remains IN PROGRESS. No application source migration has started.
+
+**NEXT TASK — audit the account trip-list consumers and their shared shell/preset dependencies before moving to the next route family:**
+
+1. Resolve the Favorites/My Trips source-correctness observation from exact current-branch files and record whether it is an existing defect or a branch update; do not silently fix it during a style-only audit.
+2. Trace the account trip-list composition through account layout, shared Header/Footer, account trip presets, loading/error/empty states and TripList/TripCard; compare all style owners with the Trips/Home findings.
+3. Continue the Section 7 consumer map for remaining account route roots and shared action/field/surface dependencies. Do not repeat already-closed TripList/TripCard edges unless a new consumer is found.
+4. Keep all audit changes in this document and English-only.
+5. Do not modify application source until the Stage 1 dependency/consumer-map gate is exhaustive.
+6. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
