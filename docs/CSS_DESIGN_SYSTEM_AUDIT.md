@@ -2166,3 +2166,279 @@ src/components/tracking/index.ts
 
 ### Outstanding candidate paths
 **0 — all 163 candidate paths now have an individual Section 10.1 record.** This is inventory completion only, not migration completion.
+
+
+## 11.12 — Design-system dependency and ownership map (2026-11-18)
+
+### Purpose and authority
+
+This section converts the file inventory into an implementation dependency map. It answers four separate questions for every styling concern:
+
+1. **Who owns the source value or rule?**
+2. **Which shared layer translates or packages that rule?**
+3. **Which components consume it?**
+4. **Which routes/pages expose those components to users?**
+
+This is an architecture/ownership map, not a claim that migration is complete. Section 10.1 remains the per-file ledger and source of truth for exact file-level findings. This section is the navigation index for deciding change order and impact. Where a consumer edge has not yet been exhaustively searched, it is explicitly marked OPEN rather than assumed.
+
+### A. Canonical dependency graph
+
+The intended dependency direction is from central owners toward leaf consumers:
+
+```text
+                    DESIGN-SYSTEM SOURCE OF TRUTH
+        src/constants/ui/*   +   src/constants/images/presets.ts
+                              |
+                              v
+                   CENTRAL TRANSLATION / EXPORT
+             src/theme/index.ts  +  src/constants/ui/index.ts
+                              |
+              +---------------+----------------+
+              |                                |
+              v                                v
+       MUI THEME CONTRACTS               CSS CUSTOM PROPERTIES
+       src/theme/components/*            emitted by MuiCssBaseline
+       src/theme/palette.ts              in src/theme/index.ts
+       src/theme/shape.ts                         |
+       src/theme/typography.ts                    v
+       src/theme/shadows.ts              app/globals.css
+              |                         *.module.css consumers
+              |
+              v
+       SEMANTIC / COMPOSITION PRESETS
+       src/styles/presets/*
+              |
+              v
+       SHARED UI PRIMITIVES / CONTROLS
+       src/components/common/*
+       src/components/layout/*
+       src/components/images/*
+       src/components/social/*
+       src/components/maps/*
+              |
+              v
+       FEATURE COMPONENTS
+       auth / admin / comments / points / trips / tracking / home
+              |
+              v
+       ROUTE LAYOUTS AND PAGES
+       app/(auth)/*  app/(account)/*  app/(admin)/*
+       app/(public)/*  app/error.tsx  app/not-found.tsx
+```
+
+**Important:** this is a logical ownership graph, not a rule that every component must import every layer. A component should consume the highest-level shared contract appropriate to its role. For example, a feature button should normally consume a semantic button component/preset; it should not independently reconstruct the theme and token chain.
+
+There are two intentional side paths:
+- **Third-party rendering boundary:** Google Maps owns its canvas and built-in controls; Next ImageResponse/Satori owns the OG renderer's serialization contract. App-owned overlays and brand values remain in scope, but vendor-owned internals must not be restyled as if they were app components.
+- **Structural composition:** a feature component or CSS Module may own unique grid/flex/positioning/responsive composition. It must consume central variables for shared visual values and must not become a second owner of color, typography, radius, shadow or recurring control skins.
+
+### B. Actual current ownership chain (verified source relationships)
+
+| Layer | Current owner files | Responsibility / current limitation |
+|---|---|---|
+| UI token source | `src/constants/ui/colors.ts`, `spacing.ts`, `sizes.ts`, `breakpoints.ts`, `shape.ts`, `shadows.ts`, `typography.ts`, `z-index.ts` | Canonical values. `src/constants/ui/index.ts` re-exports these modules. Individual token exports still need exhaustive consumer tracing. |
+| Image role source | `src/constants/images/presets.ts` | Named image-rendering presets consumed by the shared image abstraction. Consumer parity remains part of the image audit. |
+| Theme composition | `src/theme/index.ts` | Imports UI tokens, palette/shape/typography and component overrides; installs MUI defaults and emits a manually selected subset of `--ht-*` CSS variables through `MuiCssBaseline`. The exposed CSS-variable subset is not yet proven exhaustive. |
+| Theme sub-owners | `src/theme/palette.ts`, `shape.ts`, `typography.ts`, `shadows.ts` | Translate canonical token values into MUI theme contracts. No parallel token source should be introduced. |
+| MUI component contracts | `src/theme/components/button.ts`, `card.ts`, `dialog.ts`, `surface.ts`, `text-field.ts` | Button currently centralizes typography/radius only; Card and Dialog Paper use `getSurfaceStyles`; TextField currently sets only outlined/medium defaults. Full semantic states and field contract are incomplete. |
+| Semantic presets | `src/styles/presets/buttons.ts`, `cards.ts`, `forms.ts`, `layouts.ts`, `map-controls.ts`, `panels.ts`, `social.ts`, `typography.ts` | Reusable role/layout contracts. Several presets currently mix visual skin and geometry or use React `CSSProperties`, so ownership must be separated before migration. |
+| CSS bridge | `app/globals.css` and the eight CSS Modules listed in Section 10 | CSS consumes selected `--ht-*` variables. Remaining literals and native control skins need classification. |
+| Shared component layer | Common, layout, image, map and social components | Should enforce shared role APIs and prevent arbitrary caller styling from bypassing them. |
+| Feature/page layer | Auth, admin, comments, points, trips, tracking, home and route layouts | Should compose shared contracts and own only feature behavior and unique structure. |
+
+### C. Semantic workstreams: owner → shared contract → consumer groups → terminal screens
+
+The following groups define the change units. A file may appear in more than one workstream because it consumes multiple independent contracts. Do not migrate it twice or assume that changing one role fixes its other responsibilities. Exact per-file details remain in Section 10.1.
+
+#### C1. Actions, buttons and icon actions
+
+**Current owners**
+- Source values: `src/constants/ui/colors.ts`, `spacing.ts`, `sizes.ts`, `shape.ts`, `typography.ts`.
+- MUI baseline: `src/theme/components/button.ts` and `src/theme/index.ts`.
+- Current role presets: `src/styles/presets/buttons.ts`.
+- Shared navigation wrapper: `src/components/common/BackButton.tsx`.
+
+**Known consumers / terminal UI**
+- Common/global feedback: `src/components/common/ConfirmDialog.tsx`, `app/error.tsx`, `src/components/common/NotFound.tsx`.
+- Shell/navigation: `src/components/layout/Header.tsx`, `src/components/admin/AdminNavigation.tsx`.
+- Auth/profile: `ForgotPasswordForm.tsx`, `LoginForm.tsx`, `ProfileForm.tsx`, `RegisterForm.tsx`, `ResendVerificationForm.tsx`, `ResetPasswordForm.tsx`, `VerifyEmailForm.tsx`, `ChangePasswordForm.tsx`.
+- Admin: `AdminUserForm.tsx`, `AdminUsers.tsx`, `AdminImages.tsx`, `AdminFailedLogs.tsx`, `AdminReports.tsx`, `AdminRouteNotFoundLogs.tsx`.
+- Points/maps: `PointCard.tsx`, `PointForm.tsx`, `PointLocationPicker.tsx`, `TripLocationPicker.tsx`, `AddressAutocomplete.tsx`, `PointActions.tsx`.
+- Trips: `TripCard.tsx`, `TripActions.tsx`, `TripDetails.tsx`, `TripForm.tsx`, `EditTripLayout.tsx`, `TripMapSection.tsx`, `TripPagination.tsx`, `TripDaysNav.tsx`, `TripFilters.tsx`.
+- Images/social: `ImageGallery.tsx`, `ImageLightbox.tsx`, `ImageUploadField.tsx`, `ProfileImage.tsx`, `EngagementBar.tsx`, `LikeButton.tsx`, `FavoriteButton.tsx`, `ReportButton.tsx`, `TripGroupSocialActions.tsx`, `CommentsToggle.tsx`, `RepliesSection.tsx`.
+
+**Required target:** one shared semantic action API for Back, Primary/Submit, Create, Add, Edit, Save, Delete, Remove, Cancel, Confirm, Secondary, Navigation, Retry, Upload, Pagination/Stepper, Disclosure and IconAction. A semantic role owns color/variant, dimensions, typography and interaction states. Callers may provide only explicitly supported behavior/layout options. Direct MUI/native button call sites must be classified by meaning, not merely by element type.
+
+**Open edges:** exhaustive direct Button/IconButton/native-button and styled-link call-site map; all hover/focus/active/selected/disabled/loading states; all caller-level `sx` escape hatches. Do not declare this workstream complete yet.
+
+#### C2. Cards, panels, dialogs, tables and other surfaces
+
+**Current owners**
+- Base surface primitive: `src/theme/components/surface.ts` → `getSurfaceStyles(theme)`.
+- MUI Card: `src/theme/components/card.ts`.
+- MUI Dialog Paper: `src/theme/components/dialog.ts`.
+- Reusable panel: `src/styles/presets/panels.ts` → `PANEL_SX`.
+- Form composition: `src/styles/presets/forms.ts` → `AUTH_FORM_SX` and `POINT_FORM_PANEL_SX`.
+- Card content/layout: `src/styles/presets/cards.ts` (not the surface skin).
+
+**Known consumer groups**
+- Card surfaces: `AdminUsers.tsx`, `VerifyEmailForm.tsx`, `CommentsSection.tsx`, `CreatePointPage.tsx`, `EditPointPage.tsx`, `PointCard.tsx`, `PointSection.tsx`, `TripCard.tsx`, `TripDetails.tsx`, `TripForm.tsx`, `TripMapSection.tsx`.
+- Dialog surfaces: `ConfirmDialog.tsx`, `AdminImages.tsx`, `ImageLightbox.tsx`, `ProfileImage.tsx`, `ReportButton.tsx`.
+- Direct panel preset: `AdminUserForm.tsx`, `EditTripLayout.tsx`.
+- Auth panel composition: `ForgotPasswordForm.tsx`, `LoginForm.tsx`, `RegisterForm.tsx`, `ResendVerificationForm.tsx`, `ResetPasswordForm.tsx`.
+- Separate point form panel: `CreatePointPage.tsx`, `EditPointPage.tsx`.
+- Admin table Paper wrappers: `AdminFailedLogs.tsx`, `AdminImages.tsx`, `AdminReports.tsx`, `AdminRouteNotFoundLogs.tsx`, using `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`.
+- Custom surface/layout candidates: `CommentsSection.tsx`, image lightbox/profile preview, social overlays, sticky social surface, Header Drawer and CSS Module page surfaces.
+
+**Required target:** separate the reusable surface skin (background, border, radius, shadow, text contrast and state) from content geometry (padding, grid, flex, max-width, insets). Define named surface roles only where semantics differ: Card, FormPanel, ContentPanel, Dialog, TableSurface, Nested/Inset, ImageStage, Overlay and Drawer. Do not force all Paper/Box elements into one Card skin.
+
+**Open edges:** property-level consumer trace for `getSurfaceStyles`, `PANEL_SX`, `AUTH_FORM_SX`, `POINT_FORM_PANEL_SX`, Card/Paper/Dialog/Drawer and custom Box/native surfaces; confirm every call site and whether the role is a true surface or layout-only wrapper.
+
+#### C3. Fields, form controls and validation states
+
+**Current owners**
+- Token source: UI colors, spacing, sizes, shape and typography modules.
+- MUI defaults: `src/theme/components/text-field.ts` (currently only variant/size).
+- Form composition: `src/styles/presets/forms.ts`.
+- Map address variant: `src/styles/presets/map-controls.ts` → `MAP_ADDRESS_INPUT_SX`.
+- Reusable map wrapper: `src/components/maps/AddressAutocomplete.tsx`.
+
+**Known consumer groups**
+- Auth/profile forms: ChangePassword, ForgotPassword, Login, Profile, Register, ResendVerification, ResetPassword and VerifyEmail forms; shared PasswordField, PasswordRequirements and Captcha.
+- Point/trip forms: PointForm, CreatePointPage, EditPointPage, TripForm, TripFilters and TripSelectField.
+- Map fields: AddressAutocomplete, PointLocationPicker and TripLocationPicker.
+- Admin fields: AdminUserForm and any filters/search controls in AdminUsers/Admin tables.
+
+**Required target:** a shared field contract for label/helper/error text, typography, input height/padding, border/radius, adornments and hover/focus/error/disabled/read-only/loading states. Select, Autocomplete, InputBase, Checkbox, Radio, Switch and native inputs must be included; do not assume TextField override covers them. AddressAutocomplete must stop exposing unrestricted visual injection where a named variant or controlled layout API is sufficient.
+
+**Open edges:** exhaustive JSX and import map for TextField, Select, Autocomplete, InputBase, FormControl, Checkbox, Radio, Switch and native inputs; property-level caller map for `inputSx`, `buttonSx`, `containerSx` and `textFieldProps`; all state selectors and adornments.
+
+#### C4. Layout, spacing, typography and CSS Modules
+
+**Current owners**
+- Values: `src/constants/ui/spacing.ts`, `sizes.ts`, `breakpoints.ts`, `typography.ts`, `z-index.ts`.
+- Theme translation: `src/theme/index.ts`, `src/theme/typography.ts`, `src/theme/shape.ts`.
+- Reusable composition: `src/styles/presets/layouts.ts`, `cards.ts`, `forms.ts`, `typography.ts`.
+- CSS bridge: selected `--ht-*` variables emitted by `src/theme/index.ts`.
+
+**Eight CSS Modules**
+1. `app/(public)/about/AboutPage.module.css`
+2. `app/(public)/privacy-policy/LegalPage.module.css`
+3. `src/components/common/NotFound.module.css`
+4. `src/components/images/ImageGallery.module.css`
+5. `src/components/layout/Footer.module.css`
+6. `src/components/trips/TripDetailsView.module.css`
+7. `src/components/trips/TripList.module.css`
+8. `src/components/trips/TripPagination.module.css`
+
+**Required target:** preserve unique structural composition and responsive rules; migrate shared visual values to tokens/CSS variables; replace prohibited React `style` usage; classify every hardcoded gap, margin, padding, font size/weight/line height, width/height, radius, shadow, color and focus outline. Keep `app/globals.css` limited to reset, shell and CSS-variable consumers. Remove the legacy `.ht-button` skin only after proving all consumers are gone.
+
+**Open edges:** complete selector-to-className map; all `--ht-*` declarations and consumers; all token export consumers; remaining raw literal scan and responsive/state classification.
+
+#### C5. Images, upload previews and image overlays
+
+**Current owners**
+- Named image presets: `src/constants/images/presets.ts`.
+- Shared renderer: `src/components/images/AppImage.tsx`.
+- Image composition: `ImageGallery.tsx`, `ImageLightbox.tsx`, `ImageUploadField.tsx`, `ProfileImage.tsx`, `AdminUserProfileImage.tsx`, `AdminImages.tsx`, `DayImagesGallery.tsx`, `SocialObjectPlaceholder.tsx`.
+- CSS structure: `ImageGallery.module.css`; image stage/overlay styles are also present in component compositions.
+
+**Required target:** one named contract for avatar/profile, card thumbnail, point thumbnail, gallery grid, gallery stack, upload preview, editor thumbnail, lightbox/image stage, hero and OG. Fit, frame, dimensions, radius, crop and overlay controls must be owned by the role. Keep image loading/data behavior separate from presentation.
+
+**Open edges:** exhaustive Next Image/AppImage/native img/component="img" map; every preset property and consumer; overlay/close/previous/next/upload/remove controls; third-party/Satori constraints in `src/lib/images/renderTripOgImage.tsx`.
+
+#### C6. Social, comments and feedback
+
+**Current owners**
+- Shared visual presets: `src/styles/presets/social.ts`.
+- Shared controls: `EngagementBar.tsx`, `LikeButton.tsx`, `FavoriteButton.tsx`, `ReportButton.tsx`, `TripGroupSocialActions.tsx`, `SocialConfigStatus.tsx`.
+- Composition consumers: CommentsSection, CommentsToggle, RepliesSection, PointActions, TripDetailsView, PointSection and trip/card/image overlays.
+- General feedback boundary: NotificationProvider, ConfirmDialog and MUI Alert/Snackbar theme behavior.
+
+**Required target:** shared control size, icon/badge geometry, overlay/sticky surface, spacing, count and error/loading/disabled states. Keep social-specific overlay surfaces distinct from ordinary Cards and map overlays. Comments/replies must use the same content surface roles where their semantics match.
+
+**Open edges:** exhaustive consumer and state trace for each social preset export and each shared social component; audit Alert/Snackbar local widths and all feedback variants.
+
+#### C7. Navigation, page shell and route composition
+
+**Current owners**
+- Root theme/provider: `app/providers.tsx`, `app/layout.tsx`.
+- Global shell CSS: `app/globals.css`.
+- Shared shell: `Header.tsx`, `Footer.tsx` + `Footer.module.css`.
+- Navigation/action roles: shared action contract (to be completed).
+- Route wrappers: account/admin/auth/public layouts and page files in Section 10.
+
+**Known terminal screens:** home, public trip list/details/live-tracking/about/legal, account favorites/my-trips/profile, auth pages, admin dashboard/users/images/logs/reports, error and not-found screens.
+
+**Required target:** root theme and shell own global defaults; Header/Footer own composition but consume shared surface/action contracts; route layouts own only route-specific composition; page components consume feature-level semantic contracts. A route wrapper with no visual declarations is not a migration target merely because it imports a styled child.
+
+**Open edges:** complete route-to-component composition map for all layouts/pages and verify every page's visual responsibility against Section 10.1.
+
+#### C8. Maps and tracking
+
+**Current owners**
+- Map-specific preset: `src/styles/presets/map-controls.ts`.
+- Address field wrapper: `AddressAutocomplete.tsx`.
+- Map primitives: `GoogleMapView.tsx`, `PointLocationPicker.tsx`, `TripLocationPicker.tsx`.
+- Feature consumers: PointForm/CreatePointPage/EditPointPage, TripForm and trip map sections, LiveTracker.
+
+**Required target:** separate app-owned address field, map action controls, app-owned overlays and tracking controls from Google Maps canvas/native controls. Shared map actions should use the same semantic button/icon roles as the rest of the app, with map-specific geometry only where justified.
+
+**Open edges:** exact caller and state map for every map control, overlay and tracking action; identify Google-owned vs app-owned controls.
+
+### D. Change order and dependency gates
+
+This map does not replace the approved six-stage plan in Section 6. It makes the order of work explicit within that plan:
+
+| Order | Work package | Central owner(s) to establish first | Then migrate consumers | Gate before proceeding |
+|---:|---|---|---|---|
+| 1 | Tokens and CSS-variable bridge | `src/constants/ui/*`, `src/theme/index.ts` | CSS Modules and all preset/theme consumers | Every token has one owner; CSS exposure and consumer map are exhaustive. |
+| 2 | MUI theme contracts | `src/theme/components/*`, palette/shape/typography/shadows | All MUI Button/Card/Dialog/field consumers | Defaults and states are defined; no unsupported assumption that one override covers other component families. |
+| 3 | Semantic actions | `src/styles/presets/buttons.ts` and shared action components | Common, auth, admin, points, trips, maps, images, social, pagination, error screen | Every action call site has a semantic role and caller API cannot override the visual contract. |
+| 4 | Surfaces | `surface.ts`, Card/Dialog overrides, `panels.ts`, `cards.ts` | All Card/Paper/Dialog/Drawer/custom surface consumers | Surface skin and layout are separated; every surface consumer is mapped. |
+| 5 | Fields and forms | `text-field.ts`, `forms.ts`, `map-controls.ts` | Auth/profile, admin, points/trips, autocomplete and native controls | All field families and states/callers are mapped; no uncontrolled style-injection path remains. |
+| 6 | Layout/typography/CSS | tokens, `layouts.ts`, `typography.ts`, globals and eight CSS Modules | Shell, pages, lists, pagination, legal/about/not-found/trip details | Unique structure retained; all shared visual literals are token-backed. |
+| 7 | Images/social/maps specialized roles | image presets/AppImage; social presets; map presets and wrappers | Image, social, map and tracking consumers | App-owned vs vendor-owned presentation is separated; all overlay/control states mapped. |
+| 8 | Feature migration and final audit | All central contracts above | Stage 5 order in Section 6 | No consumer is left on a legacy local skin; targeted source searches completed. |
+
+**Do not implement in this table's order as blind file batches.** For each package: map declarations → map all imports/call sites → define owner/API → migrate a coherent consumer group → search for remaining old declarations → update Section 10.1 and this log. A component that consumes several packages is marked complete only after all its responsibilities are migrated.
+
+### E. How to use the map during every future batch
+
+1. Read Sections 1.4, 2, 6, 7, 10.1 and this Section 11.12 before work.
+2. Start from the current NEXT TASK and select one dependency workstream, not an arbitrary list of files.
+3. Verify current branch and HEAD; compare against the last recorded state. Do not create branches.
+4. Trace upstream owners and downstream consumers before changing a declaration.
+5. Record every edge as `owner → imported preset/override → component → caller/page`. Include property-level preset references and all call sites, not just import presence.
+6. Assign each finding one status: `MAPPED`, `OPEN`, `MIGRATION TARGET`, `MIGRATED`, or `VERIFIED`. `VERIFIED` requires consumer/state/responsive evidence; reading a file is not sufficient.
+7. Change only the approved central owner and its coherent consumer batch. Do not mix unrelated business logic or API changes.
+8. Re-search the exact old token/preset/class/prop and record the remaining consumer count.
+9. Update Section 10.1 for each affected file and append a dated Section 12 log entry. Update the NEXT TASK here.
+10. Never run build, tests, lint, CI or browser validation without explicit user authorization.
+
+### F. Current dependency-map status and exact next task
+
+- **Per-file candidate inventory:** 163/163 paths have individual records in Section 10.1 (inventory coverage only).
+- **Central ownership chain:** mapped at architecture level above.
+- **Confirmed direct ownership edges:** UI token modules → `src/theme/index.ts`; theme composition → MUI component overrides; `card.ts` and `dialog.ts` → `getSurfaceStyles`; `PANEL_SX` → `getSurfaceStyles`; `AUTH_FORM_SX` → `PANEL_SX`; `MAP_ADDRESS_INPUT_SX` → map field consumers; named image presets → AppImage.
+- **Consumer graph:** PARTIAL. The groups above consolidate known consumers from Sections 10/10.1 and prior batches. Property-level exhaustive maps remain open where stated. No migration completion is implied.
+- **Stage:** Stage 1 remains IN PROGRESS. Do not begin application source migration until the mandatory consumer maps in Section 7 are exhaustive.
+
+**NEXT TASK — continue dependency-edge completion, not a fresh file inventory:**
+1. Complete the form-control dependency map (TextField, Select, Autocomplete, InputBase, FormControl, Checkbox, Radio, Switch and native inputs), including every caller and every hover/focus/error/disabled/read-only/loading state. Record the complete `AddressAutocomplete` style-injection/caller contract.
+2. Complete direct MUI Button/IconButton/native-button/styled-link role mapping, including all callers and states; include the new Retry role in `app/error.tsx`.
+3. Reconcile every preset export and CSS variable to all property-level consumers; record exact remaining raw visual literal/style-prop/sx occurrences.
+4. Close the surface map for `getSurfaceStyles`, `PANEL_SX`, `AUTH_FORM_SX`, `POINT_FORM_PANEL_SX`, Card/Paper/Dialog/Drawer and custom surfaces.
+5. Revisit the OG renderer exception candidate only after the ordinary DOM dependency map is stable; establish Satori constraints and `SEO_BRAND` ownership.
+6. Update this map and Section 10.1 after each batch. Keep Stage 1 open until all mandatory searches are exhaustive.
+
+No application source code was changed in this map-creation batch. No build, tests, lint, CI or browser validation was run.
+
+
+### 2026-11-18 — Design-system dependency and ownership map created
+
+- Re-read the approved architecture, Styling API policy, six-stage plan, mandatory search matrix, file manifest, Section 10.1 ledger and latest audit entry before writing.
+- Re-fetched the live token export, theme composition, MUI overrides, shared presets, BackButton, ConfirmDialog, AddressAutocomplete and app error-screen source from `feature/frontend-modernization`.
+- Added Section 11.12 to this same audit document. It establishes the central source-to-screen dependency graph, records verified ownership edges, groups known consumer families, defines migration gates and records the exact next dependency-mapping tasks.
+- The map distinguishes confirmed edges from open consumer searches; it does not claim that the 163-file inventory is a completed migration or that all consumer edges are exhaustive.
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
