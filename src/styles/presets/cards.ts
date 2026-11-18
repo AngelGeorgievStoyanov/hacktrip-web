@@ -16,6 +16,35 @@ export const TRIP_CARD_SX = {
   pt: '25px',
 } as const;
 
+/** Fixed geometry and internal layout contracts for the shared TripCard. */
+export const TRIP_CARD_HEIGHT = '540px';
+export const TRIP_CARD_HEADER_SX = {
+  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+  width: '100%', height: '105px', minHeight: '105px', boxSizing: 'border-box', overflow: 'hidden',
+} as const;
+export const getTripCardEmptyHeaderSx = (isMobile: boolean) => ({
+  ...TRIP_CARD_HEADER_SX, height: isMobile ? 'auto' : '-webkit-fill-available',
+});
+export const TRIP_CARD_IMAGE_FRAME_SX = {
+  position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center',
+  width: '100%', height: '200px', minHeight: '200px', overflow: 'hidden', bgcolor: 'action.hover',
+} as const;
+export const TRIP_CARD_SOCIAL_COUNTS_SX = {
+  display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
+  gap: 0.5, width: '100%', height: '58px', minHeight: '58px', px: 2, boxSizing: 'border-box',
+} as const;
+export const TRIP_CARD_STEPPER_SPACE_SX = { height: '20px', minHeight: '20px', width: '100%' } as const;
+export const TRIP_CARD_CONTENT_SX = {
+  display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+  minHeight: 0, py: 1, '&:last-child': { pb: 1 },
+} as const;
+export const TRIP_CARD_SOCIAL_ROW_SX = { display: 'flex', alignItems: 'center', gap: 1 } as const;
+export const TRIP_CARD_PAGINATION_SX = { marginTop: 2 } as const;
+export const TRIP_CARD_DESCRIPTION_SX = {
+  display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', textAlign: 'center',
+} as const;
+export const TRIP_CARD_STEPPER_SX = { width: '-webkit-fill-available', flexGrow: 1, maxHeight: '20px' } as const;
+
 /** Consistent horizontal inset for text inside trip and point cards. */
 export const CARD_TEXT_INSET_SX = { padding: `0px ${UI_SIZES.cardTextInset}px` } as const;
 
