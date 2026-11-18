@@ -1,23 +1,22 @@
-import type { CSSProperties } from 'react';
 import { PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
-import { headingTextStyle } from '@/styles/presets/typography';
+import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 
 /** Shared layout presets used where the same page/list layout is required. */
-export const pageBackgroundStyle: CSSProperties = {
+export const PAGE_BACKGROUND_SX = {
   boxSizing: 'border-box',
-  padding: PAGE_CONTENT_PADDING,
-};
+  p: PAGE_CONTENT_PADDING,
+} as const;
 
-export const cardListStyle: CSSProperties = {
+export const CARD_LIST_SX = {
   listStyle: 'none',
   display: 'flex',
   flexWrap: 'wrap',
   justifyContent: 'center',
-  padding: 0,
-  margin: 0,
-};
+  p: 0,
+  m: 0,
+} as const;
 
-export const commentListStyle: CSSProperties = {
+export const commentListStyle = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))',
   gap: '20px',
@@ -25,7 +24,7 @@ export const commentListStyle: CSSProperties = {
   listStyle: 'none',
   padding: 0,
   margin: 0,
-};
+} as const;
 
 /** Shared surface and horizontal overflow behavior for admin data tables. */
 export const ADMIN_TABLE_CONTAINER_SX = {
@@ -54,7 +53,7 @@ export const ACCOUNT_TRIPS_CONTENT_SX = {
 export const ACCOUNT_TRIPS_HEADING_SX = {
   textAlign: 'center',
   mb: { xs: UI_SPACING.md, md: UI_SPACING.lg },
-  ...headingTextStyle,
+  ...HEADING_TEXT_SX,
 } as const;
 
 export const ACCOUNT_TRIPS_EMPTY_STATE_SX = {
@@ -67,12 +66,12 @@ export const ACCOUNT_TRIPS_EMPTY_STATE_SX = {
 } as const;
 
 /** Shared centered page shell used by the home and public trip pages. */
-export const CENTERED_PAGE_MAIN_STYLE: CSSProperties = {
-  ...pageBackgroundStyle,
+export const CENTERED_PAGE_MAIN_SX = {
+  ...PAGE_BACKGROUND_SX,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-};
+} as const;
 
 /** Shared vertical stack used by forms and compact content panels. */
 export const COLUMN_STACK_SX = {
