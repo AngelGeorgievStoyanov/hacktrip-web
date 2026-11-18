@@ -3536,14 +3536,246 @@ No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconB
 - Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
 - No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
 
-**NEXT TASK — finish semantic action and form owner matrix, then close remaining Section 7 search gaps:**
+**NEXT TASK — continue route-page audits using the reconciled page coverage matrix (Section 11.19):**
 
-1. Map exact direct consumers and prop forwarding for BackButton, BUTTON_STYLES and icon-action presets; classify every Back/Edit/Create/Add/Delete/Remove/Save/Cancel/Confirm/Secondary/Navigation/Retry action, including raw anchors and native buttons.
-2. Finish semantic action mapping for ConfirmDialog, ImageUploadField/ProfileImageUpload, ProfileForm, ChangePasswordForm, TripForm and PointForm. Do not merge distinct Upload, Replace, Delete, Remove, Search, Locate, Find-in-Map and Save actions.
-3. Trace every shared image preset export to every consumer and compare actual caller frame dimensions, aspect ratios, fill behavior, objectFit and responsive breakpoints. Include CSS Module frame declarations and all missing-image paths.
-4. Complete Section 7 consumer searches for MUI fields/surfaces/alerts, CSS variables, token exports, preset properties, React style, inline sx, raw visual literals, responsive and interaction states. Reconcile every result against exact branch-ref source.
-5. Reconcile all findings with Section 10.1 and update only existing rows or genuinely missing paths. Keep source correction for Favorites/My Trips separate and explicitly authorized.
-6. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. No application source migration before that gate.
-7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+1. Do not restart component-by-component enumeration. Select the next unaudited route family from Section 11.19 and trace each page from its route root through nested components to existing shared owners.
+2. Keep each page's own structural layout separate from shared visual ownership. Cross-reference Sections 11.12–11.18 instead of duplicating already established component maps.
+3. Audit the remaining route roots in cohesive groups: Live Tracking and public static pages; remaining Auth pages; remaining Account pages; then Admin pages and Not Found.
+4. For each page, record route file, layout/shell, composition tree, CSS Modules, React style/inline sx, presets/tokens, direct MUI/native controls, responsive rules, and state/error/loading/disabled/focus behavior.
+5. Update the page coverage matrix in Section 11.19 after every batch. A route is not COMPLETE merely because it appears in the route graph or uses a previously audited shared component.
+6. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Keep the Favorites/My Trips source-correctness issue separate and do not change app source without authorization.
+7. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
+8. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.19 — Route-page audit coverage and detailed Trip Details / Login / Register audits (2026-11-18)
+
+### A. Preflight and scope
+
+- Re-read the audit architecture, Styling API policy (Section 1.4), six-stage plan (Section 6), required inventory/search scope (Section 7), file ledger (Section 10.1), and Sections 11.12–11.18 before starting.
+- Repository: AngelGeorgievStoyanov/hacktrip-web.
+- Branch: feature/frontend-modernization.
+- Audit document blob SHA before this update: eb296e0c049f4855a00731aa25eb264dd25d3fd4.
+- Latest recorded audit commit before this batch: c200401a2b18467b658d3325201a6c15da69d945.
+- All implementation files listed in Sections B–D were fetched using the exact feature/frontend-modernization branch ref. Source blob SHAs are recorded below.
+- This batch completes detailed route-page audits for Trip Details, Login and Register. It does not migrate application source or claim Stage 1 complete.
+
+### B. Trip Details — /trips/[id]
+
+**Route and server composition**
+
+- Route root: app/(public)/trips/[id]/page.tsx.
+- Public shell: app/(public)/layout.tsx → shared Header → route → shared Footer.
+- Server route parses a positive trip ID, loads the trip group once, resolves the requested day from real day numbers, builds metadata/SEO content and JSON-LD, and passes the trip plus initial day number to TripDetailsView.
+- Invalid IDs and not-found API responses use notFound(); the selected day falls back to the first real day. The route renders JsonLd after the interactive view.
+- The route root applies CENTERED_PAGE_MAIN_STYLE through React style. This is a Styling API migration target, not an exception.
+
+**Client composition and state ownership**
+
+```text
+TripDetailsView
+├─ sticky TripDaysNav
+├─ TripGroupSocialActions
+├─ primary row
+│  ├─ TripDetails
+│  │  ├─ TripActions (navigation + management)
+│  │  ├─ FavoriteButton
+│  │  ├─ EngagementBar
+│  │  └─ BackButton
+│  └─ DayImagesGallery
+│     ├─ ImageGallery → AppImage + EngagementBar + ImageLightbox
+│     └─ SocialObjectPlaceholder (empty-day-image fallback)
+├─ conditional trip-group/day CommentsSection
+├─ map row
+│  ├─ TripMapSection → GoogleMapView + MobileStepper
+│  └─ PointsSection → PointSection
+│     ├─ ImageGallery / SocialObjectPlaceholder
+│     ├─ PointActions
+│     ├─ CommentsToggle
+│     └─ ExpandableText
+└─ conditional point CommentsSection
+   └─ RepliesSection
+```
+
+- TripDetailsView owns active day, selected point index, open trip-group/day/point comment targets, and trip-group comment visibility. It resets selected point/comments when the server-selected day changes.
+- Day changes within the loaded group use client state and replace the URL; they do not refetch the group. Trip group social state remains attached to the group; day/point/image comments remain scoped to their respective targets.
+- CommentsSection owns comment list/form/edit/reply state and requests; RepliesSection owns reply state. Social permissions and counts are driven by shared social configuration and DTO state.
+- TripMapSection owns navigable point indexes, selected marker, overview state and mobile stepper scrolling. GoogleMapView owns map rendering/events; it does not own page-level navigation controls.
+- ImageGallery owns selected image index and delegates fullscreen viewing to ImageLightbox. AppImage owns image preset rendering/fallback.
+
+**Style and layout ownership**
+
+- TripDetailsView.module.css is the route-level structural owner: 1200px max-width shell; primary two-column row (320–450px + flexible image column); map/point row (up to 600px + 500px); container-query stack at 1120px; images move before trip info when stacked; 600px media rule reduces gaps. These are page composition rules, not shared card/button skins.
+- TripDetailsView also uses local sx for sticky shell bleed/width and shared STICKY_SOCIAL_SX for the social surface. The shell bleed derives from PAGE_CONTENT_PADDING.
+- TripDaysNav owns local Pagination item sx, selected/hover colors from UI_COLORS, AppBar/Box composition and local 10px top margin. MuiPagination/AppBar do not have explicit theme overrides in the recorded theme audit.
+- TripDetails owns a MUI Card with local padding/margins/min/max widths and local flex/spacing sx. Text styling partly consumes CARD_HEADING_TEXT_STYLE, CARD_TEXT_BLOCK_STYLE and CARD_TEXT_INSET_SX, but those card text presets include CSSProperties values and are passed through React style in places. The local card geometry remains a migration target.
+- TripActions owns owner-only Add Day, Add/Edit Points, Edit Day, Delete Day and Delete Trip actions. It consumes BUTTON_STYLES.tripAction / tripActionDanger; deletion uses ConfirmDialog and mutation-pending disabled state. BackButton consumes BUTTON_STYLES.back through the shared owner and receives TRIP_ACTION_BUTTON_LAYOUT_SX.
+- TripGroupSocialActions owns trip-group Like/Favorite/Report/Comments/Share controls and local mutation/error states. It uses direct IconButtons, Badge and Tooltip; social errors use socialErrorTextStyle through React style. These are shared semantic icon-action and feedback owners, not Trip Details-only styles.
+- DayImagesGallery delegates populated days to ImageGallery (grid/galleryGrid) and empty days to a square SocialObjectPlaceholder frame (50% width, max 280px).
+- TripMapSection owns a Card frame (max 600px; small-phone 94vw), MobileStepper Back/Next Buttons, responsive stepper behavior and map dimensions from map constants. GoogleMapView owns the shared renderer. Do not force the trip map frame to match point-picker or point-card frames.
+- PointSection owns a local card layout and content inset; uses shared card text presets, ImageGallery or SocialObjectPlaceholder, PointActions, CommentsToggle and ExpandableText. The description wrapper uses React style with CARD_TEXT_INSET_SX plus a local margin.
+- CommentsSection and RepliesSection are reused feature owners, not page-owned widgets. Their MUI Card/TextField/Alert/CircularProgress/IconButton controls, edit/save/cancel/delete/reply states and local panel/list spacing must be reconciled against the global semantic action, field and feedback contracts.
+- ImageGallery.module.css owns gallery row/stack/grid structure and square grid image-button geometry; shared image preset/crop behavior remains with AppImage and the caller frame. ImageLightbox owns its fullscreen Dialog and image-control layout.
+
+**Trip Details shared dependencies already mapped elsewhere**
+
+- AppImage, ImageGallery, ImageLightbox, SocialObjectPlaceholder, GoogleMapView, ConfirmDialog, NotificationProvider, LikeButton, FavoriteButton, ReportButton, SocialConfigStatus, CommentsToggle and shared image/map behavior are cross-page owners documented in Sections 11.12, 11.13, 11.17 and 11.18.
+- This page audit adds their exact Trip Details composition and call-site context; it does not create duplicate shared implementations.
+- Semantic action roles to preserve distinctly: day navigation; map point Back/Next; Add Day; Add/Edit Points; Edit Day; Delete Day; Delete Trip; Back to Trips; Like; Favorite; Report; Share; Comments disclosure; image open/close/previous/next; comment/reply create/edit/save/cancel/delete.
+- Do not collapse these into generic primary/secondary buttons. The same-looking icon action may have different meaning and state.
+
+**Trip Details outstanding migration targets**
+
+1. Replace route-root React style usage with the approved layout preset/CSS-variable path.
+2. Move shared card padding/radius/shadow/typography roles out of local TripDetails/PointSection geometry while preserving distinct content widths and layout.
+3. Define shared Pagination/day-navigation and MobileStepper semantic states; avoid per-route duplicate selected/hover styling.
+4. Map every IconButton action and accessible state to named semantic icon-action roles; retain action-specific labels and disabled/loading behavior.
+5. Centralize comment/reply fields, panels, feedback and edit/save/cancel/delete action states without moving comment business logic.
+6. Verify Trip Details CSS Module values and image/map frames against token/preset ownership; keep unique container-query geometry where genuinely page-specific.
+7. Complete browser-level responsive/focus/touch verification only when separately authorized; none was run in this audit.
+
+### C. Login — /login
+
+**Route and shell**
+
+- Route root: app/(auth)/login/page.tsx; it renders LoginForm inside Suspense with fallback null.
+- Auth shell: app/(auth)/layout.tsx → Header → centered main → content wrapper (max-width 480px) → GuestOnly → route → Footer. Login page metadata is NOINDEX.
+- Auth layout applies a React inline style object to main and a local max-width wrapper. The main style is prohibited by Section 1.4. The route-level Suspense fallback is behavior, not a visual owner.
+- GuestOnly is applied by the auth layout. Login page itself does not add a second GuestOnly wrapper.
+
+**Form composition and states**
+
+- LoginForm composes WelcomeHeading → AUTH_FORM_SX form → AUTH_FORM_TITLE_SX title → email TextField → password TextField with local show/hide IconButton → hidden captchaToken input → Captcha → primary Login submit → secondary Register / Forgot Password / Resend Verification navigation actions.
+- Uses react-hook-form with loginSchema; validation is on submit and revalidates on change. Email/password helper/error rendering is tied to isSubmitted.
+- Local state: captcha token/reset key, submitting, showPassword. Submit is disabled while submitting or without a CAPTCHA token; spinner appears while submitting.
+- Submit calls auth login and redirects to /. Errors use NotificationProvider; after completion CAPTCHA token is cleared and widget reset.
+- BroadcastChannel listens for email-verified events and shows the shared success notification. This is feedback behavior, not a form skin.
+- The password reveal action is a raw IconButton owned by LoginForm, unlike the reusable PasswordField used by RegisterForm. It should converge on the same semantic Password Visibility IconAction contract without forcing the two field owners into one component if their form behavior differs.
+
+**Style ownership and targets**
+
+- AUTH_FORM_SX composes PANEL_SX + COLUMN_STACK_SX and adds padding 30px, max-width 700px, width 100%, box sizing and centered margin. The auth layout wrapper limits effective width to 480px; the two max-width owners are redundant and should be reconciled.
+- AUTH_FORM_TITLE_SX owns centered title spacing; AUTH_FORM_ACTIONS_SX owns the wrapping centered secondary-action row and uses UI_SPACING.md/xs.
+- Login email/password TextFields rely on shared MuiTextField defaults but do not consume a named field preset. Error/helper state is locally selected from form submission state.
+- Primary submit consumes BUTTON_STYLES.primary; all three navigation actions consume BUTTON_STYLES.secondary. Their semantics are Login/Submit versus route navigation, not interchangeable button roles.
+- Password reveal IconButton uses ShowPasswordIcon/HidePasswordIcon, local visibility state and aria-label; it has no named icon-action preset.
+- Captcha owns its third-party widget wrapper. The wrapper uses local min-height, center alignment, disabled pointer-events and opacity; CAPTCHA internal appearance is vendor-owned. Missing site key renders an alert message.
+- WelcomeHeading/ScrambleHeading are shared with Home, Trips and other auth pages. Their style ownership and React style usage are already recorded in Sections 11.14–11.15; Login is another consumer, not a new heading implementation.
+
+**Login outstanding migration targets**
+
+1. Remove auth layout React style presentation and centralize the route-shell layout while preserving the 480px content width.
+2. Reconcile the 480px shell width with AUTH_FORM_SX max-width 700px; one owner should define the effective page width.
+3. Define shared email/password field states and password visibility icon-action contract.
+4. Define semantic Login/Submit and secondary route-navigation roles with focus/disabled/loading states.
+5. Move Captcha wrapper spacing/disabled feedback to an approved external-widget wrapper contract; do not style the third-party widget internals.
+6. Preserve notification, BroadcastChannel and redirect behavior unchanged during future visual migration.
+
+### D. Register — /register
+
+**Route and shell**
+
+- Route root: app/(auth)/register/page.tsx; it wraps RegisterForm in GuestOnly. The auth layout also wraps all children in GuestOnly, so Register currently has nested GuestOnly wrappers. Record this composition for awareness; do not change route/auth behavior as part of CSS migration.
+- Auth shell: same Header/main max-width 480px/Footer as Login. Register metadata is NOINDEX.
+- Auth layout main uses the same prohibited React inline style and width wrapper described in Section C.
+
+**Form composition and states**
+
+- RegisterForm composes WelcomeHeading → AUTH_FORM_SX form → AUTH_FORM_TITLE_SX → Email / First Name / Last Name TextFields → PasswordField → PasswordRequirements → Confirm Password PasswordField → terms Checkbox/Link → conditional terms error → hidden captchaToken input → Captcha → primary Register submit → secondary Login / Resend Verification navigation actions.
+- Registration schema extends registerSchema with required confirmPassword and acceptedTerms, then checks password equality. Form mode is onChange and revalidates onChange; touched/submitted fields determine error/helper rendering.
+- Local state: submitting, registrationComplete, CAPTCHA token/reset key. The form locks fields and CAPTCHA while submitting or after successful registration. Submit requires valid form and CAPTCHA token.
+- Successful registration shows a shared success notification and schedules redirect to /login; timer is cleaned up on unmount. Errors use shared generic error text through NotificationProvider. CAPTCHA is reset after submit attempt.
+- PasswordField owns each field's visibility state and reveal/hide IconButton; PasswordRequirements derives checklist rows from shared getPasswordRequirements validation logic. These are reusable shared owners also used by Reset Password, Change Password and Admin User forms.
+- Terms acceptance is a Checkbox + FormControlLabel with local pointer-events behavior while locked; the error is a direct Typography role=alert.
+
+**Style ownership and targets**
+
+- AUTH_FORM_SX, AUTH_FORM_TITLE_SX and AUTH_FORM_ACTIONS_SX are shared presets; Register should not define duplicate page-level card/heading/action skins.
+- Email/first/last-name TextFields are direct MUI controls; password fields go through PasswordField. All need the same centralized base field contract and state matrix.
+- PasswordRequirements owns a local UL grid (one column at xs, two at sm), list reset/margins/gaps, row flex alignment and success/disabled icon/text colors from the palette. The layout and feedback icon treatment are not yet named presets.
+- Checkbox/FormControlLabel, terms link, conditional error Typography and CAPTCHA wrapper have local state/spacing behavior; no complete global MUI Checkbox/FormControlLabel/Alert theme contract was found in Section 11.18.
+- Primary Register action consumes BUTTON_STYLES.primary. Login and Resend Verification actions consume BUTTON_STYLES.secondary. Their route semantics and disabled states differ.
+- The same auth layout width redundancy (480px wrapper vs 700px form max-width) applies here.
+
+**Register outstanding migration targets**
+
+1. Reconcile auth shell/form max-width ownership.
+2. Apply one shared field contract to the three standard TextFields and both PasswordFields, including error/helper/disabled/focus states.
+3. Define password visibility icon-action and PasswordRequirements feedback/list layout contracts.
+4. Define checkbox/terms-link/error states and consistent disabled behavior during submission/registration completion.
+5. Define semantic Register/Submit versus Login/Resend route-navigation roles.
+6. Centralize CAPTCHA wrapper disabled/availability presentation while keeping vendor internals external.
+7. Preserve password matching, accepted-terms, captcha gating, success notification and redirect behavior unchanged.
+
+### E. Cross-page reuse and owner reconciliation
+
+- Trip Details reuses image, social, comments, map, placeholder, confirmation and notification owners already mapped in Sections 11.12–11.18. No new shared component owner was introduced in this batch.
+- Login and Register share auth shell, Header/Footer, WelcomeHeading/ScrambleHeading, AUTH_FORM_SX, AUTH_FORM_TITLE_SX, AUTH_FORM_ACTIONS_SX, BUTTON_STYLES, Captcha, NotificationProvider and field/theme defaults.
+- Login has a page-local password TextField/reveal control; Register uses shared PasswordField twice and shared PasswordRequirements. Preserve the behavior difference but unify the visual semantic contract.
+- Register adds PasswordRequirements and terms Checkbox; Login does not. Do not add these to Login as a generic auth template.
+- Existing Section 10.1 candidate rows cover the implementation paths inspected here; no duplicate ledger paths were added. Page-level route coverage is recorded below.
+
+### F. Route-page coverage matrix (27 route roots)
+
+Status definitions:
+- **DETAILED** — route composition and the page's main styling owners have been inspected end-to-end; shared owner dependencies are cross-referenced. This does not mean every shared owner's global state matrix or browser behavior is complete.
+- **PARTIAL** — route root/composition or account shell is recorded, but the page's complete styling/state/responsive ownership pass is not done.
+- **NOT AUDITED** — appears in the route inventory only; no page-level ownership audit has been completed.
+
+| Route group | Page | Route entry | Status | Evidence / remaining scope |
+|---|---|---|---|---|
+| Public | Home | app/(public)/page.tsx | DETAILED | Section 11.14; nested Home/TripList/TripCard ownership |
+| Public | Trips | app/(public)/trips/page.tsx | DETAILED | Section 11.15; TripFilters/TripList/TripCard/Pagination |
+| Public | Trip Details | app/(public)/trips/[id]/page.tsx | DETAILED | Section 11.19.B; nested map/images/social/comments/points |
+| Public | Live Tracking | app/(public)/live-tracking/page.tsx | NOT AUDITED | Route graph only; LiveTracker page-level style/state audit remains |
+| Public | About | app/(public)/about/page.tsx | NOT AUDITED | Route/CSS owner listed in 11.13; page-level pass remains |
+| Public | Privacy Policy | app/(public)/privacy-policy/page.tsx | NOT AUDITED | Route/CSS owner listed in 11.13; page-level pass remains |
+| Account | Favorites | app/(account)/favorites/page.tsx | PARTIAL | Route root/shared TripList recorded in 11.15–11.16; page styles/state not complete |
+| Account | My Trips | app/(account)/my-trips/page.tsx | PARTIAL | Route root/shared TripList/Create Trip action recorded; page styles/state not complete |
+| Account | Profile | app/(account)/profile/page.tsx | PARTIAL | Root/ProfileForm and shared profile/image/password owners recorded in 11.16–11.18 |
+| Account | Edit Point | app/(account)/points/edit/[pointId]/page.tsx | PARTIAL | Root/PointForm/PointLocationPicker and shared map/image owners recorded |
+| Account | Edit Trip | app/(account)/trips/[id]/edit/page.tsx | PARTIAL | Root/EditTripLayout/TripLocationPicker/upload/image owners recorded |
+| Account | Create Trip | app/(account)/trips/create/page.tsx | PARTIAL | Root/TripForm/map/upload owners recorded |
+| Account | Create Trip Point | app/(account)/trips/create/points/page.tsx | PARTIAL | Root/CreatePointPage/PointList/PointCard/map owners recorded |
+| Auth | Login | app/(auth)/login/page.tsx | DETAILED | Section 11.19.C; form, field, CAPTCHA and navigation states |
+| Auth | Register | app/(auth)/register/page.tsx | DETAILED | Section 11.19.D; fields, password feedback, terms, CAPTCHA and redirect |
+| Auth | Forgot Password | app/(auth)/forgot-password/page.tsx | NOT AUDITED | Form listed in route graph; page-level pass remains |
+| Auth | Resend Verification | app/(auth)/resend-verification/page.tsx | NOT AUDITED | Form listed in route graph; page-level pass remains |
+| Auth | Reset Password | app/(auth)/reset-password/page.tsx | NOT AUDITED | Password shared owners mapped; route/form page audit remains |
+| Auth | Verify Email | app/(auth)/verify-email/page.tsx | NOT AUDITED | Route/form page audit remains |
+| Admin | Admin landing | app/(admin)/admin/page.tsx | NOT AUDITED | Native section/h1 route root only; do not assume AdminDashboard is used |
+| Admin | Users | app/(admin)/admin/users/page.tsx | NOT AUDITED | AdminUsers and image owners listed; page-level pass remains |
+| Admin | Edit User | app/(admin)/admin/users/[userId]/page.tsx | NOT AUDITED | AdminUserForm/password/image owners listed; page-level pass remains |
+| Admin | Images | app/(admin)/admin/images/page.tsx | NOT AUDITED | AdminImages subviews listed; page-level pass remains |
+| Admin | Failed Login Logs | app/(admin)/admin/failed-login-logs/page.tsx | NOT AUDITED | Table/selection/pagination/confirm route graph only |
+| Admin | Reports | app/(admin)/admin/reports/page.tsx | NOT AUDITED | Table/pagination/confirm route graph only |
+| Admin | Route Not Found Logs | app/(admin)/admin/route-not-found-logs/page.tsx | NOT AUDITED | Table/disclosure/pagination route graph only |
+| System | Not Found / 404 | app/not-found.tsx | NOT AUDITED | NotFound shared component/CSS is inventoried; route-level page pass remains |
+
+**Verified coverage count:**
+- 27 route roots total.
+- 5 DETAILED: Home, Trips, Trip Details, Login, Register.
+- 7 PARTIAL: all 7 Account pages.
+- 15 NOT AUDITED: Live Tracking, About, Privacy Policy, four remaining Auth pages, seven Admin pages and Not Found.
+- These counts describe route-page audit coverage only. They do not change the 163/163 candidate file inventory count and do not mean Stage 1 is complete.
+
+### G. Next page-audit sequence
+
+1. Live Tracking — standalone full-screen route and LiveTracker ownership; keep Google Maps SDK UI separate from app-owned tracking controls.
+2. About + Privacy Policy — public static pages and their CSS Modules; reconcile with public shell and shared typography/layout tokens.
+3. Remaining Auth pages — Forgot Password, Resend Verification, Reset Password and Verify Email as one form-family audit, reusing the Login/Register owner map.
+4. Remaining Account pages — deepen all seven PARTIAL routes from root-only coverage into page-level style/state/responsive audits.
+5. Admin pages — Admin landing, Users, Edit User, Images, Failed Login Logs, Reports and Route Not Found Logs; trace AdminNavigation and shared table/action/dialog/image owners.
+6. Not Found — route shell plus NotFound.module.css and authorization fallback contexts.
+
+### H. Batch result
+
+- Added detailed page-level audits for Trip Details, Login and Register.
+- Added a route-page coverage matrix for all 27 route roots from the route graph.
+- Coverage is now 5 DETAILED, 7 PARTIAL and 15 NOT AUDITED.
+- The previously mapped shared owners are cross-referenced rather than duplicated. Section 10.1 remains the file-level ledger; this section is the route-page coverage ledger.
+- Stage 1 remains IN PROGRESS. No app source changes were made, no branch was created, and no build/tests/lint/CI/browser validation was run.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
