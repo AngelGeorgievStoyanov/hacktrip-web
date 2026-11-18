@@ -1,4 +1,4 @@
-import { PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
+import { PAGE_CONTENT_PADDING, ROUTE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
 import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 
 /** Shared layout presets used where the same page/list layout is required. */
@@ -42,7 +42,7 @@ export const ADMIN_PAGINATION_SX = {
 
 /** Shared layout for the account trip and favorites listing pages. */
 export const ACCOUNT_LAYOUT_MAIN_SX = {
-  p: '2rem',
+  p: ROUTE_CONTENT_PADDING,
   flex: 1,
 } as const;
 
