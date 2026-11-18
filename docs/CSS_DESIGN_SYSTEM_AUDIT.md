@@ -2992,3 +2992,139 @@ The Section 7 search matrix was applied to this dependency chain. Exact GitHub c
 6. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.16 — Account route roots and shared account-shell ownership audit (2026-11-18)
+
+### A. Preflight and branch evidence
+
+- Re-read the approved architecture, Styling API policy (Section 1.4), six-stage plan, Section 7 search matrix, Section 10.1 ledger, Sections 11.11–11.15 and the exact previous NEXT TASK.
+- Confirmed that `feature/frontend-modernization` exists and fetched every source file below using that branch ref.
+- The audit document blob SHA before this update was `6ad412819dd8a9b341c435508960faa7b42b95ad`.
+- The latest branch HEAD SHA is not exposed by the available branch-search response. The last HEAD recorded in Section 11.15 remains `05910ee557ea7768675218c4704afdbea8d6b0b5`; it is retained as the last recorded value, not represented as a newly verified HEAD.
+- The GitHub code-search endpoint returned snippets tied to a different commit context and is not branch-scoped. It was not used to override the exact branch-ref file contents.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+### B. Favorites / My Trips source-correctness follow-up
+
+The exact files fetched from `feature/frontend-modernization` still show the following mismatch:
+
+- Both files import `ACCOUNT_TRIPS_PAGE_SX`, `ACCOUNT_TRIPS_CONTENT_SX`, `ACCOUNT_TRIPS_HEADING_SX` and `ACCOUNT_TRIPS_EMPTY_STATE_SX`.
+- Their JSX references `PAGE_SX`, `CONTENT_SX`, `HEADING_SX` and `EMPTY_STATE_SX`, none of which is declared in either fetched file.
+- Both files reference `headingTextStyle` in the empty-state Typography but do not import it.
+- `src/styles/presets/layouts.ts` defines the imported `ACCOUNT_TRIPS_*` names, but does not define the shorter aliases used in JSX. The same preset file imports `headingTextStyle` internally; that does not make it available in the page module.
+
+**Conclusion:** this is a concrete source-level name-resolution inconsistency in the exact branch-ref contents, not a styling-only observation. It remains unresolved and must not be silently repaired as part of this audit. No compiler/typecheck was run, so no claim is made about the exact diagnostic set. A separate explicit source-correction task is required before migration of these two files.
+
+### C. Account shell and shared dependencies
+
+```text
+app/(account)/layout.tsx
+  └─ RequireAuth
+       ├─ status !== authenticated → render null
+       └─ authenticated
+            ├─ Header
+            ├─ main [React style: padding = ROUTE_CONTENT_PADDING, flex = 1]
+            │    └─ one account route root
+            └─ Footer
+```
+
+| Owner | Responsibility | Current style/ownership finding |
+|---|---|---|
+| `app/(account)/layout.tsx` | Authenticated route shell, Header/main/Footer order and noindex metadata | Main uses the prohibited React `style` prop for shared route padding and flex. The padding value comes from `ROUTE_CONTENT_PADDING`, but its transport is not compliant with Section 1.4. |
+| `src/components/auth/RequireAuth.tsx` | Client auth gate and redirect; renders no route UI until authenticated | Behavior-only wrapper; no visual skin. Do not treat it as the owner of account page layout. |
+| `src/components/layout/Header.tsx` | Shared navigation across public/account/auth/admin | Shared owner, already identified in 11.14/11.15. Local `NAV_BUTTON_SX`, Toolbar padding/responsive layout, welcome Button, Drawer paper elevation/height and Drawer nav geometry remain shared-shell targets. |
+| `src/components/layout/Footer.tsx` | Shared footer content and iOS landscape scroll behavior | Behavior/content owner; visual skin is in Footer.module.css. |
+| `src/components/layout/Footer.module.css` | Footer layout and colors | Colors consume `--ht-color-primary` and `--ht-color-text-inverse`; horizontal 20px padding and flex structure remain local layout values. |
+| `src/styles/presets/layouts.ts` | Shared layout presets including account trip list and centered page layouts | Account trip presets are centralized, but current Favorites/My Trips JSX does not reference their exported names correctly in the fetched branch contents. The file also retains CSSProperties presets consumed through React style elsewhere. |
+| `src/styles/presets/panels.ts` | Shared surface resolver | `PANEL_SX(theme)` delegates to `getSurfaceStyles(theme)`; this is the central surface owner used by Profile and form flows. |
+| `src/styles/presets/forms.ts` | Shared form field/layout presets | Owns `ACCOUNT_FORM_FIELDS_SX`, `FORM_CONTROL_INSET_SX`, `POINT_FORM_PANEL_SX`, `DAY_NUMBER_FIELD_SX`, and related form contracts. Some presets still contain local fixed dimensions and nested selectors; consumers must be checked before changing them. |
+| `src/styles/presets/buttons.ts` | Semantic button presets | Account consumers use primary, secondary, createTrip and day-stepper roles. BackButton still accepts caller `sx`, allowing callers to alter its shared role. |
+
+Header/Footer are not account-specific components. Their visual contracts affect every route group and must be migrated once at the shared owners, then checked against all four layout groups.
+
+### D. Remaining account route composition and ownership
+
+| Route root | Composition and shared dependencies | Observed styling ownership / migration targets |
+|---|---|---|
+| `/profile` — `app/(account)/profile/page.tsx` | Route Box → `PANEL_SX` surface → ProfileForm → ProfileImage/ProfileImageUpload, ChangePasswordForm, BackButton | Route owns centered full-height layout, responsive vertical padding, 600px panel width and panel inset. ProfileForm consumes shared button/form presets but adds local heading spacing, disabled Email TextField overrides, action-row geometry and child Button margin selector. Profile image/upload and password subflows are shared component owners and need their own consumer/state trace. |
+| `/points/edit/[pointId]` — route page | Route root → EditPointPage → PointLocationPicker, PointForm, AppImage, SocialObjectPlaceholder, ConfirmDialog | Route wrapper itself is composition-only. EditPointPage owns loading/error states, responsive map/form/image ordering, local 1200/600/520px geometry, image grid, square thumbnails and delete-image IconButton surface. Point form surface delegates to `POINT_FORM_PANEL_SX`; image frame and map overlay dependencies remain to be traced. |
+| `/trips/[id]/edit` — route page | Server route validates params and ownership → RequireTripOwner → EditTripLayout → TripLocationPicker, TripSelectField, ImageUploadField, AppImage, SocialObjectPlaceholder, ConfirmDialog, BackButton | Route page is primarily data/guard composition, not a visual owner. EditTripLayout owns a responsive map/form/image grid, content max width, day-number controls, image deletion, local alerts and numerous TextField/Button sx rules. It consumes PANEL_SX, FORM_CONTROL_INSET_SX, BUTTON_STYLES, UI_COLORS and UI_SIZES. |
+| `/trips/create` — route page | Suspense → TripForm | Route wrapper has no visual skin. TripForm owns Card/form composition, day-number field and stepper, several standard TextFields/Selects, upload field, local responsive action row and multiple semantic button presets. It consumes BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX, DAY_NUMBER_FIELD_SX and BackButton. |
+| `/trips/create/points` — route page | Suspense → CreatePointPage → PointList → PointCard; PointLocationPicker; PointForm; ConfirmDialog | CreatePointPage owns loading/error states, map/list/form two-column layout, responsive 1021px breakpoint, PointForm Card surface and local spacing. PointList/PointCard are nested shared owners; PointCard consumes card/action/text presets but retains local icon-button spacing/visibility and card geometry. |
+
+### E. Account-specific shared component contracts
+
+| Shared component / preset | Account consumers | Ownership conclusion |
+|---|---|---|
+| `TripList` → `TripCard` | Favorites and My Trips when non-empty | Already closed in 11.15 with Home and Trips as the other two route consumers. Do not repeat or fork this graph. |
+| `BackButton` | ProfileForm, PointForm, TripForm, EditTripLayout and other previously recorded auth/admin/trip consumers | One shared semantic owner; caller-provided `sx` remains an override escape hatch. Account forms use it with route-specific navigation callbacks, not route-specific skins. |
+| `PANEL_SX` / `getSurfaceStyles` | Profile route, Create/Edit Point Card, trip/edit form panels and other shared panels | Central surface chain is already present; panel geometry/content spacing remains owned by each composition. |
+| `POINT_FORM_PANEL_SX` | CreatePointPage and EditPointPage | Shared point-form surface/layout preset. Both route roots use the same owner; route-specific outer map/form geometry must not fork the panel skin. |
+| `ACCOUNT_FORM_FIELDS_SX` | ProfileForm | Shared account form field layout preset; ProfileForm adds local action-row and disabled-field rules. |
+| `BUTTON_STYLES` | ProfileForm, TripForm, PointForm, EditTripLayout, My Trips empty-state action and PointCard | Shared preset owner, but semantic role coverage is incomplete and caller-local sx composition remains in PointForm and other consumers. |
+| `PointList` / `PointCard` | CreatePointPage | PointCard is not route-owned; it is a reusable point-card owner with central text/action presets and local card/icon-button geometry. |
+| `AppImage` / `SocialObjectPlaceholder` | EditPointPage, EditTripLayout, Profile image subflow and other previously mapped routes | Shared image/placeholder owners. Their preset-to-render transport and local overlay/frame details remain open from 11.14/11.13. |
+| `AddressAutocomplete`, `PointLocationPicker`, `TripLocationPicker` | PointForm, EditPointPage, CreatePointPage, TripForm and EditTripLayout | Shared map/form dependency chain; must be audited at the component owners and all callers, not restyled separately per route. |
+| `ImageUploadField` | PointForm, TripForm, EditTripLayout and profile/admin image flows | Shared upload field; exact internal visual ownership and direct caller props remain open. |
+| `ConfirmDialog` | CreatePointPage, EditPointPage, EditTripLayout and other flows | Globally mounted shared dialog owner; route components only invoke confirmation. Its dialog/button states require a single shared contract. |
+
+### F. Concrete account migration targets confirmed in this batch
+
+1. **React style API:** account layout uses React `style` for main padding/flex. This is a direct Styling API policy violation.
+2. **Local page geometry:** Profile, EditPointPage, CreatePointPage and EditTripLayout define repeated max widths, horizontal padding, vertical spacing, centered flex/grid composition and responsive rearrangement. Determine which values are reusable layout tokens/presets versus genuinely route-specific geometry before migration.
+3. **Field contract:** ProfileForm, PointForm, TripForm and EditTripLayout use standard MUI TextFields with a mixture of defaults, centralized field presets and local sx. Disabled Email field and AddressAutocomplete are explicit variants requiring shared-state comparison.
+4. **Action contract:** Profile/Point/Trip forms combine named BUTTON_STYLES with raw Button/IconButton controls, local nested Button selectors and BackButton. Build an exact semantic action index before changing any presets.
+5. **Surface contract:** Profile and point/trip forms already consume PANEL_SX/POINT_FORM_PANEL_SX; keep surface ownership in the shared theme resolver and separate form-panel layout from the base surface.
+6. **Loading/error states:** Favorites/My Trips use CircularProgress and Alert; EditPointPage/CreatePointPage have local loading/error branches; TripForm has notification-based async errors; EditTripLayout owns inline server errors. These are different state compositions but recurring visual roles should be compared before defining a shared state contract.
+7. **Map/image composition:** EditPointPage and EditTripLayout combine map, form, image thumbnails, delete controls and placeholders. These are route compositions over shared map/image components, not reasons to create independent map or image skins.
+
+### G. Source evidence and ledger
+
+Exact branch-ref files fetched and inspected in this batch:
+
+- `app/(account)/favorites/page.tsx` — `22399b5e98c3f8c006ff1bd95e29911cac4b810a`
+- `app/(account)/my-trips/page.tsx` — `477050cfe2d688de9f3a1d2cee17222532ac1a54`
+- `app/(account)/layout.tsx` — `3ab4f092e7dc6053be4f0ca6f3f68cff31971b90`
+- `app/(account)/profile/page.tsx` — `ffb748a51d7b19353a395f59b036d03d6f000d22`
+- `app/(account)/points/edit/[pointId]/page.tsx` — `bbb9e10fc3cf9f8e567055b18bdc28584b62b4d3`
+- `app/(account)/trips/[id]/edit/page.tsx` — `cb0a66d1fa19710362603b12cb4120485130c9fc`
+- `app/(account)/trips/create/page.tsx` — `588d743a5b51e950959c2332550ecc39d6cce5ef`
+- `app/(account)/trips/create/points/page.tsx` — `3fa94b21b9a5a77480a1386a2ca95d1108f459f6`
+- `src/components/auth/RequireAuth.tsx` — `63958b4aa02186d3824f350829e967f8ce7ea4e1`
+- `src/components/auth/ProfileForm.tsx` — `53753f979947457c028f7541450f207e90ca9b03`
+- `src/components/trips/EditTripLayout.tsx` — `c86c23108089bec5169ffe2d8361b44db715bbe0`
+- `src/components/trips/TripForm.tsx` — `5a1d13e045eb0060e77e6eccaf2bff5bb3f9a272`
+- `src/components/points/CreatePointPage.tsx` — `34704fd35ef58c086f8401d961e33e47c8e8e2b2`
+- `src/components/points/EditPointPage.tsx` — `2ee94d01320853d8408b54b6c697308c839e5207`
+- `src/components/points/PointForm.tsx` — `e0580d770ce3a0d113086c752dc99313d87e90d4`
+- `src/components/points/PointList.tsx` — `f8e5e87b55b4b82139b87985ff8eaa133050ae4b`
+- `src/components/points/PointCard.tsx` — `86ecd774f4ff3aa0e7a3b8f68b8fea2c4eb8dab2`
+- `src/components/common/BackButton.tsx` — `1f78b4e652c6a3c0dd648e9166fdd9d9cf1bea95`
+- `src/styles/presets/forms.ts` — `b1de15957049dc1e583bbe3201135bb2b66b490b`
+- `src/styles/presets/panels.ts` — `c9474242c747e8248e930f56a8c5c0f26089bb2c`
+- Shared Header/Footer and Footer.module.css SHAs are recorded in Sections 11.14–11.15 and were re-fetched for this batch.
+
+Section 10.1 already has individual inventory entries for the route roots and component files listed above; this batch adds route-to-owner relationships and concrete property findings, not duplicate ledger rows.
+
+### H. Batch result and next task
+
+- Closed the account route composition roots for Favorites, My Trips, Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point at the feature-owner level.
+- Reconfirmed that Favorites/My Trips share TripList/TripCard only in the non-empty state; their dedicated empty states remain account-specific.
+- Traced account shell ownership to RequireAuth, shared Header/Footer and route main wrapper. Header/Footer remain cross-route shared owners, not account-only work.
+- Confirmed a source-level name-resolution inconsistency in Favorites/My Trips branch-ref contents; left source untouched and recorded it as a separate correction task.
+- Added exact account form, point-card, panel, button, image and map dependency relationships. The property-level audit of shared map/image/upload/dialog owners and exact direct call sites remains open.
+- Stage 1 remains IN PROGRESS. Candidate inventory coverage remains 163/163; this is not proof that the mandatory consumer maps are exhaustive.
+- No application source was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+**NEXT TASK — close shared account-form and map/image dependency owners before moving to the next route family:**
+
+1. Resolve the Favorites/My Trips source-correctness inconsistency as a separately authorized source correction; until then, do not claim these two page modules are type-safe.
+2. Trace exact direct consumers and all forwarded styling props for AddressAutocomplete, PointLocationPicker, TripLocationPicker, ImageUploadField, AppImage and SocialObjectPlaceholder.
+3. Trace ProfileImage/ProfileImageUpload/ChangePasswordForm and ConfirmDialog/NotificationProvider state compositions; identify shared action, field, image-frame, dialog and alert owners.
+4. Complete the account form field/action state matrix across ProfileForm, PointForm, TripForm and EditTripLayout, including disabled, error, loading, hover/focus and responsive action layouts.
+5. Continue the Section 7 exact call-site searches and update Section 10.1 only where a genuinely missing ledger entry is found; do not duplicate existing rows.
+6. Keep Stage 1 IN PROGRESS until all required owner-to-consumer edges and state/responsive matrices are exhaustive. Do not begin app-source migration before that gate.
+7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
