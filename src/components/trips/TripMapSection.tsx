@@ -22,6 +22,7 @@ import { BREAKPOINTS, maxWidthQuery, mediaDown } from '@/constants/ui';
 import type { TripPoint } from '@/types';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { TRIP_MAP_SECTION_CARD_SX, TRIP_MAP_SECTION_STEPPER_SX } from '@/styles/presets/map-controls';
 
 interface TripMapSectionProps {
   points: TripPoint[];
@@ -109,17 +110,7 @@ export function TripMapSection({
 
   return (
     <Card
-      sx={{
-        boxSizing: 'content-box',
-        height: 'fit-content',
-        width: '100%',
-        maxWidth: 600,
-        [mediaDown(BREAKPOINTS.smallPhone)]: {
-          display: 'flex',
-          flexDirection: 'column',
-          width: '94vw',
-        },
-      }}
+      sx={TRIP_MAP_SECTION_CARD_SX}
     >
       {markers.length > 1 ? (
         <MobileStepper
@@ -128,7 +119,7 @@ export function TripMapSection({
           steps={navigablePointIndexes.length + 1}
           position="static"
           activeStep={isOverview ? 0 : currentNavigableIndex + 1}
-          sx={{ maxWidth: 600, flexGrow: 1, maxHeight: '25px' }}
+          sx={TRIP_MAP_SECTION_STEPPER_SX}
           nextButton={
             <Button
               size="small"
