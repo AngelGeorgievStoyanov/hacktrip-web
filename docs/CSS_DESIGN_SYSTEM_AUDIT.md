@@ -3536,14 +3536,14 @@ No explicit component override is registered for MuiAlert, MuiSnackbar, MuiIconB
 - Stage 1 remains IN PROGRESS. Candidate inventory remains 163/163, but full mandatory Section 7 consumer searches, semantic action matrix, token/preset consumer closure and state/responsive matrix are not yet exhaustive.
 - No application source code changed. No branch created. No build, tests, lint, CI or browser validation run.
 
-**NEXT TASK — deepen the five remaining PARTIAL Account page audits (Section 11.19.F):**
+**NEXT TASK — audit the seven Admin route pages (Section 11.19.F):**
 
-1. Audit Profile, Edit Point, Edit Trip, Create Trip and Create Trip Point, tracing each route through form/layout owners, nested components, shared visual contracts and tokens.
-2. Reuse Sections 11.14–11.18, 11.21 and 11.22; do not duplicate shared component audits. Record page-specific composition, state/responsive behavior, direct MUI/native controls, CSS Modules, React style and inline sx.
-3. Update Section 11.19.F after the Account batch. Keep any route PARTIAL until its page-level styling and state ownership is traced end-to-end.
-4. Then audit the seven Admin routes and finish Not Found/404.
-5. Reconcile findings with Section 10.1 only where an existing row needs new evidence or a genuinely missing path is found. Do not change application source without authorization.
-6. Keep Stage 1 IN PROGRESS until every mandatory consumer map and state/responsive matrix is exhaustive. Do not begin app-source migration before that gate.
+1. Audit Admin landing, Users, Edit User, Images, Failed Login Logs, Reports and Route Not Found Logs from exact route roots through nested page components, tables, pagination, dialogs, image views and shared actions.
+2. Reuse existing component ownership maps and verify every consumer against exact branch-ref source. Do not duplicate completed shared component audits.
+3. Record route-specific data/loading/error/empty/selection/confirmation states, responsive behavior, CSS Modules, React style, inline sx, local constants and semantic action roles.
+4. Update Section 11.19.F after the Admin batch. Keep Stage 1 IN PROGRESS until mandatory consumer maps and state/responsive matrices are exhaustive.
+5. Then complete Not Found/404 and reconcile Section 10.1 only where new evidence or a genuinely missing path is found.
+6. Do not change application source without explicit authorization.
 7. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 No application source code was changed. No branch was created. No build, tests, lint, CI or browser validation was run.
@@ -3733,11 +3733,11 @@ Status definitions:
 | Public | Privacy Policy | app/(public)/privacy-policy/page.tsx | DETAILED | Section 11.20.D; long-form terms/privacy sections, generated TOC, legal CSS and SEO |
 | Account | Favorites | app/(account)/favorites/page.tsx | DETAILED | Section 11.22.B; query states, empty/error/loading branches, shared TripList and unresolved style identifiers |
 | Account | My Trips | app/(account)/my-trips/page.tsx | DETAILED | Section 11.22.C; query states, empty/create action, shared TripList and unresolved style identifiers |
-| Account | Profile | app/(account)/profile/page.tsx | PARTIAL | Root/ProfileForm and shared profile/image/password owners recorded in 11.16–11.18 |
-| Account | Edit Point | app/(account)/points/edit/[pointId]/page.tsx | PARTIAL | Root/PointForm/PointLocationPicker and shared map/image owners recorded |
-| Account | Edit Trip | app/(account)/trips/[id]/edit/page.tsx | PARTIAL | Root/EditTripLayout/TripLocationPicker/upload/image owners recorded |
-| Account | Create Trip | app/(account)/trips/create/page.tsx | PARTIAL | Root/TripForm/map/upload owners recorded |
-| Account | Create Trip Point | app/(account)/trips/create/points/page.tsx | PARTIAL | Root/CreatePointPage/PointList/PointCard/map owners recorded |
+| Account | Profile | app/(account)/profile/page.tsx | DETAILED | Section 11.23.B; profile details/image upload, password expansion, validation and feedback states |
+| Account | Edit Point | app/(account)/points/edit/[pointId]/page.tsx | DETAILED | Section 11.23.C; point load/permission, map/location, image deletion and shared PointForm states |
+| Account | Edit Trip | app/(account)/trips/[id]/edit/page.tsx | DETAILED | Section 11.23.D; server trip/day resolution, owner gate, edit form, reorder, image upload/deletion and responsive grid |
+| Account | Create Trip | app/(account)/trips/create/page.tsx | DETAILED | Section 11.23.E; create/append-day/add-point intents, retryable image uploads, map and form states |
+| Account | Create Trip Point | app/(account)/trips/create/points/page.tsx | DETAILED | Section 11.23.F; query validation, point list/reorder/delete, map picker and PointForm workflow |
 | Auth | Login | app/(auth)/login/page.tsx | DETAILED | Section 11.19.C; form, field, CAPTCHA and navigation states |
 | Auth | Register | app/(auth)/register/page.tsx | DETAILED | Section 11.19.D; fields, password feedback, terms, CAPTCHA and redirect |
 | Auth | Forgot Password | app/(auth)/forgot-password/page.tsx | DETAILED | Section 11.21.B; email/CAPTCHA form, generic success response, submit/reset/error states |
@@ -3755,8 +3755,8 @@ Status definitions:
 
 **Verified coverage count:**
 - 27 route roots total.
-- 12 DETAILED: Home, Trips, Trip Details, Live Tracking, About, Privacy Policy, Login, Register, Forgot Password, Resend Verification, Reset Password and Verify Email.
-- 7 PARTIAL: all 7 Account pages.
+- 19 DETAILED: all 6 Public pages, all 6 Auth pages, and all 7 Account pages.
+- 0 PARTIAL: all Account routes now have page-level audits.
 - 8 NOT AUDITED: seven Admin pages and Not Found.
 - These counts describe route-page audit coverage only. They do not change the 163/163 candidate file inventory count and do not mean Stage 1 is complete.
 
@@ -4193,5 +4193,111 @@ No application source code was changed. No branch was created. No build, tests, 
 
 - Added detailed page-level audits for Favorites and My Trips, including shared Account shell, query states, empty states and TripList/TripCard ownership cross-references.
 - Updated Section 11.19.F from 12 to 14 DETAILED and from 7 to 5 PARTIAL; eight routes remain NOT AUDITED (seven Admin routes and Not Found).
+- No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+- Stage 1 remains IN PROGRESS.
+
+## 11.23 — Remaining Account page audits (2026-11-18)
+
+### A. Preflight and scope
+
+- Re-read the approved architecture, Styling API policy (Section 1.4), six-stage plan (Section 6), mandatory search matrix (Section 7), file-level ledger (Section 10.1), route coverage matrix (Section 11.19.F), and relevant ownership audits in Sections 11.14–11.18 and 11.21–11.22.
+- Verified the audit document at branch feature/frontend-modernization before this batch. Pre-update document SHA: 38bb3f7d3c478e78f8ea942f3effa33e57380d53.
+- Audited all five remaining Account page roots and traced each through its nested page/form owners. Shared owners already covered in earlier sections are cross-referenced rather than repeated.
+- No application source changes, no branch creation, and no build/tests/lint/CI/browser validation.
+
+### B. Profile — /profile
+
+- Server route has NOINDEX metadata and composes a centered full-height wrapper, PANEL_SX surface (600px max width), and ProfileForm. Account layout adds RequireAuth, Header, main with React style padding/flex, and Footer.
+- ProfileForm initializes React Hook Form from authenticated user first/last name; email is disabled/read-only. Submit updates profile and auth context, optionally uploading the selected profile image first. Submit is disabled unless valid dirty fields or an image are selected; submit/Back/Change Password controls disable while saving. NotificationProvider owns success/error feedback.
+- ProfileImage fetches on mount/refresh token, shows loading, hides when no image, and supports confirmed deletion and fullscreen Dialog. ProfileImageUpload validates a single file, creates/revokes a preview URL and allows clearing the pending file.
+- ChangePasswordForm is expandable and resets when collapsed. It validates current/new/confirm passwords live, reuses PasswordField and PasswordRequirements, and has its own save/loading/error state.
+- Styling: route uses local sx for min-height, centering, responsive padding and 600px width; PANEL_SX owns shared panel skin. ProfileForm consumes ACCOUNT_FORM_FIELDS_SX and named primary/secondary/Back roles, but title, disabled email field, responsive action row and child margins remain local. Profile image circle, overlay controls, dialog, preview and delete actions contain local geometry/sx; colors/shadow partly use UI_COLORS/UI_SHADOWS and AppImage presets. No CSS Module or React style prop.
+
+### C. Edit Point — /points/edit/[pointId]
+
+- Server route is a NOINDEX wrapper for EditPointPage. The client page validates pointId, fetches the point, checks canEdit, and presents loading/error/denied states before the editor.
+- Coordinates and address selection synchronize PointLocationPicker and PointForm. Find in Map triggers map recentering. Existing image deletion is confirmed, tracks the deleting image, updates local images, and reports errors inline. Existing thumbnails use AppImage editorPointThumb; an empty image area uses SocialObjectPlaceholder.
+- PointForm is shared with Create Trip Point. Edit mode submits point changes, supports map/address geocoding, validation, inline server/location errors and Back/Done navigation. Image uploads are only offered in create mode.
+- Styling: local sx controls 1200px page width, map/form/image ordering, 1020px responsive reordering, 600/520px column caps and dynamic 1–3 column image grid. POINT_FORM_PANEL_SX and FORM_CONTROL_INSET_SX centralize the form panel and field inset; MuiCard owns the surface. Image frame/delete overlay geometry remains local; overlay colors are token-backed. PointForm still owns legacy 32ch action button widths/margins and responsive sizing. No CSS Module or React style prop.
+
+### D. Edit Trip — /trips/[id]/edit
+
+- Async server route validates trip id and optional dayId with positiveIdParam, fetches the trip, calls notFound for invalid/missing trip/day, and wraps EditTripLayout in RequireTripOwner. The owner gate checks authenticated user's trips (moderators bypass the lookup), renders null until allowed, and redirects unauthorized users to trip details.
+- EditTripLayout initializes tripEditSchema from the selected day. It supports day-number conflict confirmation/locking, reorder and update, query-cache replacement, image deletion, multi-image upload, retaining failed files for retry, and navigation to the updated day. Submit requires a selected day, valid form, no active submission, and dirty fields or new images. Errors are inline; delete uses ConfirmDialog.
+- TripLocationPicker, TripSelectField and ImageUploadField provide map, configured selects and upload behavior. Existing images use AppImage; missing images use SocialObjectPlaceholder.
+- Styling: responsive grid places map across the top on desktop and form/images in two columns; mobile order is images → map → form. PANEL_SX and MuiCard own the surface, FORM_CONTROL_INSET_SX owns field inset, and primary/Back actions are named. Many local sx values remain for grid, panel dimensions, title, day controls, button group, field rows, upload disabled overlay, image grid and delete overlay. Set/Change Day and day-stepper buttons have no dedicated semantic role. No CSS Module or React style prop.
+
+### E. Create Trip — /trips/create
+
+- NOINDEX route wraps TripForm in Suspense with null fallback because it reads useSearchParams. TripForm handles both new trip-group creation and appending days when tripGroupId is present; it loads existing trip data, derives next day number and carries forward select defaults.
+- Three distinct submit intents: Add trip, Add next day trip, and Add point's for the trip. Validation is live. Select choices come from backend config via useSelectChoices/TripSelectField, with a free-text fallback when choices are unavailable.
+- TripForm uploads selected images with bounded concurrency. Failed files are retained for retry; the created trip/day IDs are retained so retries do not create duplicate entities. Map coordinates are included in create requests. API errors use NotificationProvider; upload failures render inline. Existing-trip loading disables actions but does not replace the form with a loading skeleton.
+- Styling: MuiCard provides the shared surface, but unlike EditTripLayout the form does not consume PANEL_SX; padding, width, spacing and child control/button margins are local. Day field/stepper use DAY_NUMBER_FIELD_SX, DAY_NUMBER_BUTTON_GROUP_SX and named day increment/decrement presets. Add trip/Add next day use primary, Add point uses secondaryLightText, Back uses BackButton. The broad local descendant Button rule sets widths, heights, typography and margins on top of semantic presets. Price/currency and action layouts use local responsive sx. No CSS Module or React style prop.
+
+### F. Create Trip Point — /trips/create/points
+
+- NOINDEX route wraps CreatePointPage in Suspense with null fallback because it reads query parameters. The client page validates tripGroupId/tripId, fetches the trip, resolves the day and handles loading/invalid/missing/error states.
+- Composition: PointList + PointLocationPicker + POINT_FORM_PANEL_SX Card + shared PointForm. PointList sorts points; PointCard provides permission-aware Edit/Delete/Move actions and a map or no-marker state. Delete uses ConfirmDialog; reorder/delete/save errors are inline; saving disables list actions. Successful point save refreshes the trip and resets map selection/coordinates.
+- PointForm supports create mode, map geocoding/name synchronization, location validation and image upload. If image uploads fail after point creation, createdPointId is retained so retry updates the same point instead of creating a duplicate. Add Next Day navigates back to TripForm with the group id.
+- Styling: route owns local responsive two-column layout (single column below 1021px; desktop 0.75fr/1.6fr), map/form width and spacing. POINT_FORM_PANEL_SX and MuiCard centralize panel sizing/surface. PointList/PointCard and map picker internals are shared owners from prior audits. PointForm retains legacy button width/margin presets; Find in Map uses outlined variant with primary hover treatment, a semantic variant mismatch. No route CSS Module or React style prop.
+
+### G. Cross-page ownership and migration implications
+
+| Shared owner / contract | Consumers in this batch | Ownership note |
+|---|---|---|
+| Account layout + RequireAuth | All five | Common authenticated shell |
+| PANEL_SX / MuiCard | Profile, Edit Trip, point forms | Surface contract; Create Trip relies on MuiCard only |
+| ACCOUNT_FORM_FIELDS_SX | Profile, Change Password | Shared account field stack |
+| PointForm | Edit Point, Create Trip Point | One shared form with edit/create mode differences |
+| TripForm / TripSelectField | Create Trip | One form owner; configured-choice fallback |
+| EditTripLayout | Edit Trip | Owns day editor and image workflow |
+| PointLocationPicker | Edit Point, Create Trip Point | Shared point-location owner |
+| TripLocationPicker | Edit Trip, Create Trip | Separate trip-location owner |
+| ImageUploadField | Edit Trip, Create Trip, Create Trip Point | Shared upload/preview/processing owner |
+| ProfileImage / ChangePasswordForm | Profile | Profile-specific image/password workflows |
+| PointList / PointCard | Create Trip Point | Shared point list/card roles |
+| ConfirmDialog / NotificationProvider | Profile, Edit Point, Edit Trip, Create Trip, Create Trip Point | Shared confirmation and feedback owners |
+
+### H. Coverage and batch result
+
+- All seven Account route roots now have DETAILED page-level audits. Overall route coverage: 27 total, 19 DETAILED, 0 PARTIAL, 8 NOT AUDITED (seven Admin pages and Not Found).
+- Shared components remain separate owners; this page audit does not mean their complete state/responsive consumer matrices are finished.
+- Favorites/My Trips unresolved identifiers documented in Section 11.22 remain a separate source-correctness issue. No fixes were made.
+- Stage 1 remains IN PROGRESS; do not begin source migration until mandatory consumer maps and state/responsive matrices are exhaustive.
+
+### I. Exact branch-ref source evidence
+
+- app/(account)/profile/page.tsx — ffb748a51d7b19353a395f59b036d03d6f000d22
+- app/(account)/points/edit/[pointId]/page.tsx — bbb9e10fc3cf9f8e567055b18bdc28584b62b4d3
+- app/(account)/trips/[id]/edit/page.tsx — cb0a66d1fa19710362603b12cb4120485130c9fc
+- app/(account)/trips/create/page.tsx — 588d743a5b51e950959c2332550ecc39d6cce5ef
+- app/(account)/trips/create/points/page.tsx — 3fa94b21b9a5a77480a1386a2ca95d1108f459f6
+- app/(account)/layout.tsx — 3ab4f092e7dc6053be4f0ca6f3f68cff31971b90
+- src/components/auth/ProfileForm.tsx — 53753f979947457c028f7541450f207e90ca9b03
+- src/components/auth/ProfileImage.tsx — f544741c9a71e6ae5142c5cae763eb12947bbf24
+- src/components/auth/ChangePasswordForm.tsx — 6fe468e3574686a2ce77f281e9451e8714aed128
+- src/components/points/EditPointPage.tsx — 2ee94d01320853d8408b54b6c697308c839e5207
+- src/components/points/CreatePointPage.tsx — 34704fd35ef58c086f8401d961e33e47c8e8e2b2
+- src/components/points/PointForm.tsx — e0580d770ce3a0d113086c752dc99313d87e90d4
+- src/components/points/PointList.tsx — f8e5e87b55b4b82139b87985ff8eaa133050ae4b
+- src/components/points/PointCard.tsx — 86ecd774f4ff3aa0e7a3b8f68b8fea2c4eb8dab2
+- src/components/trips/TripForm.tsx — 5a1d13e045eb0060e77e6eccaf2bff5bb3f9a272
+- src/components/trips/EditTripLayout.tsx — c86c23108089bec5169ffe2d8361b44db715bbe0
+- src/components/trips/TripSelectField.tsx — 6897cbc28a59554c3eb62cf2714ec2a689dd6599
+- src/components/maps/PointLocationPicker.tsx — 64f24d4bff2c414e9bf0f2c57d63f59b4390da97
+- src/components/maps/TripLocationPicker.tsx — ebfb1a7cf123485aaed0dd2b4157412642ad5673
+- src/components/maps/AddressAutocomplete.tsx — f53c09e6196a8f980b2e2700884a9aeb62b2b116
+- src/components/images/ImageUploadField.tsx — 78923c1529132c880e9465e33b774ca6f2b0525b
+- src/styles/presets/forms.ts — b1de15957049dc1e583bbe3201135bb2b66b490b
+- src/styles/presets/buttons.ts — 2110bcf2a41d8ca81375682ebb9bb8ed88f48a2e
+- src/constants/ui/sizes.ts — 69e9fdeefc9ce4968e2a6c98a72b80a6f060d444
+- src/constants/ui/colors.ts — dce2b3d898c07cb7ba1b61a8ecf9608121ea8763
+- src/theme/components/card.ts — 2c933219062e2e626304bc153234a4dbe5c3205b
+- src/theme/components/text-field.ts — 4e3ed7529c7f5c219dbe0d05f4f74da0cdca84fa
+
+### J. Batch result and next task
+
+- Added detailed page-level audits for all five remaining Account routes and their nested page owners.
+- Updated Section 11.19.F from 14 to 19 DETAILED and from five to zero PARTIAL; eight routes remain NOT AUDITED (seven Admin pages and Not Found).
 - No application source code changed. No branch was created. No build, tests, lint, CI or browser validation was run.
 - Stage 1 remains IN PROGRESS.
