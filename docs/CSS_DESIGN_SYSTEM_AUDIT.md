@@ -819,6 +819,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Placeholder colors consume UI_COLORS semantic tokens; image asset selection is data/state driven. | Overlay gradient, typography sizes, image object-fit style and geometry are local; React style on Next Image is a presentation exception candidate requiring approved abstraction. | PARTIAL — color tokens used, overlay contract remains local. |
 | `src/components/trips/PointsSection.tsx` | Pure composition wrapper delegates selected point rendering to PointSection. | No visual skin of its own; selected-point section wrapper is semantic structure only. Child surface is owned by PointSection. | PARTIAL — composition only; consumer trace required. |
 | `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
+| `src/components/common/ConfirmDialog.tsx` | Uses MUI Dialog; its Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are direct MUI Buttons with the same primary/contained props; semantic roles, button states and dialog content spacing remain uncentralized. | PARTIAL — Dialog surface is centralized, action roles and layout remain. |
 ## 11. Current status and exact next task
 
 ### Current stage
@@ -1930,8 +1931,8 @@ Continue Stage 1 by completing the **Card / Paper / custom surface** consumer ma
 
 ### Live inventory after this batch
 - Candidate scope: **163**.
-- Individual Section 10.1 ledger rows: **106** unique.
-- Files still without an individual ledger row: **57**.
+- Individual Section 10.1 ledger rows: **107** unique.
+- Files still without an individual ledger row: **56**.
 - This is file-level inventory progress only; it is not migration progress and does not prove all consumer maps exhaustive.
 - Remaining category counts and exact paths are listed below.
 
