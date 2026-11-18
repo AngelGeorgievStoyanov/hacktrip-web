@@ -18,7 +18,7 @@ import {
   MAP_TRIP_OPTIONS,
   MAP_TRIP_WIDTH,
 } from '@/constants/maps';
-import { BREAKPOINTS, maxWidthQuery, mediaDown } from '@/constants/ui';
+import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
 import type { TripPoint } from '@/types';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
