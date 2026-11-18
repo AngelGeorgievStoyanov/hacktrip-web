@@ -3,12 +3,12 @@ import { UI_COLORS } from '@/constants/ui/colors';
 import { TYPOGRAPHY } from '@/constants/ui/typography';
 
 /** Shared heading text treatment for MUI typography consumers. */
-export const HEADING_TEXT_SX: SxProps<Theme> = {
+export const HEADING_TEXT_SX = {
   fontFamily: TYPOGRAPHY.fontFamily,
   color: UI_COLORS.text.inverse,
   opacity: 1,
   textShadow: `3px 3px 3px ${UI_COLORS.decorative.headingShadow}`,
-};
+} as const;
 
 /** Shared centered home/public-trips heading composition. */
 export const HOME_HEADING_SX: SxProps<Theme> = {
