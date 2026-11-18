@@ -4589,4 +4589,36 @@ No application source code was changed. No branch was created. No build, tests, 
 - Exhaustive `sx` / `style` / raw visual-literal mapping: **OPEN**.
 - Shared component call-site verification: **OPEN**.
 - Stage 1: **IN PROGRESS**; no file is marked VERIFIED by this batch.
-- Next bounded workstream: trace every exported token, CSS variable and preset property to exact consumers and call sites, starting with the React `CSSProperties` exports and the shared surface/button/field contracts. Record exact search scope, counts and paths before any source migration.
+- Next bounded workstream: continue source migration from the audited owner map. Keep Stage 1 open for the remaining exhaustive maps, but do not treat it as a project-wide migration blocker; verify the affected consumer set for each bounded change.
+
+
+## 11.27 — First source migration: Home intro preset (2026-11-18)
+
+### Scope and preflight
+- Re-read the approved styling API policy (Section 1.4), target architecture (Section 2), migration rules (Section 9), owner map (Section 11.12) and owner-layer findings (Section 11.26).
+- Confirmed branch: `feature/frontend-modernization`.
+- Starting HEAD for this source batch: `48d48b6e190f3e520e0ebe4c0d171ddf8034d401`.
+- The migration is deliberately limited to the home intro paragraph; it does not attempt to convert the other CSSProperties exports in the same file.
+
+### Source changes
+1. `src/styles/presets/typography.ts`
+   - Replaced the `HOME_INTRO_STYLE: CSSProperties` export with the semantic `HOME_INTRO_SX: SxProps<Theme>` preset.
+   - Preserved its existing margin, alignment, inherited shared heading treatment and line-height values.
+   - Removed the React CSSProperties dependency from this preset file; the remaining `headingTextStyle` and `HOME_HEADING_STYLE` exports are still legacy style objects and remain migration targets.
+2. `src/components/home/HomeHero.tsx`
+   - Replaced the paragraph's React `style` prop with MUI `Typography component="p" variant="inherit"` and the named `HOME_INTRO_SX` preset.
+   - Kept the existing page-specific `maxWidth: 850` as a local composition delta in the consumer's `sx` array.
+   - Preserved the paragraph copy and its existing layout values.
+
+### Scope and verification limits
+- The direct consumer identified and migrated in the current-branch route/component map is `src/components/home/HomeHero.tsx`.
+- Both modified files were fetched again from the branch after the writes; the new preset export and the consumer import/use are present.
+- This is a bounded migration, not an assertion that every typography preset consumer or every React `style` occurrence has been mapped.
+- No API, data, route behavior, backend logic, colors or design dimensions were intentionally changed.
+- No build, tests, lint, CI or browser validation was run, as required.
+
+### Batch result and next task
+- Source migration completed for the Home intro paragraph: **2 source files changed**.
+- Remaining legacy typography exports `headingTextStyle` and `HOME_HEADING_STYLE` remain unchanged pending their consumer migrations.
+- Stage 1 remains **IN PROGRESS** for the global inventory/consumer maps; it no longer blocks a bounded migration when the affected consumer is verified.
+- Next: migrate the Home heading and shared heading treatment only after checking its complete current-branch consumer set; then continue to the next owner family in the existing workstream map.
