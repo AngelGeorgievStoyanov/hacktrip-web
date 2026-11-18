@@ -749,6 +749,20 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/TripMapSection.tsx` | Uses MUI Card and shared map composition. | Card local sx and direct previous/next Buttons remain; separate map navigation role from generic actions. | CHANGE REQUIRED. |
 | `src/components/trips/DayImagesGallery.tsx` | Uses image gallery composition. | Local image container width/maxWidth/aspect ratio remains; compare with named gallery image roles and CSS module geometry. | PARTIAL. |
 
+
+| `app/(account)/favorites/page.tsx` | Uses shared account page/content/heading/empty-state presets and delegates populated results to TripList. | Local CircularProgress margin and Alert max-width remain; verify empty-state typography alias and child TripList contract. | PARTIAL — wrapper partly centralized. |
+| `app/(account)/profile/page.tsx` | Uses shared PANEL_SX for the inner panel. | Outer page layout and additional inner panel geometry/padding/gap remain local sx; distinguish reusable panel skin from unique route composition. | CHANGE REQUIRED. |
+| `app/(account)/trips/create/page.tsx` | Route delegates to TripForm within Suspense; no direct visual styling found. | Verify TripForm consumer ledger; no separate route-level visual migration indicated. | PARTIAL — composition wrapper only. |
+| `app/(account)/trips/create/points/page.tsx` | Route delegates to CreatePointPage within Suspense; no direct visual styling found. | Verify CreatePointPage consumer ledger; no separate route-level visual migration indicated. | PARTIAL — composition wrapper only. |
+| `app/(public)/live-tracking/page.tsx` | Uses ROUTE_CONTENT_PADDING token as the source value. | Applies token through React style prop on main; move to approved class/preset/CSS variable contract. LiveTracker is separately audited. | CHANGE REQUIRED. |
+| `app/(public)/page.tsx` | Uses HomeHero/HomeTrips shared feature components and CENTERED_PAGE_MAIN_STYLE preset. | Applies layout preset through React style prop on main; migrate to approved styling API. | CHANGE REQUIRED. |
+| `app/(public)/trips/page.tsx` | Uses shared TripFilters, TripList, TripPagination, WelcomeHeading and typography/layout presets. | Applies React style props to main/p and defines local INTRO_STYLE by extending shared preset; catch branch also references MAIN_STYLE. Move shared composition to approved styling API and resolve the route-owned variant. | CHANGE REQUIRED. |
+| `app/(public)/trips/[id]/page.tsx` | Delegates trip presentation to TripDetailsView and uses CENTERED_PAGE_MAIN_STYLE. | React style prop on main; move route composition to approved styling API. Nested TripDetailsView is separately audited. | CHANGE REQUIRED. |
+| `src/components/admin/AdminDashboard.tsx` | Semantic nav/list/link structure; no local visual declarations found. | Verify rendered navigation/link styling against shared navigation contract and parent Admin layout; no direct style migration confirmed in this file. | PARTIAL — structural only. |
+| `src/components/auth/RequireModeratorRedirect.tsx` | Auth guard returns children or null; no visual declarations. | No visual migration in this file; verify only through child component ownership. | NON-VISUAL — no styling target. |
+| `src/components/common/JsonLd.tsx` | Emits JSON-LD script only; no rendered visual UI. | No visual migration target. | NON-VISUAL — no styling target. |
+| `src/components/common/ScrambleHeading.tsx` | Uses HOME_HEADING_STYLE as base typography preset. | Public style prop allows caller-provided React presentation style and is spread into the h1; replace with approved semantic class/variant or documented nonvisual runtime API, then audit all callers. | CHANGE REQUIRED. |
+
 ### Surface / Paper clarification
 
 - MUI `Card` is already globally wired to `getSurfaceStyles` through `MuiCard`.
@@ -1157,6 +1171,163 @@ Continue Stage 1 as a full repository-wide pass through Section 7, not as a butt
 - AppImage applies resolved style internally from named presets; retain this as the image abstraction boundary and audit its presets/callers rather than allowing feature-level style props.
 - Reframed NEXT TASK as the complete Section 7 repository-wide matrix. Action/button mapping remains one workstream alongside surfaces, fields, images, tokens/CSS variables, presets, inline styling, states and responsive rules.
 - No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS; no files were promoted to VERIFIED.
+
+## 11.4 — Counted repository inventory and next unreviewed files (2026-11-18)
+
+### Exact scope and count at branch HEAD
+- Branch: feature/frontend-modernization.
+- HEAD before this documentation update: 1ecc33bd89a06ce93bb2624c65245f44177ab560.
+- The recursive repository tree is not truncated.
+- Counted the UI/design-system candidate set using exact paths under app/ and src/: TSX/JSX/CSS/SCSS files plus the canonical UI token modules, image preset module, all theme files and all style-preset files.
+- Total candidate files: **157**. Breakdown: app 39; components 87; tokens 13; presets 8; theme 10.
+- Existing detailed Section 10.1 ledger before this batch: **48** unique file paths.
+- Newly inspected and added to the ledger in this batch: **12** paths.
+- Detailed ledger after this batch: **60** unique paths.
+- Candidate files without an individual Section 10.1 ledger entry after this batch: **97**. These are the exact outstanding paths listed below.
+- Important distinction: "without an individual ledger entry" is the count of work not yet reconciled into the per-file ledger; some paths have older status-only manifest entries or historical mention in earlier audit notes. They are not counted as fully verified. Section 10.1 is the operational per-file record.
+- This is an inventory/reconciliation count, not a claim that all 60 ledger files are fully centralized. Existing PARTIAL and CHANGE REQUIRED statuses remain open.
+
+### Newly inspected batch — 12 files
+| File | Findings |
+|---|---|
+| app/(account)/favorites/page.tsx | Shared page/content/heading/empty-state presets; local progress margin and Alert width; child TripList separately audited. |
+| app/(account)/profile/page.tsx | Shared PANEL_SX but additional local outer/inner layout sx remains. |
+| app/(account)/trips/create/page.tsx | Pure route composition to TripForm; no direct visual styles. |
+| app/(account)/trips/create/points/page.tsx | Pure route composition to CreatePointPage; no direct visual styles. |
+| app/(public)/live-tracking/page.tsx | Token ROUTE_CONTENT_PADDING still applied through React style prop. |
+| app/(public)/page.tsx | Shared layout preset still applied through React style prop. |
+| app/(public)/trips/page.tsx | Shared TripFilters/List/Pagination/WelcomeHeading and typography/layout presets; local intro variant and multiple React style props remain. |
+| app/(public)/trips/[id]/page.tsx | Shared TripDetailsView and layout preset; React style prop remains on main. |
+| src/components/admin/AdminDashboard.tsx | Semantic nav/list/link structure; no local visual declaration in component; parent layout/link contract remains to verify. |
+| src/components/auth/RequireModeratorRedirect.tsx | Auth guard only; no visual output of its own. |
+| src/components/common/JsonLd.tsx | JSON-LD script only; no visual output. |
+| src/components/common/ScrambleHeading.tsx | Uses HOME_HEADING_STYLE but exposes and spreads caller-provided React style prop; styling API migration target. |
+
+### Exact outstanding file list — 97 paths without individual ledger rows
+**app (31)**
+- `app/(account)/layout.tsx`
+- `app/(account)/my-trips/page.tsx`
+- `app/(account)/points/edit/[pointId]/page.tsx`
+- `app/(account)/trips/[id]/edit/page.tsx`
+- `app/(admin)/admin/failed-login-logs/page.tsx`
+- `app/(admin)/admin/images/page.tsx`
+- `app/(admin)/admin/page.tsx`
+- `app/(admin)/admin/reports/page.tsx`
+- `app/(admin)/admin/route-not-found-logs/page.tsx`
+- `app/(admin)/admin/users/[userId]/page.tsx`
+- `app/(admin)/admin/users/page.tsx`
+- `app/(admin)/layout.tsx`
+- `app/(auth)/forgot-password/page.tsx`
+- `app/(auth)/layout.tsx`
+- `app/(auth)/login/page.tsx`
+- `app/(auth)/register/page.tsx`
+- `app/(auth)/resend-verification/page.tsx`
+- `app/(auth)/reset-password/page.tsx`
+- `app/(auth)/verify-email/page.tsx`
+- `app/(public)/about/AboutPage.module.css`
+- `app/(public)/about/page.tsx`
+- `app/(public)/layout.tsx`
+- `app/(public)/privacy-policy/LegalPage.module.css`
+- `app/(public)/privacy-policy/page.tsx`
+- `app/error.tsx`
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/not-found.tsx`
+- `app/opengraph-image.tsx`
+- `app/providers.tsx`
+- `app/twitter-image.tsx`
+
+**components (38)**
+- `src/components/admin/AdminNavigation.tsx`
+- `src/components/admin/AdminUserForm.tsx`
+- `src/components/admin/AdminUsers.tsx`
+- `src/components/auth/Captcha.tsx`
+- `src/components/auth/ForgotPasswordForm.tsx`
+- `src/components/auth/GuestOnly.tsx`
+- `src/components/auth/LoginForm.tsx`
+- `src/components/auth/RequireAuth.tsx`
+- `src/components/auth/RequireRole.tsx`
+- `src/components/auth/RequireTripOwner.tsx`
+- `src/components/auth/ResendVerificationForm.tsx`
+- `src/components/auth/ResetPasswordForm.tsx`
+- `src/components/common/ConfirmDialog.tsx`
+- `src/components/common/NotFound.module.css`
+- `src/components/common/PasswordRequirements.tsx`
+- `src/components/common/TabSyncListener.tsx`
+- `src/components/home/HomeHero.tsx`
+- `src/components/home/HomeTrips.tsx`
+- `src/components/images/ImageGallery.module.css`
+- `src/components/layout/Footer.module.css`
+- `src/components/layout/Footer.tsx`
+- `src/components/layout/Header.tsx`
+- `src/components/placeholders/SocialObjectPlaceholder.tsx`
+- `src/components/social/FavoriteButton.tsx`
+- `src/components/social/LikeAnimation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/ReportButton.tsx`
+- `src/components/social/SocialConfigStatus.tsx`
+- `src/components/trips/EditTripLayout.tsx`
+- `src/components/trips/PointsSection.tsx`
+- `src/components/trips/TripDetails.tsx`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripDetailsView.tsx`
+- `src/components/trips/TripForm.tsx`
+- `src/components/trips/TripList.module.css`
+- `src/components/trips/TripList.tsx`
+- `src/components/trips/TripPagination.module.css`
+- `src/components/trips/TripPagination.tsx`
+
+**tokens (13)**
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/index.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
+- `src/hooks/useAuth.tsx`
+- `src/hooks/useBackground.tsx`
+- `src/lib/images/renderTripOgImage.tsx`
+- `src/seo/SiteStructuredData.tsx`
+
+**presets (8)**
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/typography.ts`
+
+**theme (7)**
+- `src/theme/components/button.ts`
+- `src/theme/components/text-field.ts`
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shadows.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
+
+### Batch constraints and status
+- Re-read the CSS organization and latest NEXT TASK before source inspection; confirmed current branch and HEAD above.
+- Only the 12 files listed in this batch were fetched for this inspection. Previously recorded files were not reopened merely to inflate this batch.
+- Added all 12 to Section 10.1. Two files are explicitly classified NON-VISUAL rather than being treated as style migration targets.
+- No application source files changed. No build, tests, lint, CI or browser validation was run.
+- Stage 1 remains IN PROGRESS. No file was marked fully migrated or visually verified.
+
+### Updated NEXT TASK
+Continue only with the exact outstanding paths listed in this section; do not restart files already represented in Section 10.1 or the newly inspected batch. Work across all domains, not one component family: next inspect the remaining UI components that have no individual ledger entry, then route/page and shell styles, and finally any token/theme/preset paths not yet individually reconciled. For every batch, subtract completed paths from this outstanding register, update Section 10.1 and this count, and keep Stage 1 open until the outstanding list is empty and every required consumer map is complete. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
+
+### 2026-11-18 — Counted inventory and 12-file route/common batch
+- Read the audit document first, including ownership architecture, Section 7 matrix, Stage 1 status, manifest, detailed ledger and current NEXT TASK. Confirmed feature/frontend-modernization HEAD 1ecc33bd89a06ce93bb2624c65245f44177ab560.
+- Built a fresh, non-truncated recursive tree inventory. Counted 157 UI/design-system candidate files: app 39, components 87, theme 10, presets 8, tokens/image presets 13.
+- Reconciled Section 10.1: 48 unique detailed file rows existed before this batch. Inspected 12 additional paths and added them, bringing the detailed ledger to 60 unique paths. There are now 97 candidate paths without individual ledger rows; every one is listed by exact path in Section 11.4. Status-only manifest entries and historical mentions are not treated as full verification.
+- New inspection: favorites/profile account pages; create-trip and create-point route wrappers; public live tracking/home/trips/trip-detail pages; AdminDashboard; RequireModeratorRedirect; JsonLd; ScrambleHeading.
+- Findings include multiple route-level React style props, profile page local sx despite PANEL_SX, favorites progress/Alert sx, and ScrambleHeading exposing caller-supplied React style. Create routes are composition-only; RequireModeratorRedirect and JsonLd are non-visual.
+- No source code changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS.
 
 ## 12. Audit log (append-only)
 
