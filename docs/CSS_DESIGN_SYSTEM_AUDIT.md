@@ -712,6 +712,43 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/points/EditPointPage.tsx` | Uses MUI Card theme surface for its Card. | Local layout `sx`, local IconButton styling and other page composition remain; inspect against shared point form/action roles. | CHANGE REQUIRED. |
 | `src/components/points/CreatePointPage.tsx` | Uses MUI Card theme surface for its Card and central size token for content width. | Local layout `sx` and page composition remain; verify all nested form and action consumers. | PARTIAL — not fully fixed. |
 
+
+| `src/components/admin/AdminFailedLogs.tsx` | Uses Paper table, Checkbox selection and direct pagination Buttons. | Map checkbox and pagination contracts; inspect ADMIN_TABLE_CONTAINER_SX / ADMIN_PAGINATION_SX consumers and all states. | PARTIAL — direct action roles remain. |
+| `src/components/admin/AdminImages.tsx` | Uses shared admin table/pagination presets and Dialog for preview. | Multiple direct pagination Buttons, local preview IconButton positioning, local image/status spacing and surface details remain. | CHANGE REQUIRED. |
+| `src/components/admin/AdminReports.tsx` | Paper table uses shared admin table container preset. | Direct action and pagination Buttons need semantic contracts; verify row states. | CHANGE REQUIRED. |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
+| `src/components/admin/AdminUserProfileImage.tsx` | Uses AppImage and shared column layout preset. | Local zoom trigger geometry and direct upload/remove actions remain; verify image role. | CHANGE REQUIRED. |
+| `src/components/auth/ChangePasswordForm.tsx` | Uses shared account form field preset and primary button preset. | Local button spacing and remaining form states/callers need verification. | PARTIAL. |
+| `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and primary button preset. | Card content/heading sx and complete field/state contract need verification. | CHANGE REQUIRED. |
+| `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets and primary/secondary button presets. | TextField/Checkbox contract and locked-state treatment need verification; secondary semantic callers need mapping. | PARTIAL. |
+| `src/components/auth/ProfileForm.tsx` | Uses shared account field preset, BackButton and primary/secondary presets. | Multiple local field/heading sx and caller-level action layout remain. | CHANGE REQUIRED. |
+| `src/components/auth/ProfileImage.tsx` | Uses AppImage, Dialog and shared UI color/shadow tokens in some controls. | Local image frame dimensions/radii, IconButton positions, thumbnail sx and overlay states remain. | CHANGE REQUIRED. |
+| `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Autocomplete. | Local inputSx/containerSx and direct action Button remain; establish a named map-field variant inheriting the base field contract. | PARTIAL. |
+| `src/components/maps/GoogleMapView.tsx` | Wrapper uses responsive grid/flex layout sx. | No button/field/surface styling surfaced in this inspection; verify only if later consumer tracing finds visual controls. | PARTIAL. |
+| `src/components/maps/PointLocationPicker.tsx` | Uses primary/secondary button presets. | Local map layout and position sx remain; verify map-specific action roles and states. | PARTIAL. |
+| `src/components/maps/TripLocationPicker.tsx` | Uses primary/secondary button presets. | Local layout/position sx and map field/action states remain. | CHANGE REQUIRED. |
+| `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
+| `src/components/CustomFileUploadButton.tsx` | Shared upload component boundary exists. | Raw IconButton and contained Button component=label remain; define upload and icon-action roles. | CHANGE REQUIRED. |
+| `src/components/images/AppImage.tsx` | Central AppImage abstraction selects named image presets and computes rendering style internally. | Audit every preset and caller; internal computed React style is an implementation detail of the approved image abstraction, not permission for consumer-level style props. Document and preserve this boundary. | PARTIAL. |
+| `src/components/images/ImageGallery.tsx` | Uses AppImage and CSS Module for gallery structure. | Local sx and every gallery frame/control caller need comparison with image role presets. | PARTIAL. |
+| `src/components/images/ImageLightbox.tsx` | Uses Dialog and AppImage. | Multiple IconButtons define local position/z-index/control sx; centralize lightbox control roles while retaining unique overlay geometry. | CHANGE REQUIRED. |
+| `src/components/images/ImageUploadField.tsx` | Shared upload field and AppImage usage. | Local thumbnail dimensions/objectFit/radii, layout sx, raw remove/delete-all IconButtons and upload Button remain. | CHANGE REQUIRED. |
+| `src/components/common/ExpandableText.tsx` | Shared disclosure component exists. | Direct disclosure Button and local sx require a shared expand/collapse role and state contract. | PARTIAL. |
+| `src/components/common/NotFound.tsx` | Uses a CSS Module boundary. | Native Home button must be mapped to a shared navigation/action role; inspect paired NotFound.module.css skin. | CHANGE REQUIRED. |
+| `src/components/common/NotificationProvider.tsx` | Uses MUI notification primitives. | Only a width sx surfaced in this pass; inspect Alert/Snackbar global state and theme parity before marking complete. | PARTIAL. |
+| `src/components/common/PasswordField.tsx` | Uses MUI TextField. | Password reveal IconButton is local; must consume the shared icon-action contract and base field states. | PARTIAL. |
+| `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_STYLE preset and MUI typography. | React style prop on h1 and local padding/heading sx violate styling API policy; migrate after inventory. | CHANGE REQUIRED. |
+| `src/components/comments/CommentsSection.tsx` | Uses shared comments panel/card and social action presets; MUI Card surface is theme-backed. | React style prop on list, local comment/card spacing and many IconButtons/TextFields remain; map all edit/delete/reply/report states. | CHANGE REQUIRED. |
+| `src/components/comments/CommentsToggle.tsx` | Uses MUI IconButton for comments disclosure. | React style prop on wrapper and local heading margin remain; disclosure state should use shared contract. | CHANGE REQUIRED. |
+| `src/components/comments/RepliesSection.tsx` | Uses shared social action preset and MUI TextField. | Multiple raw IconButtons and local border/spacing sx remain; map reply/edit/delete/cancel/submit roles. | CHANGE REQUIRED. |
+| `src/components/social/EngagementBar.tsx` | Uses shared social action composition. | Responsive local sx and raw IconButton remain; verify all action states and consumers. | CHANGE REQUIRED. |
+| `src/components/social/TripGroupSocialActions.tsx` | Uses shared like animation and social action components in part. | Multiple raw IconButtons, local gaps and React style error spans remain; centralize icon actions and state feedback without merging distinct semantics. | CHANGE REQUIRED. |
+| `src/components/tracking/LiveTracker.tsx` | Uses TRACKING_SURFACE_SX and layout primitives. | Start/Stop/Reset/Follow are direct Buttons; local tracking surface and status/detail spacing need role and surface mapping. | CHANGE REQUIRED. |
+| `src/components/trips/TripDaysNav.tsx` | Uses MUI PaginationItem with PAGE_ITEM_SX. | Local pagination item margins and outer margin remain; verify selected/disabled/focus states. | CHANGE REQUIRED. |
+| `src/components/trips/TripFilters.tsx` | Uses theme values for some Select styling and reusable local constants. | SELECT_BOX_SX, FILTER_LABEL_SX and FILTER_SELECT_SX remain feature-owned; three Select consumers and responsive values need central field/filter variant mapping. | CHANGE REQUIRED. |
+| `src/components/trips/TripMapSection.tsx` | Uses MUI Card and shared map composition. | Card local sx and direct previous/next Buttons remain; separate map navigation role from generic actions. | CHANGE REQUIRED. |
+| `src/components/trips/DayImagesGallery.tsx` | Uses image gallery composition. | Local image container width/maxWidth/aspect ratio remains; compare with named gallery image roles and CSS module geometry. | PARTIAL. |
+
 ### Surface / Paper clarification
 
 - MUI `Card` is already globally wired to `getSurfaceStyles` through `MuiCard`.
@@ -753,12 +790,13 @@ This ledger is the operational source for answering "what is actually fixed in e
 7. Migrate in the order specified in Stage 5. Update exact file statuses and the next task after every batch.
 8. Do not re-audit unchanged files merely for context. Use this document and Git diff.
 
-**NEXT TASK — continue the semantic action consumer inventory (Stage 1):**
+**NEXT TASK — continue the full Stage 1 repository-wide consumer inventory (not a button-only task):**
 
-- Continue scanning every UI-bearing TSX/TS/JS/JSX file not yet inspected on the current branch, including all direct MUI Button/IconButton, native button, action-like links, and CSS-backed action controls.
-- Complete the BackButton and `BUTTON_STYLES.*` import/call-site list, then verify each shared component's full caller set.
-- Extend the role matrix below with exact file paths and call-site line numbers; distinguish semantic role from component implementation.
-- Do not migrate source code until the action inventory is exhaustive and recorded.
+- Follow Section 7's complete search matrix across the remaining current-branch UI files: semantic actions and icon actions; Card/Paper/Dialog/Box/custom surfaces; all field families; image roles and overlays; CSS variables/tokens/preset exports; React style and inline sx; raw visual literals; interaction states and responsive rules.
+- Finish the exact BackButton / BUTTON_STYLES property and caller map as one workstream, alongside—not instead of—the surface, field, image, token, CSS and styling-API workstreams.
+- Inspect every result through its component and all call sites; record exact paths/line references, semantic role, current owner, remaining duplication and status. Do not infer completion from imports alone.
+- Reconcile all inspected files in Sections 10 and 10.1. Keep Stage 1 open until every UI-bearing file and the required consumer maps are accounted for.
+- Do not migrate application source until Stage 1's inventory is exhaustive. Do not run build, tests, lint, CI or browser validation without explicit user authorization.
 
 
 ### 2026-11-18 — Stage 1 action/button inventory, first inspection batch
@@ -1042,7 +1080,83 @@ The efficient next unit is a **repository-wide component/role trace**, not arbit
 ### Status and next task
 - Stage 1 remains IN PROGRESS. No application source files changed.
 - No build, tests, lint, CI or browser validation was run, in accordance with the user's explicit instruction.
-- Next: finish the current-branch literal search for ht-button, then produce the complete import/property/call-site map for BackButton and every BUTTON_STYLES.* property. After that, continue the Card/Paper/custom-surface and form-field consumer maps. Do not begin application source migration until the action inventory and the remaining Stage 1 search matrix are complete.
+- The next work batch must continue the full Section 7 matrix across action controls, surfaces, fields, images, tokens/CSS variables, presets, React style/sx, raw visual literals, states and responsive behavior. The action-role trace is only one parallel workstream.
+- Continue literal ht-button consumer tracing and the BackButton / BUTTON_STYLES.* map, but also map all Paper/Box/custom surfaces, every form field family and image preset/caller. Do not begin source migration until the complete Stage 1 inventory is exhaustive.
+
+## 11.3 — Full UI consumer inventory expansion (2026-11-18)
+
+### Mandatory preflight and scope
+- Re-read Sections 1–3 (ownership architecture and styling API), Section 6 (approved stages), Section 7 (full search matrix), Section 9 (safe migration), Sections 10–11.2 (manifest, ledger and NEXT TASK) before inspecting source.
+- Verified branch: feature/frontend-modernization. Current HEAD before this documentation update: 70e0825287e030b097ffb08d3f73a582195ea281.
+- Compared audit baseline f77d0cff2f98298279273d0d15a27b7a236a2dd7 with current HEAD: 13 commits ahead, 0 behind. The only changed paths are docs/ARCHITECTURE.md and docs/CSS_DESIGN_SYSTEM_AUDIT.md; application source is unchanged from the audit baseline.
+- Reconfirmed the mandatory ownership chain: UI tokens → MUI theme/CSS variables → semantic/layout presets → feature components; globals/CSS Modules own only shell and unique structure. No source migration was started.
+
+### Current-branch source inspection — additional domains
+The following exact current-branch files were fetched and scanned for action controls, surfaces, fields, images, sx/style, raw visual values and interaction/layout declarations. Line references below are source line numbers at this HEAD.
+
+| File | New evidence from this batch |
+|---|---|
+| app/(account)/points/edit/[pointId]/page.tsx; app/(account)/trips/[id]/edit/page.tsx; app/(account)/trips/create/page.tsx; app/(account)/trips/create/points/page.tsx; app/(admin)/admin/failed-login-logs/page.tsx | Route/page wrappers inspected; no direct styling/control matches in these wrappers. Continue tracing imported feature components rather than treating wrappers as completed styling files. |
+| src/components/social/LikeAnimation.tsx; src/components/trips/PointsSection.tsx; src/components/auth/GuestOnly.tsx; src/components/auth/RequireAuth.tsx; src/components/auth/RequireRole.tsx | No direct styling/control matches in these files during this pass. These are not evidence that their rendered child components are centralized. |
+| src/components/admin/AdminFailedLogs.tsx | Lines 86–149: local Box layout, direct action and pagination Buttons, Checkbox selection, TableContainer Paper using ADMIN_TABLE_CONTAINER_SX and ADMIN_PAGINATION_SX. Map checkbox and pagination states separately from row actions. |
+| src/components/admin/AdminImages.tsx | Lines 71–146 and 351–359: repeated direct pagination Buttons; lines 369–386: preview Dialog and locally positioned IconButton; lines 218–326: local status/spacing and image/table sx; lines 277/296: Checkbox. Admin table/pagination presets exist but do not centralize all controls or preview geometry. |
+| src/components/admin/AdminReports.tsx | Lines 67–119: Paper table uses ADMIN_TABLE_CONTAINER_SX; direct row action and pagination Buttons remain. |
+| src/components/admin/AdminRouteNotFoundLogs.tsx | Lines 44–71: local typography, radius and panel spacing; line 102 Paper table preset; lines 127–164 direct action/pagination Buttons and local disclosure sx at line 140. |
+| src/components/admin/AdminUserProfileImage.tsx | Lines 54–107: shared column layout and AppImage, but local zoom-trigger dimensions and direct upload/remove actions remain. |
+| src/components/auth/ChangePasswordForm.tsx | Line 98 shared account field preset; lines 129–134 primary button preset with additional local margin/alignment. Shared preset use is partial, not full file centralization. |
+| src/components/auth/VerifyEmailForm.tsx | Lines 65–88: MUI Card, local heading typography and primary Button preset. Surface skin is theme-owned; content geometry/heading and field contract remain to verify. |
+| src/components/auth/RegisterForm.tsx | Lines 121–154 and 193–239: shared auth form/title/action presets and primary/secondary button presets; TextFields and Checkbox still require base field/checkbox state mapping; locked-state pointer-events sx is local behavior styling. |
+| src/components/auth/ProfileForm.tsx | Lines 71–131: shared account field preset, BackButton and primary/secondary presets; multiple local field/heading sx and caller-level action layout remain. |
+| src/components/auth/ProfileImage.tsx | Lines 67–164 and 212–256: AppImage/Dialog and some shared color/shadow tokens; local image frame sizes/radii, overlay/IconButton positions, thumbnail sx and control states remain. |
+| src/components/maps/AddressAutocomplete.tsx | Lines 97–172: TextField + Autocomplete, local inputSx/containerSx and direct Button; map address field must be a named variant inheriting the base field contract. |
+| src/components/maps/GoogleMapView.tsx | Lines 97–107: wrapper grid/flex geometry only; no direct action/field/surface skin found in this pass. |
+| src/components/maps/PointLocationPicker.tsx | Lines 110–194: primary/secondary button presets coexist with local map layout/position sx; preserve map-specific geometry while centralizing action skin. |
+| src/components/maps/TripLocationPicker.tsx | Lines 61–139: primary/secondary preset use plus local layout/position sx; verify map field/action state parity. |
+| src/components/trips/TripSelectField.tsx | Lines 49–101: TextField and Autocomplete consumers rely on MUI defaults at call sites; they must inherit the central base field contract without feature-local skins. |
+| src/components/CustomFileUploadButton.tsx | Lines 35–58: raw IconButton and contained Button component=label; upload and generic icon-action roles remain separate centralization targets. |
+| src/components/images/AppImage.tsx | Lines 61–76: AppImage computes and applies resolved style internally from a named preset. Treat this as the implementation boundary of the image abstraction; audit every preset and caller, and do not misclassify consumer-level React style prohibition as permission to add style props to AppImage. |
+| src/components/images/ImageGallery.tsx | Lines 56–85: AppImage usage with local sx; compare all frame/thumbnail roles with named image presets and CSS Module structure. |
+| src/components/images/ImageLightbox.tsx | Lines 50–138: Dialog/AppImage plus several IconButtons with local positioning, z-index and control sx; centralize lightbox control skin while retaining unique overlay geometry. |
+| src/components/images/ImageUploadField.tsx | Lines 198–311: local layout sx, thumbnail dimensions/objectFit/radii, raw remove/delete-all IconButtons and upload Button; image/upload roles and icon actions remain incomplete. |
+| src/components/common/ExpandableText.tsx | Lines 40–54: local sx and direct disclosure Button; define shared expanded/collapsed control state and semantic role. |
+| src/components/common/NotFound.tsx | Line 50: native Home button; map with NotFound.module.css to shared navigation/action role. |
+| src/components/common/NotificationProvider.tsx | Line 113: width-only sx surfaced; Snackbar/Alert global state and theme parity still need inspection. |
+| src/components/common/PasswordField.tsx | Lines 30–43: TextField plus raw password-reveal IconButton; field contract and icon-action contract are distinct gaps. |
+| src/components/common/WelcomeHeading.tsx | Lines 31–46: local layout/heading sx and React style prop on h1 despite shared HOME_HEADING_STYLE; migrate the presentation style after full inventory. |
+| src/components/comments/CommentsSection.tsx | Lines 43–53 local style constants; line 204 comments Card preset; lines 223, 313 React style props; lines 254–503 repeated Card/TextField/IconButton and local spacing. Preserve distinct comment edit/delete/reply/report roles. |
+| src/components/comments/CommentsToggle.tsx | Lines 26–36: React style prop on wrapper, local heading margin and IconButton disclosure control. |
+| src/components/comments/RepliesSection.tsx | Lines 147–300: TextFields and repeated raw IconButtons for reply/edit/delete/cancel/submit, plus local border/spacing sx. |
+| src/components/social/EngagementBar.tsx | Lines 100–169: responsive/local sx and raw IconButton; verify all engagement action states and callers. |
+| src/components/social/TripGroupSocialActions.tsx | Lines 106–209: multiple raw IconButtons, local gaps and React style error spans; preserve like/favorite/report distinctions while sharing icon-action and feedback contracts. |
+| src/components/tracking/LiveTracker.tsx | Lines 15–135: local TRACKING_SURFACE_SX, direct Start/Stop/Reset/Follow Buttons, status/details sx; distinguish tracking state actions and tracking-specific surface from generic card skin. |
+| src/components/trips/TripDaysNav.tsx | Lines 23–84: PAGE_ITEM_SX used by PaginationItem, but local item/outer margins remain; selected/disabled/focus states need verification. |
+| src/components/trips/TripFilters.tsx | Lines 35–85 and 135–222: feature-owned SELECT_BOX_SX/FILTER_LABEL_SX/FILTER_SELECT_SX consumed by three Select fields; centralize the base field contract and keep only a named trip-filter variant where necessary. |
+| src/components/trips/TripMapSection.tsx | Lines 111–163: Card local sx and direct previous/next Buttons; map navigation is a distinct semantic role over the shared control base. |
+| src/components/trips/DayImagesGallery.tsx | Line 37: local width/maxWidth/aspect-ratio image container; compare with gallery image role and keep only unique geometry. |
+
+### Cross-domain conclusions
+- This batch confirms the audit cannot be executed as a button-only workstream. The same UI files contain coupled surface, field, image, responsive and styling-API concerns that must be inventoried together.
+- Shared preset imports are partial adoption evidence only. For example, Admin tables still have direct pagination/actions; auth forms use shared button presets but local field/layout sx; map pickers use shared primary/secondary roles but retain map geometry; image upload/lightbox controls still define local icon geometry.
+- React style findings from this batch include WelcomeHeading, CommentsSection, CommentsToggle and TripGroupSocialActions. AppImage's resolved style is internal to the named image abstraction and must be evaluated as an abstraction boundary, not treated as a blanket exception for feature consumers.
+- No source files were changed. No build, tests, lint, CI or browser validation was run. No file is marked VERIFIED.
+
+### Manifest / ledger handling
+- Added the newly inspected files to Section 10.1 with concrete centralized evidence, remaining work and conservative statuses.
+- Route wrappers and auth guards with no direct style matches remain only inspected; their imported UI consumers still need to be traced.
+- Existing CHANGE REQUIRED/PARTIAL statuses are not promoted to VERIFIED by this scan.
+
+### Updated NEXT TASK
+Continue Stage 1 as a full repository-wide pass through Section 7, not as a button-only pass. Next inspect the remaining UI-bearing components and CSS/token/theme/preset consumers across all domains; reconcile exact call sites for actions, all Card/Paper/custom surfaces, field families, image presets/overlays, CSS variables and styling API violations. Complete the ht-button/BackButton/BUTTON_STYLES trace as one part of this broader matrix. Keep Stage 1 open until the full inventory is exhaustive. No application migration or validation commands yet.
+
+### 2026-11-18 — Full UI consumer inventory expansion
+- Mandatory preflight: re-read the CSS ownership architecture, styling API policy, six-stage plan, complete Section 7 search matrix, safe migration rules, file manifest/ledger and NEXT TASK.
+- Verified branch feature/frontend-modernization and HEAD 70e0825287e030b097ffb08d3f73a582195ea281 before this documentation update.
+- Compared baseline f77d0cff2f98298279273d0d15a27b7a236a2dd7 with HEAD: 13 commits ahead, 0 behind; only docs/ARCHITECTURE.md and docs/CSS_DESIGN_SYSTEM_AUDIT.md changed. No application source changes since baseline.
+- Expanded current-branch source inspection beyond actions to Admin tables/pagination, auth forms/profile images, map fields/pickers, image upload/gallery/lightbox, common controls, comments/replies/social controls, tracking, trip filters/navigation/map section and route wrappers. Exact file paths, line references and findings are recorded in Section 11.3 and the Section 10.1 ledger.
+- Newly confirmed cross-domain gaps include direct admin pagination/actions and checkboxes; field defaults/local variants; map-specific input styling; raw upload/password/lightbox/comment/social IconButtons; custom image frame/thumbnail values; multiple React style props; tracking action states; feature-owned trip filter Select presets; and local trip-map navigation controls.
+- AppImage applies resolved style internally from named presets; retain this as the image abstraction boundary and audit its presets/callers rather than allowing feature-level style props.
+- Reframed NEXT TASK as the complete Section 7 repository-wide matrix. Action/button mapping remains one workstream alongside surfaces, fields, images, tokens/CSS variables, presets, inline styling, states and responsive rules.
+- No application source files changed. No build, tests, lint, CI or browser validation was run. Stage 1 remains IN PROGRESS; no files were promoted to VERIFIED.
 
 ## 12. Audit log (append-only)
 
