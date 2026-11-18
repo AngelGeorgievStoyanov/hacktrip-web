@@ -4622,3 +4622,41 @@ No application source code was changed. No branch was created. No build, tests, 
 - Remaining legacy typography exports `headingTextStyle` and `HOME_HEADING_STYLE` remain unchanged pending their consumer migrations.
 - Stage 1 remains **IN PROGRESS** for the global inventory/consumer maps; it no longer blocks a bounded migration when the affected consumer is verified.
 - Next: migrate the Home heading and shared heading treatment only after checking its complete current-branch consumer set; then continue to the next owner family in the existing workstream map.
+
+
+## 11.28 — Shared heading migration: Home, welcome and trip-list headings (2026-11-18)
+
+### Scope and preflight
+- Re-read Sections 1.4, 2, 6 and 9, plus Sections 11.26–11.27.
+- Confirmed branch: `feature/frontend-modernization`; the preceding source batch is present at HEAD `8fd4ead8a0965fb8013880c2b88c5c4be4e480fa`.
+- Used the existing current-branch component graph to scope the shared heading owner and its direct consumers. This is a bounded migration, not completion of the global Stage 1 inventory.
+
+### Source changes
+1. `src/styles/presets/typography.ts`
+   - Replaced legacy `headingTextStyle` with the reusable `HEADING_TEXT_SX` semantic text treatment.
+   - Replaced `HOME_HEADING_STYLE` with `HOME_HEADING_SX`.
+   - Kept `HOME_INTRO_SX` on the same shared heading treatment.
+2. `src/components/home/HomeTrips.tsx`
+   - Replaced the native heading's React `style` prop with MUI `Typography` and `HOME_HEADING_SX`.
+3. `src/components/common/WelcomeHeading.tsx`
+   - Replaced the responsive native `h1` style usage with MUI `Typography` and `HOME_HEADING_SX`.
+   - Preserved the breakpoint split, touch trigger and heading content.
+4. `src/components/common/ScrambleHeading.tsx`
+   - Replaced the native `h1` and React `style` prop with MUI `Typography` and `HOME_HEADING_SX`.
+   - Removed the obsolete component-level `style` prop; the current-branch call site supplies no style override.
+   - Preserved the scramble timer, hover behavior, reduced-motion guard and accessible label.
+5. `src/components/trips/TripList.tsx`
+   - Replaced native empty-state heading/paragraph style props with MUI `Typography` and `HEADING_TEXT_SX`.
+   - Left the trip-list layout preset and list markup unchanged.
+
+### Result and limits
+- Five source files updated in this batch; the previous Home intro migration remains intact.
+- Shared heading text appearance now has one semantic preset owner; centered Home heading composition has a separate named preset.
+- No API, data, route behavior, backend logic, colors or intended design dimensions were changed.
+- The legacy `style` props addressed in this batch were removed from these heading consumers. Other `style` props and CSSProperties presets elsewhere remain migration targets.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next task
+- Bounded shared-heading migration: **SOURCE CHANGES APPLIED**.
+- Stage 1 global inventory and consumer maps: **IN PROGRESS**; this batch does not mark the global audit complete.
+- Next: continue with the next already-audited owner family in the existing migration order. Do not reopen the completed heading batch unless validation or a newly discovered consumer requires it.
