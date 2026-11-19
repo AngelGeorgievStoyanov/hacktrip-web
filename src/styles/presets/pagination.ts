@@ -17,3 +17,21 @@ export const TRIP_DAY_PAGE_ITEM_SX = {
     backgroundColor: UI_COLORS.action.navigationHoverBackground,
   },
 } as const;
+
+
+/** Structural sx contracts for the sticky trip-day navigation strip. */
+export const TRIP_DAYS_NAV_APP_BAR_SX = {
+  width: '100%',
+  margin: 0,
+  marginBottom: 0,
+} as const;
+
+export const TRIP_DAYS_NAV_CONTENT_SX = {
+  width: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+} as const;
+
+export const TRIP_DAYS_NAV_PAGINATION_SX = {
+  marginTop: '10px',
+} as const;
