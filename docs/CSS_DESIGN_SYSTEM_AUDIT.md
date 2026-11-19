@@ -718,7 +718,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminFailedLogs.tsx` | Outlined Paper table inherits shared surface; selected-row Delete uses `BUTTON_STYLES.deleteText`; Checkbox selection remains MUI-owned; Previous/Next use `ADMIN_PAGINATION_BUTTON_SX` and `ADMIN_PAGINATION_SX`. | Verify checkbox indeterminate/selected states, delete confirmation/pending/error states and responsive table behavior; no local table or pagination skin remains. | PARTIAL — action and pagination contracts centralized; selection/state parity remains open. |
 | `src/components/admin/AdminImages.tsx` | Outlined Paper table inherits the shared surface; all Previous/Next controls consume `ADMIN_PAGINATION_BUTTON_SX`; preview trigger, thumbnail, URL cell, close control, dialog content and image stage consume named `ADMIN_IMAGE_*` presets. | Verify toolbar Generate/Select action roles, Checkbox states, responsive table behavior and all preview/selection/pending states; no local preview IconButton position or image spacing object remains in the component. | PARTIAL — table, pagination and preview presentation centralized; action/state parity remains open. |
 | `src/components/admin/AdminReports.tsx` | Outlined Paper table inherits shared surface; Delete uses semantic `BUTTON_STYLES.deleteText`; Previous/Next consume `ADMIN_PAGINATION_BUTTON_SX`. | Verify delete confirmation/pending/error states, row content and responsive table behavior; no local table surface or pagination styling remains. | PARTIAL — action and pagination roles centralized; row/state verification remains open. |
-| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Outlined Paper table inherits shared surface; Previous/Next use `ADMIN_PAGINATION_BUTTON_SX`; diagnostic fields/details/expanded cell use named `ADMIN_DIAGNOSTIC_*` and `ADMIN_ROUTE_*` presets. View/Hide disclosure uses MUI Button defaults with `aria-expanded` / `aria-controls`. | Verify expanded-row content, focus/keyboard and responsive table states; no local typography, spacing or button skin remains in the component. | PARTIAL — table, disclosure and pagination presentation use shared/theme contracts; responsive/state parity remains open. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
 | `src/components/auth/ChangePasswordForm.tsx` | Password-change form consumes `BUTTON_STYLES.primary` for Save password. | The primary role is only a generic visual contract; local `alignSelf` and margin are merged into the same sx object. Field, pending/disabled and validation states remain part of the field/action audit. | PARTIAL. |
 | `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and `BUTTON_STYLES.primary` for the Go to login action. | The action is navigation but currently uses generic primary styling; Card content/heading sx and complete status/field state contract remain open. | CHANGE REQUIRED. |
@@ -6306,3 +6306,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 admin table entry: `src/components/admin/AdminRouteNotFoundLogs.tsx`. Verify disclosure, Delete/Clear actions and pagination contracts.
+
+
+## 11.89 — AdminRouteNotFoundLogs current-source verification (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 admin table entry after AdminFailedLogs.
+- Re-opened `AdminRouteNotFoundLogs.tsx` and verified the current admin diagnostic preset owner.
+- Previous/Next already consume the shared admin pagination contract; the outlined Paper table inherits the theme surface.
+- Diagnostic fields, expanded details and expanded table-cell presentation use named presets. View/Hide remains a native MUI Button default and exposes `aria-expanded` and `aria-controls`; no local disclosure skin was found.
+
+### Result and status
+- Corrected the Section 10.1 row to remove stale claims about direct pagination styles and local typography/spacing sx.
+- AdminRouteNotFoundLogs presentation: **SHARED/THEME CONTRACTS VERIFIED**.
+- Expanded-row content, focus/keyboard and responsive table states remain **PARTIAL**; no duplicate disclosure preset was added.
+- No source change, API, route, data or business logic change. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining admin feature consumers in Section 10.1, beginning with `src/components/admin/AdminUserForm.tsx` and then reconcile the rest of the admin action/table owners.
