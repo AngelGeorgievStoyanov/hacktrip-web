@@ -11,6 +11,7 @@ import { themeTypography } from './typography';
 import { buttonOverrides } from './components/button';
 import { cardOverrides } from './components/card';
 import { dialogOverrides } from './components/dialog';
+import { paperOverrides } from './components/paper';
 import { textFieldOverrides } from './components/text-field';
 
 /**
@@ -65,6 +66,7 @@ export const theme = createTheme({
     MuiButton: buttonOverrides,
     MuiCard: cardOverrides,
     MuiDialog: dialogOverrides,
+    MuiPaper: paperOverrides,
     MuiTextField: textFieldOverrides,
   },
 });
