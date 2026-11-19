@@ -104,7 +104,7 @@ export function LikeButton({
               {liked ? (
                 <ThumbUpIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               ) : (
-                <ThumbUpOffAltIcon sx={{ animation: likeAnimation.animation }} />
+                <ThumbUpOffAltIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               )}
             </Badge>
           </IconButton>
