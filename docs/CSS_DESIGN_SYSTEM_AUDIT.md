@@ -6046,3 +6046,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 trip field entry: `src/components/trips/TripSelectField.tsx`. Verify its TextField/Autocomplete contract and existing theme defaults before adding or changing a preset.
+
+
+## 11.77 — TripSelectField base-field contract verification (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 trip field entry.
+- Inspected `TripSelectField.tsx` and `src/theme/components/text-field.ts`.
+- TripSelectField does not define a local visual skin or ad hoc sx object. Its TextField and Autocomplete renderInput inherit the application TextField defaults (outlined / medium).
+- The global TextField theme owner currently defines only default variant and size; complete border, label, helper-text, focus, error, disabled and adornment states remain an open C3 field-system task.
+- Adding a TripSelectField-only style would create a parallel field skin and is not appropriate before the base field contract is completed.
+
+### Result and status
+- No source change was necessary; Section 10.1 remains **PARTIAL** because the shared base field contract is incomplete, not because TripSelectField owns local styles.
+- TripSelectField consumer behavior: **CURRENT MUI DEFAULTS VERIFIED**.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 image entry: `src/components/images/AppImage.tsx`. Inspect its style-prop transport, image preset ownership and all direct consumers before changing the rendering API.
