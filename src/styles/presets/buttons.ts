@@ -124,6 +124,8 @@ const iconActionBase = {
   },
 } as const;
 
+const iconActionDanger = { ...iconActionBase, color: 'error.main' } as const;
+
 export const ICON_ACTION_STYLES = {
   base: iconActionBase,
   primary: { ...iconActionBase, color: 'primary.main' },
@@ -136,7 +138,7 @@ export const ICON_ACTION_STYLES = {
   disclosure: iconActionBase,
   submit: iconActionBase,
   delete: iconActionDanger,
-  danger: { ...iconActionBase, color: 'error.main' },
+  danger: iconActionDanger,
   report: {
     ...iconActionBase,
     '&:hover': { color: UI_COLORS.action.danger },
