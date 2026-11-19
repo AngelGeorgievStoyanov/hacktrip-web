@@ -9,7 +9,6 @@ export interface ImagePreset {
   useThumbnail?: boolean;
   /** Default image content fit for this named rendering role. */
   objectFit?: CSSProperties['objectFit'];
-  style?: CSSProperties;
 }
 
 const IMAGE_SIZES = {
@@ -40,7 +39,6 @@ export const IMAGE_PRESETS = {
     width: 1600,
     height: 1200,
     objectFit: 'contain',
-    style: { width: '100%', height: 'auto', maxHeight: '85vh' },
   },
   tripPointThumb: { width: 200, height: 150, useThumbnail: true },
   editorDayThumb: { width: 120, height: 90, useThumbnail: true },
