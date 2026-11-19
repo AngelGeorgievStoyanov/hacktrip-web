@@ -1,4 +1,5 @@
 import { UI_SIZES } from '@/constants/ui/sizes';
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 /**
  * Layout preset for trip cards.
@@ -102,6 +103,7 @@ export const POINT_CARD_CONTAINER_SX = {
 } as const;
 
 export const getPointCardMoveButtonSx = (visible: boolean) => ({
+  ...ICON_ACTION_STYLES.base,
   visibility: visible ? 'visible' : 'hidden',
   p: 0.25,
 } as const);
