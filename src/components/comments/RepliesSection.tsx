@@ -169,7 +169,7 @@ export function RepliesSection({
             <Tooltip title="Save reply" arrow>
               <span>
                 <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.save}
                   type="submit"
                   aria-label="Save reply"
                   disabled={updateMutation.isPending}
@@ -180,7 +180,7 @@ export function RepliesSection({
             </Tooltip>
             <Tooltip title="Cancel edit" arrow>
               <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.cancel}
                 type="button"
                 aria-label="Cancel edit"
                 onClick={() => {
@@ -227,7 +227,7 @@ export function RepliesSection({
             {canEdit ? (
               <Tooltip title="Edit reply" arrow>
                 <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.edit}
                   size="small"
                   aria-label="Edit reply"
                   onClick={() => {
@@ -242,7 +242,7 @@ export function RepliesSection({
             {canDelete ? (
               <Tooltip title="Delete reply" arrow>
                 <IconButton
-            sx={ICON_ACTION_STYLES.danger}
+            sx={ICON_ACTION_STYLES.delete}
                   size="small"
                   aria-label="Delete reply"
                   onClick={() =>
@@ -292,7 +292,7 @@ export function RepliesSection({
           <Tooltip title="Reply" arrow>
             <span>
               <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.submit}
                 type="submit"
                 aria-label="Reply"
                 disabled={!reply.trim() || createMutation.isPending}
@@ -304,7 +304,7 @@ export function RepliesSection({
           </Tooltip>
           <Tooltip title="Cancel reply" arrow>
             <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.cancel}
               type="button"
               aria-label="Cancel reply"
               onClick={() => {
