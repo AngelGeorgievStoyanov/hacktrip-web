@@ -17,6 +17,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { isModeratorUser } from '@/constants/roles';
 import { BREAKPOINTS, mediaDown, maxWidthQuery } from '@/constants/ui';
 import { UI_SIZES } from '@/constants/ui/sizes';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -24,9 +25,6 @@ interface NavLink {
   href: string;
   label: string;
 }
-
-/** Legacy per-item spacing for the navigation buttons. */
-const NAV_BUTTON_SX = { margin: '2px', padding: '2px', boxSizing: 'content-box' } as const;
 
 const MENU_ICON_SX = { fontSize: UI_SIZES.iconLarge } as const;
 
@@ -101,7 +99,7 @@ export function Header() {
             component={Link}
             href={link.href}
             color="inherit"
-            sx={NAV_BUTTON_SX}
+            sx={BUTTON_STYLES.navigation}
           >
             {link.label}
           </Button>
