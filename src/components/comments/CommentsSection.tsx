@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -274,6 +276,7 @@ export function CommentsSection({
                     <Tooltip title="Save comment" arrow>
                       <span>
                         <IconButton
+            sx={ICON_ACTION_STYLES.base}
                           type="submit"
                           aria-label="Save comment"
                           disabled={updateMutation.isPending}
@@ -284,6 +287,7 @@ export function CommentsSection({
                     </Tooltip>
                     <Tooltip title="Cancel edit" arrow>
                       <IconButton
+            sx={ICON_ACTION_STYLES.base}
                         type="button"
                         aria-label="Cancel edit"
                         onClick={() => setEditingId(null)}
@@ -363,6 +367,7 @@ export function CommentsSection({
                       {canEdit ? (
                         <Tooltip title="Edit comment" arrow>
                           <IconButton
+            sx={ICON_ACTION_STYLES.base}
                             size="small"
                             aria-label="Edit comment"
                             onClick={() => {
@@ -377,6 +382,7 @@ export function CommentsSection({
                       {canDelete ? (
                         <Tooltip title="Delete comment" arrow>
                           <IconButton
+            sx={ICON_ACTION_STYLES.base}
                             size="small"
                             color="error"
                             aria-label="Delete comment"
@@ -408,6 +414,7 @@ export function CommentsSection({
                 arrow
               >
                 <IconButton
+            sx={ICON_ACTION_STYLES.base}
                   size="small"
                   aria-label={
                     openRepliesId === commentItem.id
@@ -473,6 +480,7 @@ export function CommentsSection({
                 <Tooltip title="Post comment" arrow>
                   <span>
                     <IconButton
+            sx={ICON_ACTION_STYLES.base}
                       type="submit"
                       aria-label="Post comment"
                       color="primary"
@@ -489,6 +497,7 @@ export function CommentsSection({
           <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginTop: '10px' }}>
             <Tooltip title={formOpen ? 'Close' : 'Add comment'} arrow>
               <IconButton
+            sx={ICON_ACTION_STYLES.base}
                 onClick={() => setFormOpen((previous) => !previous)}
                 aria-label={formOpen ? 'Close' : 'Add comment'}
                 aria-expanded={formOpen}
