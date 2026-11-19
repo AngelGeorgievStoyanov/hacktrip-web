@@ -43,7 +43,7 @@ export function PasswordField({
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
-                sx={ICON_ACTION_STYLES.base}
+                sx={ICON_ACTION_STYLES.passwordVisibility}
                 disabled={disabled}
                 aria-label={visible ? 'Hide password' : 'Show password'}
                 onClick={() => setVisible((current) => !current)}
