@@ -22,6 +22,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { AppImage } from '@/components/images/AppImage';
@@ -168,13 +169,14 @@ export function AdminUsers() {
                   <Divider />
                   <Stack direction="row" spacing={1} justifyContent="center" sx={{ p: 1 }}>
                     {canManage ? (
-                      <Button component={Link} href={`/admin/users/${u.id}`} variant="contained">
+                      <Button component={Link} href={`/admin/users/${u.id}`} variant="contained" sx={BUTTON_STYLES.primary}>
                         Edit user
                       </Button>
                     ) : null}
                     {canManage ? (
                       <Button
                         color="error"
+                        sx={BUTTON_STYLES.dangerText}
                         onClick={() =>
                           void confirm(
                             'Are you sure you want to delete this user?',
