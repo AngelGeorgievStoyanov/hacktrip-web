@@ -87,3 +87,6 @@ export const TRIP_GROUP_SOCIAL_ACTIONS_SX = {
   gap: 0.25,
   flexWrap: 'wrap',
 } as const;
+
+/** Dynamic like feedback animation remains supplied by the shared animation hook. */
+export const getSocialLikeAnimationSx = (animation: string | undefined) => ({ animation } as const);
