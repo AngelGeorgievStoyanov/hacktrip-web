@@ -733,7 +733,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/CustomFileUploadButton.tsx` | Shared upload trigger used by generic image upload and profile-image selection; supports camera IconButton and text Button modes, max-count/disabled gating, accept/multiple and file-change forwarding. | Two distinct raw action renderings (IconButton vs contained Button) and local 30ch wrapper; no semantic Upload role or centralized icon-action state. Direct consumers: ImageUploadField, ProfileImage/ProfileImageUpload. | CHANGE REQUIRED — shared Upload action contract. |
 | `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback; object-fit and profile-lightbox behavior use CSS Module classes. Direct consumers remain mapped in this row. | No React `style` prop or style transport remains; preset-to-caller frame ratios, dimensions and responsive `sizes` parity still require review. | PARTIAL — style transport migrated; image preset/frame parity remains open. |
 | `src/components/images/ImageGallery.tsx` | Direct consumers are PointSection and DayImagesGallery; gallery state and empty path are component-owned; images use AppImage and engagement overlays use EngagementBar. | CSS Module owns row/stack/grid structure and dynamic column classes; focus-visible outline consumes shared focus CSS variables; ImageLightbox is shared. Image frame ratios, overlay stacking and responsive caller parity remain open. | PARTIAL — structure and focus token ownership centralized; frame/overlay/caller verification remains. |
-| `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage, AdminUsers. Owns fullscreen Dialog open state via nullable index, close, previous/next wraparound, keyboard arrows and touch swipe; AppImage fills a contain-fit stage. | Local control colors are semantic tokens but positions/z-index/caption/stage geometry and IconButton role remain local. Invalid/empty image index closes by current image undefined. | CHANGE REQUIRED — shared lightbox surface and Close/Previous/Next icon-action contracts. |
+| `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage and AdminUsers. Fullscreen Dialog Paper uses the shared Dialog surface plus the documented image-stage background variant; Close/Previous/Next controls compose `ICON_ACTION_STYLES.imageControl` with named position presets; counter, root, stage and image frame use named presets. | Verify caller-specific image ratios/sizes and keyboard/touch state parity; no local control skin or geometry object remains in the component. | MIGRATED — lightbox surface, controls and stage presentation are preset-owned. |
 | `src/components/images/ImageUploadField.tsx` | Shared upload field and AppImage usage. | Local thumbnail dimensions/objectFit/radii, layout sx, raw remove/delete-all IconButtons and upload Button remain. | CHANGE REQUIRED. |
 | `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp uses EXPANDABLE_TEXT_COLLAPSED_SX; expanded state removes the clamp without local visual objects. | MIGRATED — disclosure presentation centralized; MUI owns the text-button default role. |
 | `src/components/common/NotFound.tsx` | 404 hero structure remains in NotFound.module.css; Home CTA remains a native button rendered through MUI Box. | CTA presentation uses NOT_FOUND_HOME_BUTTON_SX and semantic colors; countdown/router behavior remains component-owned. | MIGRATED — 404 hero structure and Home action have separate owners. |
@@ -6110,3 +6110,22 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 image entry: `src/components/images/ImageLightbox.tsx`. Inspect close/previous/next icon-action roles, surface and stage geometry before changing the component.
+
+
+## 11.80 — ImageLightbox current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 image entry after ImageGallery.
+- Re-opened `ImageLightbox.tsx`, `image-gallery.ts`, `dialog.ts` and `AppImage.tsx`.
+- The former CHANGE REQUIRED ledger note was stale: close/previous/next controls, control positions/z-index, counter, root, stage, image frame and Dialog image-stage surface already consume named presets/shared icon-action contracts.
+- Dialog's base Paper surface remains theme-owned; the image-lightbox background is an explicit semantic variant.
+- Keyboard arrow navigation, touch swipe and wraparound are behavior/state, not local visual styling.
+
+### Result and status
+- Corrected the Section 10.1 ImageLightbox row to match current source.
+- Lightbox presentation: **MIGRATED / VERIFIED**.
+- Caller-specific image ratio/size and responsive parity remain in the AppImage/direct-caller image audit; no duplicate lightbox styles were added.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 image entry: `src/components/images/ImageUploadField.tsx`. Inspect upload/remove/delete-all action semantics, thumbnail frames and its direct callers before changing the component.
