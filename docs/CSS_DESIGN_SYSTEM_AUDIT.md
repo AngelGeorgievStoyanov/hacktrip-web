@@ -5861,3 +5861,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next relevant trip action entry in Section 10.1: `src/components/trips/TripDetails.tsx`. Inspect its action roles and surface/content geometry before making changes.
+
+
+## 11.69 — TripDetails shared action and presentation verification (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 trip entry after TripActions.
+- Re-read `TripDetails.tsx` and verified its current shared preset/component consumers.
+
+### Findings
+- The Card surface inherits the global `MuiCard` surface contract.
+- Header, title, price, metadata, description, action column and social row consume named contracts from `trip-details.ts`.
+- Currency-info and description disclosure IconButtons consume `ICON_ACTION_STYLES.base`; Back uses the shared `BackButton` and only receives the trip action layout dimensions.
+- TripActions is now backed by the semantic trip Add/Edit/Manage/Delete roles recorded in Section 11.68.
+- No local style object or duplicate visual contract was found; no source change was necessary.
+
+### Result and status
+- The existing Section 10.1 **MIGRATED** status remains accurate; this verification adds confirmation of the current action-role ownership.
+- TripDetails presentation and action composition: **SHARED CONTRACTS VERIFIED**.
+- No API, route, data, validation or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 trip entry: `src/components/trips/TripForm.tsx`. Inspect form fields, upload controls, day controls and action roles before changing anything.
