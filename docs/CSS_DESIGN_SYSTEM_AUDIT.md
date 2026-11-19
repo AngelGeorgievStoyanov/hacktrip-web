@@ -700,7 +700,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | File | Already centralized / confirmed | Still remaining | Current result |
 |---|---|---|---|
-| `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.primary`; Delete Point uses `BUTTON_STYLES.danger`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Edit has no dedicated semantic Edit role; Delete is the only current direct `danger` consumer found. Move-up/down IconButtons, card geometry/padding and action-row layout remain local; description wrapping and caller/state verification remain open. | PARTIAL — several responsibilities centralized, not fully fixed. |
+| `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.edit`; Delete Point uses `BUTTON_STYLES.danger`; move-up/down IconButtons consume `ICON_ACTION_STYLES.base`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Point-specific move visibility/padding, card geometry/padding and action-row layout remain in the card preset owner; description wrapping and caller/state verification remain open. | PARTIAL — action roles and icon base are centralized; card layout and full state/caller verification remain. |
 | `src/components/points/PointForm.tsx` | Uses `BUTTON_STYLES.primary` for map lookup and other primary form actions; shared `BackButton` handles Back/navigation. | Primary role is mixed with local width/margin geometry in a reusable sx constant and at the map lookup call site. BackButton has caller-specific layout/conditional behavior; remaining form fields, upload, icon and disabled/loading states remain open. | PARTIAL — not fully fixed. |
 | `src/components/points/PointActions.tsx` | Social actions are delegated to shared Like/Favorite/Report components and shared status component. | Wrapper layout `sx` is local; verify the nested social controls' visual contract and all callers. | PARTIAL — not fully fixed. |
 | `src/components/points/PointList.tsx` | Delegates each item to the shared `PointCard`. | List layout remains local; verify responsive/layout requirements and empty state typography. | PARTIAL — not fully fixed. |
@@ -5713,3 +5713,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - About editorial typography now has one token owner and a theme-to-CSS-variable bridge; unique page/image geometry remains local.
 - TripFilters is recorded as migrated based on its current source, not its historical ledger status.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.63 — PointCard semantic Edit action and ledger correction (2026-11-19)
+
+### Scope and preflight
+- Continued in the existing Section 10.1 file-register order and Section 11.12 C1 action workstream; no replacement checklist or inventory was created.
+- Re-opened the current `PointCard.tsx`, `buttons.ts` and `cards.ts` source before changing the ledger.
+- Confirmed the move-up/down IconButtons already consume `ICON_ACTION_STYLES.base`; their point-specific visibility and compact padding are layout/state composition in the card preset, not an unshared icon skin.
+
+### Source changes
+- Added `BUTTON_STYLES.edit` as a semantic alias of the existing primary action treatment. This establishes a dedicated Edit role without changing any color, dimensions, typography, hover behavior or visual appearance.
+- Migrated PointCard's Edit Point action from the generic `primary` role to `edit`. Delete Point continues to consume `danger`.
+- Corrected the Section 10.1 PointCard row: move controls already use the shared icon-action base; only their point-specific visibility/padding and card layout remain local.
+
+### Preserved
+- Edit/Delete handlers, permission checks, disabled states, point ordering, map marker, content, responsive card geometry and action-row layout.
+- No API, route, data, validation or business logic changed.
+
+### Result and status
+- **2 source files changed**; one stale ledger statement corrected.
+- PointCard Edit/Delete roles and move-icon base: **SHARED CONTRACTS APPLIED**.
+- PointCard geometry, caller/state verification and remaining point-card composition: **PARTIAL — STILL OPEN**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 point entry: `src/components/points/PointForm.tsx`. Inspect its primary, Back, map lookup, upload and field contracts before making any change; preserve caller-owned navigation and form behavior.
