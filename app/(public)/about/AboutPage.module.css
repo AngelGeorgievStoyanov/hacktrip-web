@@ -70,3 +70,22 @@
     max-width: 640px;
   }
 }
+
+.aboutPageImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 640px;
+  margin: 20px auto;
+  padding: 12px;
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
+.aboutPageImageWide {
+  max-width: 760px;
+}
+
+.aboutPageImageMarkers {
+  max-width: 520px;
+}
