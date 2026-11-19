@@ -526,7 +526,7 @@ export function TripForm() {
             variant="contained"
             disabled={submitting || isLoadingExistingTrip || !isValid || isDayNumberOccupied}
             startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-            sx={BUTTON_STYLES.primary}
+            sx={BUTTON_STYLES.create}
           >
             Add trip
           </Button>
@@ -537,7 +537,7 @@ export function TripForm() {
             onClick={() => {
               void handleSubmit((values) => onSubmit(values, 'add-next-day'))();
             }}
-            sx={BUTTON_STYLES.primary}
+            sx={BUTTON_STYLES.add}
           >
             Add next day trip
           </Button>
@@ -548,7 +548,7 @@ export function TripForm() {
             onClick={() => {
               void handleSubmit((values) => onSubmit(values, 'add-point'))();
             }}
-            sx={BUTTON_STYLES.secondaryLightText}
+            sx={BUTTON_STYLES.addPoints}
           >
             Add point's for the trip
           </Button>
