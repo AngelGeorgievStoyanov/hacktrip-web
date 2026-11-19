@@ -89,6 +89,9 @@ export const CENTERED_PAGE_MAIN_SX = {
 } as const;
 
 /** Shared vertical stack used by forms and compact content panels. */
+/** Keeps trip action controls in the parent's layout without adding a wrapper box. */
+export const TRIP_ACTIONS_CONTENT_SX = { display: 'contents' } as const;
+
 export const COLUMN_STACK_SX = {
   display: 'flex',
   flexDirection: 'column',
