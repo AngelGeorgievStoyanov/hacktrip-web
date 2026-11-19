@@ -5257,3 +5257,33 @@ No application source code was changed. No branch was created. No build, tests, 
 - TripFilters search/select/toolbar presentation: **SOURCE CHANGES APPLIED**.
 - Next: reconcile every candidate in Section 10.1 against current `feature/frontend-modernization` source, including all completed Sections 11.28–11.42, and report the verified remaining migration count by category. Do not use the old PARTIAL/CHANGE REQUIRED labels as a remaining count without source-level verification.
 - Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
+
+## 11.43 — Reconciliation of the Section 10.1 ledger against migrations 11.28–11.42 (2026-11-19)
+
+### Reconciliation method and limits
+- Matched all **127 unique file paths** in Section 10.1 against the current branch and the source-change records in Sections 11.28–11.42.
+- The old ledger contains 53 CHANGE REQUIRED, 39 PARTIAL, 1 SOURCE MIGRATED, and 34 structural/non-visual/data/supporting-dependency rows. The historical **92** is only the count of old CHANGE REQUIRED + PARTIAL labels; it is **not** the remaining migration count.
+- A migration section can close one responsibility while other responsibilities in the same file remain. Therefore, files touched by 11.28–11.42 are not automatically counted as fully migrated.
+- The 34 structural/non-visual/data rows are not 34 source migration tasks. Route wrappers and barrel exports are tracked through their owning visual components. The OG renderer remains a separate supporting-dependency review, not an ordinary DOM migration.
+- This reconciliation is a dependency/workstream plan, not a claim that every remaining line in all 127 files has been exhaustively re-reviewed. The ledger's old per-file residual descriptions must be refreshed as each workstream is completed.
+
+### Remaining coordinated migration workstreams
+The remaining work is organized into **12 owner-first workstreams**. A workstream may touch multiple files; shared owners are migrated before their consumers, and completed scopes from 11.28–11.42 are not repeated.
+
+1. **Point and trip card/list actions** — PointCard, PointActions, PointList, TripCard, TripActions; finish remaining card/list geometry, semantic action roles and state parity.
+2. **Point and trip forms / shared fields** — PointForm, TripForm, TripSelectField, EditPointPage, EditTripLayout, PasswordField, PasswordRequirements and form consumers; finish field, submit/navigation, validation and pending-state contracts.
+3. **Map renderer and map feature composition** — GoogleMapView, PointLocationPicker, TripLocationPicker, TripMapSection, CreatePointPage and EditPointPage; finish canvas/loading geometry, feature-specific controls and feedback states without merging distinct map flows.
+4. **Admin tables and actions** — AdminUsers, AdminFailedLogs, AdminImages, AdminReports, AdminRouteNotFoundLogs and AdminUserForm; finish table surfaces, selection/disclosure, pagination and action states. Reuse the pagination/icon-action scopes already migrated.
+5. **Comments and social interactions** — CommentsSection, CommentsToggle, RepliesSection, EngagementBar and TripGroupSocialActions; finish disclosure, edit/delete/reply/report/submit states and residual local layout.
+6. **Live tracking controls and surface** — LiveTracker; centralize Start/Stop/Reset/Follow roles and the tracking status/detail surface.
+7. **Trip details and gallery composition** — PointSection, DayImagesGallery, TripDetails and TripDetailsView; finish parent-owned frames, text/layout composition and child-consumer parity without moving parent geometry into placeholders.
+8. **Account route shells** — account layout, profile, favorites and my-trips pages; remove remaining React presentation styles and finish page/empty/loading/error composition.
+9. **Public route shells and editorial pages** — public Home/Trips/Trip Details/live-tracking routes, HomeHero/HomeTrips, About and Privacy Policy; remove remaining React style transport and align editorial typography/spacing while retaining unique page structure.
+10. **Shared surface/theme adoption** — surface/card/dialog theme owners and remaining Paper/custom surfaces; verify adoption by intended consumers instead of adding duplicate surface presets.
+11. **Shared common controls and application shell** — BackButton, ExpandableText, NotificationProvider, NotFound, Header drawer, AdminNavigation/layout and Footer; finish semantic navigation/disclosure/feedback roles and shell spacing/surfaces. Header top-level navigation and ConfirmDialog action roles already migrated are not repeated.
+12. **OG image renderer exception review** — renderTripOgImage; determine and document whether Satori's required style-object API is a justified renderer-specific exception. Do not mechanically convert it to DOM styling abstractions.
+
+### Counting rule going forward
+- **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
+- Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
+- Next execution: workstream 1, beginning with shared card/action owners and then its direct consumers. No build, tests, lint, CI or browser validation was run.
