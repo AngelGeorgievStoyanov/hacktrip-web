@@ -7778,3 +7778,83 @@ The shared preset map is not the only visual owner. Current source examples incl
 - Next: enumerate every source consumer of BUTTON_STYLES and ICON_ACTION_STYLES, map the caller's Button/IconButton variant/color/size/disabled/pending props and background context, and classify each alias as intentional or accidental.
 - Then perform the same family-level mapping for TextField, Select, Autocomplete, InputBase, Checkbox, Radio, Switch and native inputs.
 - No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.141 — Button and icon-action consumer inventory (2026-11-19)
+
+### Scope and source coverage
+- Re-read the current branch's `src/styles/presets/buttons.ts`, MUI `MuiButton` theme override and the direct TSX consumers identified across the current 85-file `src/**/*.tsx` inventory.
+- The direct-use inventory below identifies **22 files consuming BUTTON_STYLES** and **12 files consuming ICON_ACTION_STYLES**. One indirect icon-style consumer also exists through `ADMIN_IMAGE_PREVIEW_CLOSE_SX` in `src/styles/presets/admin.ts`.
+- The current `MuiButton` theme override centralizes typography and border radius only. It deliberately leaves colors and interaction states to palette/variants and the shared preset fragments.
+- The source audit does not assert runtime CSS precedence or rendered contrast; those require browser/visual verification, which has not been run.
+
+### BUTTON_STYLES — direct consumer matrix
+
+| Consumer | Roles in use | Caller props / composition | Assessment |
+|---|---|---|---|
+| `src/components/auth/LoginForm.tsx` | submit, navigationSecondary | contained submit; contained navigation links; auth action row | Clear primary-vs-secondary distinction. Pending/disabled is supplied by the form. |
+| `src/components/auth/RegisterForm.tsx` | create, navigationSecondary | contained create; contained secondary Login link | Clear role intent. Resend Verification button still references unresolved `SECONDARY_BUTTON_SX`; this is not a BUTTON_STYLES role and remains a separate blocker. |
+| `src/components/auth/ForgotPasswordForm.tsx`, `ResendVerificationForm.tsx`, `ResetPasswordForm.tsx` | submit, navigationLink | contained submit; success navigation link | Repeated auth submit contract. NavigationLink is primary hover only; caller supplies contained variant. |
+| `src/components/auth/VerifyEmailForm.tsx` | navigationLink | contained login action | Same navigation intent as ResetPasswordForm. |
+| `src/components/auth/ProfileForm.tsx` | edit, disclosure | edit profile and expand/collapse password section | Two distinct intents currently share primary and secondary tone respectively; disclosure has an expanded state but preset has no expanded-state style. |
+| `src/components/auth/ChangePasswordForm.tsx` | save | contained save; merged with account password save layout | Semantic save role is currently only primary hover; pending/disabled comes from caller. |
+| `src/components/common/BackButton.tsx` | back | shared wrapper merges caller sx before back preset and fixes variant/color contract at component prop type | Central shared wrapper; verify that caller sx cannot unintentionally override the intended back role. |
+| `src/components/common/ConfirmDialog.tsx` | cancel, confirm | both contained; cancel secondary, confirm primary | Explicit confirmation pair. Confirm currently shares primary treatment, not a dedicated confirm-specific state. |
+| `src/components/layout/Header.tsx` | navigation | color inherit; toolbar/drawer navigation links | Structural navigation spacing, not an action-tone preset. Keep this distinct from navigationAction. |
+| `src/components/trips/TripCard.tsx` | navigationAction | contained details CTA | Uses primaryWide padding; validate against card width at mobile breakpoints. |
+| `src/components/trips/TripActions.tsx` | tripAdd, tripManage, tripEdit, tripDelete | full-width contained owner actions; delete actions disabled while mutation pending | Add/manage/edit intentionally share full-width primary; delete is full-width danger. |
+| `src/components/trips/TripForm.tsx` | create, add, addPoints, dayIncrement, dayDecrement | submit and alternate form actions; day stepper controls | Three different semantic action intents; day increment/decrement currently share one visual contract and rely on disabled boundary props. |
+| `src/components/trips/EditTripLayout.tsx` | edit, dayIncrement, dayDecrement | edit/submit and day stepper; combines icon danger with local image-delete geometry | Edit uses primary treatment; image delete is icon-action danger rather than BUTTON_STYLES.delete. |
+| `src/components/points/PointLocationPicker.tsx` | removeMarker | contained marker removal | Secondary treatment is unusual for a removal action but may be intentional because this only clears a map marker, not a persisted entity. Confirm wording/intent before renaming. |
+| `src/components/points/PointCard.tsx` | edit, delete | action buttons combined with point-card action geometry | Edit and delete share common semantic tone fragments, while card preset owns local dimensions. |
+| `src/components/points/PointForm.tsx` | edit, create, add | conditional edit/create and add-next-day actions combined with point-form action geometry | Good example of shared semantic tone plus feature-specific layout. |
+| `src/components/admin/AdminUserForm.tsx` | save, deleteText | contained save; text destructive delete | Save is primary; delete tone comes from text preset plus direct error color. |
+| `src/components/admin/AdminReports.tsx`, `AdminFailedLogs.tsx` | deleteText | text destructive action with direct `color="error"` | Duplicate color ownership: MUI color prop and sx text color both set error intent. Could be simplified only after confirming no behavior difference. |
+| `src/components/admin/AdminUserProfileImage.tsx` | deleteText | outlined destructive image delete; direct error color | Same duplicate color ownership, but outlined variant must be preserved. |
+| `src/components/admin/AdminUserForm.tsx` | save, deleteText | contained save plus delete action | Same form-level save/delete roles; verify confirmation and disabled behavior. |
+| `src/components/admin/AdminUserProfileImage.tsx` | deleteText | outlined delete image action | Image-specific destructive intent; do not collapse into generic contained delete. |
+
+### BUTTON_STYLES — role usage and aliases
+
+- Confirmed role families from the current preset definition:
+  - Primary hover fragment: `primary`, `submit`, `create`, `add`, `edit`, `save`, `navigationLink`, `findLocation`, `upload`, `removeSelection`, `confirm`.
+  - Primary wide: `primaryWide`, `navigationAction`.
+  - Secondary: `secondary`, `navigationSecondary`, `cancel`, `removeMarker`, `disclosure`, `back`.
+  - Secondary inverse-hover text: `secondaryLightText`, `addPoints`.
+  - Trip action: `tripAction`, `tripAdd`, `tripEdit`, `tripManage`.
+  - Trip destructive: `tripActionDanger`, `tripDelete`.
+  - Destructive hover: `danger`, `delete`; destructive text: `dangerText`, `deleteText`.
+  - Day stepper: `dayIncrement`, `dayDecrement`; navigation geometry: `navigation`.
+- **Important:** the direct consumer scan confirms that many exports are aliases or are not directly used by a component. Do not keep an export solely because its name exists. Before removal/renaming, finish the full TypeScript/TSX import scan, including non-component utility modules, and verify that any indirect spreads are included.
+- Potentially unused or indirect exports to verify in the final import graph: `primary`, `secondary`, `primaryWide`, `danger`, `secondaryLightText`, `createTrip`, `tripAction`, `tripActionDanger`, `findLocation`, `upload`, `removeSelection`, `dangerText`, `navigation`. Some are used through aliases or composition, so “not directly referenced by component” is not equivalent to dead code.
+
+### ICON_ACTION_STYLES — direct consumer matrix
+
+| Consumer | Roles in use | Caller state/props | Assessment |
+|---|---|---|---|
+| `src/components/common/PasswordField.tsx`, `src/components/auth/LoginForm.tsx` | passwordVisibility | disabled follows field/form state; show/hide controlled by local state | Shared neutral icon action. The icon's foreground relies on MUI default color. |
+| `src/components/social/LikeButton.tsx`, `TripGroupSocialActions.tsx` | like | active/inactive state passed through direct `color` prop; mutation pending controls disabled; `aria-pressed` reflects state | One visual role, but state tone remains component-owned. |
+| `src/components/social/FavoriteButton.tsx`, `TripGroupSocialActions.tsx` | favorite | direct `color` prop differs by caller (error vs primary/default); pending and `aria-pressed` state | **Inconsistent state color contract:** standalone FavoriteButton uses error for active, while group action uses primary. Decide whether this is intentional context-specific meaning or drift. |
+| `src/components/social/ReportButton.tsx`, `TripGroupSocialActions.tsx` | report | direct `color` prop; reported state changes error/default; report preset adds danger hover | State and hover color are split between caller and shared preset. Confirm unreport/report states and contrast. |
+| `src/components/social/TripGroupSocialActions.tsx` | share | copied state changes tooltip/accessible label; no disabled state | Share remains neutral/default; copy feedback is text/tooltip, not a button visual state. |
+| `src/components/comments/CommentsSection.tsx`, `RepliesSection.tsx` | save, cancel, edit, delete, disclosure, submit | edit/save/cancel/delete/reply states; some buttons disabled while mutations pending; submit has direct `color="primary"` | Neutral aliases provide only base radius/focus; tone relies on MUI defaults and direct props. |
+| `src/components/comments/CommentsToggle.tsx`, `EngagementBar.tsx` | disclosure | expanded/collapsed state is passed via aria-expanded and content state | No preset-specific expanded visual state. Confirm whether text/count/badge already communicates state sufficiently. |
+| `src/components/trips/TripDetails.tsx` | base | currency info and description expand/collapse controls; description uses extra state sx | Base focus/radius plus caller composition. |
+| `src/components/trips/EditTripLayout.tsx` | danger | image delete action merged with edit-trip image geometry; disabled while deleting/uploading | Shared error tone with local image action geometry. |
+| `src/styles/presets/admin.ts` | base (indirect) | `ADMIN_IMAGE_PREVIEW_CLOSE_SX` spreads the base icon preset | Indirect consumer; preserve it when updating icon base contract. |
+
+### Cross-cutting button findings
+
+1. **Button role presets do not own the full button appearance.** They are mostly hover/layout fragments; contained/outlined/text variants, palette colors, sizes, disabled/loading and focus are supplied by MUI defaults or the component. The theme owns typography/radius only.
+2. **Duplicate destructive color ownership exists.** Admin log/report/profile-image delete buttons combine `color="error"` with `BUTTON_STYLES.deleteText`, which also supplies error text color. It may be redundant, but preserve variant-specific behavior until visual verification.
+3. **Favorite active state differs by component.** Standalone FavoriteButton uses error while TripGroupSocialActions uses primary. This is a real source-level inconsistency, not merely a naming alias. Decide one shared meaning or explicitly document the different contexts.
+4. **Neutral icon roles are not semantic color roles.** Most icon-action aliases are the same focus/radius fragment. Their actual foreground color comes from MUI `color` props/defaults; do not interpret names such as `save`, `edit`, `share` as fully styled semantic variants.
+5. **Expanded states are not represented in shared disclosure presets.** Comments/profile disclosure state is carried by aria/state and content, while the preset is static. Decide whether visual state differentiation is required after checking current UI.
+6. **LiveTracking buttons use a separate `LIVE_TRACKING_BUTTON_STYLES` owner**, not BUTTON_STYLES. Reset and Center-on-my-location currently use MUI defaults. This is an intentional feature-level owner today, but the shared semantic map should decide whether Start/Stop are globally meaningful action roles or stay feature-specific.
+7. **Report dialog Cancel/Submit actions use MUI defaults** without BUTTON_STYLES. If the dialog is part of the common interaction language, it should adopt shared semantic roles after the field/action matrix is closed.
+
+### Status and next
+- Direct consumer ownership is documented for the current button/icon-action call sites; the preset definition, theme override and important direct state props have been cross-checked.
+- No semantic aliases were renamed or removed. No source code was changed.
+- Next: complete the field-family consumer matrix (TextField, Select, Autocomplete, InputBase, Checkbox, Radio, Switch, native input/file controls), then decide the minimum shared MUI theme/preset contract that removes accidental variation while preserving deliberate feature-specific geometry.
+- No build, tests, lint, CI or browser validation was run.
