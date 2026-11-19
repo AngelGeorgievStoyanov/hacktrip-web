@@ -22,6 +22,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
+import { ADMIN_USERS_TITLE_SX, ADMIN_USERS_GRID_SX, ADMIN_USER_CARD_SX, ADMIN_USER_CARD_CONTENT_SX, ADMIN_USER_CARD_IDENTITY_SX, ADMIN_USER_CARD_ACTIONS_SX, ADMIN_USERS_PAGINATION_SX } from '@/styles/presets/admin';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
