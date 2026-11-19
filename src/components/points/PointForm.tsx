@@ -268,6 +268,7 @@ export function PointForm({
         label="NAME OF CITY, PLACE, LANDMARK OR ANOTHER"
         size="medium"
         showSearchButton={false}
+        variant="form"
         textFieldProps={{
           InputLabelProps: { shrink: true },
           error: !!errors.name,
