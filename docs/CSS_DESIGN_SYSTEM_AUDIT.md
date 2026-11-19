@@ -701,7 +701,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | File | Already centralized / confirmed | Still remaining | Current result |
 |---|---|---|---|
 | `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.edit`; Delete Point uses `BUTTON_STYLES.danger`; move-up/down IconButtons consume `ICON_ACTION_STYLES.base`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Point-specific move visibility/padding, card geometry/padding and action-row layout remain in the card preset owner; description wrapping and caller/state verification remain open. | PARTIAL — action roles and icon base are centralized; card layout and full state/caller verification remain. |
-| `src/components/points/PointForm.tsx` | Uses `BUTTON_STYLES.primary` for map lookup and other primary form actions; shared `BackButton` handles Back/navigation. | Primary role is mixed with local width/margin geometry in a reusable sx constant and at the map lookup call site. BackButton has caller-specific layout/conditional behavior; remaining form fields, upload, icon and disabled/loading states remain open. | PARTIAL — not fully fixed. |
+| `src/components/points/PointForm.tsx` | Uses semantic `BUTTON_STYLES.create`, `add` and `edit` roles; Find in Map consumes `POINT_FORM_FIND_MAP_BUTTON_SX`; shared `BackButton` owns Back appearance. | Point-specific action width/responsive sizing remains in `POINT_FORM_ACTION_BUTTON_SX`; Back navigation and form state remain component-owned. Remaining field, upload, icon and disabled/loading contracts still require review. | PARTIAL — action roles and map-search presentation centralized; form/field and state verification remain open. |
 | `src/components/points/PointActions.tsx` | Social actions are delegated to shared Like/Favorite/Report components and shared status component. | Wrapper layout `sx` is local; verify the nested social controls' visual contract and all callers. | PARTIAL — not fully fixed. |
 | `src/components/points/PointList.tsx` | Delegates each item to the shared `PointCard`. | List layout remains local; verify responsive/layout requirements and empty state typography. | PARTIAL — not fully fixed. |
 | `src/components/trips/TripCard.tsx` | Details navigation uses `BUTTON_STYLES.primaryWide`; card surface uses `MuiCard`; content consumes shared card presets. | Details is navigation but uses generic primary-wide action styling. Stepper Buttons remain direct MUI defaults; substantial geometry/content sx and responsive/caller verification remain. | PARTIAL — not fully fixed. |
@@ -5739,3 +5739,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 point entry: `src/components/points/PointForm.tsx`. Inspect its primary, Back, map lookup, upload and field contracts before making any change; preserve caller-owned navigation and form behavior.
+
+
+## 11.64 — PointForm semantic action roles and map-search preset (2026-11-19)
+
+### Scope and preflight
+- Continued with the next point entry in Section 10.1 after PointCard; used the existing C1 action-role map and current preset owners.
+- Re-read `PointForm.tsx`, `forms.ts`, `buttons.ts`, `map-controls.ts` and `BackButton.tsx` before changing source.
+- Confirmed BackButton already applies its shared Back role after caller sx. PointForm's caller was redundantly passing the Primary role to Back, even though the shared Back role wins.
+
+### Source changes
+- Added semantic `BUTTON_STYLES.create` and `BUTTON_STYLES.add` aliases of the existing primary appearance; retained the dedicated `edit` role added in Section 11.63. These aliases do not change the current visual values.
+- PointForm submit now selects `edit` when editing and `create` when creating/retrying a point; Add Next Day Trip consumes `add`.
+- Added `POINT_FORM_FIND_MAP_BUTTON_SX` to the existing forms preset owner and migrated the Find in Map action away from an inline ad hoc sx object.
+- Removed the redundant Primary override from BackButton; it now receives only the existing point-form action dimensions while BackButton owns its semantic appearance.
+
+### Preserved
+- Form submission, retry-without-duplicate behavior, permission/disabled conditions, geocoding, map selection callbacks, query-cache updates, image upload flow, reset behavior and caller-owned Back/Done navigation.
+- Existing action appearance is unchanged: `create`, `add` and `edit` are semantic aliases of the same primary skin at this stage.
+- No API, DTO, validation, route, data or business logic changed.
+
+### Result and status
+- **3 source files changed**; the Section 10.1 PointForm row was reconciled.
+- PointForm Create/Add/Edit/Back roles and Find in Map presentation: **SOURCE MIGRATED**.
+- PointForm field contract, upload controls, form geometry, caller/state verification and disabled/loading behavior: **PARTIAL — STILL OPEN**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 point entry: `src/components/points/PointActions.tsx`. Verify wrapper geometry and all delegated social action contracts before making changes.
