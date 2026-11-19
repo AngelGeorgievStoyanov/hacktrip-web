@@ -75,7 +75,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
             <Button
               variant="contained"
               onClick={() => router.replace('/login')}
-              sx={BUTTON_STYLES.primary}
+              sx={BUTTON_STYLES.navigationLink}
             >
               Go to login
             </Button>
