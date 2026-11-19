@@ -90,7 +90,7 @@ export const POINT_FORM_SX = {
 export const POINT_FORM_TITLE_SX = { margin: '10px auto' } as const;
 
 /** Shared presentation and spacing for the point form's Find in Map action. */
-export const POINT_FORM_FIND_MAP_BUTTON_SX = { ...BUTTON_STYLES.primary, m: 1 } as const;
+export const POINT_FORM_FIND_MAP_BUTTON_SX = { ...BUTTON_STYLES.findLocation, m: 1 } as const;
 
 /** Alignment for the point form's standalone map-search action. */
 export const POINT_FORM_FIND_MAP_ROW_SX = {
@@ -481,3 +481,12 @@ export const getCaptchaContainerSx = (disabled: boolean) => ({
 export const PASSWORD_REQUIREMENT_INVALID_ICON_SX = {
   color: 'text.disabled',
 } as const;
+
+
+/** Full-width error/success alerts used inside stacked forms. */
+export const FORM_FULL_WIDTH_ALERT_SX = {
+  width: '100%',
+} as const;
+
+/** Compact loading indicator size for form action buttons. */
+export const FORM_ACTION_LOADING_INDICATOR_SIZE = 16;
