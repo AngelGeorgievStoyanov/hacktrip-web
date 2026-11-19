@@ -14,6 +14,7 @@ import {
   CARD_TEXT_BLOCK_STYLE,
   CARD_TEXT_INSET_SX,
 } from '@/styles/presets/cards';
+import { POINT_SECTION_IMAGE_FRAME_SX } from '@/styles/presets/image-gallery';
 
 interface PointSectionProps {
   point: TripPoint;
@@ -52,7 +53,7 @@ export function PointSection({
           </Typography>
 
           {point.images.length > 0 ? (
-            <Box sx={{ width: 'calc(100% + 32px)', mx: '-16px' }}>
+            <Box sx={POINT_SECTION_IMAGE_FRAME_SX}>
               <ImageGallery
                 images={point.images}
                 alt={point.name}
@@ -63,7 +64,7 @@ export function PointSection({
               />
             </Box>
           ) : (
-            <Box sx={{ width: 'calc(100% + 32px)', mx: '-16px', aspectRatio: '1 / 1' }}>
+            <Box sx={{ ...POINT_SECTION_IMAGE_FRAME_SX, aspectRatio: '1 / 1' }}>
               <SocialObjectPlaceholder />
             </Box>
           )}
