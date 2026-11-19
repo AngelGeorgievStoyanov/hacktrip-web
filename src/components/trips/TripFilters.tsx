@@ -2,25 +2,25 @@
 
 import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  AppBar,
-  Box,
-  FormControl,
-  InputBase,
-  InputLabel,
-  MenuItem,
-  Select,
-  Toolbar,
-} from '@mui/material';
-import { alpha, styled } from '@mui/material/styles';
+import { AppBar, Box, FormControl, InputBase, InputLabel, MenuItem, Select, Toolbar } from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import SearchIcon from '@mui/icons-material/Search';
 import { SELECT_TYPE_KEYS } from '@/constants/config';
 import { useSelectChoices } from '@/hooks/useSelects';
-import { BREAKPOINTS, mediaDown } from '@/constants/ui';
 import { TRIP_SORT_OPTIONS, type TripSort } from '@/constants/trips';
 import { buildTripsUrl, type TripsQueryParams } from '@/lib/tripUrl';
-import { UI_COLORS } from '@/constants/ui/colors';
+import {
+  TRIP_FILTER_LABEL_SX,
+  TRIP_FILTER_SEARCH_BOX_SX,
+  TRIP_FILTER_SEARCH_BUTTON_SX,
+  TRIP_FILTER_SEARCH_ICON_SX,
+  TRIP_FILTER_SEARCH_INPUT_SX,
+  TRIP_FILTER_SEARCH_SURFACE_SX,
+  TRIP_FILTER_SELECT_BOX_SX,
+  TRIP_FILTER_SELECT_GROUP_SX,
+  TRIP_FILTER_SELECT_SX,
+  TRIP_FILTERS_TOOLBAR_SX,
+} from '@/styles/presets/trip-filters';
 
 interface TripFiltersProps {
   search?: string;
@@ -29,70 +29,9 @@ interface TripFiltersProps {
   transport?: string;
 }
 
-/** Legacy search box styling. */
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'pointer',
-}));
-
-const SearchButton = styled('button')({
-  display: 'flex',
-  padding: 0,
-  border: 0,
-  background: 'none',
-  color: 'inherit',
-  cursor: 'pointer',
-});
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: '12ch',
-      '&:focus': {
-        width: '20ch',
-      },
-    },
-  },
-}));
-
-const SELECT_BOX_SX = {
-  minWidth: { xs: 200, sm: 180 },
-  margin: { xs: '5px', sm: '3px' },
-  width: { xs: '100%', sm: 'auto' },
-} as const;
-
-const FILTER_LABEL_SX = { color: UI_COLORS.text.inverse } as const;
-const FILTER_SELECT_SX = { color: UI_COLORS.text.inverse } as const;
-
 /**
- * Trip list filters. Legacy applied a filter as soon as a select changed or the search was
- * submitted, then re-rendered the list, so the controls push the new query into the URL and
- * the server-rendered list follows.
+ * Trip list filters. Select changes and submitted searches update the URL immediately;
+ * the server-rendered list then follows the new query.
  */
 export function TripFilters({ search, sort, group, transport }: TripFiltersProps) {
   const router = useRouter();
@@ -103,7 +42,6 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
   const current: TripsQueryParams = { search, group, transport, sort };
 
   function navigate(patch: Partial<TripsQueryParams>): void {
-    // A new filter starts from the first page; the previous page may not exist for it.
     router.push(buildTripsUrl({ ...current, page: 1, ...patch }));
   }
 
@@ -124,37 +62,16 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
   }
 
   function handleSearchKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
-    if (event.key === 'Enter') {
-      applySearch();
-    }
+    if (event.key === 'Enter') applySearch();
   }
 
   return (
     <AppBar position="sticky">
-      <Toolbar
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          [mediaDown(BREAKPOINTS.tripsFilters)]: {
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            [mediaDown(BREAKPOINTS.tripsFilters)]: {
-              flexDirection: 'column',
-              width: '100%',
-            },
-          }}
-        >
-          <Box sx={SELECT_BOX_SX}>
+      <Toolbar sx={TRIP_FILTERS_TOOLBAR_SX}>
+        <Box sx={TRIP_FILTER_SELECT_GROUP_SX}>
+          <Box sx={TRIP_FILTER_SELECT_BOX_SX}>
             <FormControl fullWidth>
-              <InputLabel id="trips-group-label" sx={FILTER_LABEL_SX}>
+              <InputLabel id="trips-group-label" sx={TRIP_FILTER_LABEL_SX}>
                 TYPE OF GROUP
               </InputLabel>
               <Select
@@ -162,7 +79,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 label="TYPE OF GROUP"
                 value={group ?? ''}
                 onChange={handleGroupChange}
-                sx={FILTER_SELECT_SX}
+                sx={TRIP_FILTER_SELECT_SX}
               >
                 <MenuItem value="">ALL</MenuItem>
                 {groupChoices.map((choice) => (
@@ -174,9 +91,9 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
             </FormControl>
           </Box>
 
-          <Box sx={SELECT_BOX_SX}>
+          <Box sx={TRIP_FILTER_SELECT_BOX_SX}>
             <FormControl fullWidth>
-              <InputLabel id="trips-transport-label" sx={FILTER_LABEL_SX}>
+              <InputLabel id="trips-transport-label" sx={TRIP_FILTER_LABEL_SX}>
                 TYPE OF TRANSPORT
               </InputLabel>
               <Select
@@ -184,7 +101,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 label="TYPE OF TRANSPORT"
                 value={transport ?? ''}
                 onChange={handleTransportChange}
-                sx={FILTER_SELECT_SX}
+                sx={TRIP_FILTER_SELECT_SX}
               >
                 <MenuItem value="">ALL</MenuItem>
                 {transportChoices.map((choice) => (
@@ -196,9 +113,9 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
             </FormControl>
           </Box>
 
-          <Box sx={SELECT_BOX_SX}>
+          <Box sx={TRIP_FILTER_SELECT_BOX_SX}>
             <FormControl fullWidth>
-              <InputLabel id="trips-sort-label" sx={FILTER_LABEL_SX}>
+              <InputLabel id="trips-sort-label" sx={TRIP_FILTER_LABEL_SX}>
                 SORT
               </InputLabel>
               <Select
@@ -206,7 +123,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 label="SORT"
                 value={sort ?? TRIP_SORT_OPTIONS.newest}
                 onChange={handleSortChange}
-                sx={FILTER_SELECT_SX}
+                sx={TRIP_FILTER_SELECT_SX}
               >
                 <MenuItem value={TRIP_SORT_OPTIONS.newest}>Newest</MenuItem>
                 <MenuItem value={TRIP_SORT_OPTIONS.oldest}>Oldest</MenuItem>
@@ -215,14 +132,20 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
           </Box>
         </Box>
 
-        <Box sx={{ minWidth: 220, margin: '5px', width: { xs: '100%', sm: 'auto' } }}>
-          <Search>
-            <SearchIconWrapper>
-              <SearchButton type="button" aria-label="Apply search" onClick={applySearch}>
+        <Box sx={TRIP_FILTER_SEARCH_BOX_SX}>
+          <Box sx={TRIP_FILTER_SEARCH_SURFACE_SX}>
+            <Box sx={TRIP_FILTER_SEARCH_ICON_SX}>
+              <Box
+                component="button"
+                type="button"
+                aria-label="Apply search"
+                onClick={applySearch}
+                sx={TRIP_FILTER_SEARCH_BUTTON_SX}
+              >
                 <SearchIcon fontSize="inherit" />
-              </SearchButton>
-            </SearchIconWrapper>
-            <StyledInputBase
+              </Box>
+            </Box>
+            <InputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               value={searchInput}
@@ -230,8 +153,9 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
                 setSearchInput(event.target.value)
               }
               onKeyDown={handleSearchKeyDown}
+              sx={TRIP_FILTER_SEARCH_INPUT_SX}
             />
-          </Search>
+          </Box>
         </Box>
       </Toolbar>
     </AppBar>
