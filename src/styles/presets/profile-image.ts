@@ -1,5 +1,6 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 /** Shared profile-image display, action and fullscreen-view contracts. */
 export const PROFILE_IMAGE_LOADING_SX = {
@@ -70,15 +71,11 @@ export const PROFILE_IMAGE_FULLSCREEN_STAGE_SX = {
 } as const;
 
 export const PROFILE_IMAGE_FULLSCREEN_CLOSE_SX = {
+  ...ICON_ACTION_STYLES.imageControl,
   position: 'absolute',
   top: 8,
   right: 8,
   zIndex: 2,
-  color: UI_COLORS.text.inverse,
-  backgroundColor: UI_COLORS.surface.imageControl,
-  '&:hover': {
-    backgroundColor: UI_COLORS.surface.imageControlHover,
-  },
 } as const;
 
 /** Compact profile-image presentation used by admin user views. */
