@@ -736,7 +736,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage and AdminUsers. Fullscreen Dialog Paper uses the shared Dialog surface plus the documented image-stage background variant; Close/Previous/Next controls compose `ICON_ACTION_STYLES.imageControl` with named position presets; counter, root, stage and image frame use named presets. | Verify caller-specific image ratios/sizes and keyboard/touch state parity; no local control skin or geometry object remains in the component. | MIGRATED — lightbox surface, controls and stage presentation are preset-owned. |
 | `src/components/images/ImageUploadField.tsx` | Uses named image-upload presets for field layout, preview list/rows/thumbnails, remove actions and count/limit feedback; upload trigger delegates to `CustomFileUploadButton`. | Upload and draft Remove All now use semantic `upload` / `removeSelection` roles; individual preview removal uses the shared danger icon role. Caller-specific preview/frame sizing and responsive/disabled state parity remain open. | PARTIAL — action roles and field presentation are preset-owned; caller/state parity remains. |
 | `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp uses EXPANDABLE_TEXT_COLLAPSED_SX; expanded state removes the clamp without local visual objects. | MIGRATED — disclosure presentation centralized; MUI owns the text-button default role. |
-| `src/components/common/NotFound.tsx` | 404 hero structure remains in NotFound.module.css; Home CTA remains a native button rendered through MUI Box. | CTA presentation uses NOT_FOUND_HOME_BUTTON_SX and semantic colors; countdown/router behavior remains component-owned. | MIGRATED — 404 hero structure and Home action have separate owners. |
+| `src/components/common/NotFound.tsx` | Home action consumes `NOT_FOUND_HOME_BUTTON_SX`; h3/h4 headings consume `NOT_FOUND_TITLE_SX` / `NOT_FOUND_SUBTITLE_SX`; page/content structure uses the CSS Module. | Verify countdown/redirect and heading contrast/responsive states; no local visual sx object or raw heading remains. | PARTIAL — CTA/heading roles centralized; page composition remains CSS Module-owned. |
 | `src/components/common/NotificationProvider.tsx` | Snackbar/Alert inherit MUI severity and variant states; Alert width uses NOTIFICATION_ALERT_SX. | No custom surface skin; placement/duration/close behavior remains notification-constant/provider owned. | MIGRATED — notification presentation contract centralized. |
 | `src/components/common/PasswordField.tsx` | Shared TextField owner inherits `MuiTextField` outlined/medium defaults; reveal/hide IconButton consumes `ICON_ACTION_STYLES.passwordVisibility`; forwards registration, error/helperText, disabled, maxLength and autocomplete. | MUI owns the base input/label/helper/focus/error/disabled visuals; verify mapped consumers and reveal/hide keyboard/focus behavior. | PARTIAL — icon-action role and MUI baseline verified; consumer/state parity remains open. |
 | `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_SX typography preset and MUI typography; unique wrapper/heading-group geometry is owned by `WelcomeHeading.module.css`. | Inline layout sx was moved to the CSS Module while preserving flex alignment, 25px horizontal padding and 16px bottom margin. Touch handling, responsive heading split and scramble behavior remain unchanged. | MIGRATED — unique layout is CSS Module-owned; typography remains preset-owned. |
@@ -811,7 +811,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminUsers.tsx` | Card/CardContent surface inherits `MuiCard`; card content, identity and action row use named `ADMIN_USER_CARD_*` presets; Avatar uses shared profile-image presets; Edit uses `BUTTON_STYLES.edit`, Delete uses semantic `BUTTON_STYLES.deleteText`, and Previous/Next use `ADMIN_PAGINATION_BUTTON_SX`; preview delegates to ImageLightbox. | Verify all role-visibility, delete-confirmation, mutation and responsive states; no local card/avatar/pagination style object remains. | PARTIAL — presentation roles centralized; caller/state parity remains open. |
 | `src/components/auth/Captcha.tsx` | Third-party widget owns its internal appearance; wrapper disabled/loading state consumes `getCaptchaContainerSx(disabled)` from the shared form preset owner. | Verify provider load/unavailable/error states and responsive widget sizing; no component-local sx object remains. | PARTIAL — wrapper state preset-owned; third-party/provider state parity remains open. |
 | `src/components/common/PasswordRequirements.tsx` | Requirement list and item layout use `PASSWORD_REQUIREMENTS_LIST_SX` / `PASSWORD_REQUIREMENT_ITEM_SX`; invalid icon uses `PASSWORD_REQUIREMENT_INVALID_ICON_SX`; success/secondary colors use MUI palette semantics. | Verify responsive two-column layout and all direct consumers; no local visual sx object remains. | PARTIAL — layout and feedback tokens centralized; consumer/state parity remains open. |
-| `src/components/common/NotFound.module.css` | Text colors and spacing partially consume --ht-* CSS variables. | Home CTA still defines local background, padding, margin and border; page background image/position/cover and layout are unique composition but need documented ownership. | CHANGE REQUIRED — shared action visual values are partly local. |
+| `src/components/common/NotFound.module.css` | CSS Module owns the unique full-viewport background image, cover/center positioning and flex composition; text color and gap consume `--ht-*` tokens. Home CTA is already owned by `NOT_FOUND_HOME_BUTTON_SX`; headings now use shared `NOT_FOUND_*_SX` typography roles. | Background image/layout remain intentionally page-specific; verify responsive content positioning and contrast over the image. | PARTIAL — unique composition retained; shared CTA/heading roles applied. |
 | `src/components/home/HomeHero.tsx` | WelcomeHeading owns shared home heading composition. | Intro typography and 850px content width use HOME_HERO_INTRO_SX, composed from HOME_INTRO_SX. | MIGRATED — no React style prop or local visual object remains. |
 | `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_SX; trip listing delegates to shared TripList. | Heading remains a semantic h3 and uses the shared heading preset; no local visual declaration remains. | MIGRATED — heading/list composition uses shared owners. |
 | `src/components/images/ImageGallery.module.css` | Gallery row/stack/grid layout and image-button structure are CSS Module-owned; spacing and radius consume `--ht-spacing-*` / `--ht-shape-border-radius`; focus-visible outline consumes shared `--ht-focus-outline-*` variables. | Native button reset, transparent background, clipping/overflow and aspect-ratio frame remain unique structural composition; image frame and overlay parity are tracked in ImageGallery/AppImage entries. | PARTIAL — structure and shared visual tokens centralized; unique frame/caller parity remains. |
@@ -6928,3 +6928,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next outstanding common/public CSS entry in Section 10.1: `src/components/common/NotFound.module.css`. Centralize the Home CTA visual role while keeping the unique background image/layout composition separate.
+
+
+## 11.118 — NotFound shared heading roles and ledger correction (2026-11-19)
+
+### Scope and findings
+- Continued with the next common/public CSS entry after the Admin route headings.
+- Re-opened `NotFound.tsx`, `NotFound.module.css` and the existing `NOT_FOUND_HOME_BUTTON_SX`.
+- The previous ledger claim that the Home CTA background/padding/margin/border remained in the CSS Module was stale; the component already consumed the named button preset.
+- The remaining raw h3/h4 headings had no explicit shared typography role.
+
+### Source changes
+- Added `NOT_FOUND_TITLE_SX` and `NOT_FOUND_SUBTITLE_SX` to the shared typography preset owner, matching the existing browser h3/h4 scale and margins.
+- Migrated all three raw h3/h4 elements to semantic MUI Typography components using those presets.
+- Reconciled the Section 10.1 NotFound component and CSS Module rows.
+
+### Preserved
+- Heading text and semantic levels, existing visual scale/margins, Home action appearance, 10-second countdown, automatic redirect, manual navigation and background image/layout.
+- No route, SEO, API or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- NotFound heading and Home CTA roles: **SHARED PRESETS APPLIED**.
+- Unique background image, viewport/flex composition and responsive contrast remain **PARTIAL / PAGE-SPECIFIC**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next outstanding public/legal CSS entry in Section 10.1: `app/(public)/privacy-policy/LegalPage.module.css`. Separate shared typography/spacing tokens from unique legal-document layout and preserve native anchor navigation.
