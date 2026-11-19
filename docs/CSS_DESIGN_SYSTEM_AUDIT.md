@@ -5640,13 +5640,15 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Brand colors and image dimensions already come from `SEO_BRAND` and centralized OG constants. The remaining literal geometry/typography values describe one fixed 1200×630 generated composition, not recurring DOM component styles.
 - Moving these objects into DOM-oriented presets or CSS Modules would not reduce coupling to the renderer and would not be consumed by ImageResponse. A renderer-specific style module could centralize literals but would still need to pass style objects to Satori and would add indirection without eliminating the required API.
 
-### Recommendation — approval required
-- Approve a narrowly scoped Styling API exception for `src/lib/images/renderTripOgImage.tsx` only: Satori/ImageResponse JSX may use inline `style` objects for renderer-supported CSS properties.
-- Keep brand colors, typography values and OG dimensions centralized in their existing constants. Do not allow this exception in ordinary React DOM components, route pages or shared UI components.
+### Approved SEO renderer boundary
+- **APPROVED by the user on 2026-11-19:** SEO social-image rendering remains a separate presentation boundary. `src/lib/images/renderTripOgImage.tsx` may use inline `style` objects only for Satori/ImageResponse-supported properties required to render the generated Open Graph/Twitter image.
+- This is an SEO image-renderer exception, not a general React styling exception. It does not apply to ordinary React DOM components, route pages, shared UI components or other SEO page content.
+- Keep SEO brand colors, typography values, image dimensions and content/data assembly in their existing SEO-specific owners/constants. The renderer consumes these; do not pull its Satori composition into MUI/CSS Modules or the general application design-system presets.
+- Any future SEO visual components should remain under the SEO/image-rendering boundary with their own explicit contracts; they must not silently introduce style props into the ordinary UI.
 - No source change was made to the renderer, route, data loader, image fetching/validation or cache behavior.
 
 ### Status
-- **Workstream 12 — OG image renderer exception review: REVIEW COMPLETE; APPROVAL PENDING.**
+- **Workstream 12 — SEO OG image renderer: COMPLETE.** The renderer-specific exception is approved and recorded.
 - No build, tests, lint, CI or browser validation was run.
 ## 11.59 — Remaining social and dynamic background style-prop cleanup (2026-11-19)
 
@@ -5664,3 +5666,10 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Two previously identified ordinary React style-prop owners migrated; one CSS Module added; social preset owner extended.
 - Final current-branch spot-check of the previously flagged shared DOM owners (ScrambleHeading, WelcomeHeading, AppImage, SocialObjectPlaceholder, TripList, TripDetails, PointSection, CommentsSection, CommentsToggle, TripGroupSocialActions, ReportButton and useBackground) found no remaining React `style` prop. The only known remaining `style` objects are confined to `src/lib/images/renderTripOgImage.tsx`, the Satori/ImageResponse renderer.
 - No build, tests, lint, CI or browser validation was run.
+
+## 11.60 — User approval and SEO styling boundary (2026-11-19)
+
+- User explicitly approved keeping SEO social-image generation separate from the general application design system.
+- The only approved inline-style exception is `src/lib/images/renderTripOgImage.tsx`, for Satori/ImageResponse rendering only.
+- SEO metadata, structured data, canonical/sitemap rules, OG image data and SEO brand constants remain in their dedicated SEO modules. This approval does not authorize styling exceptions elsewhere in the app.
+- **All 12 coordinated migration workstreams are now closed at the source/audit level.** This does not mean the migration has passed runtime, visual-regression, accessibility or production validation; those checks have not been run.
