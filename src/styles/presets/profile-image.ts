@@ -88,6 +88,7 @@ export const ADMIN_PROFILE_AVATAR_READONLY_SX = {
 
 /** Avatar used as a native button in the admin profile-image editor. */
 export const ADMIN_PROFILE_AVATAR_INTERACTIVE_SX = {
+  ...ICON_ACTION_STYLES.base,
   ...ADMIN_PROFILE_AVATAR_SX,
   bgcolor: 'action.selected',
 } as const;
