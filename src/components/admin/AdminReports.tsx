@@ -22,6 +22,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -89,6 +90,7 @@ export function AdminReports() {
                     <Button
                       size="small"
                       color="error"
+                      sx={BUTTON_STYLES.dangerText}
                       disabled={deleteMutation.isPending}
                       onClick={() =>
                         void confirm('Delete this report?', 'Delete Confirmation').then(
