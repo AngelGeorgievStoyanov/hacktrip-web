@@ -90,3 +90,14 @@ export const TRIP_GROUP_SOCIAL_ACTIONS_SX = {
 
 /** Dynamic like feedback animation remains supplied by the shared animation hook. */
 export const getSocialLikeAnimationSx = (animation: string | undefined) => ({ animation } as const);
+
+/** Runtime size variant for social controls rendered over an image. */
+export const getSocialOverlaySx = (size: 'small' | 'medium') => [
+  SOCIAL_OVERLAY_SX,
+  {
+    '& .MuiIconButton-root': { p: size === 'small' ? 0.5 : 0.65 },
+    '& .MuiBadge-badge': {
+      ...(size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : {}),
+    },
+  },
+] as const;
