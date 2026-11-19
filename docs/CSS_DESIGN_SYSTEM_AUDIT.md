@@ -771,8 +771,8 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout. | No route-level visual declarations; EditTripLayout owns the complete editor composition. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
 | `app/(admin)/admin/failed-login-logs/page.tsx` | Route wrapper delegates to AdminFailedLogs; no direct visual declarations. | AdminFailedLogs owns table, selection, pagination and action UI and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/images/page.tsx` | Route wrapper delegates to AdminImages; no direct visual declarations. | AdminImages owns image table, preview dialog, upload and pagination controls and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
-| `app/(admin)/admin/page.tsx` | Minimal semantic section wrapper. | Raw h1 has no explicit shared heading contract; determine whether parent Admin layout owns heading defaults or use a shared semantic heading role. | CHANGE REQUIRED. |
-| `app/(admin)/admin/reports/page.tsx` | Route delegates to AdminReports inside a semantic section. | AdminReports owns report action/table/pagination styles; raw h1 on route needs shared heading contract. | CHANGE REQUIRED. |
+| `app/(admin)/admin/page.tsx` | Admin h1 uses MUI Typography with shared `ADMIN_PAGE_TITLE_SX`; parent AdminLayout owns main layout and navigation. | SEO/noindex metadata remains unchanged; verify route heading consistency with other admin pages. | MIGRATED — heading role and parent layout are shared. |
+| `app/(admin)/admin/reports/page.tsx` | Reports h1 uses MUI Typography with shared `ADMIN_PAGE_TITLE_SX`; AdminReports owns the table/action/pagination UI. | SEO/noindex metadata remains unchanged; verify route heading consistency with other admin pages. | MIGRATED — heading role and page content ownership are shared. |
 | `app/(admin)/admin/route-not-found-logs/page.tsx` | Route wrapper delegates to AdminRouteNotFoundLogs; no direct visual declarations. | AdminRouteNotFoundLogs owns table/disclosure/pagination controls and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/users/[userId]/page.tsx` | Route delegates to AdminUserForm in a semantic section; no local style declaration. | AdminUserForm owns form fields/actions and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/users/page.tsx` | Route wrapper delegates to AdminUsers; no direct visual declarations. | AdminUsers owns user table, filters and actions and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
@@ -6907,3 +6907,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next public/admin route heading entries: `app/(admin)/admin/page.tsx` and `app/(admin)/admin/reports/page.tsx`; verify the shared heading contract before replacing raw h1 elements.
+
+
+## 11.117 — Shared Admin route heading contract (2026-11-19)
+
+### Source changes
+- Added `ADMIN_PAGE_TITLE_SX` to the shared typography preset owner. It explicitly reproduces the existing browser h1 size, weight and block margins rather than introducing a visual redesign.
+- Replaced raw h1 elements on the Admin home and Reports routes with semantic MUI Typography `component="h1"`, `variant="inherit"` and the shared preset.
+- Reconciled both Section 10.1 route rows.
+
+### Preserved
+- Heading text, h1 document semantics, current browser-default visual scale/margins, AdminLayout navigation/main composition and AdminReports content.
+- Both routes' NOINDEX metadata; SEO remains untouched.
+- No route, API, data or business logic changed.
+
+### Result and status
+- **3 source files changed** plus the Section 10.1 ledger reconciliation.
+- Admin route heading role: **SHARED PRESET APPLIED**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next outstanding common/public CSS entry in Section 10.1: `src/components/common/NotFound.module.css`. Centralize the Home CTA visual role while keeping the unique background image/layout composition separate.
