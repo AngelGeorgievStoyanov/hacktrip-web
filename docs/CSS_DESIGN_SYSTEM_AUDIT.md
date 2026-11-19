@@ -337,14 +337,14 @@ Confirmed local declarations:
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/auth/LoginForm.tsx` | Form wrapper consumes `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`; action row and title use presets. | Password visibility IconButton is raw MUI; TextField states and semantic Register/Forgot/Resend actions remain uncentralized. | PARTIAL — auth panel surface centralized. |
-| `src/components/auth/RegisterForm.tsx` | Form wrapper consumes `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`; action row/title use presets. | TextFields, PasswordField, Checkbox and disabled/validation states require form-control mapping; action roles remain generic. | PARTIAL — auth panel surface centralized. |
-| `src/components/auth/ForgotPasswordForm.tsx` | Form wrapper consumes `AUTH_FORM_SX`, which composes `PANEL_SX` → `getSurfaceStyles`; title/back action use named presets. | TextField visual states and submit action still depend on theme defaults/preset; Back caller margin override remains. | PARTIAL — auth panel surface centralized. |
-| `src/components/auth/ResendVerificationForm.tsx` | Form wrapper consumes `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`; title/back action use presets. | Field/submit states remain to map; Back caller margin override remains. | PARTIAL — auth panel surface centralized. |
-| `src/components/auth/ResetPasswordForm.tsx` | Form wrapper and success section consume `AUTH_FORM_SX` → `PANEL_SX` → `getSurfaceStyles`. | Both form and success branch need consistent semantic action roles; fields and validation/disabled states remain open. | PARTIAL — auth panel surface centralized in both branches. |
-| `src/components/auth/VerifyEmailForm.tsx` | Renders MUI Card, so base surface inherits `MuiCard` → `getSurfaceStyles`. | Local Card sizing/padding and heading weight remain; no dedicated semantic panel preset. | PARTIAL — base Card skin only. |
-| `src/components/auth/ChangePasswordForm.tsx` | Account field preset; local action spacing | Use shared field and Save/Submit |
-| `src/components/auth/ProfileForm.tsx` | Local title/field `sx`; primary/secondary buttons | Use shared field/heading/action roles |
+| `src/components/auth/LoginForm.tsx` | Form wrapper/title/action row use AUTH_FORM_*; primary and secondary actions use BUTTON_STYLES. | Password visibility IconButton now consumes ICON_ACTION_STYLES.base; MUI TextField/theme owns field states. | PARTIAL — common panel/action/icon contracts consumed; verify password-field parity with shared PasswordField. |
+| `src/components/auth/RegisterForm.tsx` | Form wrapper/title/action row use AUTH_FORM_*; PasswordField and PasswordRequirements are shared; primary/secondary actions use BUTTON_STYLES. | Remaining dynamic pointer-events behavior on the terms label is an interaction-state exception; field, helper and disabled states are MUI/shared-component owned. | PARTIAL — common contracts consumed; finish the locked terms-label interaction without React style transport and verify state parity. |
+| `src/components/auth/ForgotPasswordForm.tsx` | Form/title/back action use AUTH_FORM_*; submit uses BUTTON_STYLES.primary. | BackButton margin now consumes AUTH_FORM_BACK_BUTTON_SX instead of a caller-local sx object; TextField states inherit MUI theme. | MIGRATED — no remaining local presentation declaration. |
+| `src/components/auth/ResendVerificationForm.tsx` | Form/title/back action use AUTH_FORM_*; submit uses BUTTON_STYLES.primary. | BackButton margin now consumes AUTH_FORM_BACK_BUTTON_SX instead of a caller-local sx object; TextField states inherit MUI theme. | MIGRATED — no remaining local presentation declaration. |
+| `src/components/auth/ResetPasswordForm.tsx` | Form wrapper/title/back action use AUTH_FORM_*; PasswordField/PasswordRequirements and primary action are shared. | Success and form branches retain the same shared panel/action contracts; field and redirect states remain behavior-driven. | MIGRATED — no remaining local presentation declaration. |
+| `src/components/auth/VerifyEmailForm.tsx` | Card surface inherits MuiCard theme; action uses BUTTON_STYLES.primary. | Card sizing/stack/alignment and title weight now consume EMAIL_VERIFICATION_CARD_SX and EMAIL_VERIFICATION_TITLE_SX. | MIGRATED — page-specific card composition is owned by named forms presets. |
+| `src/components/auth/ChangePasswordForm.tsx` | Account field stack uses ACCOUNT_FORM_FIELDS_SX; password fields and requirements are shared components. | Save action now composes BUTTON_STYLES.primary with ACCOUNT_PASSWORD_SAVE_BUTTON_SX. | PARTIAL — shared fields/action spacing consumed; remaining review is state/helper-text parity with other password flows. |
+| `src/components/auth/ProfileForm.tsx` | Account field stack and primary/secondary actions already use shared contracts. | Heading, disabled-email readability, action-row layout and button spacing now consume ACCOUNT_FORM_* presets. | PARTIAL — profile form presentation centralized; verify profile-image/password-expansion composition and shared field error/helper states. |
 | `src/components/auth/ProfileImage.tsx` | See image findings | Use shared image/action roles |
 | `src/components/auth/Captcha.tsx` | Local CAPTCHA container `sx` | Keep integration geometry; tokenize spacing |
 | `src/components/admin/AdminUserForm.tsx` | Imports and applies `PANEL_SX(theme)` to its rendered form panel; Save/Delete button presets are already used. | Panel caller still adds local layout/padding; field states and semantic Delete role need mapping. This is a direct rendered `PANEL_SX` consumer. | PARTIAL — shared panel skin composed with local geometry. |
@@ -5337,4 +5337,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Result and next step
 - Six files changed in this form batch: forms.ts, PointForm.tsx, PasswordRequirements.tsx, TripForm.tsx, EditTripLayout.tsx and PasswordField.tsx (format-only). TripSelectField.tsx was reviewed and left unchanged.
 - Workstream 2 remains **IN PROGRESS**. Remaining: audit ProfileForm and auth form consumers against ACCOUNT_FORM_FIELDS_SX / AUTH_FORM_*; then reconcile field/error/helper-text contracts across all form consumers.
+- No build, tests, lint, CI or browser validation was run.
+## 11.47 — Account and authentication form adoption (2026-11-19)
+
+### Source changes
+- Added ACCOUNT_FORM_TITLE_SX, ACCOUNT_FORM_ACTIONS_SX and ACCOUNT_FORM_READONLY_FIELD_SX; ProfileForm now consumes them instead of local title, disabled-email and action-row sx objects.
+- Added ACCOUNT_PASSWORD_SAVE_BUTTON_SX; ChangePasswordForm now composes it with the existing primary button role.
+- LoginForm password visibility IconButton now consumes ICON_ACTION_STYLES.base.
+- Added AUTH_FORM_BACK_BUTTON_SX; ForgotPasswordForm and ResendVerificationForm no longer carry their own BackButton margin objects.
+- Added EMAIL_VERIFICATION_CARD_SX and EMAIL_VERIFICATION_TITLE_SX; VerifyEmailForm no longer owns its card layout/size or title-weight objects.
+- ResetPasswordForm already uses AUTH_FORM_* and shared PasswordField/PasswordRequirements contracts; no source change required.
+- RegisterForm already uses AUTH_FORM_* and shared password components/action presets. Its dynamic pointer-events state on the terms label remains for a later interaction-state-specific migration; it was not replaced with a visually different disabled control.
+
+### Preserved
+- Profile update/upload/password expansion flow, disabled email semantics, submit/back/password actions and validation.
+- Password change/reset/login/register/verification API flows, field registration, CAPTCHA lifecycle, redirect timing, visibility toggles, helper/error messages and pending/disabled states.
+- Verification success/error/loading card geometry and navigation.
+- No auth/API/validation/routing/business logic changed.
+
+### Result
+- Seven source/preset files changed in this batch: forms.ts, ProfileForm.tsx, ChangePasswordForm.tsx, LoginForm.tsx, ForgotPasswordForm.tsx, ResendVerificationForm.tsx and VerifyEmailForm.tsx. ResetPasswordForm and RegisterForm were reviewed; no unnecessary changes were made.
+- Workstream 2 remains **IN PROGRESS**. Remaining: resolve RegisterForm's dynamic terms-label interaction state using an approved state class/abstraction; review ProfileForm/ChangePasswordForm field error/helper parity; inspect remaining auth/account forms not yet included in this pass.
 - No build, tests, lint, CI or browser validation was run.
