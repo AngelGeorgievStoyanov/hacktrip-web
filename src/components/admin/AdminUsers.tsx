@@ -26,6 +26,10 @@ import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { AppImage } from '@/components/images/AppImage';
 import type { ImageDto } from '@/types';
+import {
+  ADMIN_PROFILE_AVATAR_INTERACTIVE_SX,
+  ADMIN_PROFILE_AVATAR_READONLY_SX,
+} from '@/styles/presets/profile-image';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -110,13 +114,11 @@ export function AdminUsers() {
                             });
                           }
                         }}
-                        sx={{
-                          width: 88,
-                          height: 88,
-                          bgcolor: 'action.selected',
-                          flexShrink: 0,
-                          cursor: u.profileImage ? 'zoom-in' : 'default',
-                        }}
+                        sx={
+                          u.profileImage
+                            ? ADMIN_PROFILE_AVATAR_INTERACTIVE_SX
+                            : ADMIN_PROFILE_AVATAR_READONLY_SX
+                        }
                       >
                         {u.profileImage ? (
                           <AppImage
