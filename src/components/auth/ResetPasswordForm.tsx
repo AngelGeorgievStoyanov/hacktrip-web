@@ -87,7 +87,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           <Typography variant="body1" textAlign="center">
             Your password has been reset. You can now log in.
           </Typography>
-          <Button onClick={() => router.replace('/login')} variant="contained">
+          <Button onClick={() => router.replace('/login')} variant="contained" sx={BUTTON_STYLES.navigationLink}>
             Go to login
           </Button>
         </Box>
@@ -125,7 +125,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           variant="contained"
           disabled={submitting || !isValid}
           startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-          sx={BUTTON_STYLES.primary}
+          sx={BUTTON_STYLES.submit}
         >
           Reset password
         </Button>
