@@ -59,9 +59,9 @@ export const getTripDetailsStickyHeaderSx = () => ({
   top: 0,
   zIndex: 'appBar',
   width: `calc(100% + ${PAGE_CONTENT_PADDING} + ${PAGE_CONTENT_PADDING})`,
-  marginLeft: -PAGE_CONTENT_PADDING,
-  marginRight: -PAGE_CONTENT_PADDING,
-  marginTop: -PAGE_CONTENT_PADDING,
+  marginLeft: `-${PAGE_CONTENT_PADDING}`,
+  marginRight: `-${PAGE_CONTENT_PADDING}`,
+  marginTop: `-${PAGE_CONTENT_PADDING}`, 
   pb: 1,
   backgroundColor: 'transparent',
 } as const);
