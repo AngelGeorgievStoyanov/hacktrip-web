@@ -700,7 +700,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | File | Already centralized / confirmed | Still remaining | Current result |
 |---|---|---|---|
-| `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.edit`; Delete Point uses `BUTTON_STYLES.danger`; move-up/down IconButtons consume `ICON_ACTION_STYLES.base`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Point-specific move visibility/padding, card geometry/padding and action-row layout remain in the card preset owner; description wrapping and caller/state verification remain open. | PARTIAL — action roles and icon base are centralized; card layout and full state/caller verification remain. |
+| `src/components/points/PointCard.tsx` | Edit uses `BUTTON_STYLES.edit`; Delete uses `BUTTON_STYLES.delete`; move-up/down controls use semantic `ICON_ACTION_STYLES.reorder` plus named visibility/padding; Card surface inherits `MuiCard`; text inset/wrap, map height and action row use named card presets. Direct caller: PointList → CreatePointPage. | Point-specific card geometry remains intentionally in `cards.ts`; verify visual parity at mobile/desktop widths and disabled/permission/boundary states through CreatePointPage. | PARTIAL — all component styling is preset-owned; responsive/state verification remains open. |
 | `src/components/points/PointForm.tsx` | Uses semantic `BUTTON_STYLES.create`, `add` and `edit` roles; Find in Map consumes `POINT_FORM_FIND_MAP_BUTTON_SX`; shared `BackButton` owns Back appearance. | Point-specific action width/responsive sizing remains in `POINT_FORM_ACTION_BUTTON_SX`; Back navigation and form state remain component-owned. Remaining field, upload, icon and disabled/loading contracts still require review. | PARTIAL — action roles and map-search presentation centralized; form/field and state verification remain open. |
 | `src/components/points/PointActions.tsx` | Wrapper consumes `POINT_SOCIAL_ACTIONS_SX`; LikeButton, FavoriteButton and ReportButton own their interactions and consume shared `ICON_ACTION_STYLES`; SocialConfigStatus owns its feedback presentation. | Verify all rendered call sites and responsive parity with other social-action groups; no PointActions-local visual declaration remains. | PARTIAL — source presentation is centralized; exhaustive caller/route verification remains open. |
 | `src/components/points/PointList.tsx` | Delegates each item to `PointCard`; list container consumes `POINT_LIST_SX`; empty state consumes `POINT_LIST_EMPTY_SX`. | Verify all callers and responsive behavior of the composed PointCard list; no local visual declaration remains in this component. | PARTIAL — list and empty-state presentation are preset-owned; caller/responsive verification remains open. |
@@ -7116,3 +7116,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Current position and next exact item
 - Current document position: **Section 11.125**, after the current-source reconciliation/migration batches in Sections 11.63–11.124.
 - Continue the original Section 10.1 order through the remaining **PARTIAL** entries, starting with `src/components/points/PointCard.tsx`: verify card geometry ownership, move-button visibility/padding, and responsive/caller behavior. Then proceed to PointForm, PointActions, PointList, TripCard and TripActions in the same register order.
+
+
+## 11.126 — PointCard semantic Delete/Reorder roles and caller verification (2026-11-19)
+
+### Scope and preflight
+- Continued with the first remaining PARTIAL entry in Section 10.1, as recorded in Section 11.125.
+- Re-opened `PointCard.tsx`, `cards.ts`, `PointList.tsx`, `CreatePointPage.tsx` and `EditPointPage.tsx`.
+- Confirmed PointCard's only rendered path is PointList → CreatePointPage; the edit page uses PointForm and does not render PointCard.
+- All card geometry, map height, text inset/wrapping, action-row layout and move-button visibility/padding were already owned by named card presets.
+
+### Source changes
+- Added `ICON_ACTION_STYLES.reorder` and migrated both move controls from the generic base role.
+- Migrated Delete Point from generic danger to semantic `BUTTON_STYLES.delete`.
+- Reconciled the Section 10.1 PointCard row with its actual direct caller and state ownership.
+
+### Preserved
+- Point number/order, up/down boundary visibility and disabled behavior, edit/delete permission checks, parent saving/disabled state, map marker/height, text wrapping and card geometry.
+- Existing action appearance and all callbacks.
+- No API, route, data or business logic changed.
+
+### Result and status
+- **3 source files changed** plus the Section 10.1 ledger reconciliation.
+- PointCard action and presentation ownership: **SOURCE MIGRATED / PRESET-OWNED**.
+- Mobile/desktop visual parity and all disabled/permission/boundary states remain **PARTIAL** pending approved visual validation.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 entry: `src/components/points/PointForm.tsx`. Audit its field, image upload/remove, loading/disabled and caller-owned navigation states; do not repeat the already-migrated action roles.
