@@ -3,6 +3,7 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 import { UI_COLORS } from '@/constants/ui/colors';
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 /** Compact day-number field: dimensions and non-editable numeric display. */
 export const DAY_NUMBER_FIELD_SX = {
@@ -381,3 +382,84 @@ export const EMAIL_VERIFICATION_TITLE_SX = { fontWeight: 700 } as const;
 export const PROFILE_FORM_SX = { ...ACCOUNT_FORM_FIELDS_SX, alignItems: 'stretch' } as const;
 /** Expanded change-password form field stack. */
 export const CHANGE_PASSWORD_FORM_SX = { ...ACCOUNT_FORM_FIELDS_SX, mt: 2 } as const;
+
+/** Responsive parent composition for the standalone Edit Point page. */
+export const EDIT_POINT_PAGE_SX = {
+  width: '100%',
+  maxWidth: 1200,
+  mx: 'auto',
+  px: { xs: 1, sm: 2 },
+  py: 2,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  rowGap: { xs: 2, md: 0 },
+} as const;
+export const EDIT_POINT_LOADING_SX = {
+  display: 'flex',
+  justifyContent: 'center',
+  py: 4,
+} as const;
+export const EDIT_POINT_ERROR_SX = { width: '100%', mb: 2 } as const;
+export const EDIT_POINT_MAP_WRAPPER_SX = {
+  width: '100%',
+  maxWidth: 600,
+  mx: 'auto',
+  order: 0,
+  '@media (max-width:1020px)': { order: 1 },
+} as const;
+export const EDIT_POINT_CONTENT_ROW_SX = {
+  mt: 2.5,
+  width: '100%',
+  '@media (max-width:1020px)': { mt: 0, display: 'contents', order: 1 },
+  order: 0,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  gap: 2.5,
+} as const;
+export const EDIT_POINT_FORM_CARD_SX = {
+  ...POINT_FORM_PANEL_SX,
+  '@media (max-width:1020px)': { order: 2 },
+} as const;
+export const EDIT_POINT_IMAGES_SECTION_SX = {
+  width: { xs: '100%', sm: '100%', lg: 520 },
+  maxWidth: 520,
+  minWidth: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  mt: { xs: 0, lg: 1 },
+  '@media (max-width:1020px)': { order: 0 },
+} as const;
+export const getEditPointImageGridSx = (imageCount: number) => ({
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: `repeat(${Math.min(imageCount, 3)}, minmax(0, 1fr))`,
+  gap: 1,
+  alignItems: 'start',
+} as const);
+export const EDIT_POINT_IMAGE_TILE_SX = {
+  position: 'relative',
+  width: '100%',
+  aspectRatio: '1 / 1',
+  m: { xs: 0, sm: 1 },
+  p: { xs: 0, sm: 1 },
+  boxSizing: 'border-box',
+} as const;
+export const EDIT_POINT_IMAGE_DELETE_SX = {
+  ...ICON_ACTION_STYLES.danger,
+  position: 'absolute',
+  top: 4,
+  left: 4,
+  zIndex: 1,
+  backgroundColor: UI_COLORS.action.imageControlBackground,
+  '&:hover': { backgroundColor: UI_COLORS.action.imageControlBackgroundHover },
+} as const;
+export const EDIT_POINT_IMAGE_PLACEHOLDER_SX = {
+  width: '50%',
+  maxWidth: 280,
+  aspectRatio: '1 / 1',
+  mx: 'auto',
+} as const;
