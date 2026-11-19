@@ -17,7 +17,7 @@ import {
   TRIP_FILTER_SEARCH_INPUT_SX,
   TRIP_FILTER_SEARCH_SURFACE_SX,
   TRIP_FILTER_SELECT_BOX_SX,
-  TRIP_FILTER_SELECT_GROUP_SX,
+  TRIP_FILTERS_SELECT_GROUP_SX,
   TRIP_FILTER_SELECT_SX,
   TRIP_FILTERS_TOOLBAR_SX,
 } from '@/styles/presets/trip-filters';
@@ -68,7 +68,7 @@ export function TripFilters({ search, sort, group, transport }: TripFiltersProps
   return (
     <AppBar position="sticky">
       <Toolbar sx={TRIP_FILTERS_TOOLBAR_SX}>
-        <Box sx={TRIP_FILTER_SELECT_GROUP_SX}>
+        <Box sx={TRIP_FILTERS_SELECT_GROUP_SX}>
           <Box sx={TRIP_FILTER_SELECT_BOX_SX}>
             <FormControl fullWidth>
               <InputLabel id="trips-group-label" sx={TRIP_FILTER_LABEL_SX}>
