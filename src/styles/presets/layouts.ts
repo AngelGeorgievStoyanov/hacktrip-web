@@ -1,4 +1,6 @@
+import type { Theme } from '@mui/material/styles';
 import { PAGE_CONTENT_PADDING, ROUTE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
+import { PANEL_SX } from '@/styles/presets/panels';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 
@@ -149,3 +151,26 @@ export const CREATE_POINT_LOADING_SX = {
 } as const;
 
 export const CREATE_POINT_ERROR_ALERT_SX = { mb: 2 } as const;
+
+/** Profile route shell and centered profile panel. */
+export const ACCOUNT_PROFILE_PAGE_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  minHeight: 'calc(100vh - 64px)',
+  py: { xs: 2, sm: 3 },
+} as const;
+export const ACCOUNT_PROFILE_PANEL_SX = (theme: Theme) => ({
+  ...PANEL_SX(theme),
+  boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: 2,
+  width: '100%',
+  maxWidth: 600,
+  height: 'fit-content',
+  p: { xs: 2, sm: '30px' },
+} as const);
