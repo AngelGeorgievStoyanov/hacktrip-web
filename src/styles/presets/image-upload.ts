@@ -32,3 +32,10 @@ export const PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX = { flex: 1, minWidth: 0, 
 export const CUSTOM_FILE_UPLOAD_BUTTON_CONTAINER_SX = { width: '30ch' } as const;
 export const CUSTOM_FILE_UPLOAD_BUTTON_SX = BUTTON_STYLES.primary;
 export const CUSTOM_FILE_UPLOAD_ICON_BUTTON_SX = { color: 'primary.main' } as const;
+
+/** Feature-owned wrappers around the shared field; upload behavior remains in the parent forms. */
+export const TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX = { mt: 1, mx: '4px', minWidth: 0 } as const;
+export const getIMAGE_UPLOAD_SUBMITTING_WRAPPER_SX = (isSubmitting: boolean) => ({
+  pointerEvents: isSubmitting ? 'none' : 'auto',
+  opacity: isSubmitting ? 0.7 : 1,
+} as const);
