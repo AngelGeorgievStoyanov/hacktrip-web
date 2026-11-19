@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -372,7 +374,7 @@ function MissingThumbnails() {
           <IconButton
             aria-label="Close preview"
             onClick={() => setPreviewUrl(null)}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
+            sx={[ICON_ACTION_STYLES.base, { position: 'absolute', right: 8, top: 8 }]}
           >
             <CloseRoundedIcon />
           </IconButton>
