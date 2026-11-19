@@ -361,12 +361,12 @@ Confirmed local declarations:
 |---|---|---|
 | `src/components/points/CreatePointPage.tsx` | Renders MUI Card with `POINT_FORM_PANEL_SX`; Card inherits `MuiCard` → `getSurfaceStyles`. | Page/container geometry and panel offset remain local; `POINT_FORM_PANEL_SX` is a layout + field inset preset, not a `PANEL_SX` consumer. | PARTIAL — Card skin centralized, geometry local. |
 | `src/components/points/EditPointPage.tsx` | Renders MUI Card with `POINT_FORM_PANEL_SX`; Card inherits `MuiCard` → `getSurfaceStyles`. | Page layout and image control/frame states remain local; `POINT_FORM_PANEL_SX` is layout + field inset, not a `PANEL_SX` consumer. | PARTIAL — Card skin centralized, geometry local. |
-| `src/components/points/PointActions.tsx` | Local action-row layout `sx` | Use shared action row and Edit/Delete |
-| `src/components/points/PointCard.tsx` | MUI Card inherits `MuiCard` → `getSurfaceStyles`; shared button/card presets are consumed. | Local Card geometry and move IconButtons remain; comments panel and image/social overlay responsibilities are delegated. | PARTIAL — base Card surface centralized only. |
+| `src/components/points/PointActions.tsx` | Social operations are delegated to shared Like/Favorite/Report controls and SocialConfigStatus. | Point action-row alignment now consumes `POINT_SOCIAL_ACTIONS_SX`, composed from the shared social action contract while preserving the point-specific compact gap and zero vertical margin. Nested social control state/caller parity remains part of the social workstream. | PARTIAL — local wrapper styling removed; nested social controls remain shared-owner consumers. |
+| `src/components/points/PointCard.tsx` | Edit/Delete use primary/danger roles; card surface, card geometry, text inset/wrapping, action-row layout and map height use named theme/preset contracts. Move controls consume the shared icon-action focus contract. | Verify the complete PointCard caller/state parity and whether move controls need a more specific semantic tone; preserve the compact map frame and current permission/visibility behavior. | PARTIAL — primary visual ownership centralized; final caller/state parity remains. |
 | `src/components/points/PointForm.tsx` | Local field/layout `sx` and stacked buttons | Use common fields and Create/Save/Cancel |
-| `src/components/points/PointList.tsx` | Local list/container composition | Use shared list/empty state if repeated |
-| `src/components/trips/TripActions.tsx` | Existing tripAction/tripActionDanger | Compare the same roles across all features |
-| `src/components/trips/TripCard.tsx` | Both Card render branches inherit `MuiCard` → `getSurfaceStyles`; shared card/button presets are consumed. | Responsive card geometry and stepper/navigation controls remain local; semantic action-role parity still open. | PARTIAL — base Card surface centralized only. |
+| `src/components/points/PointList.tsx` | List layout uses `POINT_LIST_SX`; empty-state typography uses `POINT_LIST_EMPTY_SX`; each item delegates to `PointCard`. | Verify responsive behavior and the empty/list states across all Create/Edit Point callers; no remaining component-local visual object is identified in this file. | PARTIAL — visual declarations centralized; caller parity remains. |
+| `src/components/trips/TripActions.tsx` | Add/Edit actions use `BUTTON_STYLES.tripAction`; destructive actions use `tripActionDanger`. | The `display: contents` wrapper now consumes `TRIP_ACTIONS_CONTENT_SX` from the layout preset owner. Remaining review is limited to action-role semantics and pending/disabled/focus parity; mutation, confirmation and ownership behavior remain unchanged. | PARTIAL — local wrapper style moved to shared owner; action-state review remains. |
+| `src/components/trips/TripCard.tsx` | Card/content/image/pagination geometry is owned by named presets; the MUI Card surface inherits the shared theme. | The fixed card frame now consumes the existing `TRIP_CARD_CONTAINER_SX` instead of duplicating its geometry inline. Details navigation still uses the generic primary-wide role; MobileStepper Next/Back retain MUI defaults. Verify state and responsive parity across all TripCard callers. | PARTIAL — fixed frame ownership consolidated; action semantics and caller/state verification remain. |
 | `src/components/trips/TripDetails.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`. | Card geometry/content styles and direct icon/action controls remain local; map caller passes marker title only to SDK InfoWindow, not a custom app panel. | PARTIAL — base Card surface centralized only. |
 | `src/components/trips/TripDetailsView.tsx` | CSS Module layout + local overlay `sx` | Preserve layout; centralize overlay |
 | `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
@@ -5287,3 +5287,23 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
 - Next execution: workstream 1, beginning with shared card/action owners and then its direct consumers. No build, tests, lint, CI or browser validation was run.
+## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
+
+### Source changes
+1. Added `POINT_SOCIAL_ACTIONS_SX` to `src/styles/presets/social.ts`, composing the existing social-action row contract while preserving the PointActions-specific 0.25 gap and zero vertical margin.
+2. Updated `src/components/points/PointActions.tsx` to consume that preset instead of a local inline sx object. Social eligibility, loading/error status, target IDs and initial counts/states are unchanged.
+3. Updated `src/components/trips/TripCard.tsx` to consume the existing `TRIP_CARD_CONTAINER_SX` instead of duplicating the same fixed width/height/box-sizing/overflow values inline. This also removes the stale undefined `TRIP_CARD_HEIGHT` reference and uses the already-imported preset.
+4. Added `TRIP_ACTIONS_CONTENT_SX` to `src/styles/presets/layouts.ts` and updated `src/components/trips/TripActions.tsx` to consume it instead of owning a local `display: contents` object.
+
+### Preserved
+- Point social operation permissions, authentication gating, SocialConfigStatus, button targets and counts.
+- TripCard fixed 352px frame, 540px height, viewport max-width, box sizing and overflow; image/day selection, swipe behavior, pagination, likes and Details href remain unchanged.
+- TripActions ownership check, route destinations, confirmation text/flow, pending/disabled states, mutation handlers and query-cache updates remain unchanged.
+- PointCard and PointList were rechecked: their card/list geometry, text, action row and icon focus contracts are already owned by existing presets; no redundant styles were added.
+
+### Result
+- **5 source/preset files updated**: two preset owners and three consumers.
+- Ledger rows for PointCard, PointActions, PointList, TripCard and TripActions refreshed to reflect current ownership and residual work.
+- Workstream 1 is **partially complete**. Remaining: cross-caller/state verification and semantic review of TripCard stepper/Details and TripActions action roles. Do not repeat the centralized geometry/layout work.
+- No API, data, validation, authentication, routing, mutation or business logic changed.
+- No build, tests, lint, CI or browser validation was run.
