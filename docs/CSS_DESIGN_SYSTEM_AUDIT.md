@@ -675,13 +675,13 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 |---|---|
 | `app/layout.tsx` | Root metadata, viewport theme color, `globals.css`, root `<html>/<body>` and `.app-shell` wrapper. | No independent surface skin; shell geometry is delegated to `.app-shell`. Keep metadata/layout concerns separate from design tokens. | STRUCTURAL — no local component skin. |
 | `app/providers.tsx` | Central `ThemeProvider` and `CssBaseline` wrap app providers; installs Query/Auth/Background/Notification/Confirm providers. | No surface declarations; provider order is composition, not visual styling. Verify theme/CSS-variable ownership in Stage 2. | STRUCTURAL — theme is mounted centrally. |
-| `app/(account)/layout.tsx` | CHANGE REQUIRED |
+| `app/(account)/layout.tsx` | RequireAuth owns access gating; Header/Footer are shared shell components. | Main content frame uses ACCOUNT_LAYOUT_MAIN_SX; no route-local visual declarations remain. | MIGRATED — account shell uses shared layout preset. |
 | `app/(admin)/layout.tsx` | CHANGE REQUIRED |
 | `app/(auth)/layout.tsx` | CHANGE REQUIRED |
 | `app/(public)/layout.tsx` | PARTIAL |
-| `app/(account)/favorites/page.tsx` | PARTIAL |
-| `app/(account)/my-trips/page.tsx` | PARTIAL |
-| `app/(account)/profile/page.tsx` | PARTIAL |
+| `app/(account)/favorites/page.tsx` | Uses shared TripList; route fetches the viewer's favorites. | Page/content/heading/loading/error/empty-state presentation uses ACCOUNT_TRIPS_* and shared heading presets. | MIGRATED — no route-local presentation remains. |
+| `app/(account)/my-trips/page.tsx` | Uses shared TripList; Create Trip CTA uses BUTTON_STYLES.createTrip. | Page/content/heading/loading/error/empty-state presentation uses ACCOUNT_TRIPS_* and shared heading presets. | MIGRATED — no route-local presentation remains. |
+| `app/(account)/profile/page.tsx` | ProfileForm owns profile fields/actions/image behavior; shared PANEL surface owns panel skin. | Centered page frame and responsive profile panel now use ACCOUNT_PROFILE_PAGE_SX and ACCOUNT_PROFILE_PANEL_SX; no route-local sx remains. | MIGRATED — account profile route shell centralized. |
 | `app/(public)/about/page.tsx` | CHANGE REQUIRED |
 | `app/(public)/live-tracking/page.tsx` | CHANGE REQUIRED |
 | `app/(public)/page.tsx` | PARTIAL |
@@ -752,7 +752,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | `app/(account)/favorites/page.tsx` | Uses shared account page/content/heading/empty-state presets and delegates populated results to TripList. | Local CircularProgress margin and Alert max-width remain; verify empty-state typography alias and child TripList contract. | PARTIAL — wrapper partly centralized. |
 | `app/(account)/profile/page.tsx` | Uses shared PANEL_SX for the inner panel. | Outer page layout and additional inner panel geometry/padding/gap remain local sx; distinguish reusable panel skin from unique route composition. | CHANGE REQUIRED. |
-| `app/(account)/trips/create/page.tsx` | Route delegates to TripForm within Suspense; no direct visual styling found. | Verify TripForm consumer ledger; no separate route-level visual migration indicated. | PARTIAL — composition wrapper only. |
+| `app/(account)/trips/create/page.tsx` | Route delegates to TripForm within Suspense; no direct visual styling found. | TripForm owns the complete form presentation contract; Suspense fallback remains null by existing route design. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
 | `app/(account)/trips/create/points/page.tsx` | Route delegates to CreatePointPage within Suspense; no direct visual styling found. | Verify CreatePointPage consumer ledger; no separate route-level visual migration indicated. | PARTIAL — composition wrapper only. |
 | `app/(public)/live-tracking/page.tsx` | Uses ROUTE_CONTENT_PADDING token as the source value. | Applies token through React style prop on main; move to approved class/preset/CSS variable contract. LiveTracker is separately audited. | CHANGE REQUIRED. |
 | `app/(public)/page.tsx` | Uses HomeHero/HomeTrips shared feature components and CENTERED_PAGE_MAIN_STYLE preset. | Applies layout preset through React style prop on main; migrate to approved styling API. | CHANGE REQUIRED. |
@@ -765,8 +765,8 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | `app/(account)/layout.tsx` | Route shell currently applies ROUTE_CONTENT_PADDING through React style on main. | Replace presentation style prop with approved CSS class/preset/variable contract; preserve flex shell structure. | CHANGE REQUIRED. |
 | `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets; empty-state CTA consumes `BUTTON_STYLES.createTrip` and links to trip creation. | The Create Trip role is still a one-off preset rather than a complete reusable semantic action contract. CircularProgress margin, Alert width/maxWidth and heading alias remain local. | CHANGE REQUIRED. |
-| `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations in route. | Ensure EditPointPage is independently represented in ledger and all its consumers are audited; route itself has no separate skin. | NON-VISUAL ROUTE — child owns UI. |
-| `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout; no direct visual declarations. | Ensure EditTripLayout is independently audited; route itself has no separate skin. | NON-VISUAL ROUTE — child owns UI. |
+| `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations. | EditPointPage owns page/form/map/image composition through named presets. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
+| `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout. | No route-level visual declarations; EditTripLayout owns the complete editor composition. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
 | `app/(admin)/admin/failed-login-logs/page.tsx` | Route wrapper delegates to AdminFailedLogs; no direct visual declarations. | AdminFailedLogs owns table, selection, pagination and action UI and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/images/page.tsx` | Route wrapper delegates to AdminImages; no direct visual declarations. | AdminImages owns image table, preview dialog, upload and pagination controls and must be tracked independently. | NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/page.tsx` | Minimal semantic section wrapper. | Raw h1 has no explicit shared heading contract; determine whether parent Admin layout owns heading defaults or use a shared semantic heading role. | CHANGE REQUIRED. |
@@ -5286,7 +5286,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Counting rule going forward
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
-- Next execution: workstream 8 — Account route shells. Workstreams 1–7 have been closed in Sections 11.45–11.53. No build, tests, lint, CI or browser validation was run.
+- Next execution: workstream 9 — Public route shells/editorial pages. Workstreams 1–8 have been closed in Sections 11.45–11.54. No build, tests, lint, CI or browser validation was run.
 ## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
 
 ### Source changes
@@ -5480,3 +5480,15 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - One public route source changed; existing trip-details/image-gallery/layout preset owners and child components were reconciled without duplicating their contracts.
 - **Workstream 7 — Trip Details/gallery composition: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
+## 11.54 — Account route shells (2026-11-19)
+
+- Reconciled the complete `(account)` route group: shared layout, Profile, Favorites, My Trips, Trip Create, Trip Edit and Point Edit routes.
+- Added `ACCOUNT_PROFILE_PAGE_SX` and `ACCOUNT_PROFILE_PANEL_SX` to `src/styles/presets/layouts.ts`; the Profile route now consumes these named presets instead of owning two local sx objects.
+- `app/(account)/layout.tsx` already consumes `ACCOUNT_LAYOUT_MAIN_SX`; Favorites and My Trips already consume ACCOUNT_TRIPS_* contracts and shared TripList/action presets. No redundant changes were made.
+- Trip Create, Trip Edit and Point Edit are route-only wrappers; their visual responsibilities are already owned by TripForm, EditTripLayout and EditPointPage respectively. The route files contain no independent visual declarations.
+- RequireAuth, RequireTripOwner, metadata/noindex, server-side ID validation, notFound behavior, data fetching and route destinations were left unchanged.
+- **Workstream 8 — Account route shells: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Workstream 9 — Public route shells/editorial pages. Reuse the existing public route ownership map and preserve route-specific content/SEO behavior.
