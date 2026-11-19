@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { AppBar, Box, Pagination, PaginationItem } from '@mui/material';
 import type { PaginationRenderItemParams } from '@mui/material/Pagination';
 import { buildTripUrl } from '@/lib/tripUrl';
-import { UI_COLORS } from '@/constants/ui/colors';
+import { TRIP_DAY_PAGE_ITEM_SX } from '@/styles/presets/pagination';
 
 interface TripDaysNavProps {
   tripGroupId: number;
@@ -18,18 +18,6 @@ interface TripDaysNavProps {
    */
   onSelect?: (dayNumber: number) => void;
 }
-
-const PAGE_ITEM_SX = {
-  margin: '3px',
-  color: UI_COLORS.text.inverse,
-  '&.Mui-selected': {
-    backgroundColor: UI_COLORS.action.navigationSelectedBackground,
-    color: UI_COLORS.text.inverse,
-  },
-  '&:hover': {
-    backgroundColor: UI_COLORS.action.navigationHoverBackground,
-  },
-} as const;
 
 /**
  * The parent sticky social/navigation stack owns the shell bleed; this strip fills it.
@@ -76,7 +64,7 @@ export function TripDaysNav({ tripGroupId, days, selectedDay, onSelect }: TripDa
           }}
           renderItem={(item: PaginationRenderItemParams) =>
             item.type === 'page' ? (
-              <PaginationItem {...item} page={days[(item.page ?? 1) - 1]} sx={PAGE_ITEM_SX} />
+              <PaginationItem {...item} page={days[(item.page ?? 1) - 1]} sx={TRIP_DAY_PAGE_ITEM_SX} />
             ) : (
               <PaginationItem {...item} sx={PAGE_ITEM_SX} />
             )
