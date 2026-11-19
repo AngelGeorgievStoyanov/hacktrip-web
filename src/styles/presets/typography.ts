@@ -57,3 +57,12 @@ export const EXPANDABLE_TEXT_COLLAPSED_SX = {
   WebkitLineClamp: 3,
   overflow: 'hidden',
 } as const;
+
+
+/** Admin route h1: explicit semantic heading role matching the existing browser h1 scale. */
+export const ADMIN_PAGE_TITLE_SX = {
+  fontSize: '2em',
+  fontWeight: 700,
+  marginBlockStart: '0.67em',
+  marginBlockEnd: '0.67em',
+} as const;
