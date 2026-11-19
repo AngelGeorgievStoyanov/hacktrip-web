@@ -153,6 +153,7 @@ export const BUTTON_STYLES = {
   secondary,
   back: secondary,
   secondaryLightText,
+  addPoints: secondaryLightText,
   createTrip,
   tripAction,
   tripActionDanger,
