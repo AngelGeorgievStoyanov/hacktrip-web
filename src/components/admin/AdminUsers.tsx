@@ -21,7 +21,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
-import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
@@ -70,7 +69,7 @@ export function AdminUsers() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 2 }}>
+      <Typography variant="h4" sx={ADMIN_USERS_TITLE_SX}>
         Users
       </Typography>
       {error ? (
@@ -82,28 +81,16 @@ export function AdminUsers() {
       {queryError ? <Alert severity="error">{getGenericErrorMessage(queryError)}</Alert> : null}
       {data ? (
         <>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
-              gap: 2,
-            }}
-          >
+          <Box sx={ADMIN_USERS_GRID_SX}>
             {visibleUsers.map((u) => {
               const canManage = isAdmin || (isManager && u.role === 'user');
               return (
                 <Card
                   key={u.id}
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minWidth: 0,
-                    p: 1,
-                    '& .MuiTypography-root': { overflowWrap: 'anywhere' },
-                  }}
+                  sx={ADMIN_USER_CARD_SX}
                 >
                   <CardContent
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 1.25, flexGrow: 1 }}
+                    sx={ADMIN_USER_CARD_CONTENT_SX}
                   >
                     <Stack direction="row" spacing={1.5} alignItems="center">
                       <Avatar
@@ -135,7 +122,7 @@ export function AdminUsers() {
                           <PersonOutlineRoundedIcon fontSize="large" />
                         )}
                       </Avatar>
-                      <Box sx={{ minWidth: 0 }}>
+                      <Box sx={ADMIN_USER_CARD_IDENTITY_SX}>
                         <Typography variant="h6">
                           {u.firstName} {u.lastName}
                         </Typography>
@@ -168,7 +155,7 @@ export function AdminUsers() {
                     </Typography>
                   </CardContent>
                   <Divider />
-                  <Stack direction="row" spacing={1} justifyContent="center" sx={{ p: 1 }}>
+                  <Stack direction="row" spacing={1} justifyContent="center" sx={ADMIN_USER_CARD_ACTIONS_SX}>
                     {canManage ? (
                       <Button component={Link} href={`/admin/users/${u.id}`} variant="contained" sx={BUTTON_STYLES.primary}>
                         Edit user
@@ -206,7 +193,7 @@ export function AdminUsers() {
         onClose={() => setPreview(null)}
       />
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
-        <Box sx={{ ...ADMIN_PAGINATION_SX, mt: 2 }}>
+        <Box sx={ADMIN_USERS_PAGINATION_SX}>
           <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
             Previous
           </Button>
