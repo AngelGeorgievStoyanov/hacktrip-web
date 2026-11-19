@@ -7171,3 +7171,32 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 point entry: `src/components/points/PointActions.tsx`. Verify all call sites and disabled/pending states for shared Like/Favorite/Report controls, then `PointList.tsx` responsive composition.
+
+
+## 11.128 — Remove remaining inline sx from shared social status and LikeButton (2026-11-19)
+
+### Scope and findings
+- Resumed the original inline `sx` / React `style` remediation list, not the semantic action-role workstream.
+- Re-scanned current source for the next social/common component batch. `PointActions.tsx`, `TripList.tsx`, `PointList.tsx`, `TripCard.tsx`, `TripActions.tsx`, `TripForm.tsx`, `EditTripLayout.tsx` and `PointForm.tsx` contain no inline `sx={{...}}` or React `style=` matches.
+- Found two actual inline sx violations:
+  - `SocialConfigStatus.tsx`: compact loading wrapper.
+  - `LikeButton.tsx`: dynamic animation on the unliked icon.
+
+### Source changes
+- Added `SOCIAL_CONFIG_STATUS_WRAPPER_SX` to the existing shared social preset owner and migrated the loading wrapper.
+- Reused the already-existing `getSocialLikeAnimationSx` helper for the unliked icon, matching the liked icon and avoiding a second local object.
+- Updated the Section 10.1 SocialConfigStatus row where present.
+
+### Preserved
+- Exact inline-flex wrapper, 0.5 padding, loading indicator size and role/accessible label.
+- Dynamic animation string, liked/unliked icon behavior, mutation and animation hook lifecycle.
+- No API, auth, route, data or business logic changed.
+
+### Result
+- **3 source files changed** plus the Section 10.1 ledger reconciliation.
+- The two confirmed inline sx occurrences in this batch are **REMOVED**.
+- No React `style` prop was found in these two files.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue the same exhaustive current-branch search for remaining `sx={{...}}`, callback-built local sx objects and React `style=` occurrences. Keep the approved Satori/ImageResponse renderer exception isolated to `src/lib/images/renderTripOgImage.tsx`; do not treat Google Maps SDK configuration such as `mapContainerStyle` as a React style prop.
