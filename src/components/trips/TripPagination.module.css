@@ -28,7 +28,7 @@
 }
 
 .link:hover {
-  background-color: var(--ht-color-action-hover);
+  color: var(--ht-color-primary-hover);
   text-decoration: underline;
 }
 
