@@ -740,7 +740,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/NotificationProvider.tsx` | Snackbar/Alert inherit MUI severity and variant states; Alert width uses NOTIFICATION_ALERT_SX. | No custom surface skin; placement/duration/close behavior remains notification-constant/provider owned. | MIGRATED — notification presentation contract centralized. |
 | `src/components/common/PasswordField.tsx` | Shared TextField owner inherits `MuiTextField` outlined/medium defaults; reveal/hide IconButton consumes `ICON_ACTION_STYLES.passwordVisibility`; forwards registration, error/helperText, disabled, maxLength and autocomplete. | MUI owns the base input/label/helper/focus/error/disabled visuals; verify mapped consumers and reveal/hide keyboard/focus behavior. | PARTIAL — icon-action role and MUI baseline verified; consumer/state parity remains open. |
 | `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_SX typography preset and MUI typography; unique wrapper/heading-group geometry is owned by `WelcomeHeading.module.css`. | Inline layout sx was moved to the CSS Module while preserving flex alignment, 25px horizontal padding and 16px bottom margin. Touch handling, responsive heading split and scramble behavior remain unchanged. | MIGRATED — unique layout is CSS Module-owned; typography remains preset-owned. |
-| `src/components/comments/CommentsSection.tsx` | Uses shared comments panel/card and social action presets; MUI Card surface is theme-backed. | React style prop on list, local comment/card spacing and many IconButtons/TextFields remain; map all edit/delete/reply/report states. | CHANGE REQUIRED. |
+| `src/components/comments/CommentsSection.tsx` | Comment panel/list/card/author/body/timestamp/edit/create/action-row/hint presentation uses named `COMMENT_*` presets; social actions delegate to shared Like/Favorite/Report/Replies components; edit/save/cancel/submit/disclosure/delete IconButtons use semantic `ICON_ACTION_STYLES` roles. | Verify all permission/config combinations, field error/focus/disabled states, mutation pending/confirmation behavior and responsive comment/reply composition; no React `style` prop or component-local visual object remains. | PARTIAL — action and layout contracts centralized; state/caller parity remains open. |
 | `src/components/comments/CommentsToggle.tsx` | Uses MUI IconButton for comments disclosure. | React style prop on wrapper and local heading margin remain; disclosure state should use shared contract. | CHANGE REQUIRED. |
 | `src/components/comments/RepliesSection.tsx` | Uses shared social action preset and MUI TextField. | Multiple raw IconButtons and local border/spacing sx remain; map reply/edit/delete/cancel/submit roles. | CHANGE REQUIRED. |
 | `src/components/social/EngagementBar.tsx` | Uses shared social action composition. | Responsive local sx and raw IconButton remain; verify all action states and consumers. | CHANGE REQUIRED. |
@@ -6606,3 +6606,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next common component in Section 10.1: `src/components/comments/CommentsSection.tsx`. Inspect its React style transport, edit/delete/reply/report icon-action roles and field states before making changes.
+
+
+## 11.103 — CommentsSection semantic icon-action roles (2026-11-19)
+
+### Scope and preflight
+- Continued with the next common interaction component in Section 10.1.
+- Re-opened `CommentsSection.tsx` and `comments.ts`; confirmed the panel/list/card/author/body/timestamp/edit/create/action-row/hint presentation already consumes named presets and no React `style` prop remains.
+- The remaining direct action issue was that several semantically different IconButtons all consumed the generic icon-action base role.
+
+### Source changes
+- Added semantic `ICON_ACTION_STYLES.edit`, `save`, `cancel`, `disclosure`, `submit` and `delete` aliases while preserving the existing base/danger appearances.
+- Migrated Save comment, Cancel edit, Edit comment, Show/Hide replies, Post comment, Add/Close comment and Delete comment to the matching semantic roles.
+- Reconciled the Section 10.1 CommentsSection row.
+
+### Preserved
+- Comment query keys, viewer cache separation, permission/social-config gating, edit/create/delete mutations, confirmation, invalidation, form focus, reply toggling, count badges, notifications and pending/disabled states.
+- No API, DTO, validation, authorization, route or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Comment icon-action semantics: **SOURCE MIGRATED**.
+- Permission/config, field, mutation and responsive state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 comments entry: `src/components/comments/CommentsToggle.tsx`. Verify its React style transport and disclosure action role before changing it.
