@@ -19,6 +19,7 @@ import { tripApi, type TripEditInput } from '@/api/trips';
 import { AppImage } from '@/components/images/AppImage';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
 import ImageUploadField from '@/components/images/ImageUploadField';
+import { getIMAGE_UPLOAD_SUBMITTING_WRAPPER_SX } from '@/styles/presets/image-upload';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { TripSelectField } from './TripSelectField';
 import { SELECT_TYPE_KEYS } from '@/constants/config';
@@ -452,9 +453,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               helperText={errors.destination?.message}
             />
 
-            <Box
-              sx={{ pointerEvents: submitting ? 'none' : 'auto', opacity: submitting ? 0.7 : 1 }}
-            >
+            <Box sx={getIMAGE_UPLOAD_SUBMITTING_WRAPPER_SX(submitting)}>
               <ImageUploadField
                 files={newImages}
                 setFiles={setNewImages}
