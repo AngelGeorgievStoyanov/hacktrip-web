@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { Typography } from '@mui/material';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
-import { HOME_INTRO_SX } from '@/styles/presets/typography';
+import { HOME_HERO_INTRO_SX } from '@/styles/presets/typography';
 
 interface HomeHeroProps {
   /** Server-rendered trips list and share controls. */
@@ -14,7 +14,7 @@ interface HomeHeroProps {
 export function HomeHero({ children }: HomeHeroProps) {
   return (
     <WelcomeHeading>
-      <Typography component="p" variant="inherit" sx={[HOME_INTRO_SX, { maxWidth: 850 }]}>
+      <Typography component="p" variant="inherit" sx={HOME_HERO_INTRO_SX}>
         Discover places worth visiting, explore photos and experiences shared by others, and share
         your own discoveries with the HackTrip community.
       </Typography>
