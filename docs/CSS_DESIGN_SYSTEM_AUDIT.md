@@ -367,16 +367,16 @@ Confirmed local declarations:
 | `src/components/points/PointList.tsx` | List layout uses POINT_LIST_SX; empty-state typography uses POINT_LIST_EMPTY_SX; each item delegates to PointCard. | Caller and empty state verified; no component-local visual object remains in this file. | MIGRATED — layout and typography are preset-owned. |
 | `src/components/trips/TripActions.tsx` | Add/Edit actions use BUTTON_STYLES.tripAction; destructive actions use tripActionDanger. | display: contents wrapper consumes TRIP_ACTIONS_CONTENT_SX. Ownership gating, navigation/management sections, pending/disabled states, confirmation and mutation outcomes verified. | MIGRATED — action roles/layout are shared-preset owned. |
 | `src/components/trips/TripCard.tsx` | Card/content/image/pagination geometry is owned by named presets; the MUI Card surface inherits the shared theme. | Fixed frame uses TRIP_CARD_CONTAINER_SX; Details uses BUTTON_STYLES.primaryWide; Next/Back use MUI's shared Button defaults and preserve disabled boundary states. Shared TripList is the only direct caller. | MIGRATED — card geometry, actions and states are covered by presets/theme; no duplicate action preset needed. |
-| `src/components/trips/TripDetails.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`. | Card geometry/content styles and direct icon/action controls remain local; map caller passes marker title only to SDK InfoWindow, not a custom app panel. | PARTIAL — base Card surface centralized only. |
-| `src/components/trips/TripDetailsView.tsx` | CSS Module layout + local overlay `sx` | Preserve layout; centralize overlay |
+| `src/components/trips/TripDetails.tsx` | MUI Card inherits shared surface; social and trip actions delegate to shared components. | Card/header/metadata/description/actions/social-row geometry now use `trip-details.ts`; React style props removed; currency/expand IconButtons use shared focus contract. | MIGRATED — trip information panel presentation centralized. |
+| `src/components/trips/TripDetailsView.tsx` | CSS Module owns the unique responsive page grid/row composition; child features own their content. | Sticky day-navigation shell uses `getTripDetailsStickyHeaderSx`; `TripDetailsView.module.css` remains responsible for unique page grid and container-query layout. | MIGRATED — shell geometry centralized without moving unique page layout out of its CSS Module. |
 | `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
 | `src/components/trips/TripForm.tsx` | Trip create flow uses TripSelectField, ImageUploadField, TripLocationPicker, day-number field and stepper presets. | Form/card layout, location frame, heading, day row, price/currency row, action row and button geometry now consume named TRIP_FORM_* presets. | PARTIAL — local layout centralized; remaining review is field/error state consistency and shared field adoption. |
 | `src/components/trips/EditTripLayout.tsx` | Map picker, image upload, trip selects, day stepper, button roles and image placeholder are shared components/presets. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile/delete control and placeholder frame now consume EDIT_TRIP_* presets. Day input alignment moved from React style to preset sx. | PARTIAL — route-specific geometry is centralized; remaining review is field/error state consistency and shared field adoption. |
 | `src/components/trips/TripDaysNav.tsx` | Local page-item colors/spacing | Use shared day-navigation role/states |
 | `src/components/trips/TripMapSection.tsx` | Renders MUI Card with theme-owned surface; map and SDK InfoWindow are delegated to GoogleMapView. | Card frame and MobileStepper container use TRIP_MAP_SECTION_CARD_SX and TRIP_MAP_SECTION_STEPPER_SX. Back/Next controls inherit MUI Button defaults; point selection/focus and keyboard navigation remain feature-owned. | MIGRATED — feature composition uses named map-control presets and shared MUI defaults. |
-| `src/components/trips/PointSection.tsx` | Renders MUI Card and inherits `MuiCard` → `getSurfaceStyles`. | `POINT_CARD_STYLE` still combines local card layout/content and visual responsibilities; image sizing and action controls need shared contracts. | PARTIAL — base Card surface centralized only. |
+| `src/components/trips/PointSection.tsx` | MUI Card inherits shared surface; ImageGallery, placeholder, PointActions, CommentsToggle and ExpandableText are shared components. | Card/content/empty-image/description/title/note/action-row geometry now use named `trip-details.ts` and `image-gallery.ts` presets; description wrapper no longer uses React style. | MIGRATED — point detail presentation centralized while preserving its image-frame parent geometry. |
 | `src/components/trips/PointsSection.tsx` | No style matches in initial scan | Inspect full file/imports before marking VERIFIED |
-| `src/components/trips/DayImagesGallery.tsx` | Local image-wrapper geometry | Use named image-frame preset |
+| `src/components/trips/DayImagesGallery.tsx` | Delegates populated days to ImageGallery; empty days render SocialObjectPlaceholder. | Empty-day parent frame uses DAY_IMAGE_PLACEHOLDER_FRAME_SX; gallery frame/controls are owned by ImageGallery and its presets. | MIGRATED — no component-local presentation remains; parent placeholder geometry is preserved. |
 | `src/components/trips/TripList.tsx` | Renders `TripCard`; list references `cardListStyle`, empty-state heading uses `headingTextStyle`. | Both presentation presets are applied through prohibited React `style`; empty-state typography and list composition need migration to approved sx/className/token consumers. | CHANGE REQUIRED — React style violations. |
 | `src/components/trips/TripPagination.tsx` | Crawlable `<nav>` with real Next links and `aria-current`; structural classes are in `TripPagination.module.css`. | No semantic pagination visual preset for link/active/disabled states; class module owns only list layout. | CHANGE REQUIRED — role styling missing. |
 | `src/components/trips/TripSelectField.tsx` | TextField/Autocomplete/MenuItem inherit MUI theme defaults; component owns no local visual object. | Searchable and fallback fields retain MUI shared component contracts. | MIGRATED — no local visual migration required. |
@@ -5286,7 +5286,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Counting rule going forward
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
-- Next execution: workstream 7 — Trip Details/gallery composition. Workstreams 1–6 have been closed in Sections 11.45–11.52. No build, tests, lint, CI or browser validation was run.
+- Next execution: workstream 8 — Account route shells. Workstreams 1–7 have been closed in Sections 11.45–11.53. No build, tests, lint, CI or browser validation was run.
 ## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
 
 ### Source changes
@@ -5435,3 +5435,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Workstream 7 — Trip Details/gallery composition. Continue from the existing Section 10.1 and Sections 11.12/11.34 ownership maps; do not redo image gallery or image component migrations already closed in 11.34.
+## 11.53 — Trip Details and gallery composition (2026-11-19)
+
+### Source changes
+- Added `src/styles/presets/trip-details.ts` for TripDetails card/header/metadata/description/action/social layout, sticky day-navigation shell and PointSection composition.
+- Migrated `TripDetails.tsx`: removed `React.CSSProperties` aliases and all React `style` props; card, metadata, description, action column and social row use named presets. Currency-info and expand/collapse IconButtons now use the shared focus-visible icon-action contract.
+- Migrated `TripDetailsView.tsx` sticky shell to `getTripDetailsStickyHeaderSx`. Its unique responsive page grid, row composition and container-query behavior remain in `TripDetailsView.module.css`.
+- Migrated `PointSection.tsx` card/content/title/note/description/action-row and empty-image frame to named presets. The point image frame remains parent-owned and distinct from the placeholder's internal rendering.
+- Reconciled `DayImagesGallery.tsx`: it already used `DAY_IMAGE_PLACEHOLDER_FRAME_SX`; populated gallery rendering remains owned by ImageGallery. No redundant source change.
+
+### Preserved
+- Day selection and URL state, trip metadata, price/currency tooltip, description expand/collapse, favorite eligibility, TripActions navigation/management, Back destination, social/comment state and action ordering.
+- Point selection/comment target, map-marker notice, ImageGallery behavior, placeholder parent dimensions, PointActions and comment toggle behavior.
+- CSS Module page grid and responsive container-query composition remain intact; no gallery/lightbox internals were moved or reimplemented.
+- No API, DTO, validation, auth, routing, data or business logic changed.
+
+### Result
+- Added one shared preset owner; updated three source components and reconciled DayImagesGallery as already migrated.
+- **Workstream 7 — Trip Details/gallery composition: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Workstream 8 — Account route shells. Inspect route layout wrappers and shared account page/loading/error owners; do not redo ProfileForm/auth form migration.
