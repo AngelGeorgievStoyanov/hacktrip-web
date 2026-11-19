@@ -741,7 +741,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/PasswordField.tsx` | Shared TextField owner inherits `MuiTextField` outlined/medium defaults; reveal/hide IconButton consumes `ICON_ACTION_STYLES.passwordVisibility`; forwards registration, error/helperText, disabled, maxLength and autocomplete. | MUI owns the base input/label/helper/focus/error/disabled visuals; verify mapped consumers and reveal/hide keyboard/focus behavior. | PARTIAL — icon-action role and MUI baseline verified; consumer/state parity remains open. |
 | `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_SX typography preset and MUI typography; unique wrapper/heading-group geometry is owned by `WelcomeHeading.module.css`. | Inline layout sx was moved to the CSS Module while preserving flex alignment, 25px horizontal padding and 16px bottom margin. Touch handling, responsive heading split and scramble behavior remain unchanged. | MIGRATED — unique layout is CSS Module-owned; typography remains preset-owned. |
 | `src/components/comments/CommentsSection.tsx` | Comment panel/list/card/author/body/timestamp/edit/create/action-row/hint presentation uses named `COMMENT_*` presets; social actions delegate to shared Like/Favorite/Report/Replies components; edit/save/cancel/submit/disclosure/delete IconButtons use semantic `ICON_ACTION_STYLES` roles. | Verify all permission/config combinations, field error/focus/disabled states, mutation pending/confirmation behavior and responsive comment/reply composition; no React `style` prop or component-local visual object remains. | PARTIAL — action and layout contracts centralized; state/caller parity remains open. |
-| `src/components/comments/CommentsToggle.tsx` | Uses MUI IconButton for comments disclosure. | React style prop on wrapper and local heading margin remain; disclosure state should use shared contract. | CHANGE REQUIRED. |
+| `src/components/comments/CommentsToggle.tsx` | Wrapper and empty-label presentation use `COMMENTS_TOGGLE_ROW_SX` / `COMMENTS_TOGGLE_EMPTY_LABEL_SX`; show/hide/add action consumes `ICON_ACTION_STYLES.disclosure`. | No React `style` prop or local heading margin remains; verify count/open/empty states and keyboard/focus behavior through parent callers. | PARTIAL — disclosure role and layout presets centralized; caller/state parity remains open. |
 | `src/components/comments/RepliesSection.tsx` | Uses shared social action preset and MUI TextField. | Multiple raw IconButtons and local border/spacing sx remain; map reply/edit/delete/cancel/submit roles. | CHANGE REQUIRED. |
 | `src/components/social/EngagementBar.tsx` | Uses shared social action composition. | Responsive local sx and raw IconButton remain; verify all action states and consumers. | CHANGE REQUIRED. |
 | `src/components/social/TripGroupSocialActions.tsx` | Uses shared like animation and social action components in part. | Multiple raw IconButtons, local gaps and React style error spans remain; centralize icon actions and state feedback without merging distinct semantics. | CHANGE REQUIRED. |
@@ -6632,3 +6632,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 comments entry: `src/components/comments/CommentsToggle.tsx`. Verify its React style transport and disclosure action role before changing it.
+
+
+## 11.104 — CommentsToggle disclosure role and ledger reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 comments entry.
+- Re-opened `CommentsToggle.tsx` and confirmed wrapper/empty-label layout already consumes named comment presets; the old React style-prop/local-margin ledger note was stale.
+- The only remaining generic action role was the Show/Hide/Add comment IconButton.
+
+### Source changes
+- Migrated the toggle to `ICON_ACTION_STYLES.disclosure`, the semantic alias introduced in Section 11.103.
+- Reconciled the Section 10.1 CommentsToggle row.
+
+### Preserved
+- Count badge, empty label, open/closed icons, tooltip/aria labels, `aria-expanded`, parent-owned toggle callback and visual appearance.
+- No API, comment behavior or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- CommentsToggle disclosure presentation: **SOURCE MIGRATED**.
+- Count/open/empty and keyboard/focus parity through parent callers remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 comments entry: `src/components/comments/RepliesSection.tsx`. Map reply/edit/delete/cancel/submit icon roles and remaining local style declarations.
