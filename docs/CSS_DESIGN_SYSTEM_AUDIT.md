@@ -7727,3 +7727,54 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Remaining work is concentrated in the full field-family matrix, button/icon-action semantic matrix, page/component responsive states and caller parity; no source style should be changed by visual guesswork.
 - Next: inspect every current BUTTON_STYLES and ICON_ACTION_STYLES consumer, classify role equivalence vs accidental aliasing, then map direct MUI button props and icon-button states to the semantic role owner.
 - No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.140 — Button and icon-action semantic contract: definition-level audit (2026-11-19)
+
+### Shared MUI Button role map
+
+| Semantic role family | Current preset aliases | Actual shared contract | Remaining decision |
+|---|---|---|---|
+| Primary | primary, submit, create, add, edit, save, upload, removeSelection, confirm | Same primary hover fragment; default contained/text appearance still depends on the caller's MUI variant and palette. | Decide whether these are genuinely equivalent semantic roles or need separate intent/state definitions; preserve current contained/text variants and current hover value until all consumers are mapped. |
+| Primary wide/navigation | primaryWide, navigationAction | Primary hover plus the shared CSS-variable button padding. | Verify navigation action width/padding against every caller; do not apply wide padding to ordinary submit actions. |
+| Secondary | secondary, navigationSecondary, cancel, removeMarker, disclosure, back | Same custom secondary background/text and hover text treatment. | Confirm contrast and intent for cancel/back/disclosure/remove-marker; role names may be semantically distinct despite identical current appearance. |
+| Secondary light text | secondaryLightText, addPoints | Secondary treatment with inverse text on hover. | Verify all callers and contrast in each surface/background context. |
+| Trip action | tripAction, tripAdd, tripEdit, tripManage | Primary hover plus shared full-width action geometry. | These are currently visual aliases; keep action intent distinguishable if future permissions/pending states need different behavior. |
+| Trip destructive action | tripActionDanger, tripDelete | Danger hover plus shared full-width action geometry. | Confirm destructive confirmation, disabled and focus states across every trip/day action caller. |
+| Destructive | danger, delete | Same danger hover fragment. | MUI contained/text defaults and direct color props still participate; map all destructive button variants before changing the owner. |
+| Destructive text | dangerText, deleteText | Same error text color only. | Verify text-button and contained-button callers do not accidentally combine incompatible color/variant defaults. |
+| Day number | dayIncrement, dayDecrement | Same 40px width/min-width, compact height and primary-dark hover. | Verify disabled boundary states and selected-day role separately from increment/decrement intent. |
+| Navigation spacing | navigation | Margin/padding/hit-area geometry only; no semantic color/variant. | Keep structural spacing separate from action tone. |
+
+### Shared icon-action role map
+
+| Role family | Current preset aliases | Actual contract | Remaining decision |
+|---|---|---|---|
+| Base/neutral | base, removeSelection, passwordVisibility, reorder, like, favorite, share, edit, save, cancel, disclosure, submit | Circular radius and visible keyboard focus outline only. | Confirm the MUI IconButton default color is appropriate for every background and role; add semantic tone only where callers need it. |
+| Primary | primary, upload | Base focus/radius plus primary color. | Verify all upload/primary icon contexts and disabled states. |
+| Destructive | delete, danger | Base focus/radius plus error color. | Verify hover/disabled/confirmation behavior for all destructive icon actions. |
+| Report | report | Base focus/radius plus danger hover color. | Confirm active/reported state and hover contrast; direct component color props also participate. |
+| Image control | imageControl | Base focus/radius plus inverse text and translucent image-control background/hover. | Verify lightbox/profile fullscreen overlays and contrast over variable imagery. |
+
+### Direct MUI props and defaults that still participate
+
+The shared preset map is not the only visual owner. Current source examples include:
+- AdminNavigation: active/inactive Button variant and color are selected directly from pathname state.
+- LikeButton/FavoriteButton/ReportButton and TripGroupSocialActions: active/inactive icon color is selected directly from social state.
+- AdminReports: error color is passed directly while the delete text preset also supplies its color.
+- ReportButton dialog Cancel/Submit actions and LiveTracker Reset/Follow actions use MUI defaults rather than named semantic button roles.
+- TripCard and TripDaysNav use MUI Pagination/MobileStepper native defaults for portions of their controls; their geometry/state presets are separate.
+- MUI Button theme override currently centralizes typography and radius only. It does not define the app's complete semantic action palette, hover, focus, disabled or role behavior.
+
+### Confirmed design-system gaps
+
+1. **Primary hover token inconsistency remains:** UI_COLORS.brand.primary is blue while UI_COLORS.brand.primaryHover is green. The current presets deliberately consume the latter; do not silently change it to a blue shade during centralization.
+2. **Alias names are broader than their contracts:** several semantic names share the same object identity. This is not automatically a defect, but the role equivalence must be justified by the full consumer inventory and expected states.
+3. **Icon neutral roles rely on MUI defaults:** many named icon roles intentionally provide focus/radius only. Record their effective foreground/background and disabled state per caller before claiming a complete icon-action system.
+4. **Action state coverage is incomplete:** the preset definitions do not establish a unified hover/focus/active/disabled/loading contract for all MUI and native button families.
+
+### Result and next
+- The definition-level semantic map is documented; no role aliases were renamed or changed.
+- Next: enumerate every source consumer of BUTTON_STYLES and ICON_ACTION_STYLES, map the caller's Button/IconButton variant/color/size/disabled/pending props and background context, and classify each alias as intentional or accidental.
+- Then perform the same family-level mapping for TextField, Select, Autocomplete, InputBase, Checkbox, Radio, Switch and native inputs.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
