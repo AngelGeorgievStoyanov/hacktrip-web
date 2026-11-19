@@ -12,4 +12,9 @@ export const UI_SIZES = {
   wideButtonPaddingY: 10,
   wideButtonPaddingX: 50,
   footerHorizontalPadding: 20,
+  paginationItemMinSize: 32,
+  paginationItemPaddingY: 6,
+  paginationItemPaddingX: 10,
+  paginationFocusOutlineWidth: 2,
+  paginationFocusOutlineOffset: 2,
 } as const;
