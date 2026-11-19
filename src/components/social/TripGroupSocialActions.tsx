@@ -16,7 +16,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { socialErrorTextStyle } from '@/styles/presets/social';
+import { SOCIAL_ERROR_TEXT_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
 import { isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
@@ -105,7 +105,7 @@ export function TripGroupSocialActions({
   }
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25, flexWrap: 'wrap' }}>
+    <Box sx={TRIP_GROUP_SOCIAL_ACTIONS_SX}>
       <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
       {isAuthenticated && canLike ? (
         <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
@@ -131,7 +131,7 @@ export function TripGroupSocialActions({
                 )}
               </Badge>
             </IconButton>
-          </span>
+          </Box>
         </Tooltip>
       ) : null}
       {isAuthenticated && canFavorite ? (
@@ -202,7 +202,7 @@ export function TripGroupSocialActions({
         </IconButton>
       </Tooltip>
       {isAuthenticated && likeMutation.error ? (
-        <span role="alert" style={socialErrorTextStyle}>
+        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
           {getGenericErrorMessage(likeMutation.error)}
         </span>
       ) : null}
