@@ -164,3 +164,18 @@ export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
 export const TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX = {
   ...BUTTON_STYLES.removeMarker, minHeight: 56, whiteSpace: 'nowrap',
 } as const;
+
+
+/** Compose the shared root frame with the selected feature layout. */
+export const getAddressAutocompleteRootSx = (variant: keyof typeof ADDRESS_AUTOCOMPLETE_VARIANTS) => [
+  ADDRESS_AUTOCOMPLETE_ROOT_SX,
+  ADDRESS_AUTOCOMPLETE_VARIANTS[variant].container,
+] as const;
+
+/** Compose the shared search action with the selected feature layout. */
+export const getAddressAutocompleteSearchButtonSx = (
+  variant: keyof typeof ADDRESS_AUTOCOMPLETE_VARIANTS,
+) => [
+  ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX,
+  ADDRESS_AUTOCOMPLETE_VARIANTS[variant].button,
+] as const;
