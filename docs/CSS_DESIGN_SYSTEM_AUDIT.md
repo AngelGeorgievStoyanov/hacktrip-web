@@ -702,7 +702,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 |---|---|---|---|
 | `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.edit`; Delete Point uses `BUTTON_STYLES.danger`; move-up/down IconButtons consume `ICON_ACTION_STYLES.base`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Point-specific move visibility/padding, card geometry/padding and action-row layout remain in the card preset owner; description wrapping and caller/state verification remain open. | PARTIAL — action roles and icon base are centralized; card layout and full state/caller verification remain. |
 | `src/components/points/PointForm.tsx` | Uses semantic `BUTTON_STYLES.create`, `add` and `edit` roles; Find in Map consumes `POINT_FORM_FIND_MAP_BUTTON_SX`; shared `BackButton` owns Back appearance. | Point-specific action width/responsive sizing remains in `POINT_FORM_ACTION_BUTTON_SX`; Back navigation and form state remain component-owned. Remaining field, upload, icon and disabled/loading contracts still require review. | PARTIAL — action roles and map-search presentation centralized; form/field and state verification remain open. |
-| `src/components/points/PointActions.tsx` | Social actions are delegated to shared Like/Favorite/Report components and shared status component. | Wrapper layout `sx` is local; verify the nested social controls' visual contract and all callers. | PARTIAL — not fully fixed. |
+| `src/components/points/PointActions.tsx` | Wrapper consumes `POINT_SOCIAL_ACTIONS_SX`; LikeButton, FavoriteButton and ReportButton own their interactions and consume shared `ICON_ACTION_STYLES`; SocialConfigStatus owns its feedback presentation. | Verify all rendered call sites and responsive parity with other social-action groups; no PointActions-local visual declaration remains. | PARTIAL — source presentation is centralized; exhaustive caller/route verification remains open. |
 | `src/components/points/PointList.tsx` | Delegates each item to the shared `PointCard`. | List layout remains local; verify responsive/layout requirements and empty state typography. | PARTIAL — not fully fixed. |
 | `src/components/trips/TripCard.tsx` | Details navigation uses `BUTTON_STYLES.primaryWide`; card surface uses `MuiCard`; content consumes shared card presets. | Details is navigation but uses generic primary-wide action styling. Stepper Buttons remain direct MUI defaults; substantial geometry/content sx and responsive/caller verification remain. | PARTIAL — not fully fixed. |
 | `src/components/trips/TripActions.tsx` | Three non-destructive actions (Add Next Day Trip, Add/Edit Points, Edit Day) use `BUTTON_STYLES.tripAction`; Delete Day and Delete Trip use `tripActionDanger`. | Edit/Add semantics are grouped under one trip-specific appearance; destructive actions share one role. Verify parity with point/admin action roles and loading/disabled/focus states. | PARTIAL — not fully fixed. |
@@ -5767,3 +5767,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 point entry: `src/components/points/PointActions.tsx`. Verify wrapper geometry and all delegated social action contracts before making changes.
+
+
+## 11.65 — PointActions source verification and stale-ledger correction (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 point entry after PointForm.
+- Inspected `PointActions.tsx`, `social.ts`, `LikeButton.tsx`, `FavoriteButton.tsx` and `ReportButton.tsx` on `feature/frontend-modernization`.
+
+### Findings
+- `PointActions` already consumes the named `POINT_SOCIAL_ACTIONS_SX` preset; the ledger's statement that its wrapper layout was local was stale.
+- Like and Favorite consume `ICON_ACTION_STYLES.base`; Report consumes `ICON_ACTION_STYLES.report`.
+- The shared controls own their mutation/pending/error/pressed states. `SocialConfigStatus` remains the shared configuration-feedback owner.
+- No source change was necessary in this batch; adding another PointActions-specific style preset would duplicate existing ownership.
+
+### Result and status
+- Section 10.1 was corrected to reflect current source ownership.
+- PointActions wrapper and nested social-control presentation: **SHARED CONTRACTS VERIFIED**.
+- Full caller/route and responsive parity verification remains open; therefore the file remains **PARTIAL**, not declared fully migrated.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 point entry: `src/components/points/PointList.tsx`. Verify list geometry, empty-state typography and all rendered callers before deciding whether any migration is required.
