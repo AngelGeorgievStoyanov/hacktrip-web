@@ -22,6 +22,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
@@ -206,13 +207,14 @@ export function AdminUsers() {
       />
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
         <Box sx={{ ...ADMIN_PAGINATION_SX, mt: 2 }}>
-          <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+          <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
             Previous
           </Button>
           <Typography>
             Page {page} of {pagination.totalPages}
           </Typography>
           <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
             disabled={page >= (pagination.totalPages ?? 1)}
             onClick={() => setPage((p) => p + 1)}
           >
