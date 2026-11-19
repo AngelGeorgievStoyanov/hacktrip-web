@@ -23,6 +23,7 @@ import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import type { RouteNotFoundLogDto } from '@/types/admin';
+import { ADMIN_DIAGNOSTIC_FIELD_SX, ADMIN_DIAGNOSTIC_LABEL_SX, ADMIN_DIAGNOSTIC_PRE_SX, ADMIN_ROUTE_DETAILS_SX, getAdminRouteExpandedCellSx } from '@/styles/presets/admin';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -42,24 +43,13 @@ function formatDiagnosticValue(value: string | null): string {
 
 function DiagnosticField({ label, value }: { label: string; value: string | null }) {
   return (
-    <Box sx={{ minWidth: 0 }}>
-      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+    <Box sx={ADMIN_DIAGNOSTIC_FIELD_SX}>
+      <Typography variant="subtitle2" sx={ADMIN_DIAGNOSTIC_LABEL_SX}>
         {label}
       </Typography>
       <Box
         component="pre"
-        sx={{
-          m: 0,
-          p: 1,
-          maxWidth: '100%',
-          overflow: 'auto',
-          whiteSpace: 'pre-wrap',
-          overflowWrap: 'anywhere',
-          borderRadius: 1,
-          bgcolor: 'action.hover',
-          fontFamily: 'monospace',
-          fontSize: '0.8rem',
-        }}
+        sx={ADMIN_DIAGNOSTIC_PRE_SX}
       >
         {formatDiagnosticValue(value)}
       </Box>
@@ -69,7 +59,7 @@ function DiagnosticField({ label, value }: { label: string; value: string | null
 
 function RouteNotFoundLogDetails({ item }: { item: RouteNotFoundLogDto }) {
   return (
-    <Box sx={{ display: 'grid', gap: 2, p: 2 }}>
+    <Box sx={ADMIN_ROUTE_DETAILS_SX}>
       <DiagnosticField label="Request path" value={item.reqUrl} />
       <DiagnosticField label="Headers" value={item.reqHeaders} />
       <DiagnosticField label="Query" value={item.reqQuery} />
@@ -138,7 +128,7 @@ export function AdminRouteNotFoundLogs() {
                     <TableRow>
                       <TableCell
                         colSpan={6}
-                        sx={{ p: 0, borderBottom: isExpanded ? undefined : 0 }}
+                        sx={getAdminRouteExpandedCellSx(isExpanded)}
                       >
                         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                           <Box id={`route-not-found-details-${item.id}`}>
