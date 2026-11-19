@@ -725,7 +725,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/RegisterForm.tsx` | Register uses `create`; Login/Resend links use `navigationSecondary`; form/title/action row use auth presets; PasswordField, PasswordRequirements and Captcha are shared; accepted-terms Checkbox inherits MUI defaults. | Verify Checkbox locked/checked/focus states, field errors/helpers, CAPTCHA lifecycle and submit/disabled parity across consumers. | PARTIAL — action roles and MUI defaults verified; field/checkbox/CAPTCHA state parity remains open. |
 | `src/components/auth/ProfileForm.tsx` | Edit Profile uses `BUTTON_STYLES.edit`; Change Password section toggle uses `BUTTON_STYLES.disclosure`; Back uses shared `BackButton`; form, action row, title and read-only field consume named account form presets. | Verify editable/read-only field states, image upload/delete/fullscreen states, password disclosure/reset behavior and submit/disabled state parity; no local action skin remains. | PARTIAL — action roles and form layout centralized; field/image/state parity remains open. |
 | `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
-| `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
+| `src/components/maps/AddressAutocomplete.tsx` | Root/search action compose shared base contracts with the selected `form` / `pointPicker` / `tripPicker` variant through `getAddressAutocompleteRootSx` and `getAddressAutocompleteSearchButtonSx`; input uses `layout.input`. | Verify each variant's responsive field/search/extra-action geometry and caller-specific field states; no inline sx object or arbitrary caller sx API remains. | PARTIAL — inline compositions moved to named preset helpers; caller/state parity remains open. |
 | `src/components/maps/GoogleMapView.tsx` | Shared renderer owns SDK loading, map frame/loading geometry, Google Maps `mapContainerStyle` config and loading indicator size through named map-controls contracts; markers, paths, InfoWindow, fit-bounds/focus behavior and map events remain feature API. | Verify all direct consumers, loading/error states, frame dimensions and responsive map interactions; Google Maps SDK options are configuration objects, not React inline style props. | PARTIAL — renderer geometry/config centralized; caller/state parity remains open. |
 | `src/components/maps/PointLocationPicker.tsx` | Uses shared GoogleMapView and named point-picker/autocomplete/action/Snackbar presets; Remove Marker uses semantic `BUTTON_STYLES.removeMarker`; GPS loading indicator size is named in map-controls. | Verify browser geolocation permission/error, find-in-map trigger, marker drag/click, snackbar and responsive action states; point-specific behavior remains separate from TripLocationPicker. | PARTIAL — map/action presentation centralized; geolocation and caller state parity remain open. |
 | `src/components/maps/TripLocationPicker.tsx` | Uses shared GoogleMapView and named trip map frame/hint/autocomplete contracts; Remove Marker uses semantic `BUTTON_STYLES.removeMarker` through its named preset. | Verify map-click/drag, search, marker-clear and responsive hint/frame states; remains intentionally separate from PointLocationPicker (no GPS/find-in-map action). | PARTIAL — map/action presentation centralized; caller state parity remains open. |
@@ -7200,3 +7200,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue the same exhaustive current-branch search for remaining `sx={{...}}`, callback-built local sx objects and React `style=` occurrences. Keep the approved Satori/ImageResponse renderer exception isolated to `src/lib/images/renderTripOgImage.tsx`; do not treat Google Maps SDK configuration such as `mapContainerStyle` as a React style prop.
+
+
+## 11.129 — AddressAutocomplete inline sx composition migration (2026-11-19)
+
+### Scope and findings
+- Continued the current-branch search for inline `sx={{...}}` and React `style=` occurrences.
+- Found two component-local object compositions in `AddressAutocomplete.tsx`: the root Stack merged the common root preset with the selected variant container; the Search Button merged its common action preset with the selected variant button.
+- These are not new visual roles: they are the existing three supported variant contracts being composed locally.
+
+### Source changes
+- Added `getAddressAutocompleteRootSx(variant)` and `getAddressAutocompleteSearchButtonSx(variant)` to the existing `map-controls.ts` preset owner.
+- Replaced both inline object spreads with those named helpers. Kept `layout.input` unchanged for the TextField.
+
+### Preserved
+- Exact base-before-variant merge order and all form/pointPicker/tripPicker dimensions, responsive widths, colors, button treatments and field behavior.
+- Search/autocomplete/geocoding, Enter handling, disabled/loading states, extra action and notice behavior.
+- No API, map behavior, validation or business logic changed.
+
+### Result
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Both confirmed inline sx object compositions are **REMOVED** from AddressAutocomplete.
+- No React `style` prop was found in this component.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue the exact same search through the remaining UI-bearing TSX files, then inspect any callback-built `sx` expressions and inline React `style` separately. Keep Google Maps SDK configuration objects and the approved Satori/ImageResponse renderer exception out of the React-style violation count.
