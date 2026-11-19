@@ -130,6 +130,12 @@ export const ICON_ACTION_STYLES = {
   upload: { ...iconActionBase, color: 'primary.main' },
   removeSelection: iconActionBase,
   passwordVisibility: iconActionBase,
+  edit: iconActionBase,
+  save: iconActionBase,
+  cancel: iconActionBase,
+  disclosure: iconActionBase,
+  submit: iconActionBase,
+  delete: iconActionDanger,
   danger: { ...iconActionBase, color: 'error.main' },
   report: {
     ...iconActionBase,
