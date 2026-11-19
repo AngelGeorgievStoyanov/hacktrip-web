@@ -731,7 +731,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; frame/hint and responsive composition remain feature-specific, while autocomplete and marker-clear visuals now consume named presets. No GPS action/find trigger. | PARTIAL — remaining map action and state contracts stay open; do not merge behavior blindly. |
 | `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
 | `src/components/CustomFileUploadButton.tsx` | Shared upload trigger used by generic image upload and profile-image selection; supports camera IconButton and text Button modes, max-count/disabled gating, accept/multiple and file-change forwarding. | Two distinct raw action renderings (IconButton vs contained Button) and local 30ch wrapper; no semantic Upload role or centralized icon-action state. Direct consumers: ImageUploadField, ProfileImage/ProfileImageUpload. | CHANGE REQUIRED — shared Upload action contract. |
-| `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback. Direct consumers: ProfileImage, ImageGallery, ImageLightbox, AdminUserProfileImage, AdminUsers, EditPointPage, TripCard, EditTripLayout. | Preset rendering is centralized but still passed through React style to Next Image/fallback; audit actual caller frames and preset sizing before migration. | CHANGE REQUIRED — prohibited style transport and preset/frame parity. |
+| `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback; object-fit and profile-lightbox behavior use CSS Module classes. Direct consumers remain mapped in this row. | No React `style` prop or style transport remains; preset-to-caller frame ratios, dimensions and responsive `sizes` parity still require review. | PARTIAL — style transport migrated; image preset/frame parity remains open. |
 | `src/components/images/ImageGallery.tsx` | Direct consumers: PointSection and DayImagesGallery. Owns gallery index state, empty-array null path, row/stack/grid composition, image open trigger and ImageLightbox; delegates images to AppImage and engagement overlay to EngagementBar. | CSS Module owns structural variants; runtime grid columns and focus-visible outline remain local sx. Image frame/preset ratios and overlay stacking/responsive states need explicit parity map. | PARTIAL — state and direct consumers mapped; frame/overlay visual contract open. |
 | `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage, AdminUsers. Owns fullscreen Dialog open state via nullable index, close, previous/next wraparound, keyboard arrows and touch swipe; AppImage fills a contain-fit stage. | Local control colors are semantic tokens but positions/z-index/caption/stage geometry and IconButton role remain local. Invalid/empty image index closes by current image undefined. | CHANGE REQUIRED — shared lightbox surface and Close/Previous/Next icon-action contracts. |
 | `src/components/images/ImageUploadField.tsx` | Shared upload field and AppImage usage. | Local thumbnail dimensions/objectFit/radii, layout sx, raw remove/delete-all IconButtons and upload Button remain. | CHANGE REQUIRED. |
@@ -6064,3 +6064,22 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 image entry: `src/components/images/AppImage.tsx`. Inspect its style-prop transport, image preset ownership and all direct consumers before changing the rendering API.
+
+
+## 11.78 — AppImage current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next image entry in Section 10.1.
+- Re-opened `AppImage.tsx`, `AppImage.module.css` and `constants/images/presets.ts`.
+- The old ledger claim that AppImage passes presentation through the React `style` prop was stale. The current component has no `style` prop in its API and no `style=` transport to Next Image or the fallback.
+- Named preset object-fit roles map to CSS Module classes; dimensions, fill, sizes, priority and thumbnail behavior are resolved by the shared AppImage owner.
+- The remaining image audit is preset/caller frame parity and responsive `sizes`, not prohibited inline style transport.
+
+### Result and status
+- Corrected the Section 10.1 AppImage row; no source change was needed.
+- AppImage style-prop policy: **VERIFIED / COMPLIANT**.
+- Image preset dimensions, frame ratios and all direct caller compositions: **PARTIAL — STILL OPEN**.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 image entry: `src/components/images/ImageGallery.tsx`. Inspect its runtime grid/focus styles and CSS Module consumers before making changes.
