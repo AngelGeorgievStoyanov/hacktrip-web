@@ -129,6 +129,7 @@ export const ICON_ACTION_STYLES = {
   primary: { ...iconActionBase, color: 'primary.main' },
   upload: { ...iconActionBase, color: 'primary.main' },
   removeSelection: iconActionBase,
+  passwordVisibility: iconActionBase,
   danger: { ...iconActionBase, color: 'error.main' },
   report: {
     ...iconActionBase,
