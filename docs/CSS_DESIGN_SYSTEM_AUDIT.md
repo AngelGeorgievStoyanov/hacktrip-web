@@ -4893,3 +4893,46 @@ No application source code was changed. No branch was created. No build, tests, 
 - ImageUploadField + CustomFileUploadButton owner chain and all confirmed direct consumers: **SOURCE CHANGES APPLIED**.
 - Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
 - Next: migrate the already-audited `ImageGallery` owner and both direct consumers (`PointSection`, `DayImagesGallery`) end-to-end, including its CSS Module, responsive grid/focus states, AppImage frames and ImageLightbox composition. Re-read this document and Sections 11.17–11.18 before editing.
+
+
+## 11.34 — ImageGallery, ImageLightbox, AppImage and both gallery consumers (2026-11-19)
+
+### Scope and preflight
+- Re-read Styling API policy (Section 1.4), image rendering/placeholder ownership and exact consumer graph (Sections 11.17–11.18), preset/theme owner findings (Section 11.26), and the immediately preceding NEXT in Section 11.33.
+- Confirmed branch: `feature/frontend-modernization`; starting HEAD was `0ab9aa3f22eeace28e81b47728c7b76c537ed8d1`. No branch was created.
+- Reused the existing ownership map and confirmed exact current-branch consumers:
+  - `ImageGallery`: `PointSection`, `DayImagesGallery`.
+  - `ImageLightbox`: `ImageGallery`, `AdminUserProfileImage`, `AdminUsers`.
+  - `AppImage`: `ProfileImage`, `ImageGallery`, `ImageLightbox`, `AdminUserProfileImage`, `AdminUsers`, `EditPointPage`, `TripCard`, `EditTripLayout`.
+- Barrel exports were excluded from rendered-consumer counts. Existing admin and profile consumers were retained; no unrelated gallery caller was folded into the two trip-gallery compositions.
+
+### Source changes
+1. `src/styles/presets/image-gallery.ts` — new semantic owner for PointSection image-frame composition, DayImagesGallery placeholder frame and ImageLightbox dialog/root/control/counter/stage contracts. Existing semantic image-control colors remain sourced from `UI_COLORS`.
+2. `src/components/images/ImageGallery.tsx` — removed the dynamic inline grid sx and caller-independent focus sx. Grid column count now selects one of three explicit CSS Module structural classes. Image ordering, selected index, open/close callbacks, social overlay and comment target behavior are unchanged.
+3. `src/components/images/ImageGallery.module.css` — retained unique flex/grid/stack geometry and existing CSS-variable spacing/radius usage; added 1/2/3-column structural classes and a token-backed keyboard `:focus-visible` outline.
+4. `src/components/images/ImageLightbox.tsx` — replaced local visual sx objects with named presets. Keyboard ArrowLeft/ArrowRight wrapping, touch-swipe threshold, previous/next wrapping, close behavior, counter and full-screen Dialog composition remain unchanged.
+5. `src/components/images/AppImage.module.css` — new CSS owner for preset-driven `object-fit` and the profile-lightbox responsive frame.
+6. `src/components/images/AppImage.tsx` — removed React `style` prop transport from both Next Image and missing-image fallback. Preset presentation is now expressed through internal CSS Module classes while caller className is preserved. Thumbnail-to-full-image retry, loading/priority/fetchPriority, fill/dimensions/sizes, alt text and fallback accessibility remain unchanged.
+7. `src/constants/images/presets.ts` — removed the React CSSProperties `style` field from the preset contract and represented the former profileLightbox sizing through its named CSS class; image source dimensions, fit, thumbnail, priority and sizes hints remain intact.
+8. `src/components/trips/PointSection.tsx` — replaced duplicated image/placeholder frame width and inset declarations with the shared PointSection frame preset.
+9. `src/components/trips/DayImagesGallery.tsx` — replaced the local no-image placeholder frame sx with its named preset. Day placeholder remains distinct from the PointSection bleed frame.
+
+### Preserved behavior and boundaries
+- ImageGallery empty-array behavior, row/stack/grid variants, grid column cap, image ordering, first-image priority/eager/high fetch priority, alt text, engagement overlay, comment state and selected-image index remain unchanged.
+- ImageLightbox remains shared by the gallery and both admin profile-image flows. The admin callers retain their independent selection state and one-image/multi-image behavior.
+- AppImage remains the single shared renderer for all eight confirmed direct consumer files. The image preset API no longer carries React style objects.
+- PointSection and DayImagesGallery retain separate parent composition and their existing SocialObjectPlaceholder fallback; the fallback itself and unrelated trip/profile/admin layout were not consolidated.
+- No API, backend, data, image URL selection, upload, social, comment or business logic changes.
+
+### Result
+- **9 source files changed** (2 new shared style files and 7 existing files).
+- Gallery and lightbox visuals now flow through named presets/CSS Modules; all AppImage preset presentation is transported by CSS classes rather than React `style` props.
+- Both direct ImageGallery consumers were migrated without merging their distinct frame geometry.
+- No build, tests, lint, CI or browser/keyboard/touch validation was run.
+
+### Status and next
+- ImageGallery + ImageLightbox + AppImage owner chain and both direct gallery consumers: **SOURCE CHANGES APPLIED**.
+- Existing admin/profile ImageLightbox consumers were verified and preserved; their separate avatar/action compositions remain future migration targets.
+- Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
+- Next: continue with the already-audited ProfileImage display/delete/fullscreen composition and its admin profile-image counterpart. Re-read Sections 11.17–11.18 and this entry before editing; keep profile avatar, pending upload preview and fullscreen image as distinct states.
+- No build, tests, lint, CI or browser validation was run.
