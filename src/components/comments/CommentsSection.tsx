@@ -35,25 +35,15 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
-import { commentListStyle } from '@/styles/presets/layouts';
-import { SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
+import {
+  COMMENTS_PANEL_SX, COMMENTS_TITLE_SX, COMMENT_LIST_SX, COMMENT_CARD_SX,
+  COMMENT_EDIT_FORM_SX, COMMENT_EDIT_ACTIONS_SX, COMMENT_AUTHOR_ROW_SX,
+  COMMENT_AUTHOR_AVATAR_SX, COMMENT_AUTHOR_NAME_SX, COMMENT_BODY_SX,
+  COMMENT_TIMESTAMP_SX, COMMENT_SOCIAL_ACTIONS_SX, COMMENT_CREATE_FORM_SX,
+  COMMENT_CREATE_ACTION_ROW_SX, COMMENT_ANONYMOUS_HINT_SX,
+} from '@/styles/presets/comments';
 import { useNotification } from '@/components/common/NotificationProvider';
 
-const COMMENTS_PANEL_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  margin: '20px 0',
-  padding: '25px',
-} as const;
-
-const COMMENT_CARD_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  width: '100%',
-  height: 'fit-content',
-  padding: '30px',
-} as const;
 
 function commentKey(target: CommentTarget, viewerCacheKey: string): unknown[] {
   switch (target.type) {
@@ -208,7 +198,7 @@ export function CommentsSection({
         variant="h5"
         component="h2"
         aria-label={`Comments, ${total} total`}
-        sx={{ marginBottom: '10px' }}
+        sx={COMMENTS_TITLE_SX}
       >
         Comments
       </Typography>
@@ -222,7 +212,7 @@ export function CommentsSection({
         </Typography>
       ) : null}
 
-      <ul style={commentListStyle}>
+      <Box component="ul" sx={COMMENT_LIST_SX}>
         {data?.items.map((commentItem) => {
           const createdAt = formatTimestamp(commentItem.createdAt);
           const updatedAt = formatTimestamp(commentItem.updatedAt);
@@ -263,7 +253,7 @@ export function CommentsSection({
                       updateMutation.mutate({ id: commentItem.id, comment: editingComment });
                     }
                   }}
-                  sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%' }}
+                  sx={COMMENT_EDIT_FORM_SX}
                 >
                   <TextField
                     label="Edit comment"
@@ -272,7 +262,7 @@ export function CommentsSection({
                     value={editingComment}
                     onChange={(e) => setEditingComment(e.target.value)}
                   />
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Box sx={COMMENT_EDIT_ACTIONS_SX}>
                     <Tooltip title="Save comment" arrow>
                       <span>
                         <IconButton
@@ -299,14 +289,14 @@ export function CommentsSection({
                 </Box>
               ) : (
                 <>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: '8px' }}>
+                  <Box sx={COMMENT_AUTHOR_ROW_SX}>
                     <Avatar
                       alt={commentItem.author.name}
-                      sx={{ backgroundColor: 'primary.main', width: 40, height: 40 }}
+                      sx={COMMENT_AUTHOR_AVATAR_SX}
                     >
                       {initials(commentItem.author.name)}
                     </Avatar>
-                    <Typography variant="subtitle1" component="h3" sx={{ fontWeight: 500 }}>
+                    <Typography variant="subtitle1" component="h3" sx={COMMENT_AUTHOR_NAME_SX}>
                       Author name: {commentItem.author.name}
                     </Typography>
                   </Box>
@@ -314,19 +304,13 @@ export function CommentsSection({
                   <Typography
                     variant="body1"
                     component="p"
-                    sx={{
-                      margin: 0,
-                      padding: '5px',
-                      whiteSpace: 'pre-wrap',
-                      overflowWrap: 'anywhere',
-                      wordBreak: 'break-word',
-                    }}
+                    sx={COMMENT_BODY_SX}
                   >
                     {commentItem.comment}
                   </Typography>
 
                   {createdAt ? (
-                    <Typography variant="caption" color="text.secondary" sx={{ marginTop: '8px' }}>
+                    <Typography variant="caption" color="text.secondary" sx={COMMENT_TIMESTAMP_SX}>
                       {updatedAt && updatedAt !== createdAt
                         ? `Edited on ${updatedAt}`
                         : `Posted on ${createdAt}`}
@@ -335,7 +319,7 @@ export function CommentsSection({
 
                   {isAuthenticated && hasCommentActions ? (
                     <Box
-                      sx={{ ...SOCIAL_ACTIONS_SX, marginTop: '10px' }}
+                      sx={COMMENT_SOCIAL_ACTIONS_SX}
                     >
                       {canLike ? (
                         <LikeButton
@@ -451,7 +435,7 @@ export function CommentsSection({
             </Card>
           );
         })}
-      </ul>
+      </Box>
 
       {isAuthenticated && canCreateComment ? (
         <>
@@ -465,7 +449,7 @@ export function CommentsSection({
                   createMutation.mutate({ comment });
                 }
               }}
-              sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginTop: '10px' }}
+              sx={COMMENT_CREATE_FORM_SX}
             >
               <TextField
                 label="Add a comment"
@@ -493,7 +477,7 @@ export function CommentsSection({
             </Box>
           ) : null}
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginTop: '10px' }}>
+          <Box sx={COMMENT_CREATE_ACTION_ROW_SX}>
             <Tooltip title={formOpen ? 'Close' : 'Add comment'} arrow>
               <IconButton
             sx={ICON_ACTION_STYLES.base}
@@ -508,7 +492,7 @@ export function CommentsSection({
           </Box>
         </>
       ) : status === 'anonymous' ? (
-        <Typography variant="body2" sx={{ marginTop: '10px' }}>
+        <Typography variant="body2" sx={COMMENT_ANONYMOUS_HINT_SX}>
           Log in to comment.
         </Typography>
       ) : null}
