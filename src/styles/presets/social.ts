@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
@@ -28,10 +27,10 @@ export const SOCIAL_BADGE_COMPACT_STYLE = {
 } as const;
 
 /** Shared compact inline error text for social actions. */
-export const socialErrorTextStyle: CSSProperties = {
+export const SOCIAL_ERROR_TEXT_SX = {
   color: UI_COLORS.action.danger,
   fontSize: '0.75rem',
-};
+} as const;
 
 /** Shared visual treatment for social controls rendered over images or maps. */
 export const SOCIAL_OVERLAY_SX = {
@@ -65,4 +64,26 @@ export const STICKY_SOCIAL_SX = {
   boxShadow: 1,
   backdropFilter: 'blur(10px)',
   WebkitBackdropFilter: 'blur(10px)',
+} as const;
+
+/** Inline social controls and their non-wrapping action row. */
+export const SOCIAL_ENGAGEMENT_INLINE_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.25rem',
+  margin: '0.25rem 0',
+} as const;
+export const getSocialEngagementActionsSx = (actionsJustify: 'flex-start' | 'space-around') => ({
+  display: 'flex',
+  gap: 1,
+  alignItems: 'center',
+  flexWrap: 'nowrap',
+  justifyContent: actionsJustify,
+  width: '100%',
+} as const);
+export const TRIP_GROUP_SOCIAL_ACTIONS_SX = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: 0.25,
+  flexWrap: 'wrap',
 } as const;
