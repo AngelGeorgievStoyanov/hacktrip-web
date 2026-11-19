@@ -13,7 +13,7 @@ import { useLikeAnimation } from '@/components/social/LikeAnimation';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { SocialTargetTypeInput } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { SOCIAL_BADGE_COMPACT_STYLE } from '@/styles/presets/social';
+import { getSocialBadgeSx, getSocialLikeAnimationSx } from '@/styles/presets/social';
 
 interface LikeButtonProps {
   targetType: SocialTargetTypeInput;
@@ -98,13 +98,11 @@ export function LikeButton({
               max={Number.MAX_SAFE_INTEGER}
               color="primary"
               sx={
-                size === 'small'
-                  ? { '& .MuiBadge-badge': SOCIAL_BADGE_COMPACT_STYLE }
-                  : undefined
+                getSocialBadgeSx(size)
               }
             >
               {liked ? (
-                <ThumbUpIcon sx={{ animation: likeAnimation.animation }} />
+                <ThumbUpIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               ) : (
                 <ThumbUpOffAltIcon sx={{ animation: likeAnimation.animation }} />
               )}
