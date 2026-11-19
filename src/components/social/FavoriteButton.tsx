@@ -12,7 +12,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { SocialTargetTypeInput } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { SOCIAL_BADGE_COMPACT_STYLE } from '@/styles/presets/social';
+import { getSocialBadgeSx } from '@/styles/presets/social';
 
 interface FavoriteButtonProps {
   targetType: SocialTargetTypeInput;
@@ -79,9 +79,7 @@ export function FavoriteButton({
               max={Number.MAX_SAFE_INTEGER}
               color="error"
               sx={
-                size === 'small'
-                  ? { '& .MuiBadge-badge': SOCIAL_BADGE_COMPACT_STYLE }
-                  : undefined
+                getSocialBadgeSx(size)
               }
             >
               {favorited ? <BookmarkRemoveIcon /> : <BookmarkAddIcon />}
