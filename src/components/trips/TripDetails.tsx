@@ -103,7 +103,7 @@ export function TripDetails({
 
       {day.price != null ? (
         <Box sx={TRIP_DETAILS_PRICE_ROW_SX}>
-          <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_METADATA_SX}>
+          <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_PRICE_LABEL_SX}>
             PRICE OF THE TRIP:
           </Typography>
           <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_PRICE_VALUE_SX}>
@@ -121,20 +121,20 @@ export function TripDetails({
       ) : null}
 
       {transportName ? (
-        <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+        <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
           TRANSPORT WITH: {transportName}
         </Typography>
       ) : null}
-      <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+      <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
         COUNT OF PEOPLE: {day.countPeoples}
       </Typography>
       {groupName ? (
-        <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+        <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
           TYPE OF THE GROUP: {groupName}
         </Typography>
       ) : null}
       {destination ? (
-        <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+        <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
           DESTINATION: {destination}
         </Typography>
       ) : null}
@@ -154,7 +154,7 @@ export function TripDetails({
               <Typography
                 variant="subtitle1"
                 component="div"
-                sx={{ ...LINE_STYLE, ...CARD_TEXT_INSET_SX, marginTop: '10px' }}
+                sx={TRIP_DETAILS_DESCRIPTION_SX}
               >
                 Description: {day.description.slice(0, 150)}...
               </Typography>
@@ -178,7 +178,7 @@ export function TripDetails({
         </>
       ) : null}
 
-      <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+      <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
         {totalPoints > 0
           ? `FOR THIS TRIP HAVE ${totalPoints} POINTS`
           : 'FOR THIS TRIP DONT HAVE POINTS'}
