@@ -158,7 +158,7 @@ export function AdminUsers() {
                   <Divider />
                   <Stack direction="row" spacing={1} justifyContent="center" sx={ADMIN_USER_CARD_ACTIONS_SX}>
                     {canManage ? (
-                      <Button component={Link} href={`/admin/users/${u.id}`} variant="contained" sx={BUTTON_STYLES.primary}>
+                      <Button component={Link} href={`/admin/users/${u.id}`} variant="contained" sx={BUTTON_STYLES.edit}>
                         Edit user
                       </Button>
                     ) : null}
