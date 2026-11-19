@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Box } from '@mui/material';
+import { NOT_FOUND_HOME_BUTTON_SX } from '@/styles/presets/buttons';
 import styles from './NotFound.module.css';
 
 const COUNTDOWN_START = 10;
@@ -47,13 +49,9 @@ export function NotFound() {
       <h4>WRONG WAY!</h4>
       <div className={styles.content}>
         <h3>{count} SECONDS OR CLICK</h3>
-        <button
-          type="button"
-          onClick={goHome}
-          className={styles.homeButton}
-        >
+        <Box component="button" type="button" onClick={goHome} sx={NOT_FOUND_HOME_BUTTON_SX}>
           HOME
-        </button>
+        </Box>
       </div>
     </main>
   );
