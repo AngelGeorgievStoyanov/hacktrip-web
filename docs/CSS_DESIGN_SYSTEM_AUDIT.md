@@ -792,7 +792,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(auth)/resend-verification/page.tsx` | Route metadata (`NOINDEX`) and delegation to `ResendVerificationForm`. | No route-owned visual declarations; the child form owns fields, Back action, submit and feedback states. | NON-VISUAL ROUTE — form owns UI. |
 | `app/(auth)/reset-password/page.tsx` | Route metadata and async `searchParams` handling; passes only a string token to `ResetPasswordForm`. | No route-level visual declarations; child form owns password fields, requirements, submit/Back actions and feedback states. | NON-VISUAL ROUTE — form owns UI. |
 | `app/(auth)/verify-email/page.tsx` | Route metadata and async `searchParams` handling; passes only a string token to `VerifyEmailForm`. | No route-level visual declarations; child form owns Card surface, status/feedback and action styling. | NON-VISUAL ROUTE — form owns UI. |
-| `app/(public)/about/AboutPage.module.css` | Page/container and image-row structure; page padding, colors, image-row gaps, decorative heading shadow and editorial typography consume theme-generated `--ht-*` variables; responsive stacking is unique layout. | Remaining page-specific image frame padding/margins and composition geometry are intentionally local; shared editorial typography values are owned by `ABOUT_EDITORIAL_TYPOGRAPHY` in `src/constants/ui/typography.ts`. | PARTIAL — editorial typography centralized; unique page/image geometry retained for separate review. | |
+| `app/(public)/about/AboutPage.module.css` | Page/container/image-row structure and editorial typography consume theme-generated variables; image margin/padding now use shared `--ht-spacing-md-plus` / `--ht-spacing-sm`; responsive stacking uses shared spacing tokens. | Unique image max-widths, aspect/fit and editorial composition remain local page geometry; typography values remain in `ABOUT_EDITORIAL_TYPOGRAPHY`. | PARTIAL — shared typography/spacing centralized; unique image frame geometry retained. |
 | `app/(public)/about/page.tsx` | SEO metadata and semantic content hierarchy remain; image dimensions/sizes use the named `aboutIllustration` preset. | Next Image instances consume `.aboutPageImage`, `.aboutPageImageWide`, `.aboutPageImageMarkers` and `.aboutPageImageRow` classes; responsive max widths and image frame geometry remain owned by AboutPage.module.css. | MIGRATED — no React style prop remains; unique editorial image composition retained. |
 | `app/(public)/layout.tsx` | Shared Header/Footer composition; pages own their `<main>`. | Flex-fill wrapper uses `.publicLayoutContent` in PublicLayout.module.css; preserves footer-at-bottom behavior without React style transport. | MIGRATED — structural shell rule is CSS Module-owned. |
 | `app/(public)/privacy-policy/LegalPage.module.css` | Page outer padding uses shared `--ht-spacing-lg/md/xxl`; body font size and semibold intro weight consume theme-generated typography variables; surface/text/border/link/TOC radius use `--ht-*` tokens. | Unique responsive content padding, legal heading rhythm/scroll offsets, intro/TOC/contact spacing and long-form line-height remain local document composition. Native Back anchor already consumes `LEGAL_BACK_LINK_SX` from the shared button preset. | PARTIAL — shared spacing/typography and Back link centralized; unique legal-document geometry retained. |
@@ -7069,3 +7069,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the remaining CSS Module/token audit entries in Section 10.1; inspect About and public page geometry only after all shared-token candidates are verified.
+
+
+## 11.124 — About page image spacing token migration (2026-11-19)
+
+### Scope and findings
+- Continued with the next public CSS Module entry after LegalPage.
+- Re-opened `AboutPage.module.css` and verified the existing About typography and mobile-padding token bridge from Section 11.62.
+- The remaining image frame margin (20px) and padding (12px) match shared `mdPlus` and `sm` spacing tokens; image max-widths and aspect/object-fit remain unique to the page's editorial composition.
+
+### Source changes
+- Migrated image frame margin to `--ht-spacing-md-plus`.
+- Migrated image frame padding to `--ht-spacing-sm`.
+- Reconciled the Section 10.1 AboutPage CSS row.
+
+### Preserved
+- Exact 20px margin and 12px padding, image max-widths (640/760/520), object-fit, responsive image-row stacking, page gutters, editorial font/size/line-height and all SEO metadata/content.
+- No API, route, SEO or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- About image spacing: **SHARED TOKENS APPLIED**.
+- Unique image frame widths/aspect and page composition remain **PARTIAL / PAGE-SPECIFIC**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining public/legal and common CSS Module rows in Section 10.1; inspect the current CSS source before changing any value already tokenized.
