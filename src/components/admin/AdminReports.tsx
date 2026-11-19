@@ -90,7 +90,7 @@ export function AdminReports() {
                     <Button
                       size="small"
                       color="error"
-                      sx={BUTTON_STYLES.dangerText}
+                      sx={BUTTON_STYLES.deleteText}
                       disabled={deleteMutation.isPending}
                       onClick={() =>
                         void confirm('Delete this report?', 'Delete Confirmation').then(
