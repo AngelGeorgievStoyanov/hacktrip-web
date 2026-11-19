@@ -1,4 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 /** Shared gallery and fullscreen image-viewer presentation contracts. */
 export const POINT_SECTION_IMAGE_FRAME_SX = {
@@ -24,11 +25,9 @@ export const IMAGE_LIGHTBOX_ROOT_SX = {
 } as const;
 
 const IMAGE_LIGHTBOX_CONTROL_BASE_SX = {
+  ...ICON_ACTION_STYLES.imageControl,
   position: 'absolute',
   zIndex: 2,
-  color: UI_COLORS.text.inverse,
-  bgcolor: UI_COLORS.surface.imageControl,
-  '&:hover': { bgcolor: UI_COLORS.surface.imageControlHover },
 } as const;
 
 export const IMAGE_LIGHTBOX_CLOSE_CONTROL_SX = {
