@@ -7858,3 +7858,53 @@ The shared preset map is not the only visual owner. Current source examples incl
 - No semantic aliases were renamed or removed. No source code was changed.
 - Next: complete the field-family consumer matrix (TextField, Select, Autocomplete, InputBase, Checkbox, Radio, Switch, native input/file controls), then decide the minimum shared MUI theme/preset contract that removes accidental variation while preserving deliberate feature-specific geometry.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.142 — Form-control family and consumer matrix (2026-11-19)
+
+### Current theme ownership
+- `src/theme/components/text-field.ts` sets only `MuiTextField.defaultProps.variant = outlined` and `size = medium`. Its comment explicitly says these match MUI defaults and do not change appearance.
+- `src/theme/index.ts` registers overrides for `MuiButton`, `MuiCard`, `MuiDialog`, `MuiPaper` and `MuiTextField`. There are no app-level component overrides registered for `MuiInputBase`, `MuiOutlinedInput`, `MuiInputLabel`, `MuiSelect`, `MuiAutocomplete`, `MuiCheckbox`, `MuiRadio`, `MuiSwitch`, `MuiFormControlLabel` or `MuiFormHelperText`.
+- Therefore the current design system does **not** own a complete visual contract for the field family. MUI defaults currently supply most focus, hover, error, disabled, selected and helper-text visuals. Feature presets only cover selected contexts.
+- The source audit has not verified MUI's computed CSS at runtime or accessibility contrast in the rendered application.
+
+### Field-family consumer matrix
+
+| Control family | Current consumers / use cases | Existing owner | Gap / decision |
+|---|---|---|---|
+| TextField (standard/outlined) | Login, Register, Forgot Password, Resend Verification, Profile, Admin User, Trip Form, Edit Trip, Point Form, Comments, Replies, Report reason, Address Autocomplete, TripSelectField fallback/search display. | MuiTextField defaults only choose outlined/medium; form presets own width/spacing; map address preset owns a specific map-field treatment. | No shared app field contract for label, input text, outline, hover, focus, error, helper, disabled, read-only, required or adornment states. Decide whether to retain MUI defaults as an explicit documented contract or define theme-level semantic tokens/overrides. |
+| PasswordField wrapper | Login, Register/Confirm, Reset Password, Change Password, Admin User edit. | Shared PasswordField wraps TextField and ICON_ACTION_STYLES.passwordVisibility; PasswordRequirements has separate list presets. | TextField visual state is inherited; wrapper owns visibility interaction only. Confirm helper/error and disabled behavior consistently across all callers. |
+| MUI Select component | TripFilters: group, transport, sort. | TRIP_FILTER_LABEL_SX and TRIP_FILTER_SELECT_SX; layout presets for selector groups/boxes. | Select root, icon, outline, menu item, selected, hover, focus and disabled remain MUI defaults; label uses a separate white text preset. |
+| TextField `select` mode | AdminUserForm role/status; TripSelectField fallback selection. | MuiTextField default variant/size + surrounding form layout. | This is a second Select implementation pattern. Decide whether to standardize on MUI Select or TextField select; do not merge without checking option rendering, keyboard and form-control semantics. |
+| MUI Autocomplete | TripSelectField searchable config choices; AddressAutocomplete Google Places suggestions. | AddressAutocomplete has shared root/row/field/button presets and MAP_ADDRESS_INPUT_SX; TripSelectField has no explicit app-owned autocomplete sx contract in its current implementation. | Popup/listbox/paper/options/highlight/selected/clear/loading/focus states are not globally themed. Keep Google Places and config-select behavior distinct where their data/interaction differs, while sharing field shell semantics where safe. |
+| InputBase | TripFilters search input. | TRIP_FILTER_SEARCH_SURFACE_SX, TRIP_FILTER_SEARCH_INPUT_SX and search icon/button presets. | Local search-specific surface, translucent hover and input sizing are centralized in a feature preset, but not part of a reusable global search-field role. Preserve current responsive expansion and toolbar contrast. |
+| InputLabel / FormControl | TripFilters three selectors. | TRIP_FILTER_LABEL_SX + local FormControl composition. | Label color is centralized but label shrink/focus/error/disabled positioning and FormControl sizing are not. |
+| Checkbox | Register terms acceptance; AdminImages bulk select; AdminFailedLogs row/select-all. | RegisterForm.module.css only applies locked class behavior to its label; admin components use MUI defaults. | No shared checkbox size, color, focus-visible, checked, indeterminate, disabled or label-spacing contract. Admin selection and terms acceptance may be different semantic contexts but should share accessible base behavior. |
+| Switch | AdminUserForm email-verified state. | MUI default Switch/FormControlLabel. | No app-level color/size/track/thumb/disabled/focus contract. Confirm if one admin-only usage should remain native MUI or use a global semantic toggle role. |
+| Radio | No direct Radio control found in the reviewed TSX consumers. | Not currently applicable. | Do not create a role pre-emptively; add it only when a real product use case appears. |
+| Native input | Hidden form fields for captcha; hidden file inputs in CustomFileUploadButton. | Captcha integration and CustomFileUploadButton wrapper; native inputs are visually hidden. | Keep the native input as the actual accessible/file-selection control. Centralize the visible trigger and focus/error state through the wrapper, not by styling hidden inputs as MUI fields. |
+| CAPTCHA | Auth forms; Google reCAPTCHA widget embedded in Captcha. | Captcha container sizing preset; third-party widget owns its internal iframe UI. | Only outer placement/container is app-owned. Do not attempt to theme third-party iframe controls. |
+| File upload | CustomFileUploadButton and ImageUploadField used by profile/trip/point/admin image flows. | Shared upload component + image-upload presets + profile-image presets. | Verify focus-visible on trigger, disabled, accepted file feedback, validation/error and upload progress across all callers. |
+
+### Specific source findings
+
+1. **TripFilters has a separate field system.** Its three selectors use MUI Select + InputLabel + FormControl; its search uses InputBase. Their foreground/toolbar treatment is in `trip-filters.ts`, but component states still come from MUI.
+2. **AddressAutocomplete has the most complete feature-level field preset.** MAP_ADDRESS_INPUT_SX defines map background, text, label, outline, hover and focus. Its field is still a TextField/Autocomplete composition, so validation, disabled and popup/listbox states need separate review.
+3. **TripSelectField has two fallback paths.** With no choices it renders TextField; with searchable choices it renders Autocomplete; with non-searchable choices it renders TextField select. All three must preserve identical label/value/error/helper semantics even though their interaction primitives differ.
+4. **AdminUserForm mixes field primitives.** TextField for text/email, TextField select for role/status and Switch for emailVerified. Its form panel owns layout only; it does not supply a shared field visual contract.
+5. **Checkbox semantics vary by context.** RegisterForm locks the terms row through a CSS Module class; admin log/image checkboxes use selection state and MUI defaults. A shared base token can coexist with distinct semantic selected/indeterminate roles.
+6. **Comment/report fields are easy to miss in a page-only review.** CommentsSection, RepliesSection and ReportButton contain TextFields inside interactive overlays/edit states. They must be included in field error/focus/disabled QA, not just route form pages.
+7. **Field layout presets are not field visual presets.** `ACCOUNT_FORM_FIELDS_SX`, `TRIP_FORM_SX`, `EDIT_TRIP_FORM_SX`, `POINT_FORM_SX` and `FORM_CONTROL_INSET_SX` centralize layout/width/spacing. They do not establish field border, label, focus, error or disabled semantics.
+
+### Proposed ownership boundary (no source change yet)
+- **Theme layer:** common visual base for MUI TextField/InputBase/OutlinedInput/InputLabel/FormHelperText/Select/Autocomplete/Checkbox/Switch, only where a shared app-wide appearance is desired.
+- **Semantic field presets:** map-specific address field, toolbar search, compact numeric day field and any genuinely distinct read-only/inline field roles.
+- **Form layout presets:** keep width, spacing, responsive grouping and panel geometry in the existing forms/layout presets.
+- **Feature components:** own value, validation, helper text, loading, disabled, selected, expanded and mutation state; do not duplicate global field colors locally unless the feature role is explicitly different.
+- **Native/third-party controls:** keep native file input and reCAPTCHA iframe behavior within their wrappers/integration boundaries.
+
+### Status and next
+- Field consumers and the currently missing theme component contracts are documented.
+- No source changes were made; no MUI default values or visual states were guessed or normalized.
+- Next: build the actual token-to-theme proposal for buttons and fields together, separating shared base tokens from semantic variants. Before implementing it, reconcile current palette roles and the known primary/primary-hover mismatch, destructive colors, CSS variable bridge and existing feature presets. Then fix the two confirmed compile blockers in a separately approved source-change step.
+- No build, tests, lint, CI or browser validation was run.
