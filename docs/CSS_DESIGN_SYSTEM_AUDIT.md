@@ -719,12 +719,12 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminImages.tsx` | Uses shared admin table/pagination presets and Dialog for preview. | Multiple direct pagination Buttons, local preview IconButton positioning, local image/status spacing and surface details remain. | CHANGE REQUIRED. |
 | `src/components/admin/AdminReports.tsx` | Paper table uses shared admin table container preset. | Direct action and pagination Buttons need semantic contracts; verify row states. | CHANGE REQUIRED. |
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
-| `src/components/admin/AdminUserProfileImage.tsx` | Uses AppImage and shared column layout preset. | Local zoom trigger geometry and direct upload/remove actions remain; verify image role. | CHANGE REQUIRED. |
+| `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
 | `src/components/auth/ChangePasswordForm.tsx` | Password-change form consumes `BUTTON_STYLES.primary` for Save password. | The primary role is only a generic visual contract; local `alignSelf` and margin are merged into the same sx object. Field, pending/disabled and validation states remain part of the field/action audit. | PARTIAL. |
 | `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and `BUTTON_STYLES.primary` for the Go to login action. | The action is navigation but currently uses generic primary styling; Card content/heading sx and complete status/field state contract remain open. | CHANGE REQUIRED. |
 | `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets; primary Register action and two secondary actions consume `BUTTON_STYLES.primary` and a local alias of `BUTTON_STYLES.secondary`. | Secondary roles include navigation/alternate auth actions but currently share one generic secondary skin. TextField/Checkbox contract and locked-state treatment remain open. | PARTIAL. |
 | `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
-| `src/components/auth/ProfileImage.tsx` | Uses AppImage, Dialog and shared UI color/shadow tokens in some controls. | Local image frame dimensions/radii, IconButton positions, thumbnail sx and overlay states remain. | CHANGE REQUIRED. |
+| `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
 | `src/components/maps/GoogleMapView.tsx` | Shared renderer owns Google Maps SDK loading, map canvas wrapper, markers, path, InfoWindow, fit-bounds/focus behavior and map events; feature controls/state remain with callers. | Direct consumers: PointLocationPicker, TripLocationPicker, TripMapSection, PointCard. Local Box geometry and loading CircularProgress size remain; Google Maps SDK controls are not MUI theme components. | PARTIAL — renderer ownership mapped; loading/canvas geometry contract open. |
 | `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | AddressAutocomplete now consumes the named point-picker variant; GPS and clear-marker actions retain their existing roles; Snackbar/Alert state and externally forwarded findInMapTrigger are unchanged. | PARTIAL — map action semantics and feedback states remain open. |
@@ -6185,3 +6185,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the profile/admin image consumers in Section 10.1, beginning with `src/components/auth/ProfileImage.tsx` and `src/components/admin/AdminUserProfileImage.tsx`.
+
+
+## 11.84 — Profile image and admin profile-image action contracts (2026-11-19)
+
+### Scope and preflight
+- Continued with the profile/admin image consumers identified in Section 10.1.
+- Re-opened `ProfileImage.tsx`, `AdminUserProfileImage.tsx`, `profile-image.ts` and the image-upload preset owner.
+- Confirmed ProfileImage's display/delete/fullscreen composition already consumes named presets; the old local-frame/position ledger note was stale.
+- AdminUserProfileImage still had one local upload-button alignment sx object and direct Delete/Upload button role styling.
+
+### Source changes
+- Added `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX` to the profile-image preset owner; it composes the semantic Upload role with the existing start alignment.
+- Admin profile-image Delete now explicitly consumes `BUTTON_STYLES.dangerText`, retaining its existing error-colored outlined appearance.
+- Admin profile-image Upload/Replace now consumes the named upload/alignment preset instead of a component-local sx object.
+- Reconciled the Section 10.1 ProfileImage and AdminUserProfileImage rows.
+
+### Preserved
+- Profile image loading, delete confirmation, fullscreen open/close, image URLs/presets, preview object-URL lifecycle, upload/replace/delete mutations, query invalidation, error states and disabled/pending conditions.
+- No API, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- ProfileImage presentation: **MIGRATED / VERIFIED**.
+- AdminUserProfileImage action/avatar presentation: **SOURCE MIGRATED**; caller/state verification remains **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining admin image controls and image preset/caller parity; do not duplicate the already-centralized AppImage, ImageLightbox or profile-image roles.
