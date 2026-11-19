@@ -7571,3 +7571,84 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Next: build the route-to-component ownership matrix for every App Router page and its rendered component tree; then verify the corresponding style owner chain (theme, token, preset, CSS Module or justified local composition) and identify duplicate/competing owners.
 - After the route matrix, continue the semantic role matrices for buttons/icon actions and field families, then colors/spacing/breakpoints/image frames/CSS-variable consumers.
 - No application source files were changed. No branch was created. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.137 — App Router page-to-component and style-owner matrix (2026-11-19)
+
+### Coverage and method
+- Re-fetched the live recursive tree at the current branch head and enumerated all route-group page files, route-group layouts, root/error boundaries and the supporting metadata/image endpoints.
+- Read the current source of all **28 page entry points** across account, admin, auth, public and global error/not-found routes, plus the four shared layout/root entry points. The matrix below records each page's direct rendered component tree and the style-owner chain visible in source.
+- This is a route-composition/source-ownership pass, not a complete recursive audit of every descendant component's internal states. Descendant component declarations and all their callers still need to be reconciled against Section 10.1 and the semantic matrices.
+- No build, tests, lint, CI or browser checks were run.
+
+### Shared route shells
+
+| Entry point | Rendered shell / ownership chain | Remaining verification |
+|---|---|---|
+| `app/layout.tsx` | Root `html/body` → `.app-shell` from `app/globals.css` → `SiteStructuredData` + `Providers`; theme/CssBaseline owner is `src/theme/index.ts`. | Confirm public/account/admin/auth route groups compose the shell without duplicate header/footer or main landmarks. |
+| `app/providers.tsx` | Emotion App Router cache → MUI ThemeProvider(`theme`) → CssBaseline → QueryClient → AuthProvider → BackgroundProvider → NotificationProvider → ConfirmDialogProvider → TabSyncListener → route children. | Provider composition is structural; runtime hydration and provider state QA remain unverified. |
+| `app/(public)/layout.tsx` | Header → `.publicLayoutContent` CSS Module flex fill → route children → Footer; individual public pages own their main landmark. | Verify short/long page footer behavior and avoid nested duplicate main landmarks. |
+| `app/(account)/layout.tsx` | RequireAuth → Header → main(`ACCOUNT_LAYOUT_MAIN_SX`) → page → Footer. | Verify auth redirect/loading and route content spacing across all account pages. |
+| `app/(admin)/layout.tsx` | RequireRole(MODERATOR_ROLES) → Header → main(`ROUTE_LAYOUT_MAIN_SX`) → AdminNavigation → page → Footer. | Verify role gate, navigation active state and admin content spacing. |
+| `app/(auth)/layout.tsx` | Header → main(`AUTH_LAYOUT_MAIN_SX`) → content(`AUTH_LAYOUT_CONTENT_SX`) → GuestOnly → page → Footer. | Register page also renders its own GuestOnly guard; confirm this duplication is intentional and harmless. |
+
+### Account routes
+
+| Route / entry point | Direct rendered component tree | Style-owner chain and remaining work |
+|---|---|---|
+| `/favorites` — `app/(account)/favorites/page.tsx` | AccountLayout → section → Container → heading → loading/error/empty state or TripList → TripCard. | `ACCOUNT_TRIPS_*` layouts + `HEADING_TEXT_SX` + TripList/TripCard presets/theme; verify query loading/error/empty/populated states and narrow cards. |
+| `/my-trips` — `app/(account)/my-trips/page.tsx` | AccountLayout → section → Container → heading → loading/error/empty state with create-trip CTA or TripList → TripCard. | Same account listing presets + `BUTTON_STYLES.createTrip`; verify CTA, query states and card responsive composition. |
+| `/points/edit/[pointId]` — `app/(account)/points/edit/[pointId]/page.tsx` | AccountLayout → EditPointPage → point data/map/form/image children. | `EDIT_POINT_*` and shared map/form/image presets; verify permission, loading/error, map and image mutation states. |
+| `/profile` — `app/(account)/profile/page.tsx` | AccountLayout → centered page Box → profile panel Box → ProfileForm → ProfileImage/upload/password children. | `ACCOUNT_PROFILE_PAGE_SX` + `ACCOUNT_PROFILE_PANEL_SX` + account form/profile-image presets + theme surface; verify edit/read-only, upload/delete/fullscreen and password states. |
+| `/trips/[id]/edit` — `app/(account)/trips/[id]/edit/page.tsx` | AccountLayout → server param validation/getTrip/notFound → RequireTripOwner → EditTripLayout → day/point editor children. | Child editor presets and shared panels/forms/maps/images; verify owner gate, selected-day validation, responsive editor columns and pending/error states. |
+| `/trips/create` — `app/(account)/trips/create/page.tsx` | AccountLayout → Suspense(null) → TripForm → location picker, form fields and image upload. | `TRIP_FORM_*` + map-controls + image-upload presets + theme fields; verify suspense, validation, submit, upload and mobile form states. |
+| `/trips/create/points` — `app/(account)/trips/create/points/page.tsx` | AccountLayout → Suspense(null) → CreatePointPage → PointList/PointCard + PointLocationPicker + PointForm. | `CREATE_POINT_*`, `POINT_LIST_*`, card/form/map presets; verify editor grid breakpoints, map and point mutation states. |
+
+### Admin routes
+
+| Route / entry point | Direct rendered component tree | Style-owner chain and remaining work |
+|---|---|---|
+| `/admin` — `app/(admin)/admin/page.tsx` | AdminLayout → section → h1 Admin. | `ADMIN_PAGE_TITLE_SX`; verify heading baseline and empty dashboard intent. |
+| `/admin/failed-login-logs` — `app/(admin)/admin/failed-login-logs/page.tsx` | AdminLayout → section → AdminFailedLogs. | Admin table/surface, checkbox, delete and pagination presets; verify selection, confirmation, pending/error and narrow table states. |
+| `/admin/images` — `app/(admin)/admin/images/page.tsx` | AdminLayout → section → AdminImages → inventory toolbar/table/preview dialog. | Admin image preview/pagination presets + theme Paper/Dialog + upload/action roles; verify toolbar roles, selection, preview and responsive table states. |
+| `/admin/reports` — `app/(admin)/admin/reports/page.tsx` | AdminLayout → h1 → AdminReports. | `ADMIN_PAGE_TITLE_SX` + admin report table/delete/pagination contracts; verify confirmation/pending/error and responsive rows. |
+| `/admin/route-not-found-logs` — `app/(admin)/admin/route-not-found-logs/page.tsx` | AdminLayout → section → AdminRouteNotFoundLogs → expandable diagnostic rows. | Admin diagnostic/route detail presets + Paper/pagination; verify disclosure keyboard state and responsive expanded content. |
+| `/admin/users` — `app/(admin)/admin/users/page.tsx` | AdminLayout → section → AdminUsers → user cards/list and profile image/lightbox. | Admin user grid/card/profile-image presets + theme Card/Dialog; verify grid breakpoints, avatar actions and loading/error/empty states. |
+| `/admin/users/[userId]` — `app/(admin)/admin/users/[userId]/page.tsx` | AdminLayout → section → AdminUserForm(userId) → profile image, fields, password disclosure and actions. | `ADMIN_USER_FORM_PANEL_SX`, account field/form and profile-image presets + theme surface; verify field family, permission and mutation states. |
+
+### Authentication routes
+
+| Route / entry point | Direct rendered component tree | Style-owner chain and remaining work |
+|---|---|---|
+| `/forgot-password` — `app/(auth)/forgot-password/page.tsx` | AuthLayout/GuestOnly → ForgotPasswordForm. | Auth form/panel/action presets + theme TextField/Button; verify invalid, success, pending and error states. |
+| `/login` — `app/(auth)/login/page.tsx` | AuthLayout/GuestOnly → Suspense(null) → LoginForm. | Auth form presets + PasswordField/Captcha-related controls where rendered + theme fields/button roles; verify validation, pending, error and redirect states. |
+| `/register` — `app/(auth)/register/page.tsx` | AuthLayout/GuestOnly → page-level GuestOnly → RegisterForm → WelcomeHeading, fields, PasswordField/Requirements, terms Checkbox, Captcha and navigation actions. | Auth form/typography/button presets + RegisterForm CSS Module + theme fields; known unresolved `SECONDARY_BUTTON_SX` reference is recorded in 11.136. Verify duplicated GuestOnly and lock/checkbox/CAPTCHA states. |
+| `/resend-verification` — `app/(auth)/resend-verification/page.tsx` | AuthLayout/GuestOnly → ResendVerificationForm. | Auth form/panel/action presets + theme fields/buttons; verify success/error/pending and enumeration-safe feedback states. |
+| `/reset-password` — `app/(auth)/reset-password/page.tsx` | AuthLayout/GuestOnly → server search-param token extraction → ResetPasswordForm(token). | Auth form + PasswordField/Requirements + shared field/button contracts; verify absent/invalid/expired token and submit states. |
+| `/verify-email` — `app/(auth)/verify-email/page.tsx` | AuthLayout/GuestOnly → server search-param token extraction → VerifyEmailForm(token). | Email verification card/title/navigation presets + theme Card/Button/Alert; verify token success/error/loading and redirect states. |
+
+### Public routes
+
+| Route / entry point | Direct rendered component tree | Style-owner chain and remaining work |
+|---|---|---|
+| `/` — `app/(public)/page.tsx` | PublicLayout → main(`CENTERED_PAGE_MAIN_SX`) → HomeHero → HomeTrips → TripList/TripCard. | Shared page/layout/heading/card/image/social presets + theme surface; verify hero, server-loaded trip states, image priority and responsive card grid. |
+| `/about` — `app/(public)/about/page.tsx` | PublicLayout → AboutPage CSS Module main → WelcomeHeading → editorial sections and Next Image illustrations. | AboutPage CSS Module + WelcomeHeading CSS Module + `IMAGE_PRESETS.aboutIllustration`/asset dimensions; verify editorial type/spacing and all image frames at breakpoints. |
+| `/privacy-policy` — `app/(public)/privacy-policy/page.tsx` | PublicLayout → LegalPage CSS Module content/sections/TOC → native back link. | LegalPage CSS Module + `LEGAL_BACK_LINK_SX` + theme-emitted legal CSS variables; verify long-document anchor/TOC and narrow-width readability. |
+| `/live-tracking` — `app/(public)/live-tracking/page.tsx` | PublicLayout → RequireModeratorRedirect → main(`LIVE_TRACKING_PAGE_MAIN_SX`) → LiveTracker → map/telemetry/actions. | Tracking/map-controls presets + Google Maps SDK options + semantic Start/Stop roles; verify permission, connection, map and telemetry states and mobile layout. |
+| `/trips` — `app/(public)/trips/page.tsx` | PublicLayout → TripFilters → main(`CENTERED_PAGE_MAIN_SX`) → WelcomeHeading/intro → TripList/TripCard → TripPagination. | Filter/layout/typography/card/pagination presets + TripPagination CSS Module; verify all query combinations, empty/error handling, page boundaries, focus/hover and responsive filter stacking. |
+| `/trips/[id]` — `app/(public)/trips/[id]/page.tsx` | PublicLayout → server trip/day resolution → main(`CENTERED_PAGE_MAIN_SX`) → TripDetailsView → JsonLd. | TripDetailsView CSS Module + trip-details/card/map/image/social/comment presets + theme surfaces; verify day selection, image frames, map, comments, sticky header and mobile stacking. |
+
+### Global error and supporting route endpoints
+
+| Entry point | Rendered output / owner | Remaining verification |
+|---|---|---|
+| `app/error.tsx` | Error Box(`GLOBAL_ERROR_PAGE_SX`) → Typography → Alert → Button(`BUTTON_STYLES.primary`). | Verify error boundary reset behavior, contrast and responsive spacing; shared layout/action presets are in place. |
+| `app/not-found.tsx` | Shared NotFound component → `NotFound.module.css` structure + named heading/CTA presets. | Verify redirect/countdown, keyboard and mobile states; no route-local style owner. |
+| `app/api/og/trips/[id]/route.ts`, `app/opengraph-image.tsx`, `app/twitter-image.tsx` | Server-side Open Graph/Twitter image generation; Satori/Next ImageResponse styling is separate from DOM/MUI/CSS Module contracts. | Keep the documented renderer-only exception; verify output dimensions/branding through the SEO/image audit, not DOM style migration. |
+|`app/robots.ts`, `app/sitemap.ts` | Metadata endpoints; no rendered UI. | SEO route coverage only; excluded from visual style ownership. |
+
+### Route matrix result
+- All **28 page entry points** are mapped to their direct component entry and first-level style-owner chain.
+- Shared route shells and global error/not-found boundaries are mapped separately.
+- The matrix exposes the remaining cross-cutting checks rather than marking pages fully verified: descendant state coverage, responsive behavior, MUI field/action states, image frame ratios, CSS Module breakpoints and route-specific interaction states.
+- Next pass: walk the component descendants and their direct consumers for each route group, reconcile each with the Section 10.1 ledger, then mark a route VERIFIED only after its full component/style/state chain is closed.
