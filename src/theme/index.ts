@@ -34,6 +34,7 @@ export const theme = createTheme({
       styleOverrides: {
         ':root': {
           /* Variables are emitted only for values consumed by plain CSS/CSS Modules. */
+          '--ht-spacing-footer-horizontal': `${UI_SIZES.footerHorizontalPadding}px`,
           '--ht-button-padding': `${UI_SIZES.wideButtonPaddingY}px ${UI_SIZES.wideButtonPaddingX}px`,
           '--ht-shape-border-radius': `${themeShape.borderRadius}px`,
           '--ht-spacing-xxs': `${UI_SPACING.xxs * UI_SPACING.unit}px`,
