@@ -371,7 +371,7 @@ Confirmed local declarations:
 | `src/components/trips/TripDetails.tsx` | MUI Card inherits shared surface; social and trip actions delegate to shared components. | Card/header/metadata/description/actions/social-row geometry now use `trip-details.ts`; React style props removed; currency/expand IconButtons use shared focus contract. | MIGRATED — trip information panel presentation centralized. |
 | `src/components/trips/TripDetailsView.tsx` | CSS Module owns the unique responsive page grid/row composition; child features own their content. | Sticky day-navigation shell uses `getTripDetailsStickyHeaderSx`; `TripDetailsView.module.css` remains responsible for unique page grid and container-query layout. | MIGRATED — shell geometry centralized without moving unique page layout out of its CSS Module. |
 | `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
-| `src/components/trips/TripForm.tsx` | Trip create flow uses TripSelectField, ImageUploadField, TripLocationPicker, day-number field and stepper presets. | Form/card layout, location frame, heading, day row, price/currency row, action row and button geometry now consume named TRIP_FORM_* presets. | PARTIAL — local layout centralized; remaining review is field/error state consistency and shared field adoption. |
+| `src/components/trips/TripForm.tsx` | Uses semantic `create`, `add` and `addPoints` action roles; day stepper uses named increment/decrement contracts; Back uses shared `BackButton`; form, upload and action geometry consume named presets. | Field-state/theme contract, upload/remove actions, loading/disabled/focus parity and full caller verification remain open. | PARTIAL — action roles centralized; form/field and state audit remains. |
 | `src/components/trips/EditTripLayout.tsx` | Map picker, image upload, trip selects, day stepper, button roles and image placeholder are shared components/presets. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile/delete control and placeholder frame now consume EDIT_TRIP_* presets. Day input alignment moved from React style to preset sx. | PARTIAL — route-specific geometry is centralized; remaining review is field/error state consistency and shared field adoption. |
 | `src/components/trips/TripDaysNav.tsx` | Local page-item colors/spacing | Use shared day-navigation role/states |
 | `src/components/trips/TripMapSection.tsx` | Renders MUI Card with theme-owned surface; map and SDK InfoWindow are delegated to GoogleMapView. | Card frame and MobileStepper container use TRIP_MAP_SECTION_CARD_SX and TRIP_MAP_SECTION_STEPPER_SX. Back/Next controls inherit MUI Button defaults; point selection/focus and keyboard navigation remain feature-owned. | MIGRATED — feature composition uses named map-control presets and shared MUI defaults. |
@@ -5883,3 +5883,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 trip entry: `src/components/trips/TripForm.tsx`. Inspect form fields, upload controls, day controls and action roles before changing anything.
+
+
+## 11.70 — TripForm semantic Create/Add action roles (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 trip entry after TripDetails.
+- Inspected `TripForm.tsx`, its existing form/action presets and the shared button role owner.
+- Confirmed the day-number decrement/increment controls already use their named stepper roles and Back already delegates to `BackButton`.
+
+### Source changes
+- Migrated Add trip to `BUTTON_STYLES.create`.
+- Migrated Add next day trip to `BUTTON_STYLES.add`.
+- Added `BUTTON_STYLES.addPoints` as a semantic alias of the existing secondary-light-text treatment and migrated Add points for the trip to it. This preserves the existing visual distinction of that action.
+- Existing action-row geometry remains in `TRIP_FORM_ACTIONS_SX`; no local style object was added.
+
+### Preserved
+- Form validation, day-number bounds and duplicate checks, create-trip/create-day intent, selected map coordinates, concurrent image uploads/retries, route navigation, disabled/submitting conditions, field values and Back behavior.
+- No API, DTO, validation, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed**; the Section 10.1 TripForm row was reconciled.
+- TripForm Create/Add/AddPoints/Back and day-stepper roles: **SOURCE MIGRATED / EXISTING CONTRACTS RETAINED**.
+- Field states, upload/remove controls, loading/disabled/focus parity and full caller verification remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 trip entry: `src/components/trips/EditTripLayout.tsx`. Re-check the existing day-number, trip-image delete and action presets before changing anything; do not duplicate the work already recorded in Section 11.40.
