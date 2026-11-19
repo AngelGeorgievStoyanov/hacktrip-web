@@ -17,7 +17,13 @@ import { useNotification } from '@/components/common/NotificationProvider';
 import { truncatePointName } from '@/lib/pointName';
 import type { SocialImageDto, TripGroupResponse, TripPoint } from '@/types';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { FORM_CONTROL_INSET_SX } from '@/styles/presets/forms';
+import {
+  POINT_FORM_SX,
+  POINT_FORM_TITLE_SX,
+  POINT_FORM_FIND_MAP_ROW_SX,
+  POINT_FORM_ACTIONS_SX,
+  POINT_FORM_ACTION_BUTTON_SX,
+} from '@/styles/presets/forms';
 
 interface PointFormProps {
   tripGroupId: number;
@@ -43,18 +49,6 @@ interface PointFormValues {
 
 const formSchema = pointFormSchema;
 
-const legacyButtonSx = {
-  width: '32ch',
-  m: 1,
-  ...BUTTON_STYLES.primary,
-};
-
-const stackedActionButtonSx = {
-  ...legacyButtonSx,
-  '@media (max-width:610px)': {
-    width: 'calc(100% - 16px)',
-  },
-};
 
 export function PointForm({
   tripGroupId,
@@ -237,18 +231,9 @@ export function PointForm({
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1,
-        minWidth: 0,
-        width: '100%',
-        maxWidth: '100%',
-        alignItems: 'stretch',
-        '& .MuiFormControl-root': FORM_CONTROL_INSET_SX,
-      }}
+      sx={POINT_FORM_SX}
     >
-      <Typography gutterBottom variant="h5" sx={{ margin: '10px auto' }}>
+      <Typography gutterBottom variant="h5" sx={POINT_FORM_TITLE_SX}>
         {isEdit ? 'EDIT POINT' : 'ADD POINT'}
       </Typography>
       {serverError ? (
@@ -276,14 +261,14 @@ export function PointForm({
         }}
       />
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+      <Box sx={POINT_FORM_FIND_MAP_ROW_SX}>
         <Button
           type="button"
           variant="outlined"
           onClick={() => void handleFindInMap()}
           disabled={findingLocation || !isLoaded || !watch('name').trim()}
           startIcon={findingLocation ? <CircularProgress size={16} /> : undefined}
-          sx={{ m: 1, ...BUTTON_STYLES.primary }}
+          sx={[BUTTON_STYLES.primary, { m: 1 }]}
         >
           FIND IN MAP
         </Button>
@@ -314,15 +299,7 @@ export function PointForm({
         />
       ) : null}
 
-      <Box
-        sx={{
-          display: 'flex',
-          '@media (max-width:610px)': {
-            flexDirection: 'column',
-            alignItems: 'center',
-          },
-        }}
-      >
+      <Box sx={POINT_FORM_ACTIONS_SX}>
         <Button
           type="submit"
           variant="contained"
@@ -334,7 +311,7 @@ export function PointForm({
             existingImages.length + uploadedImageCount + files.length > MAX_IMAGES_PER_ENTITY
           }
           startIcon={submitting ? <CircularProgress size={16} /> : undefined}
-          sx={stackedActionButtonSx}
+          sx={[BUTTON_STYLES.primary, POINT_FORM_ACTION_BUTTON_SX]}
         >
           {isEdit ? 'EDIT POINT' : createdPointId ? 'RETRY IMAGE UPLOAD' : 'ADD POINT'}
         </Button>
@@ -344,7 +321,7 @@ export function PointForm({
             variant="contained"
             onClick={onAddNextDay}
             disabled={submitting}
-            sx={stackedActionButtonSx}
+            sx={[BUTTON_STYLES.primary, POINT_FORM_ACTION_BUTTON_SX]}
           >
             ADD NEXT DAY TRIP
           </Button>
@@ -363,7 +340,7 @@ export function PointForm({
             else onBack();
           }}
           disabled={submitting}
-          sx={stackedActionButtonSx}
+          sx={[BUTTON_STYLES.primary, POINT_FORM_ACTION_BUTTON_SX]}
         >
           BACK
         </BackButton>
