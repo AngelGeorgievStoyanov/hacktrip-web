@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { UI_COLORS } from '@/constants/ui/colors';
+import { ABOUT_EDITORIAL_TYPOGRAPHY } from '@/constants/ui/typography';
 import { MUI_BREAKPOINTS } from '@/constants/ui/breakpoints';
 import { ABOUT_PAGE_MOBILE_PADDING, PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
 import { UI_SIZES } from '@/constants/ui/sizes';
@@ -35,6 +36,13 @@ export const theme = createTheme({
         ':root': {
           /* Variables are emitted only for values consumed by plain CSS/CSS Modules. */
           '--ht-spacing-footer-horizontal': `${UI_SIZES.footerHorizontalPadding}px`,
+          '--ht-about-font-family': ABOUT_EDITORIAL_TYPOGRAPHY.fontFamily,
+          '--ht-about-font-weight': `${ABOUT_EDITORIAL_TYPOGRAPHY.fontWeight}`,
+          '--ht-about-heading-margin': ABOUT_EDITORIAL_TYPOGRAPHY.headingMargin,
+          '--ht-about-h1-size': ABOUT_EDITORIAL_TYPOGRAPHY.h1,
+          '--ht-about-h2-size': ABOUT_EDITORIAL_TYPOGRAPHY.h2,
+          '--ht-about-h3-size': ABOUT_EDITORIAL_TYPOGRAPHY.h3,
+          '--ht-about-h3-line-height': `${ABOUT_EDITORIAL_TYPOGRAPHY.h3LineHeight}`,
           '--ht-button-padding': `${UI_SIZES.wideButtonPaddingY}px ${UI_SIZES.wideButtonPaddingX}px`,
           '--ht-shape-border-radius': `${themeShape.borderRadius}px`,
           '--ht-spacing-xxs': `${UI_SPACING.xxs * UI_SPACING.unit}px`,
