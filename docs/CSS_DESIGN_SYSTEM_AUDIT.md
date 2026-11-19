@@ -745,7 +745,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/comments/RepliesSection.tsx` | Reply item/edit/body/social/create layouts use named `REPLY_*` presets; Save/Cancel/Edit/Submit/Delete IconButtons use semantic `ICON_ACTION_STYLES` roles; Like/Favorite/Report delegate to shared social controls. | Verify permission/config combinations, reply field error/focus/disabled states, mutation pending/confirmation and responsive nesting; no local border/spacing or React style prop remains. | PARTIAL — layout and action roles centralized; state/caller parity remains open. |
 | `src/components/social/EngagementBar.tsx` | Inline/overlay shell and action-row geometry consume `SOCIAL_ENGAGEMENT_INLINE_SX`, `getSocialOverlaySx` and `getSocialEngagementActionsSx`; Like/Favorite/Report delegate to shared controls; Comments toggle uses `ICON_ACTION_STYLES.disclosure`. | Verify overlay size variants, external/internal comment ownership, responsive placement and permission/config states; no component-local sx object or unstyled raw IconButton remains. | PARTIAL — visual/action contracts centralized; caller/responsive state parity remains open. |
 | `src/components/social/TripGroupSocialActions.tsx` | Like/Favorite/Report/Share use semantic `ICON_ACTION_STYLES` roles; Comments delegates to `CommentsToggle`; action row, error feedback and like animation consume named social presets/helpers. | Verify permission/config combinations, animation failure/reduced-motion states, share copied feedback and responsive caller parity; no raw unstyled icon or React style error span remains. | PARTIAL — action/presentation contracts centralized; interaction-state parity remains open. |
-| `src/components/tracking/LiveTracker.tsx` | Uses TRACKING_SURFACE_SX and layout primitives. | Start/Stop/Reset/Follow are direct Buttons; local tracking surface and status/detail spacing need role and surface mapping. | CHANGE REQUIRED. |
+| `src/components/tracking/LiveTracker.tsx` | Map frame/loading, Google Maps container/polyline options, action row, status, telemetry grid and stat frames consume named `tracking.ts` presets/constants. Start/Stop use `LIVE_TRACKING_BUTTON_STYLES`; Reset/Follow intentionally retain MUI text-button defaults. | Verify geolocation permission/error, tracking start/stop/reset, follow/pan behavior and responsive telemetry states; `mapContainerStyle` is a Google Maps SDK option, not a React `style` prop. | PARTIAL — presentation owners verified; interaction/responsive state parity remains open. |
 | `src/components/trips/TripDaysNav.tsx` | Page and non-page PaginationItems consume `TRIP_DAY_PAGE_ITEM_SX`; AppBar, centered content and Pagination spacing consume named `TRIP_DAYS_NAV_*` presets. | No component-local sx objects remain; URL navigation and optional caller-owned `onSelect` remain behavior-only. | MIGRATED — day-navigation presentation is preset-owned. |
 | `src/components/trips/TripFilters.tsx` | Trip group, transport and sort Selects plus search input/button consume the named contracts in `src/styles/presets/trip-filters.ts`. | Toolbar, select group/box/label/select, search surface/button/icon/input geometry are preset-owned; URL navigation and filter state remain feature behavior. | MIGRATED — filter presentation is named-preset-owned. |
 | `src/components/trips/TripMapSection.tsx` | Card frame consumes `TRIP_MAP_SECTION_CARD_SX`; MobileStepper container consumes `TRIP_MAP_SECTION_STEPPER_SX`; Card surface inherits the shared theme. | Back/Next slot controls intentionally retain MUI MobileStepper text-button defaults; Google Maps renderer, marker/path state and responsive scroll behavior remain feature-owned. | MIGRATED — map frame and stepper container use shared contracts; native MUI controls retained. |
@@ -6770,3 +6770,22 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the remaining common/social consumer verification in Section 10.1, then move to `src/components/tracking/LiveTracker.tsx` and the maps/tracking action contracts.
+
+
+## 11.110 — LiveTracker current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next tracking component in Section 10.1.
+- Re-opened `LiveTracker.tsx` and `tracking.ts`.
+- The old CHANGE REQUIRED row was stale: map frame/loading, Google Maps configuration, action row, status and telemetry layout already consume named tracking presets/constants.
+- Start/Stop use the named tracking action styles. Reset/Follow intentionally retain MUI text-button defaults; no redundant custom preset is added.
+- `mapContainerStyle` is a Google Maps SDK configuration prop, not a React `style` prop.
+
+### Result and status
+- Corrected the Section 10.1 LiveTracker row.
+- LiveTracker visual ownership: **SHARED PRESETS / MUI DEFAULTS VERIFIED**.
+- Geolocation permission/error, tracking lifecycle, follow/pan and responsive telemetry state parity remain **PARTIAL**.
+- No source change, API, route, data or tracking behavior changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next map/tracking entry in Section 10.1: `src/components/maps/GoogleMapView.tsx`. Verify the map canvas/loading geometry contract and its direct consumers without treating Google Maps SDK options as React inline styles.
