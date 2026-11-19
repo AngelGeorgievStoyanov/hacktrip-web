@@ -89,7 +89,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
           <Button
             color="error"
             variant="outlined"
-            sx={BUTTON_STYLES.dangerText}
+            sx={BUTTON_STYLES.deleteText}
             startIcon={<DeleteOutlineRoundedIcon />}
             disabled={deleteMutation.isPending || uploadMutation.isPending}
             onClick={() => {
