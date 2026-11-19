@@ -90,7 +90,7 @@ export function AdminFailedLogs() {
           <Typography>{selected.size} selected</Typography>
           <Button
             color="error"
-            sx={BUTTON_STYLES.dangerText}
+            sx={BUTTON_STYLES.deleteText}
             disabled={deleteMutation.isPending}
             onClick={() =>
               void confirm(
