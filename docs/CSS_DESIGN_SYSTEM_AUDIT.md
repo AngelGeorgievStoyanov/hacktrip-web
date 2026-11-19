@@ -4976,3 +4976,40 @@ No application source code was changed. No branch was created. No build, tests, 
 - Stage 1 global inventory remains IN PROGRESS and does not block these bounded migrations.
 - Next: continue with the separately audited SocialObjectPlaceholder owner and its five direct consumers (`PointSection`, `DayImagesGallery`, `TripCard`, `EditPointPage`, `EditTripLayout`). Keep parent-owned frame/aspect-ratio geometry separate from the placeholder's fill/overlay/typography.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.36 — SocialObjectPlaceholder owner and all direct consumers (2026-11-19)
+
+### Scope and preflight
+- Re-read Styling API policy (Section 1.4), the image/placeholder ownership graph and exact consumer list (Section 11.17), the gallery frame contracts (Section 11.34), the profile-image migration (Section 11.35) and the immediately preceding NEXT.
+- Confirmed branch: `feature/frontend-modernization`; starting HEAD: `b817ee94473aa0a9bf3e58d5c4cb95e4503c07fc`. No branch was created.
+- Re-fetched the shared placeholder and all five direct consumers from the exact branch ref:
+  - `PointSection`
+  - `DayImagesGallery`
+  - `TripCard`
+  - `EditPointPage`
+  - `EditTripLayout`
+- Confirmed the five consumers do not pass styling overrides to the placeholder. Their parent-owned frame dimensions and aspect ratios are intentionally distinct, so no caller geometry was moved into the shared placeholder or changed.
+
+### Source changes
+1. `src/styles/presets/social-object-placeholder.ts` — new semantic owner for the placeholder root/fill surface, decorative overlay, title typography and supporting text typography. Existing UI color tokens and all current visual values are preserved.
+2. `src/components/placeholders/SocialObjectPlaceholder.module.css` — new CSS Module owns only the decorative image's structural fill behavior (`display`, width/height and `object-fit: cover`), replacing the prohibited Next Image React `style` prop.
+3. `src/components/placeholders/SocialObjectPlaceholder.tsx` — replaced local root/overlay/typography sx objects with the named presets and switched the decorative Next Image to the CSS Module class. No public styling props were added.
+
+### Preserved behavior and boundaries
+- Random client-side SVG selection, lazy selection after mount, one selected asset request, decorative image alt/aria-hidden behavior and parent-level accessible image label remain unchanged.
+- The placeholder still fills its parent's available frame; it does not set an aspect ratio or impose a fixed size.
+- All five consumer compositions remain distinct and unchanged: PointSection's bleed frame and square fallback, DayImagesGallery's centered square frame, TripCard's existing card image frame, and the separate centered square frames in EditPointPage and EditTripLayout.
+- AppImage and SocialObjectPlaceholder remain separate fallback/rendering owners. No image URL, upload, API, backend, data or business logic changes.
+
+### Result
+- **3 source files changed** (2 new style-owner files and 1 existing component).
+- The shared placeholder now has one named presentation owner; its image fill behavior uses CSS Modules rather than React `style`.
+- All five direct consumers were verified; their distinct parent-owned geometry was deliberately retained without unnecessary source edits.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- SocialObjectPlaceholder owner and all five direct consumers: **SOURCE CHANGES APPLIED**.
+- Stage 1 global inventory remains IN PROGRESS and does not block these bounded migrations.
+- Next: continue with the next pending owner family already listed in this audit; re-read the relevant ownership/consumer sections and latest NEXT before editing.
+- No build, tests, lint, CI or browser validation was run.
