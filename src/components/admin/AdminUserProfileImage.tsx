@@ -13,9 +13,11 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import {
   ADMIN_PROFILE_AVATAR_INTERACTIVE_SX,
   ADMIN_PROFILE_AVATAR_READONLY_SX,
+  ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX,
 } from '@/styles/presets/profile-image';
 
 export function AdminUserProfileImage({ userId }: { userId: string }) {
@@ -87,6 +89,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
           <Button
             color="error"
             variant="outlined"
+            sx={BUTTON_STYLES.dangerText}
             startIcon={<DeleteOutlineRoundedIcon />}
             disabled={deleteMutation.isPending || uploadMutation.isPending}
             onClick={() => {
@@ -108,7 +111,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
         variant="contained"
         disabled={files.length !== 1 || uploadMutation.isPending || deleteMutation.isPending}
         onClick={() => uploadMutation.mutate(files[0])}
-        sx={{ alignSelf: 'flex-start' }}
+        sx={ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX}
       >
         {uploadMutation.isPending ? (
           <CircularProgress size={UI_SIZES.smallIndicator} />
