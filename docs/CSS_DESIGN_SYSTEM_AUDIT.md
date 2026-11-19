@@ -743,7 +743,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/comments/CommentsSection.tsx` | Comment panel/list/card/author/body/timestamp/edit/create/action-row/hint presentation uses named `COMMENT_*` presets; social actions delegate to shared Like/Favorite/Report/Replies components; edit/save/cancel/submit/disclosure/delete IconButtons use semantic `ICON_ACTION_STYLES` roles. | Verify all permission/config combinations, field error/focus/disabled states, mutation pending/confirmation behavior and responsive comment/reply composition; no React `style` prop or component-local visual object remains. | PARTIAL — action and layout contracts centralized; state/caller parity remains open. |
 | `src/components/comments/CommentsToggle.tsx` | Wrapper and empty-label presentation use `COMMENTS_TOGGLE_ROW_SX` / `COMMENTS_TOGGLE_EMPTY_LABEL_SX`; show/hide/add action consumes `ICON_ACTION_STYLES.disclosure`. | No React `style` prop or local heading margin remains; verify count/open/empty states and keyboard/focus behavior through parent callers. | PARTIAL — disclosure role and layout presets centralized; caller/state parity remains open. |
 | `src/components/comments/RepliesSection.tsx` | Reply item/edit/body/social/create layouts use named `REPLY_*` presets; Save/Cancel/Edit/Submit/Delete IconButtons use semantic `ICON_ACTION_STYLES` roles; Like/Favorite/Report delegate to shared social controls. | Verify permission/config combinations, reply field error/focus/disabled states, mutation pending/confirmation and responsive nesting; no local border/spacing or React style prop remains. | PARTIAL — layout and action roles centralized; state/caller parity remains open. |
-| `src/components/social/EngagementBar.tsx` | Uses shared social action composition. | Responsive local sx and raw IconButton remain; verify all action states and consumers. | CHANGE REQUIRED. |
+| `src/components/social/EngagementBar.tsx` | Inline/overlay shell and action-row geometry consume `SOCIAL_ENGAGEMENT_INLINE_SX`, `getSocialOverlaySx` and `getSocialEngagementActionsSx`; Like/Favorite/Report delegate to shared controls; Comments toggle uses `ICON_ACTION_STYLES.disclosure`. | Verify overlay size variants, external/internal comment ownership, responsive placement and permission/config states; no component-local sx object or unstyled raw IconButton remains. | PARTIAL — visual/action contracts centralized; caller/responsive state parity remains open. |
 | `src/components/social/TripGroupSocialActions.tsx` | Uses shared like animation and social action components in part. | Multiple raw IconButtons, local gaps and React style error spans remain; centralize icon actions and state feedback without merging distinct semantics. | CHANGE REQUIRED. |
 | `src/components/tracking/LiveTracker.tsx` | Uses TRACKING_SURFACE_SX and layout primitives. | Start/Stop/Reset/Follow are direct Buttons; local tracking surface and status/detail spacing need role and surface mapping. | CHANGE REQUIRED. |
 | `src/components/trips/TripDaysNav.tsx` | Page and non-page PaginationItems consume `TRIP_DAY_PAGE_ITEM_SX`; AppBar, centered content and Pagination spacing consume named `TRIP_DAYS_NAV_*` presets. | No component-local sx objects remain; URL navigation and optional caller-owned `onSelect` remain behavior-only. | MIGRATED — day-navigation presentation is preset-owned. |
@@ -6682,3 +6682,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 social component: `src/components/social/EngagementBar.tsx`. Verify overlay action roles, responsive geometry and all Like/Favorite/Report state variants.
+
+
+## 11.106 — EngagementBar disclosure role and ledger reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 social component.
+- Re-opened `EngagementBar.tsx` and verified inline/overlay shell and action-row layout are already preset-owned through `SOCIAL_ENGAGEMENT_INLINE_SX`, `getSocialOverlaySx` and `getSocialEngagementActionsSx`.
+- Like/Favorite/Report already delegate to shared social controls; the only generic icon role in this component was the comments disclosure action.
+
+### Source changes
+- Migrated the comments Show/Hide/Add IconButton to `ICON_ACTION_STYLES.disclosure`.
+- Reconciled the Section 10.1 EngagementBar row to remove stale claims about local responsive sx and raw unstyled IconButtons.
+
+### Preserved
+- Overlay/inline modes, small/medium size, comment count badge, external/internal comment ownership, event propagation suppression, social-config permission checks and nested CommentsSection behavior.
+- No API, social, comment or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- EngagementBar action and presentation contracts: **SOURCE MIGRATED**.
+- All caller/responsive overlay states and permission/config combinations remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 social component: `src/components/social/TripGroupSocialActions.tsx`. Verify action semantics, animation, count badges and any remaining local style transport.
