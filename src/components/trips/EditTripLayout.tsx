@@ -346,7 +346,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                   slotProps={{ htmlInput: { min: 0, max: 1000000, step: 'any' } }}
                 />
               </Box>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Box sx={EDIT_TRIP_PRICE_CURRENCY_ITEM_SX}>
                 <Controller
                   control={control}
                   name="currency"
