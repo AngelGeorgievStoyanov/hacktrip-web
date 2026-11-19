@@ -8,6 +8,7 @@ import { ReportButton } from '@/components/social/ReportButton';
 import { SocialConfigStatus } from '@/components/social/SocialConfigStatus';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed } from '@/lib/socialConfig';
+import { POINT_SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
 import type { TripPoint } from '@/types';
 
 export function PointActions({ point }: { point: TripPoint }) {
@@ -34,7 +35,7 @@ export function PointActions({ point }: { point: TripPoint }) {
   );
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.25, alignItems: 'center', my: 0 }}>
+    <Box sx={POINT_SOCIAL_ACTIONS_SX}>
       <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
       {isAuthenticated && (canLike || canFavorite || canReport) ? (
         <>
