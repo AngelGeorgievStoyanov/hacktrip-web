@@ -304,9 +304,9 @@ Confirmed local declarations:
 | `app/globals.css` | Reset and `.app-shell` use structural global CSS; `.ht-button` and danger hover remain a parallel native/server-rendered button skin consuming selected `--ht-*` variables. | Keep reset/shell only; retain `.ht-button` until every server-rendered consumer and template is exhaustively traced, then migrate to the shared semantic action contract. | PARTIAL — legacy global skin still exists. |
 | `app/(public)/about/AboutPage.module.css` | Space Mono, weights/clamp sizes, margins, text shadow | Consume typography tokens/CSS variables; keep layout/responsive rules |
 | `app/(public)/privacy-policy/LegalPage.module.css` | Page/content padding, typography, Back-link skin | Tokenize; Back link must use shared Back role |
-| `src/components/common/NotFound.module.css` | Home button skin | Use shared CTA role; keep page layout/background |
+| `src/components/common/NotFound.module.css` | Unique full-viewport 404 hero/background and centered content composition. | Background/text/action colors consume CSS variables; the native Home CTA keeps its contrast-on-hero role and unique padding/margin, not a generic primary button skin. | MIGRATED — structural/page-specific styling is scoped and token-backed. |
 | `src/components/images/ImageGallery.module.css` | Gallery structure; shared variables | Verify selectors/consumers; preserve structure |
-| `src/components/layout/Footer.module.css` | Literal horizontal padding | Use shared page/container gutter |
+| `src/components/layout/Footer.module.css` | Footer structure and typography are CSS Module-owned. | Horizontal padding now consumes `--ht-spacing-footer-horizontal` emitted from UI_SIZES; primary/inverse colors remain CSS-variable-owned. | MIGRATED — recurring spacing/color values centralized. |
 | `src/components/trips/TripDetailsView.module.css` | Unique responsive grid/flex, container-query rearrangement and component-specific positioning. | Retained as the structural owner for 1200px shell, 320–450px / 600px / 500px grid tracks, 1120px container-query stacking/order and 600px responsive gaps. The 20px TripDetails card margins are page-specific parent placement, not a reusable visual skin; shared spacing/gutters continue to use `--ht-spacing-*` and page tokens where applicable. | STRUCTURAL — intentional CSS Module ownership; no duplicate shared card/button skin remains. |
 | `src/components/trips/TripList.module.css` | Empty-state typography/margins | Use shared typography/spacing |
 | `src/components/trips/TripPagination.module.css` | Outer margin | Use shared pagination spacing |
@@ -315,14 +315,14 @@ Confirmed local declarations:
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/common/BackButton.tsx` | Back preset, but callers can override `sx` | Enforce Back role; allow layout/accessibility props only |
+| `src/components/common/BackButton.tsx` | Shared BackButton fixes contained variant and applies BUTTON_STYLES.back; caller owns destination and navigation behavior. | Shared semantic Back role is always merged last; callers use sx only for layout placement/dimensions. No caller can replace the shared visual role through sx. | MIGRATED — shared Back appearance centralized; caller-owned navigation/layout retained. |
 | `src/components/common/ConfirmDialog.tsx` | MUI Dialog Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are both direct `contained` primary Buttons, so semantic action roles are indistinguishable; dialog spacing remains default/local composition. | PARTIAL — surface centralized, action roles missing. |
-| `src/components/common/NotFound.tsx` | Native button + CSS skin | Use shared CTA role |
-| `src/components/common/ExpandableText.tsx` | Direct Button + local `sx` | Use shared Expand/Collapse role |
+| `src/components/common/NotFound.tsx` | Shared 404 experience uses a native Home button with scoped CSS Module. | Countdown, timeout cleanup and router replacement are behavior-owned; the unique hero CTA remains page-specific and token-backed in NotFound.module.css. | MIGRATED — unique 404 CTA retained as an intentional CSS Module variant; no React style transport. |
+| `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp now uses EXPANDABLE_TEXT_COLLAPSED_SX; no component-local visual object remains. Expanded text and disclosure state remain behavior-owned. | MIGRATED — disclosure clamp presentation centralized. |
 | `src/components/common/PasswordField.tsx` | TextField defaults inherit MUI theme; visibility IconButton uses ICON_ACTION_STYLES.base. | Password visibility interaction and maxLength remain behavior-only; no local presentation object remains. | MIGRATED — shared theme/icon-action contract consumed. |
 | `src/components/common/PasswordRequirements.tsx` | Password validation state is computed by shared getPasswordRequirements. | List and item layout now consume PASSWORD_REQUIREMENTS_LIST_SX and PASSWORD_REQUIREMENT_ITEM_SX; success/neutral colors use MUI palette roles. | MIGRATED — layout and feedback colors use shared contracts. |
-| `src/components/common/NotificationProvider.tsx` | Shared Snackbar + Alert provider; severity and placement are data-driven from notification constants. | Alert width now uses NOTIFICATION_ALERT_SX; severity/variant/placement remain MUI and notification-constant owned. | MIGRATED — no provider-local presentation object remains. |
-| `src/components/layout/Header.tsx` | MUI AppBar/Toolbar and Drawer; drawer Paper uses explicit MUI elevation 12 and HEADER_DRAWER_PAPER_SX for height. | Toolbar/welcome/drawer content layout and nav action roles remain in the separate application-shell workstream. | PARTIAL — Drawer Paper sizing centralized; shell composition/actions remain open. |
+| `src/components/common/NotificationProvider.tsx` | Shared Snackbar + Alert provider; severity and placement are data-driven from notification constants. | Alert width uses NOTIFICATION_ALERT_SX; severity variants inherit MUI Alert defaults and notification constants own placement/duration. | MIGRATED — provider-local presentation removed. |
+| `src/components/layout/Header.tsx` | MUI AppBar/Toolbar and Drawer; Drawer Paper retains explicit elevation 12. | Header root/welcome/menu/toolbar/drawer Paper/nav layout and desktop/mobile navigation spacing use named HEADER_* presets; all header navigation buttons use BUTTON_STYLES.navigation. | MIGRATED — application header shell centralized; responsive drawer state/keyboard/logout behavior preserved. |
 | `src/components/layout/Footer.tsx` | CSS Module consumer | Use shared footer/page gutter |
 | `src/components/CustomFileUploadButton.tsx` | Camera IconButton and contained Button-as-label now consume named upload-trigger presets; wrapper width is centralized. | Verify shared Upload semantic action role and disabled/focus state parity with theme. | PARTIAL — trigger geometry/skin centralized. |
 | `src/components/images/AppImage.tsx` | Central preset resolver; no arbitrary style prop | Preserve boundary; define a named preset for each shared image role |
@@ -350,7 +350,7 @@ Confirmed local declarations:
 | `src/components/auth/Captcha.tsx` | Local CAPTCHA container `sx` | Keep integration geometry; tokenize spacing |
 | `src/components/admin/AdminUserForm.tsx` | Admin edit panel composes PANEL_SX and COLUMN_STACK_SX; Save/Delete use shared button roles. | Panel dimensions/padding, password field stack and back-button placement now consume ADMIN_USER_FORM_* presets; field controls inherit MUI theme. | MIGRATED — admin user edit composition and actions use shared contracts. |
 | `src/components/admin/AdminUsers.tsx` | User entries render MUI Card with theme-owned surface; profile preview delegates to ImageLightbox; avatar states and pagination actions use existing presets. | User grid/card/content/identity/action/pagination spacing now consume ADMIN_* presets; Edit/Delete use primary/danger text roles. | MIGRATED — user directory composition and actions use shared admin/profile/button contracts. |
-| `src/components/admin/AdminNavigation.tsx` | Local navigation layout and active/inactive styles | Use shared Navigation role |
+| `src/components/admin/AdminNavigation.tsx` | Admin navigation uses native Next.js links rendered as MUI Buttons. | Container geometry uses ADMIN_NAVIGATION_SX; active/inactive appearance remains the MUI contained/text + primary/inherit semantic variant, avoiding duplicate action presets. | MIGRATED — navigation layout and states have explicit owners. |
 | `src/components/admin/AdminDashboard.tsx` | Link-based admin navigation | Verify link/button role parity |
 | `src/components/admin/AdminFailedLogs.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override. | ADMIN_TABLE_CONTAINER_SX owns width only; outlined Paper background/border/radius are theme-owned; bulk toolbar/action/pagination use shared presets. | MIGRATED — table surface and actions are theme/preset-owned. |
 | `src/components/admin/AdminReports.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override; Card/Dialog surfaces remain theme-owned. | ADMIN_TABLE_CONTAINER_SX now owns width only; outlined Paper background/border/radius are theme-owned. | MIGRATED — table surface and pagination/action contracts are shared. |
@@ -822,7 +822,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
 | `src/components/common/ConfirmDialog.tsx` | Uses MUI Dialog; its Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are direct MUI Buttons with the same primary/contained props; semantic roles, button states and dialog content spacing remain uncentralized. | PARTIAL — Dialog surface is centralized, action roles and layout remain. |
 | `app/api/og/trips/[id]/route.ts` | Server route parses trip/day parameters, loads OG data and delegates image generation to `renderTripOgImage`; sets immutable cache headers. | No UI or CSS declarations in the route. Visual implementation is in the supporting renderer `src/lib/images/renderTripOgImage.tsx`; route cache/data behavior is not a styling concern. | STRUCTURAL — server image endpoint only. |
-| `app/error.tsx` | Uses MUI Box, Typography and Alert; error message semantics are delegated to MUI primitives. | Local Box `sx` owns flex layout, gap, alignment and padding; retry is a direct contained MUI Button without the shared Retry/Navigation semantic role. No shared error-panel preset is consumed. | CHANGE REQUIRED — local error-screen composition and direct Retry action. |
+| `app/error.tsx` | Global route error uses MUI Alert and Typography; retry action is a MUI Button. | Page layout uses GLOBAL_ERROR_PAGE_SX and retry uses BUTTON_STYLES.primary; Alert severity inherits MUI defaults. | MIGRATED — global error composition/action centralized. |
 | `app/not-found.tsx` | Delegates the entire not-found experience to the existing `src/components/common/NotFound`. | No local styles or controls; visual work belongs to `NotFound.tsx` and `NotFound.module.css`, already inventoried. | STRUCTURAL — route wrapper only. |
 | `app/opengraph-image.tsx` | Uses centralized SEO image dimensions and delegates rendering to `renderTripOgImage`; exports Next metadata-image properties. | No local visual declarations. The shared renderer owns the OG composition and its Satori/ImageResponse styles; review that dependency separately. | STRUCTURAL — metadata image entry point. |
 | `app/robots.ts` | Uses centralized site URL and emits crawler rules plus sitemap/host references. | No UI, CSS, tokens or visual state. | STRUCTURAL — SEO metadata route, not a styling consumer. |
@@ -5287,7 +5287,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Counting rule going forward
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
-- Next execution: workstream 11 — Shared common controls and application shell. Workstreams 1–10 have been closed in Sections 11.45–11.56. No build, tests, lint, CI or browser validation was run.
+- Next execution: workstream 12 — OG image renderer exception review. Workstreams 1–11 have been closed in Sections 11.45–11.57. No build, tests, lint, CI or browser validation was run.
 ## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
 
 ### Source changes
@@ -5601,3 +5601,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Two existing surface consumers migrated to named presets; one new feedback preset file added; existing theme surface owners reconciled.
 - **Workstream 10 — Shared surface/theme adoption: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
+## 11.57 — Shared common controls and application shell (2026-11-19)
+
+### Source changes
+- Added `src/styles/presets/header.ts`; Header root, welcome row, menu icon, Drawer Paper sizing, drawer navigation, drawer buttons and responsive Toolbar now use named contracts. All desktop, mobile and authenticated welcome/logout navigation actions use the existing BUTTON_STYLES.navigation role.
+- Added GLOBAL_ERROR_PAGE_SX to the existing `feedback.ts`; `app/error.tsx` now uses it and BUTTON_STYLES.primary for Retry.
+- Added EXPANDABLE_TEXT_COLLAPSED_SX; ExpandableText no longer owns a local clamp style object.
+- NotificationProvider now uses its existing NOTIFICATION_ALERT_SX contract.
+- Added ADMIN_NAVIGATION_SX; AdminNavigation's container layout is centralized while active/inactive MUI variant/color states remain the semantic state owner.
+- Added `UI_SIZES.footerHorizontalPadding` and emitted `--ht-spacing-footer-horizontal` from the theme; Footer.module.css consumes the variable instead of a literal 20px padding.
+
+### Verified and intentionally retained
+- BackButton already applies BUTTON_STYLES.back last; callers retain only placement/dimension sx and own href/router behavior. No change required.
+- NotFound remains a scoped CSS Module 404 hero with token-backed colors and a unique contrast-on-hero Home CTA; it is not forced into the generic contained primary skin.
+- AdminNavigation active/inactive states already use contained/text and primary/inherit MUI variants; no duplicate button style was introduced.
+- Footer iOS landscape scroll behavior, listener cleanup and copyright content were untouched.
+
+### Preserved
+- Header route visibility, auth/moderator gates, logout flow, desktop/mobile breakpoints, Drawer open/close, Escape/keyboard handling and link destinations.
+- Notification severity, durations, positions, callbacks and dismissal; ExpandableText DOM content, clamp measurement, state and SEO visibility; global error reset callback.
+- No auth, route, API, data or business logic changed.
+
+### Result
+- Added header/feedback preset ownership and extended UI size/CSS-variable bridge; updated Header, ExpandableText, NotificationProvider, AdminNavigation, Footer CSS and global error page.
+- **Workstream 11 — Shared common controls and application shell: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Workstream 12 — OG image renderer exception review. Inspect Satori's renderer-only style-object requirements and document the narrow exception; do not convert renderer configuration into DOM styling.
