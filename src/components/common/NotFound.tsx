@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { NOT_FOUND_HOME_BUTTON_SX } from '@/styles/presets/buttons';
+import { NOT_FOUND_TITLE_SX, NOT_FOUND_SUBTITLE_SX } from '@/styles/presets/typography';
 import styles from './NotFound.module.css';
 
 const COUNTDOWN_START = 10;
@@ -45,10 +46,10 @@ export function NotFound() {
 
   return (
     <main className={styles.page}>
-      <h3>PAGE NOT FOUND 404</h3>
-      <h4>WRONG WAY!</h4>
+      <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>PAGE NOT FOUND 404</Typography>
+      <Typography component="h4" variant="inherit" sx={NOT_FOUND_SUBTITLE_SX}>WRONG WAY!</Typography>
       <div className={styles.content}>
-        <h3>{count} SECONDS OR CLICK</h3>
+        <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>{count} SECONDS OR CLICK</Typography>
         <Box component="button" type="button" onClick={goHome} sx={NOT_FOUND_HOME_BUTTON_SX}>
           HOME
         </Box>
