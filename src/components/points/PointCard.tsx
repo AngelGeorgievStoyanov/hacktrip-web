@@ -86,7 +86,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onEdit(point)}
             disabled={disabled || !point.permissions.canEdit}
-            sx={[BUTTON_STYLES.primary, POINT_CARD_ACTION_BUTTON_SX]}
+            sx={[BUTTON_STYLES.edit, POINT_CARD_ACTION_BUTTON_SX]}
           >
             EDIT POINT
           </Button>
