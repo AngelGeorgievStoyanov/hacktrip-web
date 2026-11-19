@@ -127,6 +127,8 @@ const iconActionBase = {
 export const ICON_ACTION_STYLES = {
   base: iconActionBase,
   primary: { ...iconActionBase, color: 'primary.main' },
+  upload: { ...iconActionBase, color: 'primary.main' },
+  removeSelection: iconActionBase,
   danger: { ...iconActionBase, color: 'error.main' },
   report: {
     ...iconActionBase,
@@ -150,6 +152,8 @@ export const BUTTON_STYLES = {
   navigationAction: primaryWide,
   danger,
   dangerText: { color: 'error.main' },
+  upload: primary,
+  removeSelection: primary,
   secondary,
   back: secondary,
   secondaryLightText,
