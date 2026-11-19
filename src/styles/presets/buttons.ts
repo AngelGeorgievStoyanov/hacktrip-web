@@ -132,6 +132,7 @@ export const ICON_ACTION_STYLES = {
   upload: { ...iconActionBase, color: 'primary.main' },
   removeSelection: iconActionBase,
   passwordVisibility: iconActionBase,
+  reorder: iconActionBase,
   like: iconActionBase,
   favorite: iconActionBase,
   share: iconActionBase,
