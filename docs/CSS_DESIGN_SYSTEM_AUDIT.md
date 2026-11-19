@@ -749,7 +749,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/TripDaysNav.tsx` | Page and non-page PaginationItems consume `TRIP_DAY_PAGE_ITEM_SX`; AppBar, centered content and Pagination spacing consume named `TRIP_DAYS_NAV_*` presets. | No component-local sx objects remain; URL navigation and optional caller-owned `onSelect` remain behavior-only. | MIGRATED — day-navigation presentation is preset-owned. |
 | `src/components/trips/TripFilters.tsx` | Trip group, transport and sort Selects plus search input/button consume the named contracts in `src/styles/presets/trip-filters.ts`. | Toolbar, select group/box/label/select, search surface/button/icon/input geometry are preset-owned; URL navigation and filter state remain feature behavior. | MIGRATED — filter presentation is named-preset-owned. |
 | `src/components/trips/TripMapSection.tsx` | Card frame consumes `TRIP_MAP_SECTION_CARD_SX`; MobileStepper container consumes `TRIP_MAP_SECTION_STEPPER_SX`; Card surface inherits the shared theme. | Back/Next slot controls intentionally retain MUI MobileStepper text-button defaults; Google Maps renderer, marker/path state and responsive scroll behavior remain feature-owned. | MIGRATED — map frame and stepper container use shared contracts; native MUI controls retained. |
-| `src/components/trips/DayImagesGallery.tsx` | Uses image gallery composition. | Local image container width/maxWidth/aspect ratio remains; compare with named gallery image roles and CSS module geometry. | PARTIAL. |
+| `src/components/trips/DayImagesGallery.tsx` | Delegates populated day images to shared `ImageGallery` with the named `gallery` preset and grid variant; empty state uses `DAY_IMAGE_PLACEHOLDER_FRAME_SX` and `SocialObjectPlaceholder`. | No component-local width/maxWidth/aspect-ratio or style object remains; gallery frame/overlay responsive parity is tracked in ImageGallery. | MIGRATED — day image composition and placeholder frame use shared contracts. |
 
 
 | `app/(account)/favorites/page.tsx` | Uses shared account page/content/heading/empty-state presets and delegates populated results to TripList. | Loading margin, error width and empty-state typography now consume ACCOUNT_TRIPS_LOADING_SX, ACCOUNT_TRIPS_ERROR_SX and HEADING_TEXT_SX; no route-local visual declaration remains. | MIGRATED — account list states use shared contracts. |
@@ -6156,3 +6156,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 image consumer: `src/components/images/DayImagesGallery.tsx`. Verify image frame sizing and AppImage preset use against its parent trip layout.
+
+
+## 11.82 — DayImagesGallery current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 image consumer after ImageUploadField.
+- Re-opened `DayImagesGallery.tsx` and `image-gallery.ts`.
+- The previous note that local image container width/maxWidth/aspect ratio remained was stale. Populated content delegates to `ImageGallery` with the named `gallery` preset and grid variant; the empty placeholder uses `DAY_IMAGE_PLACEHOLDER_FRAME_SX`.
+- No local visual sx object or CSS declaration exists in DayImagesGallery.
+
+### Result and status
+- Corrected the Section 10.1 DayImagesGallery row.
+- Day image composition and placeholder frame: **MIGRATED / VERIFIED**.
+- Gallery frame ratios, overlay stacking and responsive caller parity remain tracked under ImageGallery; no duplicate DayImagesGallery styles were added.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next outstanding image consumer in Section 10.1: `src/components/images/ImageUploadField.tsx` / `CustomFileUploadButton.tsx` caller-state verification, then inspect the remaining account/admin profile image consumers.
