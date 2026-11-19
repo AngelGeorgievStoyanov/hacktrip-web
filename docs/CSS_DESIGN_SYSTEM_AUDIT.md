@@ -795,7 +795,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(public)/about/AboutPage.module.css` | Page/container and image-row structure; page padding, colors, image-row gaps, decorative heading shadow and editorial typography consume theme-generated `--ht-*` variables; responsive stacking is unique layout. | Remaining page-specific image frame padding/margins and composition geometry are intentionally local; shared editorial typography values are owned by `ABOUT_EDITORIAL_TYPOGRAPHY` in `src/constants/ui/typography.ts`. | PARTIAL — editorial typography centralized; unique page/image geometry retained for separate review. | |
 | `app/(public)/about/page.tsx` | SEO metadata and semantic content hierarchy remain; image dimensions/sizes use the named `aboutIllustration` preset. | Next Image instances consume `.aboutPageImage`, `.aboutPageImageWide`, `.aboutPageImageMarkers` and `.aboutPageImageRow` classes; responsive max widths and image frame geometry remain owned by AboutPage.module.css. | MIGRATED — no React style prop remains; unique editorial image composition retained. |
 | `app/(public)/layout.tsx` | Shared Header/Footer composition; pages own their `<main>`. | Flex-fill wrapper uses `.publicLayoutContent` in PublicLayout.module.css; preserves footer-at-bottom behavior without React style transport. | MIGRATED — structural shell rule is CSS Module-owned. |
-| `app/(public)/privacy-policy/LegalPage.module.css` | Page/content surface, text, border, link and TOC radius use selected `--ht-*` variables; CSS Module appropriately owns legal-document layout and anchor scroll offsets. | Local padding/margins/gaps, fixed font-size/line-height, and Back-link padding/skin remain; classify reusable spacing/typography and migrate to tokens. The `.legalPageBack` anchor is a separate native Back visual contract that must align with shared Back semantics without losing link navigation. | CHANGE REQUIRED. |
+| `app/(public)/privacy-policy/LegalPage.module.css` | Page outer padding uses shared `--ht-spacing-lg/md/xxl`; body font size and semibold intro weight consume theme-generated typography variables; surface/text/border/link/TOC radius use `--ht-*` tokens. | Unique responsive content padding, legal heading rhythm/scroll offsets, intro/TOC/contact spacing and long-form line-height remain local document composition. Native Back anchor already consumes `LEGAL_BACK_LINK_SX` from the shared button preset. | PARTIAL — shared spacing/typography and Back link centralized; unique legal-document geometry retained. |
 | `app/(public)/privacy-policy/page.tsx` | SEO metadata and long-form terms/privacy content remain data-driven; document structure is owned by LegalPage.module.css. | Return anchor keeps native href navigation and now consumes LEGAL_BACK_LINK_SX from the shared button preset owner; legal document typography/layout remains page-specific. | MIGRATED — legal return action centralized; no React style transport. |
 
 | `src/components/admin/AdminUserForm.tsx` | Save uses `BUTTON_STYLES.save`; Delete uses semantic `BUTTON_STYLES.deleteText`; Back uses shared `BackButton` with named `ADMIN_USER_FORM_BACK_SX`; panel and password field stack use named admin/layout presets. | Verify admin/manager field visibility, PasswordField/PasswordRequirements states, Switch/Select states, save/delete pending and confirmation behavior; no component-local button skin remains. | PARTIAL — action and panel roles centralized; field/state parity remains open. |
@@ -6955,3 +6955,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next outstanding public/legal CSS entry in Section 10.1: `app/(public)/privacy-policy/LegalPage.module.css`. Separate shared typography/spacing tokens from unique legal-document layout and preserve native anchor navigation.
+
+
+## 11.119 — Legal page shared spacing/typography token migration (2026-11-19)
+
+### Scope and preflight
+- Continued with the next public/legal CSS entry after NotFound.
+- Re-opened `privacy-policy/page.tsx`, `LegalPage.module.css`, the UI spacing scale and theme typography bridge.
+- Confirmed the Back to Hack Trip anchor already uses `LEGAL_BACK_LINK_SX` through MUI Box `component="a"`; the prior ledger note claiming its padding/skin remained local was stale.
+
+### Source changes
+- Exposed the shared body1 font-size token as `--ht-font-size-body1` through the theme.
+- Migrated legal page outer padding (24px/16px/48px) to the existing spacing tokens.
+- Migrated long-form body font size to the shared body1 token and intro navigation weight to `--ht-font-weight-semibold`.
+- Reconciled the Section 10.1 LegalPage CSS row.
+
+### Preserved
+- Native anchor navigation and all terms/privacy content, heading levels, anchor scroll offsets, responsive content padding, legal TOC/contact spacing, line-height 1.75, colors, borders and document layout.
+- Existing Back link appearance and native navigation semantics.
+- No SEO metadata, canonical, content, route or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Repeated outer spacing/body font/semibold values: **SHARED TOKENS APPLIED**.
+- Unique legal-document geometry and typography rhythm remain **PARTIAL / PAGE-SPECIFIC**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next common shell entry in Section 10.1: `src/components/layout/Footer.module.css`. Centralize repeated footer spacing while keeping its unique layout/flow in the CSS Module.
