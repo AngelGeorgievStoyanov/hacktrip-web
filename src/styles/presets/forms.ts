@@ -328,3 +328,6 @@ export const EDIT_TRIP_IMAGE_DELETE_SX = {
     backgroundColor: UI_COLORS.action.tripImageControlBackgroundHover,
   },
 } as const;
+
+/** Flexible price field inside the trip create price/currency row. */
+export const TRIP_FORM_PRICE_FIELD_SX = { flex: 1 } as const;
