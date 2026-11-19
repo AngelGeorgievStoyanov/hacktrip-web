@@ -452,7 +452,7 @@ export const EDIT_POINT_IMAGE_TILE_SX = {
   boxSizing: 'border-box',
 } as const;
 export const EDIT_POINT_IMAGE_DELETE_SX = {
-  ...ICON_ACTION_STYLES.danger,
+  ...ICON_ACTION_STYLES.delete,
   position: 'absolute',
   top: 4,
   left: 4,
