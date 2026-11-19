@@ -750,8 +750,8 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/DayImagesGallery.tsx` | Uses image gallery composition. | Local image container width/maxWidth/aspect ratio remains; compare with named gallery image roles and CSS module geometry. | PARTIAL. |
 
 
-| `app/(account)/favorites/page.tsx` | Uses shared account page/content/heading/empty-state presets and delegates populated results to TripList. | Local CircularProgress margin and Alert max-width remain; verify empty-state typography alias and child TripList contract. | PARTIAL — wrapper partly centralized. |
-| `app/(account)/profile/page.tsx` | Uses shared PANEL_SX for the inner panel. | Outer page layout and additional inner panel geometry/padding/gap remain local sx; distinguish reusable panel skin from unique route composition. | CHANGE REQUIRED. |
+| `app/(account)/favorites/page.tsx` | Uses shared account page/content/heading/empty-state presets and delegates populated results to TripList. | Loading margin, error width and empty-state typography now consume ACCOUNT_TRIPS_LOADING_SX, ACCOUNT_TRIPS_ERROR_SX and HEADING_TEXT_SX; no route-local visual declaration remains. | MIGRATED — account list states use shared contracts. |
+| `app/(account)/profile/page.tsx` | Uses shared account profile page and panel contracts. | Root page and inner panel now consume ACCOUNT_PROFILE_PAGE_SX and ACCOUNT_PROFILE_PANEL_SX; no route-local sx callback or duplicated panel composition remains. | MIGRATED — route shell and panel are preset-owned. |
 | `app/(account)/trips/create/page.tsx` | Route delegates to TripForm within Suspense; no direct visual styling found. | TripForm owns the complete form presentation contract; Suspense fallback remains null by existing route design. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
 | `app/(account)/trips/create/points/page.tsx` | Route delegates to CreatePointPage within Suspense; no direct visual styling found. | Verify CreatePointPage consumer ledger; no separate route-level visual migration indicated. | PARTIAL — composition wrapper only. |
 | `app/(public)/live-tracking/page.tsx` | Uses ROUTE_CONTENT_PADDING token as the source value. | Applies token through React style prop on main; move to approved class/preset/CSS variable contract. LiveTracker is separately audited. | CHANGE REQUIRED. |
@@ -763,7 +763,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/JsonLd.tsx` | Emits JSON-LD script only; no rendered visual UI. | No visual migration target. | NON-VISUAL — no styling target. |
 | `src/components/common/ScrambleHeading.tsx` | Uses HOME_HEADING_STYLE as base typography preset. | Public style prop allows caller-provided React presentation style and is spread into the h1; replace with approved semantic class/variant or documented nonvisual runtime API, then audit all callers. | CHANGE REQUIRED. |
 
-| `app/(account)/layout.tsx` | Route shell currently applies ROUTE_CONTENT_PADDING through React style on main. | Replace presentation style prop with approved CSS class/preset/variable contract; preserve flex shell structure. | CHANGE REQUIRED. |
+| `app/(account)/layout.tsx` | Authenticated route shell with Header/main/Footer order and noindex metadata. | Main uses Box component=main with ACCOUNT_LAYOUT_MAIN_SX; no React style prop remains. | MIGRATED — authenticated shell uses shared layout contract. |
 | `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets; empty-state CTA consumes `BUTTON_STYLES.createTrip` and links to trip creation. | The Create Trip role is still a one-off preset rather than a complete reusable semantic action contract. CircularProgress margin, Alert width/maxWidth and heading alias remain local. | CHANGE REQUIRED. |
 | `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations. | EditPointPage owns page/form/map/image composition through named presets. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
 | `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout. | No route-level visual declarations; EditTripLayout owns the complete editor composition. | NON-VISUAL ROUTE — child owns UI; no route-level migration required. |
@@ -1411,8 +1411,8 @@ Continue only with the exact outstanding paths listed in this section; do not re
 ### Files inspected in this batch — 12
 | File | Result |
 |---|---|
-| `app/(account)/layout.tsx` | Route shell currently applies ROUTE_CONTENT_PADDING through React style on main. Remaining: Replace presentation style prop with approved CSS class/preset/variable contract; preserve flex shell structure. Status: CHANGE REQUIRED. |
-| `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets and BUTTON_STYLES.createTrip. Remaining: CircularProgress local margin, Alert local width/maxWidth and heading style alias require mapping; audit all preset imports and empty/error/loading states. Status: CHANGE REQUIRED. |
+| `app/(account)/layout.tsx` | Route shell main now consumes ACCOUNT_LAYOUT_MAIN_SX through MUI Box; Header/main/Footer order retained. Status: MIGRATED. |
+| `app/(account)/my-trips/page.tsx` | Loading/error/empty/list states and Create Trip action consume named account/button presets; no route-local style declaration remains. Status: MIGRATED. |
 | `app/(account)/points/edit/[pointId]/page.tsx` | Route delegates to EditPointPage; no direct visual declarations in route. Remaining: Ensure EditPointPage is independently represented in ledger and all its consumers are audited; route itself has no separate skin. Status: NON-VISUAL ROUTE — child owns UI. |
 | `app/(account)/trips/[id]/edit/page.tsx` | Server route validates IDs/ownership and delegates presentation to EditTripLayout; no direct visual declarations. Remaining: Ensure EditTripLayout is independently audited; route itself has no separate skin. Status: NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/failed-login-logs/page.tsx` | Route wrapper delegates to AdminFailedLogs; no direct visual declarations. Remaining: AdminFailedLogs owns table, selection, pagination and action UI and must be tracked independently. Status: NON-VISUAL ROUTE — child owns UI. |
@@ -5492,3 +5492,19 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Workstream 9 — Public route shells/editorial pages. Reuse the existing public route ownership map and preserve route-specific content/SEO behavior.
+## 11.54 — Account route shells and account landing pages (2026-11-19)
+
+- Reconciled the authenticated route shell: `app/(account)/layout.tsx` uses `Box component="main"` with `ACCOUNT_LAYOUT_MAIN_SX`; Header/main/Footer ordering and RequireAuth remain unchanged.
+- Favorites and My Trips already consume the shared `ACCOUNT_TRIPS_*` page/content/heading/loading/error/empty-state contracts. Confirmed no route-local presentation object remains; populated content delegates to the already-migrated TripList.
+- Profile page now consumes both `ACCOUNT_PROFILE_PAGE_SX` and `ACCOUNT_PROFILE_PANEL_SX`. Replaced its duplicate inline theme callback/panel geometry with the imported preset; panel width, responsive padding, alignment and gap are preserved.
+- Create Trip and Create Trip Point route files are composition-only Suspense wrappers; Edit Point and Edit Trip routes delegate to their already-migrated feature owners. No unnecessary route styles were introduced.
+
+### Preserved
+- RequireAuth, route metadata/noindex, query keys, trip/favorites API calls, loading/error/empty states, CTA URL and TripList behavior.
+- ProfileForm and all profile image/password subflows; route remains a layout owner only.
+- No API, auth, authorization, validation, route behavior or business logic changed.
+
+### Result
+- Updated the Profile route source; account shell/list pages were already migrated and verified against current branch.
+- **Workstream 8 — Account route shells: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
