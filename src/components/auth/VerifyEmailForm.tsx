@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Button, Card, CircularProgress, Typography } from '@mui/material';
+import { Button, Card, CircularProgress, Typography } from '@mui/material';
 import { authApi } from '@/api/auth';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { publishTabEvent } from '@/lib/tabSync';
