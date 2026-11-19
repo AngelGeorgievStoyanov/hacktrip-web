@@ -373,7 +373,7 @@ Confirmed local declarations:
 | `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
 | `src/components/trips/TripForm.tsx` | Uses semantic `create`, `add` and `addPoints` action roles; day stepper uses named increment/decrement contracts; Back uses shared `BackButton`; form, upload and action geometry consume named presets. | Field-state/theme contract, upload/remove actions, loading/disabled/focus parity and full caller verification remain open. | PARTIAL — action roles centralized; form/field and state audit remains. |
 | `src/components/trips/EditTripLayout.tsx` | Day decrement/increment use shared stepper roles; Set/Change Day and Edit Your Trip use semantic `BUTTON_STYLES.edit`; image delete uses `ICON_ACTION_STYLES.danger` plus named overlay geometry; Back uses shared `BackButton`. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile/delete control and placeholder frame consume EDIT_TRIP_* presets. Field/error state consistency and shared field adoption remain open. | PARTIAL — action roles and route-specific geometry are centralized; field/state audit remains. |
-| `src/components/trips/TripDaysNav.tsx` | Local page-item colors/spacing | Use shared day-navigation role/states |
+| `src/components/trips/TripDaysNav.tsx` | Page and non-page PaginationItems consume `TRIP_DAY_PAGE_ITEM_SX`; AppBar, centered content and Pagination spacing consume named `TRIP_DAYS_NAV_*` presets. | No component-local sx objects remain; URL navigation and optional caller-owned `onSelect` remain behavior-only. | MIGRATED — day-navigation presentation is preset-owned. |
 | `src/components/trips/TripMapSection.tsx` | Renders MUI Card with theme-owned surface; map and SDK InfoWindow are delegated to GoogleMapView. | Card frame and MobileStepper container use TRIP_MAP_SECTION_CARD_SX and TRIP_MAP_SECTION_STEPPER_SX. Back/Next controls inherit MUI Button defaults; point selection/focus and keyboard navigation remain feature-owned. | MIGRATED — feature composition uses named map-control presets and shared MUI defaults. |
 | `src/components/trips/PointSection.tsx` | MUI Card inherits shared surface; ImageGallery, placeholder, PointActions, CommentsToggle and ExpandableText are shared components. | Card/content/empty-image/description/title/note/action-row geometry now use named `trip-details.ts` and `image-gallery.ts` presets; description wrapper no longer uses React style. | MIGRATED — point detail presentation centralized while preserving its image-frame parent geometry. |
 | `src/components/trips/PointsSection.tsx` | No style matches in initial scan | Inspect full file/imports before marking VERIFIED |
@@ -5984,3 +5984,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue through the existing trip list/navigation register; verify `TripDaysNav.tsx` and `TripFilters.tsx` against the current branch rather than trusting their historical status labels.
+
+
+## 11.74 — TripDaysNav residual sx cleanup and stale reference fix (2026-11-19)
+
+### Scope and preflight
+- Continued with the next trip navigation consumer after TripPagination.
+- Re-opened `TripDaysNav.tsx` and `pagination.ts` on the target branch instead of relying on the earlier Section 11.41 completion note.
+- Found a stale `PAGE_ITEM_SX` reference on the non-page PaginationItem branch after the original local constant had been removed. The remaining AppBar, Box and Pagination sx objects also bypassed the named-preset-only styling API.
+
+### Source changes
+- Added `TRIP_DAYS_NAV_APP_BAR_SX`, `TRIP_DAYS_NAV_CONTENT_SX` and `TRIP_DAYS_NAV_PAGINATION_SX` to the existing pagination preset owner.
+- Migrated the AppBar, centered content wrapper and Pagination top spacing to those named presets.
+- Replaced the stale `PAGE_ITEM_SX` reference with `TRIP_DAY_PAGE_ITEM_SX`, so both page and non-page PaginationItem branches use the existing shared day-navigation contract.
+- Reconciled the Section 10.1 TripDaysNav entry.
+
+### Preserved
+- AppBar sticky-parent composition, day count/selection, page labels, URL updates, optional client-side `onSelect`, router scroll behavior and PaginationItem semantics.
+- Existing dimensions, margins, colors, hover and selected states; no redesign.
+- No API, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed**; one stale reference corrected and three local sx objects migrated to named presets.
+- TripDaysNav presentation: **SOURCE MIGRATED**.
+- No build, tests, lint, CI or browser validation was run.
+ 
+### Next
+- Verify `TripFilters.tsx` and its preset owner against the current source, then continue with the next outstanding Section 10.1 entry.
