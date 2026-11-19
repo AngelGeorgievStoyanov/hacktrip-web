@@ -12,7 +12,7 @@ import { resendVerificationSchema } from '@/validations/auth';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { RESEND_VERIFICATION_SUCCESS_MESSAGE } from '@/constants/notifications';
-import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_BACK_BUTTON_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
@@ -88,7 +88,7 @@ export function ResendVerificationForm() {
           Resend verification email
         </Button>
         <Box sx={AUTH_FORM_BACK_ACTION_SX}>
-          <BackButton component={Link} href="/login" disabled={submitting} sx={{ m: '5px' }}>
+          <BackButton component={Link} href="/login" disabled={submitting} sx={AUTH_FORM_BACK_BUTTON_SX}>
             Back to login
           </BackButton>
         </Box>
