@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Box, Button } from '@mui/material';
-import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 const sections = [
   { href: '/admin/users', label: 'Users' },
@@ -41,7 +40,6 @@ export function AdminNavigation() {
             size="small"
             variant={active ? 'contained' : 'text'}
             color={active ? 'primary' : 'inherit'}
-            sx={active ? BUTTON_STYLES.adminNavigationActive : BUTTON_STYLES.adminNavigationInactive}
             aria-current={active ? 'page' : undefined}
           >
             {section.label}
