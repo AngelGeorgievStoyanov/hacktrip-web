@@ -214,3 +214,116 @@ export const TRIP_FORM_ACTIONS_SX = {
     textTransform: 'uppercase',
   },
 } as const;
+
+/** Parent-owned responsive grid for the edit-trip map, form and image regions. */
+export const EDIT_TRIP_PAGE_SX = (contentMaxWidth: number) => ({
+  width: '100%',
+  maxWidth: contentMaxWidth,
+  mx: 'auto',
+  px: { xs: 1, sm: 2 },
+  py: { xs: 2, sm: 2 },
+  display: 'grid',
+  gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'repeat(2, minmax(0, 1fr))' },
+  gridTemplateAreas: {
+    xs: '"images" "map" "form"',
+    lg: '"map map" "form images"',
+  },
+  alignItems: 'start',
+  gap: 2,
+});
+export const EDIT_TRIP_MAP_WRAPPER_SX = {
+  gridArea: 'map',
+  width: '100%',
+  maxWidth: 600,
+  mx: 'auto',
+} as const;
+export const EDIT_TRIP_FORM_SX = (theme: Theme) => ({
+  ...PANEL_SX(theme),
+  gridArea: 'form',
+  boxSizing: 'border-box',
+  m: { xs: 0, sm: 2 },
+  p: { xs: 2, sm: '30px' },
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'space-between',
+  gap: 1,
+  width: 'min(100%, 520px)',
+  flex: '0 1 520px',
+  minWidth: 0,
+  height: 'fit-content',
+  '& .MuiFormControl-root': FORM_CONTROL_INSET_SX,
+  '& .MuiButton-root': { m: 1 },
+});
+export const EDIT_TRIP_TITLE_SX = {
+  m: '10px auto',
+  textTransform: 'uppercase',
+  textAlign: 'center',
+} as const;
+export const EDIT_TRIP_DAY_ROW_SX = {
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexWrap: 'wrap',
+  '@media (max-width: 600px)': { flexDirection: 'column' },
+} as const;
+export const EDIT_TRIP_DAY_FIELD_SX = {
+  maxWidth: 90,
+  pointerEvents: 'none',
+  '& input': { textAlign: 'center' },
+} as const;
+export const EDIT_TRIP_PRICE_CURRENCY_ROW_SX = {
+  display: 'flex',
+  flexDirection: 'row',
+  width: '100%',
+  gap: 1,
+} as const;
+export const EDIT_TRIP_PRICE_CURRENCY_ITEM_SX = { flex: 1, minWidth: 0 } as const;
+export const EDIT_TRIP_ACTIONS_SX = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  alignItems: 'center',
+} as const;
+export const EDIT_TRIP_IMAGES_SECTION_SX = {
+  gridArea: 'images',
+  boxSizing: 'border-box',
+  width: 'min(100%, 520px)',
+  flex: '0 1 520px',
+  minWidth: 0,
+  m: { xs: 0, sm: 2 },
+  p: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+} as const;
+export const EDIT_TRIP_IMAGE_GRID_SX = {
+  display: 'grid',
+  width: '100%',
+  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+  gap: 1,
+} as const;
+export const EDIT_TRIP_IMAGE_TILE_SX = {
+  position: 'relative',
+  width: '100%',
+  aspectRatio: '1 / 1',
+  overflow: 'hidden',
+  border: '1px solid var(--ht-color-border-subtle)',
+  p: 0.5,
+} as const;
+export const EDIT_TRIP_IMAGE_PLACEHOLDER_SX = {
+  width: '50%',
+  maxWidth: 280,
+  aspectRatio: '1 / 1',
+  mx: 'auto',
+} as const;
+export const EDIT_TRIP_IMAGE_DELETE_SX = {
+  position: 'absolute',
+  top: 4,
+  right: 4,
+  backgroundColor: 'var(--ht-color-action-trip-image-control-background)',
+  '&:hover': {
+    backgroundColor: 'var(--ht-color-action-trip-image-control-background-hover)',
+  },
+} as const;
