@@ -712,7 +712,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/theme/components/surface.ts` | Defines elevated getSurfaceStyles and outlined getOutlinedSurfaceStyles from active theme values. | Adopted by MuiCard, MuiDialog.paper, MuiPaper.outlined and PANEL_SX; no blanket default Paper override is applied. | MIGRATED — shared surface roles and variant boundary confirmed. |
 | `src/components/trips/PointSection.tsx` | Card surface inherits `MuiCard`; title, content, image frame, empty image frame, note, description and action row consume named `trip-details.ts` / `image-gallery.ts` presets. ImageGallery, PointActions, CommentsToggle and ExpandableText are shared child components. | No React `style` prop or component-local sx object remains; verify responsive composition through all parent routes and child states. | MIGRATED — PointSection presentation and child composition use shared contracts. |
 | `src/components/points/EditPointPage.tsx` | Parent/loading/error/map/content/form/image grid/tile/placeholder use named `EDIT_POINT_*` presets; point map/form/image rendering delegate to shared components; image Delete uses `ICON_ACTION_STYLES.delete` through its overlay preset. | Verify permission/load/delete pending/error and responsive map/form/image states; no component-local sx object remains. | PARTIAL — page geometry and Delete role centralized; caller/state parity remains open. |
-| `src/components/points/CreatePointPage.tsx` | Uses MUI Card theme surface for its Card and central size token for content width. | Local layout `sx` and page composition remain; verify all nested form and action consumers. | PARTIAL — not fully fixed. |
+| `src/components/points/CreatePointPage.tsx` | Page/grid/list/editor/loading/error/alert and form-panel composition use named `CREATE_POINT_*` and `POINT_FORM_PANEL_WITH_TOP_MARGIN_SX` presets; PointList, PointLocationPicker and PointForm own nested presentation/actions. | No component-local sx object remains; verify responsive grid and saving/error state parity through nested child components. | MIGRATED — page composition and responsive layout are preset-owned. |
 
 
 | `src/components/admin/AdminFailedLogs.tsx` | Outlined Paper table inherits shared surface; selected-row Delete uses `BUTTON_STYLES.deleteText`; Checkbox selection remains MUI-owned; Previous/Next use `ADMIN_PAGINATION_BUTTON_SX` and `ADMIN_PAGINATION_SX`. | Verify checkbox indeterminate/selected states, delete confirmation/pending/error states and responsive table behavior; no local table or pagination skin remains. | PARTIAL — action and pagination contracts centralized; selection/state parity remains open. |
@@ -6874,3 +6874,20 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 point-page entry: `src/components/points/CreatePointPage.tsx`. Verify its page geometry, loading/error state, map frame and nested PointForm ownership.
+
+
+## 11.115 — CreatePointPage current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 point-page entry after EditPointPage.
+- Re-opened `CreatePointPage.tsx` and verified page/grid/list/editor/loading/error/alert/form-panel layout is owned by named `CREATE_POINT_*` and `POINT_FORM_PANEL_WITH_TOP_MARGIN_SX` presets.
+- PointList, PointLocationPicker and PointForm delegate their own action and visual contracts to the shared components/presets already tracked separately.
+- No component-local sx object or React style prop remains in CreatePointPage.
+
+### Result and status
+- Corrected the Section 10.1 CreatePointPage row to **MIGRATED** for its page composition/layout responsibility.
+- Responsive grid, saving/error state and nested child behavior remain verified in their respective component rows; no duplicate page preset was added.
+- No source change, API, route, data or business logic change. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 admin row after CreatePointPage: verify remaining AdminFailedLogs, AdminImages, AdminReports, AdminRouteNotFoundLogs and AdminUsers state/caller parity, then move to public-page wrappers and remaining CSS Modules.
