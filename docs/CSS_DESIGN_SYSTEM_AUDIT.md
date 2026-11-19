@@ -726,7 +726,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/ProfileForm.tsx` | Edit Profile uses `BUTTON_STYLES.edit`; Change Password section toggle uses `BUTTON_STYLES.disclosure`; Back uses shared `BackButton`; form, action row, title and read-only field consume named account form presets. | Verify editable/read-only field states, image upload/delete/fullscreen states, password disclosure/reset behavior and submit/disabled state parity; no local action skin remains. | PARTIAL — action roles and form layout centralized; field/image/state parity remains open. |
 | `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
-| `src/components/maps/GoogleMapView.tsx` | Shared renderer owns Google Maps SDK loading, map canvas wrapper, markers, path, InfoWindow, fit-bounds/focus behavior and map events; feature controls/state remain with callers. | Direct consumers: PointLocationPicker, TripLocationPicker, TripMapSection, PointCard. Local Box geometry and loading CircularProgress size remain; Google Maps SDK controls are not MUI theme components. | PARTIAL — renderer ownership mapped; loading/canvas geometry contract open. |
+| `src/components/maps/GoogleMapView.tsx` | Shared renderer owns SDK loading, map frame/loading geometry, Google Maps `mapContainerStyle` config and loading indicator size through named map-controls contracts; markers, paths, InfoWindow, fit-bounds/focus behavior and map events remain feature API. | Verify all direct consumers, loading/error states, frame dimensions and responsive map interactions; Google Maps SDK options are configuration objects, not React inline style props. | PARTIAL — renderer geometry/config centralized; caller/state parity remains open. |
 | `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | AddressAutocomplete now consumes the named point-picker variant; GPS and clear-marker actions retain their existing roles; Snackbar/Alert state and externally forwarded findInMapTrigger are unchanged. | PARTIAL — map action semantics and feedback states remain open. |
 | `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; frame/hint and responsive composition remain feature-specific, while autocomplete and marker-clear visuals now consume named presets. No GPS action/find trigger. | PARTIAL — remaining map action and state contracts stay open; do not merge behavior blindly. |
 | `src/components/trips/TripSelectField.tsx` | TextField and Autocomplete renderInput inherit the shared `MuiTextField` defaults (`outlined` / `medium`); no feature-local field skin or sx object. | MUI owns outlined input, label, helper, focus, error and disabled defaults; verify the config-loading/free-text/searchable branches and their caller states. | PARTIAL — shared MUI field baseline verified; caller/state parity remains open. |
@@ -6789,3 +6789,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next map/tracking entry in Section 10.1: `src/components/maps/GoogleMapView.tsx`. Verify the map canvas/loading geometry contract and its direct consumers without treating Google Maps SDK options as React inline styles.
+
+
+## 11.111 — GoogleMapView SDK container/loading preset migration (2026-11-19)
+
+### Source changes
+- Added `getGoogleMapContainerStyle(height)` to the map-controls preset owner for the Google Maps SDK's required `mapContainerStyle` configuration.
+- Added `GOOGLE_MAP_LOADING_INDICATOR_SIZE` to the same owner.
+- Migrated GoogleMapView away from its component-local SDK config object and numeric CircularProgress size literal.
+- Reconciled the Section 10.1 GoogleMapView row.
+
+### Preserved
+- Map width/height conversion, loading frame dimensions, SDK loading, center/zoom, options, markers, polyline, InfoWindow, fitBounds/focus, map click/drag and caller callbacks.
+- The SDK's `mapContainerStyle` remains a configuration prop, not a React `style` prop.
+- No API, map data, route or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- GoogleMapView frame/loading/SDK container presentation: **PRESET-OWNED**.
+- Direct caller frame ratios, responsive map interactions and loading/error parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with `PointLocationPicker.tsx` and `TripLocationPicker.tsx`; keep their distinct GPS/find-in-map versus trip search/marker-clear semantics separate while auditing shared map/action contracts.
