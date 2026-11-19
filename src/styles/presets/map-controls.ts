@@ -56,6 +56,15 @@ export const getGoogleMapLoadingSx = (maxWidth: number | string, height: number 
   height,
 } as const);
 
+/** Google Maps SDK mapContainerStyle config; this is not a React style prop. */
+export const getGoogleMapContainerStyle = (height: number | string) => ({
+  width: '100%',
+  height: typeof height === 'number' ? `${height}px` : height,
+} as const);
+
+/** Shared loading indicator size for the map renderer. */
+export const GOOGLE_MAP_LOADING_INDICATOR_SIZE = 28;
+
 /** Point picker outer stack and action row retain their feature-specific responsive layout. */
 export const POINT_LOCATION_PICKER_STACK_SX = {
   width: '100%',
