@@ -5,10 +5,10 @@ import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useReportActions } from '@/hooks/useReportActions';
-import { Alert, Button, IconButton, Tooltip } from '@mui/material';
+import { Alert, Box, Button, IconButton, Tooltip } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { socialErrorTextStyle } from '@/styles/presets/social';
+import { SOCIAL_ERROR_TEXT_SX, REPORT_BUTTON_TOOLTIP_WRAPPER_SX, REPORT_BUTTON_REASON_FIELD_SX } from '@/styles/presets/social';
 import ReportIcon from '@mui/icons-material/Report';
 import ReportOffIcon from '@mui/icons-material/ReportOff';
 import type { ReportTargetTypeInput } from '@/types';
@@ -86,7 +86,7 @@ export function ReportButton({
       {isAuthenticated ? (
         <>
           <Tooltip title={done ? 'UN REPORT' : label} arrow>
-            <span style={{ display: 'inline-flex' }}>
+            <Box component="span" sx={REPORT_BUTTON_TOOLTIP_WRAPPER_SX}>
               <IconButton
                 onClick={handleClick}
                 disabled={pending}
@@ -98,7 +98,7 @@ export function ReportButton({
               >
                 {done ? <ReportOffIcon /> : <ReportIcon />}
               </IconButton>
-            </span>
+            </Box>
           </Tooltip>
           <Dialog open={open} onClose={() => setOpen(false)}>
             <DialogTitle>Report this content</DialogTitle>
@@ -111,7 +111,7 @@ export function ReportButton({
                 fullWidth
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
-                sx={{ mt: 1 }}
+                sx={REPORT_BUTTON_REASON_FIELD_SX}
               />
             </DialogContent>
             <DialogActions>
@@ -124,14 +124,14 @@ export function ReportButton({
         </>
       ) : null}
       {isAuthenticated && error && !open ? (
-        <span role="alert" style={socialErrorTextStyle}>
+        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
           {error}
-        </span>
+        </Box>
       ) : null}
       {/* The icon carries the reported state; the status is announced but not shown as a
           second, text-based control. */}
       {isAuthenticated && done ? (
-        <span role="status" style={visuallyHidden}>
+        <Box component="span" role="status" sx={visuallyHidden}>
           Reported. Thank you.
         </span>
       ) : null}
