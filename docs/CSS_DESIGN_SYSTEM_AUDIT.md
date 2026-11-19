@@ -723,7 +723,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/ChangePasswordForm.tsx` | Save password uses semantic `BUTTON_STYLES.save` plus `ACCOUNT_PASSWORD_SAVE_BUTTON_SX`; form stack uses `CHANGE_PASSWORD_FORM_SX`; fields and requirements delegate to shared PasswordField/PasswordRequirements. | Verify TextField error/helper/disabled/focus states and pending/reset behavior against the global field contract; no component-local action geometry remains. | PARTIAL — Save and form layout contracts centralized; field/state parity remains open. |
 | `src/components/auth/VerifyEmailForm.tsx` | Card surface inherits `MuiCard`; card layout/title use `EMAIL_VERIFICATION_CARD_SX` and `EMAIL_VERIFICATION_TITLE_SX`; Go to login consumes semantic `BUTTON_STYLES.navigationLink`. | Verify success/error/loading states and responsive card content; no component-local action or card style remains. | PARTIAL — navigation and card presentation centralized; status/state parity remains open. |
 | `src/components/auth/RegisterForm.tsx` | Register uses semantic `BUTTON_STYLES.create`; Login and Resend Verification links use `BUTTON_STYLES.navigationSecondary`; form/title/action row use shared auth presets; PasswordField, PasswordRequirements and Captcha are shared components. | Verify Checkbox/locked states, field error/helper/focus states, CAPTCHA lifecycle and submit/disabled parity against shared theme contracts; no local secondary button alias remains. | PARTIAL — action roles centralized; field/checkbox/captcha state parity remains open. |
-| `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
+| `src/components/auth/ProfileForm.tsx` | Edit Profile uses `BUTTON_STYLES.edit`; Change Password section toggle uses `BUTTON_STYLES.disclosure`; Back uses shared `BackButton`; form, action row, title and read-only field consume named account form presets. | Verify editable/read-only field states, image upload/delete/fullscreen states, password disclosure/reset behavior and submit/disabled state parity; no local action skin remains. | PARTIAL — action roles and form layout centralized; field/image/state parity remains open. |
 | `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
 | `src/components/maps/GoogleMapView.tsx` | Shared renderer owns Google Maps SDK loading, map canvas wrapper, markers, path, InfoWindow, fit-bounds/focus behavior and map events; feature controls/state remain with callers. | Direct consumers: PointLocationPicker, TripLocationPicker, TripMapSection, PointCard. Local Box geometry and loading CircularProgress size remain; Google Maps SDK controls are not MUI theme components. | PARTIAL — renderer ownership mapped; loading/canvas geometry contract open. |
@@ -6415,3 +6415,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/ProfileForm.tsx`. Migrate Edit Profile and Change Password to their semantic roles while preserving the existing appearance.
+
+
+## 11.94 — ProfileForm semantic Edit and Disclosure roles (2026-11-19)
+
+### Source changes
+- Migrated Edit Profile from generic Primary to `BUTTON_STYLES.edit`.
+- Added `BUTTON_STYLES.disclosure` as a semantic alias of the existing secondary appearance and migrated the Change Password toggle to it.
+- Back, form layout, title, action row and read-only email field remain owned by their existing shared contracts.
+- Reconciled the Section 10.1 ProfileForm row.
+
+### Preserved
+- Profile update, optional image upload, dirty/valid/submitting conditions, auth-context update, reset behavior, notifications, password-section toggle and browser Back navigation.
+- Existing Edit/Change Password button appearances are unchanged.
+- No API, validation, auth, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Edit and Disclosure action roles: **SOURCE MIGRATED**.
+- Field, profile-image and password state parity remains **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/ForgotPasswordForm.tsx`. Give the submit and Back navigation actions explicit semantic roles, preserving the existing appearance.
