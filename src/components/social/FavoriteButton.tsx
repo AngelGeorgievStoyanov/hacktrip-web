@@ -63,7 +63,7 @@ export function FavoriteButton({
       <Tooltip title={favorited ? 'Remove from favorites' : 'Add to favorites'} arrow>
         <span>
           <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.favorite}
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending}
             aria-label={
