@@ -60,6 +60,9 @@ export const TRIP_CARD_DESCRIPTION_SX = {
 } as const;
 export const TRIP_CARD_STEPPER_SX = { width: '-webkit-fill-available', flexGrow: 1, maxHeight: '20px' } as const;
 
+/** Shared top inset for content inside trip and point cards. */
+export const CARD_CONTENT_TOP_PADDING = { paddingTop: '25px' } as const;
+
 /** Consistent horizontal inset for text inside trip and point cards. */
 export const CARD_TEXT_INSET_SX = { padding: `0px ${UI_SIZES.cardTextInset}px` } as const;
 
