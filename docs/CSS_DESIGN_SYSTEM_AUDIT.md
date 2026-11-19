@@ -397,7 +397,7 @@ Confirmed local declarations:
 | `src/components/social/LikeButton.tsx` | Icon control uses shared ICON_ACTION_STYLES and compact badge contract; animation is a semantic dynamic helper. | Shared like icon states, focus/hover/disabled and count badge are preset-owned. | MIGRATED — semantic Like role centralized. |
 | `src/components/social/FavoriteButton.tsx` | Icon control uses shared ICON_ACTION_STYLES and compact badge contract. | Favorite active/inactive, focus/hover/disabled and count badge use shared semantic roles. | MIGRATED — semantic Favorite role centralized. |
 | `src/components/social/EngagementBar.tsx` | Social controls delegate to shared Like/Favorite/Report; comment action uses shared icon role. | Inline action row and overlay size/badge variants use named social preset helpers; event propagation and comments layout behavior remain component-owned. | MIGRATED — no caller-local presentation object remains. |
-| `src/components/social/ReportButton.tsx` | Report trigger, Cancel and Submit use shared icon/button semantic roles; error feedback uses shared social preset. | Report confirmation/form layout and feedback presentation use named shared contracts; report permission and pending state remain behavior-owned. | MIGRATED — semantic Report role centralized. |
+| `src/components/social/ReportButton.tsx` | Report trigger uses ICON_ACTION_STYLES.report; Cancel/Submit remain MUI text-button defaults. | Tooltip wrapper, reason field spacing, social error text and visually-hidden status use named sx contracts/MUI visuallyHidden; no React style prop remains. | MIGRATED — report presentation centralized without changing report state/permissions. |
 | `src/components/social/TripGroupSocialActions.tsx` | Like/Favorite/Report/Share/comment controls use shared icon-action role; social errors use shared feedback style. | Action row, animated like state and error feedback use named social presets/helpers. | MIGRATED — social action presentation centralized. |
 | `src/components/social/SocialConfigStatus.tsx` | Local compact `sx` | Use shared status-indicator role |
 | `src/components/social/LikeAnimation.tsx` | No style match in initial scan | Verify motion behavior separately from visual skin |
@@ -650,7 +650,8 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `src/components/social/FavoriteButton.tsx` | PARTIAL |
 | `src/components/social/LikeAnimation.tsx` | PENDING |
 | `src/components/social/LikeButton.tsx` | PARTIAL |
-| `src/components/social/ReportButton.tsx` | CHANGE REQUIRED |
+| `src/components/social/ReportButton.tsx` | MIGRATED — tooltip wrapper, dialog field spacing, error feedback and visually-hidden status use named sx contracts; no React style prop remains. |
+| `src/hooks/useBackground.tsx` | MIGRATED — dynamic background uses Next Image fill/unoptimized inside a fixed CSS Module layer; preload/decode lifecycle preserved; no React style prop remains. |
 | `src/components/social/SocialConfigStatus.tsx` | PARTIAL |
 | `src/components/social/TripGroupSocialActions.tsx` | CHANGE REQUIRED |
 | `src/components/tracking/LiveTracker.tsx` | CHANGE REQUIRED |
@@ -5646,4 +5647,20 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Status
 - **Workstream 12 — OG image renderer exception review: REVIEW COMPLETE; APPROVAL PENDING.**
+- No build, tests, lint, CI or browser validation was run.
+## 11.59 — Remaining social and dynamic background style-prop cleanup (2026-11-19)
+
+- `ReportButton.tsx`: replaced the inline-flex tooltip wrapper with `REPORT_BUTTON_TOOLTIP_WRAPPER_SX`; replaced the reason-field margin with `REPORT_BUTTON_REASON_FIELD_SX`; replaced the stale `socialErrorTextStyle` reference with `SOCIAL_ERROR_TEXT_SX`; converted error/status spans to MUI Box with `sx`, including MUI's `visuallyHidden` accessibility contract. Report icon remains `ICON_ACTION_STYLES.report`.
+- Added the two ReportButton-specific layout contracts to the existing social preset owner; no new semantic color or button variant was introduced.
+- `useBackground.tsx`: replaced the dynamic React `style` background layer with Next Image (`fill`, `unoptimized`, dynamic `src`) inside a new `useBackground.module.css` fixed-position layer. The existing image preload/decode and generation/cancellation lifecycle remains unchanged.
+- The CSS Module preserves fixed/inset positioning, negative stacking order, pointer-event suppression, cover sizing and centered image position. `unoptimized` keeps the original image URL path so the preloaded image can be reused.
+
+### Preserved
+- Report/withdraw state, permission gating, reason input, pending/error state, callbacks, dialog open/close and accessible status announcement.
+- Background API loading, preload/decode, route eligibility, navigation generations, stale-request guards, next/current image context and image URL.
+- No API, auth, data, routing or business logic changed.
+
+### Result
+- Two previously identified ordinary React style-prop owners migrated; one CSS Module added; social preset owner extended.
+- The remaining known `style` objects are confined to `src/lib/images/renderTripOgImage.tsx`, where they are the required Satori/ImageResponse renderer input described in Section 11.58.
 - No build, tests, lint, CI or browser validation was run.
