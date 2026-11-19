@@ -1,4 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
+import { ROUTE_CONTENT_PADDING } from '@/constants/ui/spacing';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 /** Live tracking map frame and Google Maps SDK configuration. */
@@ -62,3 +63,6 @@ export const LIVE_TRACKING_STAT_SX = {
   p: 1,
 } as const;
 export const LIVE_TRACKING_STAT_VALUE_SX = { m: 0 } as const;
+
+/** Public live-tracking route content gutter. */
+export const LIVE_TRACKING_PAGE_MAIN_SX = { p: ROUTE_CONTENT_PADDING } as const;
