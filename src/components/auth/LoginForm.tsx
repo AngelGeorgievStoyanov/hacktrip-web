@@ -19,7 +19,7 @@ import { zodResolver } from '@/lib/zodResolver';
 import { getAuthErrorMessage } from '@/lib/errors';
 import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
-import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
@@ -108,6 +108,7 @@ export function LoginForm() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    sx={ICON_ACTION_STYLES.base}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowPassword((visible) => !visible)}
                     onMouseDown={(event) => event.preventDefault()}
