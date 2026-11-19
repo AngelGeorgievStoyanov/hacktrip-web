@@ -6011,3 +6011,20 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
  
 ### Next
 - Verify `TripFilters.tsx` and its preset owner against the current source, then continue with the next outstanding Section 10.1 entry.
+
+
+## 11.75 — TripFilters current-branch verification (2026-11-19)
+
+### Scope and findings
+- Re-opened `TripFilters.tsx` and `trip-filters.ts` after the earlier Section 11.62 ledger reconciliation.
+- Confirmed the component consumes named contracts for the Toolbar, selector group/boxes/labels/selects, search wrapper/surface/icon/button and input.
+- No local styled-components or component-local sx objects remain in the consumer. URL query construction, filter state and event handlers remain component-owned.
+- The preset's remaining values describe this Trips-only toolbar/search role; shared colors and spacing already reference central UI tokens where applicable. No repeated global AppBar skin or generic field skin was introduced.
+
+### Result and status
+- Section 10.1 **MIGRATED** status is confirmed against the current branch; no source change was necessary.
+- TripFilters consumer: **SHARED PRESET VERIFIED**.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue from the next outstanding trip/image entry in Section 10.1; keep SEO/social-image rendering separate under the approved Section 11.58 boundary.
