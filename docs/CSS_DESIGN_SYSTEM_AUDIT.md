@@ -5036,5 +5036,5 @@ No application source code was changed. No branch was created. No build, tests, 
 
 ### Status and next
 - ConfirmDialog cancel/confirm action-role migration: **SOURCE CHANGE APPLIED**.
-- Next: continue the same common-primitives action workstream with BackButton and the already-defined button role contracts; reuse existing presets and avoid adding roles unless the current contract demonstrably cannot represent the action.
+- Next: continue the **application-wide design-system migration**, not a BackButton/ConfirmDialog-only task. Use the existing Section 11.12 dependency map and audited route/component records to migrate the remaining shared contracts and all affected consumers across the full app: global actions and navigation; cards, panels, dialogs and tables; fields/forms; page/layout/typography/CSS; images/social/maps/tracking. Work owner-first and then migrate each complete consumer group end-to-end. Reuse existing tokens, theme overrides and presets wherever they fit; add a new shared contract only for a proven missing semantic role. Do not restart route audits or create another inventory.
 - Stage 1 remains IN PROGRESS for its exhaustive maps, but it does not block this bounded migration.
