@@ -399,7 +399,7 @@ Confirmed local declarations:
 | `src/components/social/EngagementBar.tsx` | Social controls delegate to shared Like/Favorite/Report; comment action uses shared icon role. | Inline action row and overlay size/badge variants use named social preset helpers; event propagation and comments layout behavior remain component-owned. | MIGRATED — no caller-local presentation object remains. |
 | `src/components/social/ReportButton.tsx` | Report trigger uses ICON_ACTION_STYLES.report; Cancel/Submit remain MUI text-button defaults. | Tooltip wrapper, reason field spacing, social error text and visually-hidden status use named sx contracts/MUI visuallyHidden; no React style prop remains. | MIGRATED — report presentation centralized without changing report state/permissions. |
 | `src/components/social/TripGroupSocialActions.tsx` | Like/Favorite/Report/Share/comment controls use shared icon-action role; social errors use shared feedback style. | Action row, animated like state and error feedback use named social presets/helpers. | MIGRATED — social action presentation centralized. |
-| `src/components/social/SocialConfigStatus.tsx` | Local compact `sx` | Use shared status-indicator role |
+| `src/components/social/SocialConfigStatus.tsx` | Loading wrapper uses `SOCIAL_CONFIG_STATUS_WRAPPER_SX`; indicator size uses `UI_SIZES.smallIndicator`; Alert severity inherits MUI defaults. | Verify loading/error transitions and inline social-action row behavior through callers; no component-local inline sx or React style prop remains. | SOURCE MIGRATED — local inline sx removed. |
 | `src/components/social/LikeAnimation.tsx` | No style match in initial scan | Verify motion behavior separately from visual skin |
 
 ---
@@ -7226,3 +7226,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue the exact same search through the remaining UI-bearing TSX files, then inspect any callback-built `sx` expressions and inline React `style` separately. Keep Google Maps SDK configuration objects and the approved Satori/ImageResponse renderer exception out of the React-style violation count.
+
+
+## 11.130 — Direct inline sx / React style scan checkpoint (2026-11-19)
+
+### Exact search scope
+- Re-scanned all **121 tracked TSX files** in the current `feature/frontend-modernization` branch for direct JSX `sx={{...}}`, callback-built inline sx objects and React `style=` props.
+- Reviewed the existing exception boundary for `src/lib/images/renderTripOgImage.tsx`; its Satori/ImageResponse style objects remain the only approved React-style exception.
+- Google Maps SDK configuration such as `mapContainerStyle` is not counted as a React `style` prop.
+
+### Confirmed app-owned violations found and fixed
+1. `src/components/social/SocialConfigStatus.tsx` — one inline loading-wrapper sx object moved to `SOCIAL_CONFIG_STATUS_WRAPPER_SX` in `src/styles/presets/social.ts`.
+2. `src/components/social/LikeButton.tsx` — one inline unliked-icon animation sx object now uses the existing `getSocialLikeAnimationSx` helper.
+3. `src/components/maps/AddressAutocomplete.tsx` — two inline base-plus-variant sx object compositions moved to `getAddressAutocompleteRootSx` and `getAddressAutocompleteSearchButtonSx` in `src/styles/presets/map-controls.ts`.
+
+### Result
+- **4 app-owned inline sx occurrences removed** across **5 source/preset files** in Sections 11.128–11.129.
+- After those changes, the 121-file TSX scan found **no remaining direct app-owned inline sx object or React style prop**.
+- The only remaining direct React `style` matches are the documented Satori/ImageResponse objects in `src/lib/images/renderTripOgImage.tsx`.
+- Updated the original Section 5.7 SocialConfigStatus finding so it no longer reports a stale local sx violation.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue the same approved audit list by checking for indirect/local style constants and callback-built sx values that a direct JSX-prop scan cannot classify on its own. Preserve the Satori exception; do not broaden this pass into semantic action-role or unrelated state-parity work.
