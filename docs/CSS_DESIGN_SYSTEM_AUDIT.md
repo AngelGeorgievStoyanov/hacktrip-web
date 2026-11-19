@@ -8016,3 +8016,55 @@ Other `--ht-*` variables (spacing, shape, typography, sizing) have distinct CSS 
 
 ### Next audit item
 Complete the repository-wide direct-consumer sweep for `UI_COLORS`, `ht-button` / `ht-button--danger`, and every `--ht-color-*` variable against the current feature-branch tree. Then reconcile the remaining inventory ledger rows. Only after those checks should the audit be marked complete or source cleanup be proposed.
+
+
+## 11.145 — Repository-wide color-token and legacy-class consumer sweep (2026-11-19)
+
+### Scope and result
+A branch-pinned source scan was completed against tree `8f6b804d3e14d3cec3ffe79cbee58ea533897eae` (HEAD before this documentation commit):
+
+- **121/121 TSX files** scanned.
+- **14/14 CSS files** scanned.
+- **129/129 non-TSX TypeScript files** scanned, including all 40 UI foundation files (UI constants, style presets and theme files).
+- Total: **264/264 TS/TSX/CSS files** in the current source tree.
+- The scan checked direct `UI_COLORS` references, `ht-button` class names, `--ht-color-*` references, and raw hex/RGB/HSL color literals in TSX/CSS. All files were fetched from `feature/frontend-modernization`; default-branch code-search results were excluded.
+
+### Exhaustive direct-consumer findings
+
+1. Direct `UI_COLORS` use is concentrated in the expected design-system layer:
+   - `src/theme/palette.ts` — MUI palette mapping.
+   - `src/theme/index.ts` — CSS custom-property bridge.
+   - 12 shared preset modules: `buttons.ts`, `forms.ts`, `image-gallery.ts`, `image-upload.ts`, `map-controls.ts`, `pagination.ts`, `profile-image.ts`, `social-object-placeholder.ts`, `social.ts`, `tracking.ts`, `trip-filters.ts`, and `typography.ts`.
+   - `app/layout.tsx` — browser theme color metadata uses `UI_COLORS.brand.primary`.
+   - No other direct `UI_COLORS` reference was found in the remaining TS/TSX files.
+2. No raw hex, RGB, or HSL color literal was found in the 121 TSX files. Feature components use MUI semantic props such as `color="primary"`, `color="error"`, `color="success"`, and `color="text.secondary"` instead. These are semantic MUI palette references, not duplicated raw colors.
+3. No `ht-button` or `ht-button--danger` reference was found in any of the 121 TSX files or the 129 non-TSX TypeScript files. The only occurrence is the legacy selector definition in `app/globals.css`. This is strong evidence that the legacy skin currently has no source-level TS/TSX consumer; do not delete it until any non-TypeScript/server-generated markup path is ruled out.
+4. CSS custom-property consumers are limited to the expected CSS surfaces: About, Legal, NotFound, ImageGallery, Footer, TripPagination and the global stylesheet. No additional color-variable consumer was found in the other CSS files.
+5. The two CSS color variables defined by `src/theme/index.ts` but not consumed by any CSS file are:
+   - `--ht-color-action-contrast-background`
+   - `--ht-color-legal-back-background`
+   They are candidates for removal from the CSS bridge or for a consumer to be restored, but they may still be consumed indirectly by runtime-injected markup. No change is made without confirming that boundary.
+6. Other defined color variables have concrete CSS consumers:
+   - `--ht-color-primary`, `--ht-color-primary-hover`, `--ht-color-text-inverse`
+   - `--ht-color-surface-page`, `--ht-color-text-primary`
+   - `--ht-color-border-legal`, `--ht-color-legal-link`
+   - `--ht-color-decorative-heading-shadow`, `--ht-color-action-danger-hover`
+
+### Final color-token audit disposition
+
+| Item | Disposition |
+|---|---|
+| Direct color-token ownership | Centralized in the MUI palette and shared presets; no stray direct `UI_COLORS` imports found elsewhere in TS/TSX. |
+| Raw colors in TSX | None found. Semantic MUI color props remain valid and should not be mechanically replaced. |
+| CSS variable bridge | Two unconsumed color variables identified; all other color variables have CSS consumers. |
+| Legacy `.ht-button` CSS | No TS/TSX consumer found; classify as likely orphaned legacy CSS, pending non-TSX/server-markup confirmation. |
+| Primary/hover, danger/error and secondary semantics | Still require product/design intent decisions; do not recolor or rename by assumption. |
+| Feature-specific literals | `trip-filters.ts` translucent white states and the `error.main` image-upload message remain explicit follow-up candidates; they are not raw literals in TSX/CSS. |
+
+### Changes and verification
+- No application source or visual value was changed.
+- This section records a static source scan only. It does not claim runtime DOM coverage, visual QA, build, tests, lint, CI, or browser validation.
+- Branch remains `feature/frontend-modernization`; this audit entry is committed to the same branch.
+
+### Remaining work before the global audit can be closed
+The color-token consumer sweep is complete. The global design-system audit is **not yet complete**: reconcile the 56 missing inventory ledger entries identified in Section 11.135, verify the legacy `.ht-button` markup boundary, and review the two unresolved source-level blockers (duplicate `ADMIN_NAVIGATION_SX` and undefined `SECONDARY_BUTTON_SX`). Keep source fixes separate and do not close the audit until those items have a documented disposition.
