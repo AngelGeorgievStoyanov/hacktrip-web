@@ -821,7 +821,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Placeholder colors consume UI_COLORS semantic tokens; image asset selection is data/state driven. | Overlay gradient, typography sizes, image object-fit style and geometry are local; React style on Next Image is a presentation exception candidate requiring approved abstraction. | PARTIAL — color tokens used, overlay contract remains local. |
 | `src/components/trips/PointsSection.tsx` | Pure composition wrapper delegates selected point rendering to PointSection. | No visual skin of its own; selected-point section wrapper is semantic structure only. Child surface is owned by PointSection. | PARTIAL — composition only; consumer trace required. |
 | `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
-| `src/components/common/ConfirmDialog.tsx` | Uses MUI Dialog; its Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are direct MUI Buttons with the same primary/contained props; semantic roles, button states and dialog content spacing remain uncentralized. | PARTIAL — Dialog surface is centralized, action roles and layout remain. |
+| `src/components/common/ConfirmDialog.tsx` | Dialog Paper/surface and content/action spacing inherit shared MUI Dialog defaults; No uses semantic `BUTTON_STYLES.cancel`; Yes uses `BUTTON_STYLES.confirm`. | Verify focus trap/autofocus, Escape/backdrop close, repeated confirm calls and keyboard/disabled behavior; no component-local dialog or action geometry remains. | PARTIAL — Cancel/Confirm roles centralized; interaction/accessibility state parity remains open. |
 | `app/api/og/trips/[id]/route.ts` | Server route parses trip/day parameters, loads OG data and delegates image generation to `renderTripOgImage`; sets immutable cache headers. | No UI or CSS declarations in the route. Visual implementation is in the supporting renderer `src/lib/images/renderTripOgImage.tsx`; route cache/data behavior is not a styling concern. | STRUCTURAL — server image endpoint only. |
 | `app/error.tsx` | Global route error uses MUI Alert and Typography; retry action is a MUI Button. | Page layout uses GLOBAL_ERROR_PAGE_SX and retry uses BUTTON_STYLES.primary; Alert severity inherits MUI defaults. | MIGRATED — global error composition/action centralized. |
 | `app/not-found.tsx` | Delegates the entire not-found experience to the existing `src/components/common/NotFound`. | No local styles or controls; visual work belongs to `NotFound.tsx` and `NotFound.module.css`, already inventoried. | STRUCTURAL — route wrapper only. |
@@ -7001,3 +7001,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next common component entry: `src/components/common/ConfirmDialog.tsx`. Centralize Cancel/Confirm roles and dialog content/action spacing while preserving the shared Dialog surface.
+
+
+## 11.121 — ConfirmDialog semantic Cancel/Confirm roles (2026-11-19)
+
+### Source changes
+- Added `BUTTON_STYLES.cancel` as an alias of the existing secondary appearance and `BUTTON_STYLES.confirm` as an alias of the existing primary appearance.
+- Migrated the No/Yes actions to Cancel/Confirm semantic roles without changing their current treatments.
+- Reconciled the Section 10.1 ConfirmDialog row.
+
+### Preserved
+- Promise resolution, single pending confirmation, title/message defaults, close/backdrop behavior, autofocus and all consumer confirmation flows.
+- MUI Dialog surface and default content/action spacing; no duplicate dialog preset was added.
+- No API, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- ConfirmDialog Cancel/Confirm action roles: **SOURCE MIGRATED**.
+- Focus trap, Escape/backdrop, repeated-call and keyboard/accessibility parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next placeholder/common image entry in Section 10.1: `src/components/placeholders/SocialObjectPlaceholder.tsx`. Separate AppImage/Next Image configuration from prohibited React style props and preserve the unique overlay composition.
