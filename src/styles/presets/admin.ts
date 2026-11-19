@@ -125,3 +125,6 @@ export const ADMIN_USER_FORM_BACK_SX = {
   alignSelf: 'flex-start',
   mt: 1,
 } as const;
+
+/** Password-field disclosure stack in the admin user editor. */
+export const ADMIN_USER_PASSWORD_FIELDS_SX = { display: 'flex', flexDirection: 'column', gap: 1 } as const;
