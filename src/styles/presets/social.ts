@@ -17,6 +17,12 @@ export const POINT_SOCIAL_ACTIONS_SX = {
   my: 0,
 } as const;
 
+/** Compact loading wrapper for social configuration feedback. */
+export const SOCIAL_CONFIG_STATUS_WRAPPER_SX = {
+  display: 'inline-flex',
+  p: 0.5,
+} as const;
+
 /** Compact count badge metrics shared by small social action buttons and image overlays. */
 export const SOCIAL_BADGE_COMPACT_STYLE = {
   fontSize: '0.65rem',
