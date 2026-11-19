@@ -32,7 +32,7 @@ import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
-import { PANEL_SX } from '@/styles/presets/panels';
+import { ADMIN_USER_FORM_PANEL_SX, ADMIN_USER_FORM_BACK_SX } from '@/styles/presets/admin';
 import type { AuthUserDto, Role, UserStatus } from '@/types';
 
 const ROLE_OPTIONS: Role[] = ['user', 'admin', 'manager'];
@@ -142,14 +142,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
 
   return (
     <Box
-      sx={(theme) => ({
-        ...PANEL_SX(theme),
-        ...COLUMN_STACK_SX,
-        width: '100%',
-        maxWidth: 760,
-        mx: 'auto',
-        p: { xs: 2, sm: 3 },
-      })}
+      sx={ADMIN_USER_FORM_PANEL_SX}
     >
       <Typography variant="h4">Edit user</Typography>
       <Typography>Email: {target.email}</Typography>
@@ -327,7 +320,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
       <BackButton
         startIcon={<ArrowBackRoundedIcon />}
         onClick={() => router.push('/admin/users')}
-        sx={{ alignSelf: 'flex-start', mt: 1 }}
+        sx={ADMIN_USER_FORM_BACK_SX}
       >
         Back
       </BackButton>
