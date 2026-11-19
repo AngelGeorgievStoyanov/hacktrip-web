@@ -22,20 +22,20 @@
 .aboutPageContent h1,
 .aboutPageContent h2,
 .aboutPageContent h3 {
-  margin: 8px 0;
-  font-family: 'Space Mono', monospace;
-  font-weight: 600;
+  margin: var(--ht-about-heading-margin);
+  font-family: var(--ht-about-font-family);
+  font-weight: var(--ht-about-font-weight);
 }
 
 .aboutPageContent h1 {
-  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-size: var(--ht-about-h1-size);
 }
 .aboutPageContent h2 {
-  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-size: var(--ht-about-h2-size);
 }
 .aboutPageContent h3 {
-  font-size: clamp(1rem, 2vw, 1.25rem);
-  line-height: 1.6;
+  font-size: var(--ht-about-h3-size);
+  line-height: var(--ht-about-h3-line-height);
 }
 
 .aboutPageContent a {
