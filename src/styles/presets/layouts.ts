@@ -43,9 +43,20 @@ export const ADMIN_PAGINATION_SX = {
 } as const;
 
 /** Shared layout for the account trip and favorites listing pages. */
-export const ACCOUNT_LAYOUT_MAIN_SX = {
+/** Shared flexing route shell used by authenticated, moderator and guest-only layouts. */
+export const ROUTE_LAYOUT_MAIN_SX = {
   p: ROUTE_CONTENT_PADDING,
   flex: 1,
+} as const;
+export const ACCOUNT_LAYOUT_MAIN_SX = ROUTE_LAYOUT_MAIN_SX;
+export const AUTH_LAYOUT_MAIN_SX = {
+  ...ROUTE_LAYOUT_MAIN_SX,
+  display: 'flex',
+  justifyContent: 'center',
+} as const;
+export const AUTH_LAYOUT_CONTENT_SX = {
+  width: '100%',
+  maxWidth: 480,
 } as const;
 
 export const ACCOUNT_TRIPS_PAGE_SX = { width: '100%' } as const;
