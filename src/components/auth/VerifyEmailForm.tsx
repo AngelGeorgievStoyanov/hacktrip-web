@@ -13,7 +13,7 @@ import {
   LOGIN_EMAIL_VERIFIED_MESSAGE,
 } from '@/constants/notifications';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
+import { EMAIL_VERIFICATION_CARD_SX, EMAIL_VERIFICATION_TITLE_SX } from '@/styles/presets/forms';
 
 export function VerifyEmailForm({ token }: { token?: string }) {
   const router = useRouter();
@@ -63,19 +63,9 @@ export function VerifyEmailForm({ token }: { token?: string }) {
   return (
     <WelcomeHeading>
       <Card
-        sx={{
-          ...COLUMN_STACK_SX,
-          alignItems: 'center',
-          width: '100%',
-          maxWidth: 560,
-          boxSizing: 'border-box',
-          mx: 'auto',
-          p: { xs: 3, sm: 4 },
-          color: 'text.primary',
-          textAlign: 'center',
-        }}
+        sx={EMAIL_VERIFICATION_CARD_SX}
       >
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 700 }}>
+        <Typography variant="h5" component="h1" sx={EMAIL_VERIFICATION_TITLE_SX}>
           Verify email
         </Typography>
 
