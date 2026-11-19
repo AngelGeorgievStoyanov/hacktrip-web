@@ -711,7 +711,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/theme/components/dialog.ts` | MUI Dialog Paper receives `getSurfaceStyles`; ImageLightbox applies its documented semantic image-stage override. | ConfirmDialog, AdminImages, ImageLightbox, ProfileImage and ReportButton inherit the shared Dialog Paper contract. | MIGRATED — Dialog surface and image-stage exception are explicit. |
 | `src/theme/components/surface.ts` | Defines elevated getSurfaceStyles and outlined getOutlinedSurfaceStyles from active theme values. | Adopted by MuiCard, MuiDialog.paper, MuiPaper.outlined and PANEL_SX; no blanket default Paper override is applied. | MIGRATED — shared surface roles and variant boundary confirmed. |
 | `src/components/trips/PointSection.tsx` | Card surface inherits `MuiCard`; title, content, image frame, empty image frame, note, description and action row consume named `trip-details.ts` / `image-gallery.ts` presets. ImageGallery, PointActions, CommentsToggle and ExpandableText are shared child components. | No React `style` prop or component-local sx object remains; verify responsive composition through all parent routes and child states. | MIGRATED — PointSection presentation and child composition use shared contracts. |
-| `src/components/points/EditPointPage.tsx` | Uses MUI Card theme surface for its Card. | Local layout `sx`, local IconButton styling and other page composition remain; inspect against shared point form/action roles. | CHANGE REQUIRED. |
+| `src/components/points/EditPointPage.tsx` | Parent/loading/error/map/content/form/image grid/tile/placeholder use named `EDIT_POINT_*` presets; point map/form/image rendering delegate to shared components; image Delete uses `ICON_ACTION_STYLES.delete` through its overlay preset. | Verify permission/load/delete pending/error and responsive map/form/image states; no component-local sx object remains. | PARTIAL — page geometry and Delete role centralized; caller/state parity remains open. |
 | `src/components/points/CreatePointPage.tsx` | Uses MUI Card theme surface for its Card and central size token for content width. | Local layout `sx` and page composition remain; verify all nested form and action consumers. | PARTIAL — not fully fixed. |
 
 
@@ -6847,3 +6847,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Return to the next point-page entry in Section 10.1 order: `src/components/points/EditPointPage.tsx`, then `CreatePointPage.tsx`.
+
+
+## 11.114 — EditPointPage current-source reconciliation and Delete role (2026-11-19)
+
+### Scope and findings
+- Returned to the next point-page entry in Section 10.1 order after completing the intervening admin/auth/social/map checks.
+- Re-opened `EditPointPage.tsx` and the `forms.ts` preset owner.
+- The old CHANGE REQUIRED note was stale: page/loading/error/map/content/form/image-grid/tile/placeholder geometry already consumed named `EDIT_POINT_*` presets; map, form and image rendering delegated to shared components.
+- The image-delete overlay preset was the remaining generic danger role.
+
+### Source changes
+- Migrated `EDIT_POINT_IMAGE_DELETE_SX` from generic `ICON_ACTION_STYLES.danger` to semantic `ICON_ACTION_STYLES.delete`.
+- Reconciled the Section 10.1 EditPointPage row.
+
+### Preserved
+- Point fetch/permission checks, map coordinate synchronization, find-in-map trigger, image grid/count, delete confirmation, pending state, API call and local image removal.
+- Existing delete overlay appearance, position and z-index.
+- No API, route, data or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- EditPointPage page composition: **PRESET-OWNED**; image Delete role: **SOURCE MIGRATED**.
+- Permission/load/delete and responsive caller state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 point-page entry: `src/components/points/CreatePointPage.tsx`. Verify its page geometry, loading/error state, map frame and nested PointForm ownership.
