@@ -3,7 +3,7 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 import { UI_COLORS } from '@/constants/ui/colors';
-import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 /** Compact day-number field: dimensions and non-editable numeric display. */
 export const DAY_NUMBER_FIELD_SX = {
@@ -88,6 +88,9 @@ export const POINT_FORM_SX = {
 
 /** Centered heading for the point create/edit form. */
 export const POINT_FORM_TITLE_SX = { margin: '10px auto' } as const;
+
+/** Shared presentation and spacing for the point form's Find in Map action. */
+export const POINT_FORM_FIND_MAP_BUTTON_SX = { ...BUTTON_STYLES.primary, m: 1 } as const;
 
 /** Alignment for the point form's standalone map-search action. */
 export const POINT_FORM_FIND_MAP_ROW_SX = {
