@@ -8068,3 +8068,47 @@ A branch-pinned source scan was completed against tree `8f6b804d3e14d3cec3ffe79c
 
 ### Remaining work before the global audit can be closed
 The color-token consumer sweep is complete. The global design-system audit is **not yet complete**: reconcile the 56 missing inventory ledger entries identified in Section 11.135, verify the legacy `.ht-button` markup boundary, and review the two unresolved source-level blockers (duplicate `ADMIN_NAVIGATION_SX` and undefined `SECONDARY_BUTTON_SX`). Keep source fixes separate and do not close the audit until those items have a documented disposition.
+
+
+## 11.146 — Final ledger status reconciliation and confirmed blocker disposition (2026-11-19)
+
+### Correction to the remaining-work note in Section 11.145
+- The 56 missing ledger rows were already added and verified in **Section 11.136**. The Section 11.145 sentence listing ledger reconciliation as still outstanding was stale; it is superseded by this correction.
+- Section 10.1 currently contains **183 unique file rows**: the 182 current in-scope candidate files plus the retained Satori/ImageResponse supporting exception `src/lib/images/renderTripOgImage.tsx`.
+- Current row-status count, parsed from the live Section 10.1 table:
+  - **40 MIGRATED**
+  - **12 CENTRALIZED**
+  - **92 PARTIAL**
+  - **20 STRUCTURAL**
+  - **16 NON-VISUAL**
+  - **1 DATA**
+  - **1 APPROVED EXCEPTION**
+  - **1 BLOCKER**
+- Therefore, the inventory is complete (**182/182 candidate paths**), but the implementation/verification audit is not. The 92 PARTIAL rows are the active file-level follow-up set; they include a mixture of remaining source contracts and caller/state/responsive verification. They must not all be interpreted as 92 files requiring fresh CSS migration.
+- The 40 MIGRATED and 12 CENTRALIZED rows are not a substitute for visual QA. Their individual remaining-work column still governs any outstanding caller, state or responsive verification.
+
+### Current-source blocker confirmation
+The following source files were re-fetched from `feature/frontend-modernization` after the color sweep:
+
+1. `src/styles/presets/admin.ts`
+   - `ADMIN_NAVIGATION_SX` is still exported at lines 133 and 144.
+   - The duplicate declarations remain the one explicit BLOCKER row in Section 10.1.
+2. `src/components/auth/RegisterForm.tsx`
+   - The adjacent Login action uses `BUTTON_STYLES.navigationSecondary` at line 229.
+   - The Resend Verification action still references undeclared/unimported `SECONDARY_BUTTON_SX` at line 238.
+   - `src/styles/presets/buttons.ts` confirms `BUTTON_STYLES.navigationSecondary` is an exported alias of the shared `secondary` treatment. This is the evidence-backed replacement candidate, but no source edit is made in this audit-only step.
+3. `app/globals.css`
+   - The only `ht-button` / `ht-button--danger` occurrences in the complete TS/TSX/CSS sweep are the global CSS selector definitions.
+   - No TSX or TypeScript consumer exists in the current tree. Classify this as likely orphaned legacy CSS; removal still requires confirming that no non-TypeScript or externally supplied markup relies on it.
+
+### Next exact execution order
+1. Close the two source blockers with minimal, separately documented source changes after the intended semantic role is approved.
+2. Decide and document the legacy `.ht-button` CSS disposition; remove only if the server-rendered/external-markup boundary is confirmed clear.
+3. Work through the **92 PARTIAL** ledger rows in their existing Section 10.1 order. For each row, close its stated remaining source contract and/or record the precise caller/state/responsive verification still required. Do not create duplicate audits or re-open already migrated files without new evidence.
+4. Reconcile the shared semantic matrices against those file-level rows (button/icon actions, field families, surfaces, typography, spacing, breakpoints, images and CSS bridge).
+5. Only then decide whether Stage 1 can be closed. No build, tests, lint, CI or browser validation was run in this pass.
+
+### Change boundary
+- This entry is documentation-only.
+- No application source, visual value, CSS class, token, preset or theme behavior was changed.
+- Branch remains `feature/frontend-modernization`.
