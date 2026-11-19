@@ -49,3 +49,11 @@ export const POINT_LIST_EMPTY_SX = {
 /** Page-specific intro widths compose the shared intro typography treatment. */
 export const HOME_HERO_INTRO_SX = { ...HOME_INTRO_SX, maxWidth: 850 } as const;
 export const TRIPS_PAGE_INTRO_SX = { ...HOME_INTRO_SX, maxWidth: 900 } as const;
+
+/** Three-line collapsed state for long point/trip descriptions. */
+export const EXPANDABLE_TEXT_COLLAPSED_SX = {
+  display: '-webkit-box',
+  WebkitBoxOrient: 'vertical',
+  WebkitLineClamp: 3,
+  overflow: 'hidden',
+} as const;
