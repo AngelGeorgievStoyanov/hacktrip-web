@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { NOINDEX } from '@/constants/seo';
-import { ROUTE_CONTENT_PADDING } from '@/constants/ui/spacing';
+import { ROUTE_LAYOUT_MAIN_SX } from '@/styles/presets/layouts';
+import { Box } from '@mui/material';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { RequireRole } from '@/components/auth';
@@ -15,10 +16,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <RequireRole roles={[...MODERATOR_ROLES]}>
       <Header />
-      <main style={{ padding: ROUTE_CONTENT_PADDING, flex: 1 }}>
+      <Box component="main" sx={ROUTE_LAYOUT_MAIN_SX}>
         <AdminNavigation />
         {children}
-      </main>
+      </Box>
       <Footer />
     </RequireRole>
   );
