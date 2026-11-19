@@ -763,7 +763,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminDashboard.tsx` | Semantic nav/list/link structure; no local visual declarations found. | Verify rendered navigation/link styling against shared navigation contract and parent Admin layout; no direct style migration confirmed in this file. | PARTIAL — structural only. |
 | `src/components/auth/RequireModeratorRedirect.tsx` | Auth guard returns children or null; no visual declarations. | No visual migration in this file; verify only through child component ownership. | NON-VISUAL — no styling target. |
 | `src/components/common/JsonLd.tsx` | Emits JSON-LD script only; no rendered visual UI. | No visual migration target. | NON-VISUAL — no styling target. |
-| `src/components/common/ScrambleHeading.tsx` | Uses HOME_HEADING_STYLE as base typography preset. | Public style prop allows caller-provided React presentation style and is spread into the h1; replace with approved semantic class/variant or documented nonvisual runtime API, then audit all callers. | CHANGE REQUIRED. |
+| `src/components/common/ScrambleHeading.tsx` | Uses `HOME_HEADING_SX` for typography and exposes only text/ref/scramble behavior; no React `style` prop or caller-provided presentation object remains. | Verify reduced-motion, touch/hover and responsive heading split behavior through WelcomeHeading; no local visual style transport remains. | MIGRATED — typography preset-owned; interaction remains component-owned. |
 
 | `app/(account)/layout.tsx` | Authenticated route shell with Header/main/Footer order and noindex metadata. | Main uses Box component=main with ACCOUNT_LAYOUT_MAIN_SX; no React style prop remains. | MIGRATED — authenticated shell uses shared layout contract. |
 | `app/(account)/my-trips/page.tsx` | Uses shared page/content/heading/empty-state presets; empty-state CTA consumes `BUTTON_STYLES.createTrip` and links to trip creation. | Loading margin, error width and empty-state typography consume named account presets; Create Trip retains its semantic action role. | MIGRATED — account list states and CTA use shared contracts. |
@@ -6588,3 +6588,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next remaining auth/field entry in Section 10.1: `src/components/auth/ChangePasswordForm.tsx` / `ProfileForm.tsx` consumer-state verification, then proceed to the remaining common components in the register.
+
+
+## 11.102 — ScrambleHeading current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next common component in Section 10.1.
+- Re-opened `ScrambleHeading.tsx`, `WelcomeHeading.tsx` and `WelcomeHeading.module.css`.
+- The old ledger note claiming a public React `style` prop was stale. The current ScrambleHeading props are only `text` and the imperative ref; its heading consumes `HOME_HEADING_SX`.
+- WelcomeHeading's unique wrapper/heading-group geometry remains in its CSS Module as recorded in Section 11.61; touch handling, responsive split and scramble behavior remain unchanged.
+
+### Result and status
+- Corrected the Section 10.1 ScrambleHeading row.
+- React style-prop policy: **VERIFIED / COMPLIANT**.
+- Typography and unique wrapper layout: **SHARED PRESET + CSS MODULE VERIFIED**.
+- No source change, API, route or business logic change. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next common component in Section 10.1: `src/components/comments/CommentsSection.tsx`. Inspect its React style transport, edit/delete/reply/report icon-action roles and field states before making changes.
