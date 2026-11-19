@@ -744,7 +744,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/comments/CommentsToggle.tsx` | Wrapper and empty-label presentation use `COMMENTS_TOGGLE_ROW_SX` / `COMMENTS_TOGGLE_EMPTY_LABEL_SX`; show/hide/add action consumes `ICON_ACTION_STYLES.disclosure`. | No React `style` prop or local heading margin remains; verify count/open/empty states and keyboard/focus behavior through parent callers. | PARTIAL — disclosure role and layout presets centralized; caller/state parity remains open. |
 | `src/components/comments/RepliesSection.tsx` | Reply item/edit/body/social/create layouts use named `REPLY_*` presets; Save/Cancel/Edit/Submit/Delete IconButtons use semantic `ICON_ACTION_STYLES` roles; Like/Favorite/Report delegate to shared social controls. | Verify permission/config combinations, reply field error/focus/disabled states, mutation pending/confirmation and responsive nesting; no local border/spacing or React style prop remains. | PARTIAL — layout and action roles centralized; state/caller parity remains open. |
 | `src/components/social/EngagementBar.tsx` | Inline/overlay shell and action-row geometry consume `SOCIAL_ENGAGEMENT_INLINE_SX`, `getSocialOverlaySx` and `getSocialEngagementActionsSx`; Like/Favorite/Report delegate to shared controls; Comments toggle uses `ICON_ACTION_STYLES.disclosure`. | Verify overlay size variants, external/internal comment ownership, responsive placement and permission/config states; no component-local sx object or unstyled raw IconButton remains. | PARTIAL — visual/action contracts centralized; caller/responsive state parity remains open. |
-| `src/components/social/TripGroupSocialActions.tsx` | Uses shared like animation and social action components in part. | Multiple raw IconButtons, local gaps and React style error spans remain; centralize icon actions and state feedback without merging distinct semantics. | CHANGE REQUIRED. |
+| `src/components/social/TripGroupSocialActions.tsx` | Like/Favorite/Report/Share use semantic `ICON_ACTION_STYLES` roles; Comments delegates to `CommentsToggle`; action row, error feedback and like animation consume named social presets/helpers. | Verify permission/config combinations, animation failure/reduced-motion states, share copied feedback and responsive caller parity; no raw unstyled icon or React style error span remains. | PARTIAL — action/presentation contracts centralized; interaction-state parity remains open. |
 | `src/components/tracking/LiveTracker.tsx` | Uses TRACKING_SURFACE_SX and layout primitives. | Start/Stop/Reset/Follow are direct Buttons; local tracking surface and status/detail spacing need role and surface mapping. | CHANGE REQUIRED. |
 | `src/components/trips/TripDaysNav.tsx` | Page and non-page PaginationItems consume `TRIP_DAY_PAGE_ITEM_SX`; AppBar, centered content and Pagination spacing consume named `TRIP_DAYS_NAV_*` presets. | No component-local sx objects remain; URL navigation and optional caller-owned `onSelect` remain behavior-only. | MIGRATED — day-navigation presentation is preset-owned. |
 | `src/components/trips/TripFilters.tsx` | Trip group, transport and sort Selects plus search input/button consume the named contracts in `src/styles/presets/trip-filters.ts`. | Toolbar, select group/box/label/select, search surface/button/icon/input geometry are preset-owned; URL navigation and filter state remain feature behavior. | MIGRATED — filter presentation is named-preset-owned. |
@@ -6707,3 +6707,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 social component: `src/components/social/TripGroupSocialActions.tsx`. Verify action semantics, animation, count badges and any remaining local style transport.
+
+
+## 11.107 — Semantic Like/Favorite/Report/Share icon roles (2026-11-19)
+
+### Source changes
+- Added `ICON_ACTION_STYLES.like`, `favorite` and `share` aliases of the existing icon-action base; Report already had its semantic role.
+- Migrated TripGroupSocialActions Like/Favorite/Report/Share IconButtons to their semantic roles.
+- Migrated the shared LikeButton and FavoriteButton components to the same roles, so all consumers share one semantic contract.
+- Reconciled the Section 10.1 TripGroupSocialActions row.
+
+### Preserved
+- Like/favorite/report API mutations and permissions, current-user pressed states, counts/badges, animation requests/failure feedback, report withdrawal, share URL/title/text/day query and copied-link feedback.
+- Existing icon dimensions, colors, hover/focus behavior and action ordering.
+- No API, social, route, data or business logic changed.
+
+### Result and status
+- **4 source files changed** plus the Section 10.1 ledger reconciliation.
+- Like/Favorite/Report/Share icon-action roles: **SOURCE MIGRATED**.
+- Permission/config, animation, share-feedback and responsive caller state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining common social components in Section 10.1; verify ReportButton's dialog Cancel/Submit roles and the shared social action wrappers before moving to the live-tracking feature.
