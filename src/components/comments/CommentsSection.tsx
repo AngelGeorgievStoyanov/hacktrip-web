@@ -266,7 +266,7 @@ export function CommentsSection({
                     <Tooltip title="Save comment" arrow>
                       <span>
                         <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.save}
                           type="submit"
                           aria-label="Save comment"
                           disabled={updateMutation.isPending}
@@ -277,7 +277,7 @@ export function CommentsSection({
                     </Tooltip>
                     <Tooltip title="Cancel edit" arrow>
                       <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.cancel}
                         type="button"
                         aria-label="Cancel edit"
                         onClick={() => setEditingId(null)}
@@ -351,7 +351,7 @@ export function CommentsSection({
                       {canEdit ? (
                         <Tooltip title="Edit comment" arrow>
                           <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.edit}
                             size="small"
                             aria-label="Edit comment"
                             onClick={() => {
@@ -366,7 +366,7 @@ export function CommentsSection({
                       {canDelete ? (
                         <Tooltip title="Delete comment" arrow>
                           <IconButton
-                            sx={ICON_ACTION_STYLES.danger}
+                            sx={ICON_ACTION_STYLES.delete}
                             size="small"
                             aria-label="Delete comment"
                             onClick={() =>
@@ -397,7 +397,7 @@ export function CommentsSection({
                 arrow
               >
                 <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.disclosure}
                   size="small"
                   aria-label={
                     openRepliesId === commentItem.id
@@ -463,7 +463,7 @@ export function CommentsSection({
                 <Tooltip title="Post comment" arrow>
                   <span>
                     <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.submit}
                       type="submit"
                       aria-label="Post comment"
                       color="primary"
@@ -480,7 +480,7 @@ export function CommentsSection({
           <Box sx={COMMENT_CREATE_ACTION_ROW_SX}>
             <Tooltip title={formOpen ? 'Close' : 'Add comment'} arrow>
               <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.disclosure}
                 onClick={() => setFormOpen((previous) => !previous)}
                 aria-label={formOpen ? 'Close' : 'Add comment'}
                 aria-expanded={formOpen}
