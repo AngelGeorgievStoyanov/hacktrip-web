@@ -16,7 +16,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { SOCIAL_ERROR_TEXT_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
+import { SOCIAL_ERROR_TEXT_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
 import { isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
@@ -125,9 +125,9 @@ export function TripGroupSocialActions({
             >
               <Badge badgeContent={likes} invisible={likes === 0} max={BADGE_MAX} color="primary">
                 {liked ? (
-                  <ThumbUpIcon sx={{ animation: likeAnimation.animation }} />
+                  <ThumbUpIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
                 ) : (
-                  <ThumbUpOffAltIcon sx={{ animation: likeAnimation.animation }} />
+                  <ThumbUpOffAltIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
                 )}
               </Badge>
             </IconButton>
@@ -159,7 +159,7 @@ export function TripGroupSocialActions({
                 {favorited ? <BookmarkRemoveIcon /> : <BookmarkAddIcon />}
               </Badge>
             </IconButton>
-          </span>
+          </Box>
         </Tooltip>
       ) : null}
       {isAuthenticated && canReport ? (
@@ -182,7 +182,7 @@ export function TripGroupSocialActions({
             >
               {reported ? <ReportOffIcon /> : <ReportIcon />}
             </IconButton>
-          </span>
+          </Box>
         </Tooltip>
       ) : null}
       {isAuthenticated && canComment ? (
@@ -204,17 +204,17 @@ export function TripGroupSocialActions({
       {isAuthenticated && likeMutation.error ? (
         <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
           {getGenericErrorMessage(likeMutation.error)}
-        </span>
+        </Box>
       ) : null}
       {isAuthenticated && favoriteMutation.error ? (
-        <span role="alert" style={socialErrorTextStyle}>
+        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
           {getGenericErrorMessage(favoriteMutation.error)}
-        </span>
+        </Box>
       ) : null}
       {isAuthenticated && reportActions.error ? (
-        <span role="alert" style={socialErrorTextStyle}>
+        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
           {reportActions.error}
-        </span>
+        </Box>
       ) : null}
     </Box>
   );
