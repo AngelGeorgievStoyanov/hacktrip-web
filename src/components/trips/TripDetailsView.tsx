@@ -15,15 +15,13 @@ import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
 import { STICKY_SOCIAL_SX } from '@/styles/presets/social';
-import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
+import { getTripDetailsStickyHeaderSx } from '@/styles/presets/trip-details';
 import type { TripGroupResponse } from '@/types';
 
 interface TripDetailsViewProps {
   trip: TripGroupResponse;
   initialDayNumber: number;
 }
-
-const SHELL_BLEED = `-${PAGE_CONTENT_PADDING}`;
 
 /**
  * Trip Details view owns the active day in client state.
@@ -110,17 +108,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
     <>
       <Box
         data-trip-sticky-header="true"
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 'appBar',
-          width: `calc(100% + ${PAGE_CONTENT_PADDING} + ${PAGE_CONTENT_PADDING})`,
-          marginLeft: SHELL_BLEED,
-          marginRight: SHELL_BLEED,
-          marginTop: SHELL_BLEED,
-          pb: 1,
-          backgroundColor: 'transparent',
-        }}
+        sx={getTripDetailsStickyHeaderSx()}
       >
         <TripDaysNav
           tripGroupId={group.id}
