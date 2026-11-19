@@ -742,7 +742,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_SX typography preset and MUI typography; unique wrapper/heading-group geometry is owned by `WelcomeHeading.module.css`. | Inline layout sx was moved to the CSS Module while preserving flex alignment, 25px horizontal padding and 16px bottom margin. Touch handling, responsive heading split and scramble behavior remain unchanged. | MIGRATED — unique layout is CSS Module-owned; typography remains preset-owned. |
 | `src/components/comments/CommentsSection.tsx` | Comment panel/list/card/author/body/timestamp/edit/create/action-row/hint presentation uses named `COMMENT_*` presets; social actions delegate to shared Like/Favorite/Report/Replies components; edit/save/cancel/submit/disclosure/delete IconButtons use semantic `ICON_ACTION_STYLES` roles. | Verify all permission/config combinations, field error/focus/disabled states, mutation pending/confirmation behavior and responsive comment/reply composition; no React `style` prop or component-local visual object remains. | PARTIAL — action and layout contracts centralized; state/caller parity remains open. |
 | `src/components/comments/CommentsToggle.tsx` | Wrapper and empty-label presentation use `COMMENTS_TOGGLE_ROW_SX` / `COMMENTS_TOGGLE_EMPTY_LABEL_SX`; show/hide/add action consumes `ICON_ACTION_STYLES.disclosure`. | No React `style` prop or local heading margin remains; verify count/open/empty states and keyboard/focus behavior through parent callers. | PARTIAL — disclosure role and layout presets centralized; caller/state parity remains open. |
-| `src/components/comments/RepliesSection.tsx` | Uses shared social action preset and MUI TextField. | Multiple raw IconButtons and local border/spacing sx remain; map reply/edit/delete/cancel/submit roles. | CHANGE REQUIRED. |
+| `src/components/comments/RepliesSection.tsx` | Reply item/edit/body/social/create layouts use named `REPLY_*` presets; Save/Cancel/Edit/Submit/Delete IconButtons use semantic `ICON_ACTION_STYLES` roles; Like/Favorite/Report delegate to shared social controls. | Verify permission/config combinations, reply field error/focus/disabled states, mutation pending/confirmation and responsive nesting; no local border/spacing or React style prop remains. | PARTIAL — layout and action roles centralized; state/caller parity remains open. |
 | `src/components/social/EngagementBar.tsx` | Uses shared social action composition. | Responsive local sx and raw IconButton remain; verify all action states and consumers. | CHANGE REQUIRED. |
 | `src/components/social/TripGroupSocialActions.tsx` | Uses shared like animation and social action components in part. | Multiple raw IconButtons, local gaps and React style error spans remain; centralize icon actions and state feedback without merging distinct semantics. | CHANGE REQUIRED. |
 | `src/components/tracking/LiveTracker.tsx` | Uses TRACKING_SURFACE_SX and layout primitives. | Start/Stop/Reset/Follow are direct Buttons; local tracking surface and status/detail spacing need role and surface mapping. | CHANGE REQUIRED. |
@@ -6657,3 +6657,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 comments entry: `src/components/comments/RepliesSection.tsx`. Map reply/edit/delete/cancel/submit icon roles and remaining local style declarations.
+
+
+## 11.105 — RepliesSection semantic icon-action roles (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 comments entry after CommentsToggle.
+- Re-opened `RepliesSection.tsx` and confirmed reply item/edit/body/social/create geometry already consumes named `REPLY_*` presets; the old note about local border/spacing styles was stale.
+- The remaining direct action issue was that Save, Cancel, Edit, Reply and Delete IconButtons shared generic base/danger roles.
+
+### Source changes
+- Migrated Save reply to `save`, Cancel edit/reply to `cancel`, Edit reply to `edit`, Reply submit to `submit` and Delete reply to `delete` semantic icon-action roles.
+- Reconciled the Section 10.1 RepliesSection row.
+
+### Preserved
+- Reply query/cache keys, viewer-state reset, permission/social-config gating, create/update/delete mutations, confirmation, invalidation, reply text state, Like/Favorite/Report actions and pending/disabled behavior.
+- No API, DTO, validation, authorization, route or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- Reply action semantics: **SOURCE MIGRATED**.
+- Permission/config, field, mutation and responsive nested-state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 social component: `src/components/social/EngagementBar.tsx`. Verify overlay action roles, responsive geometry and all Like/Favorite/Report state variants.
