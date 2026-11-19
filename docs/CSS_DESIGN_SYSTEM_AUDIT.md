@@ -7292,3 +7292,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Next
 - Continue the same source-level check across the remaining UI-bearing `app/**/*.tsx` route/layout files (the earlier 121-file direct scan included these, but this indirect-object pass has not yet rechecked them).
 - Then inspect declarations and call sites for any remaining non-style-named objects passed to `sx`, and reconcile the final count. Preserve the documented Satori/ImageResponse exception and keep SDK configuration objects outside the React-style count.
+
+
+## 11.133 — Indirect sx / React style scan: App Router TSX (2026-11-19)
+
+### Scope and method
+- Continued the Section 11.132 follow-up on the existing `feature/frontend-modernization` branch.
+- Inspected all **36 tracked `app/**/*.tsx` files** in the current branch tree, including account, admin, auth, public, error, root layout, provider and image metadata routes.
+- Checked JSX `sx={identifier}` / helper references, callback-built sx expressions, React `style=` props, and locally declared style-like constants.
+- Followed the imports for every non-literal `sx` reference found in route files to verify ownership rather than classifying by naming alone.
+
+### Findings
+- All route-level `sx` references found resolve to imported shared presets from `src/styles/presets/*` (layouts, typography, tracking, buttons or feedback).
+- The account, admin, auth and public layouts use shared layout presets; the trip listing and detail routes use shared page/typography presets; the global error route uses the shared feedback and button presets.
+- No callback-built route-local sx object or additional route-local style constant was confirmed.
+- No React `style=` prop was found in the 36 App Router TSX files.
+- The `privacy-policy` route's CSS Module class usage is intentionally separate from MUI sx and remains unchanged.
+- No new source-level exception was identified. The previously documented Satori/ImageResponse renderer exception remains outside this React component scan.
+
+### Result
+- **36/36 App Router TSX files inspected** for indirect sx references and React style props.
+- No new app-owned inline React style prop or ad hoc route-local sx object was confirmed.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Perform a final repository-wide source scan for non-style-named local objects passed to `sx`, computed/callback sx expressions and React `style` props outside `app/` and `src/components/` (including any remaining UI-bearing `src/**/*.tsx` files).
+- Reconcile the exception list and inventory counts after that scan. Preserve the Satori/ImageResponse exception and do not count Google Maps SDK configuration props as React `style` props.
