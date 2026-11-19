@@ -42,6 +42,7 @@ export const theme = createTheme({
           '--ht-focus-outline-width': `${UI_SIZES.focusOutlineWidth}px`,
           '--ht-focus-outline-offset': `${UI_SIZES.focusOutlineOffset}px`,
           '--ht-font-weight-semibold': `${TYPOGRAPHY.fontWeightSemiBold}`,
+          '--ht-font-size-body1': TYPOGRAPHY.body1.fontSize,
           '--ht-about-font-family': ABOUT_EDITORIAL_TYPOGRAPHY.fontFamily,
           '--ht-about-font-weight': `${ABOUT_EDITORIAL_TYPOGRAPHY.fontWeight}`,
           '--ht-about-heading-margin': ABOUT_EDITORIAL_TYPOGRAPHY.headingMargin,
