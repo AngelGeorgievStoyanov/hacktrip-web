@@ -12,8 +12,19 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { PointLocationPicker } from '@/components/maps/PointLocationPicker';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { SocialImageDto, TripPoint } from '@/types';
-import { UI_COLORS } from '@/constants/ui/colors';
-import { POINT_FORM_PANEL_SX } from '@/styles/presets/forms';
+import {
+  EDIT_POINT_PAGE_SX,
+  EDIT_POINT_LOADING_SX,
+  EDIT_POINT_ERROR_SX,
+  EDIT_POINT_MAP_WRAPPER_SX,
+  EDIT_POINT_CONTENT_ROW_SX,
+  EDIT_POINT_FORM_CARD_SX,
+  EDIT_POINT_IMAGES_SECTION_SX,
+  getEditPointImageGridSx,
+  EDIT_POINT_IMAGE_TILE_SX,
+  EDIT_POINT_IMAGE_DELETE_SX,
+  EDIT_POINT_IMAGE_PLACEHOLDER_SX,
+} from '@/styles/presets/forms';
 
 export function EditPointPage() {
   const router = useRouter();
@@ -87,7 +98,7 @@ export function EditPointPage() {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+      <Box sx={EDIT_POINT_LOADING_SX}>
         <CircularProgress />
       </Box>
     );
@@ -98,32 +109,14 @@ export function EditPointPage() {
 
   return (
     <Box
-      sx={{
-        width: '100%',
-        maxWidth: 1200,
-        mx: 'auto',
-        px: { xs: 1, sm: 2 },
-        py: 2,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        rowGap: { xs: 2, md: 0 },
-      }}
+      sx={EDIT_POINT_PAGE_SX}
     >
       {error ? (
-        <Alert severity="error" sx={{ width: '100%', mb: 2 }}>
+        <Alert severity="error" sx={EDIT_POINT_ERROR_SX}>
           {error}
         </Alert>
       ) : null}
-      <Box
-        sx={{
-          width: '100%',
-          maxWidth: 600,
-          mx: 'auto',
-          order: 0,
-          '@media (max-width:1020px)': { order: 1 },
-        }}
-      >
+      <Box sx={EDIT_POINT_MAP_WRAPPER_SX}>
         <PointLocationPicker
           latitude={latitude}
           longitude={longitude}
@@ -137,24 +130,9 @@ export function EditPointPage() {
           }
         />
       </Box>
-      <Box
-        sx={{
-          mt: 2.5,
-          width: '100%',
-          '@media (max-width:1020px)': { mt: 0, display: 'contents', order: 1 },
-          order: 0,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          justifyContent: 'center',
-          gap: 2.5,
-        }}
-      >
+      <Box sx={EDIT_POINT_CONTENT_ROW_SX}>
         <Card
-          sx={{
-            ...POINT_FORM_PANEL_SX,
-            '@media (max-width:1020px)': { order: 2 },
-          }}
+          sx={EDIT_POINT_FORM_CARD_SX}
         >
           <PointForm
             key={point.id}
@@ -176,39 +154,15 @@ export function EditPointPage() {
           />
         </Card>
 
-        <Box
-          sx={{
-            width: { xs: '100%', sm: '100%', lg: 520 },
-            maxWidth: 520,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mt: { xs: 0, lg: 1 },
-            '@media (max-width:1020px)': { order: 0 },
-          }}
-        >
+        <Box sx={EDIT_POINT_IMAGES_SECTION_SX}>
           {existingImages.length > 0 ? (
             <Box
-              sx={{
-                width: '100%',
-                display: 'grid',
-                gridTemplateColumns: `repeat(${Math.min(existingImages.length, 3)}, minmax(0, 1fr))`,
-                gap: 1,
-                alignItems: 'start',
-              }}
+              sx={getEditPointImageGridSx(existingImages.length)}
             >
               {existingImages.map((image) => (
                 <Box
                   key={image.id}
-                  sx={{
-                    position: 'relative',
-                    width: '100%',
-                    aspectRatio: '1 / 1',
-                    m: { xs: 0, sm: 1 },
-                    p: { xs: 0, sm: 1 },
-                    boxSizing: 'border-box',
-                  }}
+                  sx={EDIT_POINT_IMAGE_TILE_SX}
                 >
                   <AppImage
                     image={image}
@@ -224,14 +178,7 @@ export function EditPointPage() {
                         onClick={() => void handleDeleteImage(image)}
                         disabled={deletingImageId !== null}
                         size="small"
-                        sx={{
-                          position: 'absolute',
-                          top: 4,
-                          left: 4,
-                          zIndex: 1,
-                          backgroundColor: UI_COLORS.action.imageControlBackground,
-                          '&:hover': { backgroundColor: UI_COLORS.action.imageControlBackgroundHover },
-                        }}
+                        sx={EDIT_POINT_IMAGE_DELETE_SX}
                       >
                         <RemoveImageIcon />
                       </IconButton>
@@ -241,7 +188,7 @@ export function EditPointPage() {
               ))}
             </Box>
           ) : (
-            <Box sx={{ width: '50%', maxWidth: 280, aspectRatio: '1 / 1', mx: 'auto' }}>
+            <Box sx={EDIT_POINT_IMAGE_PLACEHOLDER_SX}>
               <SocialObjectPlaceholder />
             </Box>
           )}
