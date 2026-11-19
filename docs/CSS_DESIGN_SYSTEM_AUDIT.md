@@ -390,14 +390,14 @@ Confirmed local declarations:
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/comments/CommentsSection.tsx` | Two MUI Cards render the comments panel and each comment item; both inherit `MuiCard` → `getSurfaceStyles`. | `COMMENTS_PANEL_SX` and `COMMENT_CARD_SX` duplicate local panel/card layout and possibly visual surface responsibilities; edit/delete/save/cancel IconButtons remain raw. | CHANGE REQUIRED — custom panel presets need separation into structure vs skin. |
-| `src/components/comments/CommentsToggle.tsx` | Native inline layout style + local typography margin | Use shared comments-toggle role/layout |
-| `src/components/comments/RepliesSection.tsx` | Local reply border/spacing, raw action IconButtons | Use shared nested-comment layout and action roles |
-| `src/components/social/LikeButton.tsx` | Shared badge preset + local conditional `sx` wrapper | Centralize Like icon states |
-| `src/components/social/FavoriteButton.tsx` | Shared badge preset + local conditional `sx` wrapper | Centralize Favorite icon states |
-| `src/components/social/EngagementBar.tsx` | Local conditional `sx` + raw social controls | Use shared engagement layout/icon roles |
-| `src/components/social/ReportButton.tsx` | Inline span styles, raw Cancel/Submit, local error `sx` | Use shared Report/Cancel/Submit/feedback roles |
-| `src/components/social/TripGroupSocialActions.tsx` | Repeated raw icon controls and local error spans | Use shared Like/Favorite/Report roles |
+| `src/components/comments/CommentsSection.tsx` | MUI Cards inherit shared `MuiCard` surface; social controls delegate to shared Like/Favorite/Report and Replies components. | Panel/title/list/card/edit/create/author/body/timestamp/social-action layouts use `comments.ts`; icon controls use ICON_ACTION_STYLES. | MIGRATED — comment composition and action states use shared presets/theme. |
+| `src/components/comments/CommentsToggle.tsx` | Comment toggle is a MUI IconButton with Badge; action icon inherits shared icon-action role. | Toggle row and empty-label spacing use named comments presets; no native inline layout remains. | MIGRATED — comment toggle layout centralized. |
+| `src/components/comments/RepliesSection.tsx` | Reply action icons use shared base/danger icon roles; Like/Favorite/Report delegate to shared social components. | Reply item, edit form, body wrapping, social-action row, nested section and create form use comments presets. | MIGRATED — nested comment presentation centralized. |
+| `src/components/social/LikeButton.tsx` | Icon control uses shared ICON_ACTION_STYLES and compact badge contract; animation is a semantic dynamic helper. | Shared like icon states, focus/hover/disabled and count badge are preset-owned. | MIGRATED — semantic Like role centralized. |
+| `src/components/social/FavoriteButton.tsx` | Icon control uses shared ICON_ACTION_STYLES and compact badge contract. | Favorite active/inactive, focus/hover/disabled and count badge use shared semantic roles. | MIGRATED — semantic Favorite role centralized. |
+| `src/components/social/EngagementBar.tsx` | Social controls delegate to shared Like/Favorite/Report; comment action uses shared icon role. | Inline action row and overlay size/badge variants use named social preset helpers; event propagation and comments layout behavior remain component-owned. | MIGRATED — no caller-local presentation object remains. |
+| `src/components/social/ReportButton.tsx` | Report trigger, Cancel and Submit use shared icon/button semantic roles; error feedback uses shared social preset. | Report confirmation/form layout and feedback presentation use named shared contracts; report permission and pending state remain behavior-owned. | MIGRATED — semantic Report role centralized. |
+| `src/components/social/TripGroupSocialActions.tsx` | Like/Favorite/Report/Share/comment controls use shared icon-action role; social errors use shared feedback style. | Action row, animated like state and error feedback use named social presets/helpers. | MIGRATED — social action presentation centralized. |
 | `src/components/social/SocialConfigStatus.tsx` | Local compact `sx` | Use shared status-indicator role |
 | `src/components/social/LikeAnimation.tsx` | No style match in initial scan | Verify motion behavior separately from visual skin |
 
@@ -5398,4 +5398,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Result
 - Added one shared preset owner and updated six admin source components; all six ledger rows refreshed.
 - **Workstream 4 — Admin tables and actions: COMPLETE.** Admin navigation/shell remains tracked under the separate application-shell workstream.
+- No build, tests, lint, CI or browser validation was run.
+## 11.51 — Comments and social interaction presentation (2026-11-19)
+
+- Added `src/styles/presets/comments.ts` for comment panel/list/card, edit/create forms, author/body/timestamp, reply nesting, social rows and toggle layout.
+- Migrated CommentsSection and RepliesSection to the named contracts; all edit/delete/cancel/reply icon actions use shared icon-action roles. Comment Cards continue to inherit the MUI Card theme surface.
+- Replaced CommentsToggle's native inline flex style with MUI Box + named row preset; empty-label spacing is centralized.
+- Added social preset helpers for inline action rows, Trip Group actions, compact error feedback and runtime overlay sizing. EngagementBar no longer carries its own nested visual object for overlay size/badge behavior.
+- TripGroupSocialActions uses shared action-row/error contracts. LikeButton, FavoriteButton and ReportButton already consumed shared icon/button contracts from 11.39; their ledger rows are now reconciled.
+
+### Preserved
+- Comment/reply CRUD, permissions, authentication/config gates, query keys/invalidation, optimistic/cache behavior, counts, loading/errors, nested reply state and confirmation flows.
+- Like/favorite/report mutations and eligibility, share fallback, animation state, comments open/close control, overlay event propagation, icon sizes and compact badge behavior.
+- No API, DTO, validation, auth, routing, data or business logic changed.
+
+### Result
+- Added one comments preset owner; updated five comment/social consumers and the social preset owner; reconciled three previously migrated social button consumers.
+- **Workstream 5 — Comments/social interactions: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
