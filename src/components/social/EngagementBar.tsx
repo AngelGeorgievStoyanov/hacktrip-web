@@ -17,7 +17,7 @@ import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialCon
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
-import { SOCIAL_BADGE_COMPACT_STYLE, SOCIAL_OVERLAY_SX } from '@/styles/presets/social';
+import { SOCIAL_BADGE_COMPACT_STYLE, SOCIAL_OVERLAY_SX, SOCIAL_ENGAGEMENT_INLINE_SX, getSocialEngagementActionsSx } from '@/styles/presets/social';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
@@ -110,21 +110,14 @@ export function EngagementBar({
                 },
               },
             ]
-          : { display: 'flex', flexDirection: 'column', gap: '0.25rem', margin: '0.25rem 0' }
+          : SOCIAL_ENGAGEMENT_INLINE_SX
       }
     >
       {showConfigStatus ? (
         <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
       ) : null}
       <Box
-        sx={{
-          display: 'flex',
-          gap: 1,
-          alignItems: 'center',
-          flexWrap: 'nowrap',
-          justifyContent: actionsJustify,
-          width: '100%',
-        }}
+        sx={getSocialEngagementActionsSx(actionsJustify)}
       >
         {status === 'authenticated' ? (
           <>
