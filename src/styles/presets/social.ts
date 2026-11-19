@@ -32,6 +32,10 @@ export const SOCIAL_ERROR_TEXT_SX = {
   fontSize: '0.75rem',
 } as const;
 
+/** Compact badge styling shared by Like/Favorite controls in small overlay mode. */
+export const getSocialBadgeSx = (size: 'small' | 'medium') =>
+  size === 'small' ? { '& .MuiBadge-badge': SOCIAL_BADGE_COMPACT_STYLE } as const : undefined;
+
 /** Shared visual treatment for social controls rendered over images or maps. */
 export const SOCIAL_OVERLAY_SX = {
   position: 'absolute',
