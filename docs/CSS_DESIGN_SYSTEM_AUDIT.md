@@ -720,7 +720,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminReports.tsx` | Outlined Paper table inherits shared surface; Delete uses semantic `BUTTON_STYLES.deleteText`; Previous/Next consume `ADMIN_PAGINATION_BUTTON_SX`. | Verify delete confirmation/pending/error states, row content and responsive table behavior; no local table surface or pagination styling remains. | PARTIAL — action and pagination roles centralized; row/state verification remains open. |
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Outlined Paper table inherits shared surface; Previous/Next use `ADMIN_PAGINATION_BUTTON_SX`; diagnostic fields/details/expanded cell use named `ADMIN_DIAGNOSTIC_*` and `ADMIN_ROUTE_*` presets. View/Hide disclosure uses MUI Button defaults with `aria-expanded` / `aria-controls`. | Verify expanded-row content, focus/keyboard and responsive table states; no local typography, spacing or button skin remains in the component. | PARTIAL — table, disclosure and pagination presentation use shared/theme contracts; responsive/state parity remains open. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
-| `src/components/auth/ChangePasswordForm.tsx` | Password-change form consumes `BUTTON_STYLES.primary` for Save password. | The primary role is only a generic visual contract; local `alignSelf` and margin are merged into the same sx object. Field, pending/disabled and validation states remain part of the field/action audit. | PARTIAL. |
+| `src/components/auth/ChangePasswordForm.tsx` | Save password uses semantic `BUTTON_STYLES.save` plus `ACCOUNT_PASSWORD_SAVE_BUTTON_SX`; form stack uses `CHANGE_PASSWORD_FORM_SX`; fields and requirements delegate to shared PasswordField/PasswordRequirements. | Verify TextField error/helper/disabled/focus states and pending/reset behavior against the global field contract; no component-local action geometry remains. | PARTIAL — Save and form layout contracts centralized; field/state parity remains open. |
 | `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and `BUTTON_STYLES.primary` for the Go to login action. | The action is navigation but currently uses generic primary styling; Card content/heading sx and complete status/field state contract remain open. | CHANGE REQUIRED. |
 | `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets; primary Register action and two secondary actions consume `BUTTON_STYLES.primary` and a local alias of `BUTTON_STYLES.secondary`. | Secondary roles include navigation/alternate auth actions but currently share one generic secondary skin. TextField/Checkbox contract and locked-state treatment remain open. | PARTIAL. |
 | `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
@@ -6346,3 +6346,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next outstanding Section 10.1 admin/auth consumers; prioritize `AdminReports.tsx` and `AdminFailedLogs.tsx` status reconciliation, then the remaining auth form action roles.
+
+
+## 11.91 — ChangePasswordForm semantic Save role (2026-11-19)
+
+### Scope and findings
+- Continued with the next Section 10.1 auth form entry after AdminUserForm.
+- Re-opened `ChangePasswordForm.tsx` and verified its existing form/action preset consumers.
+- The save-button alignment and margin were already owned by `ACCOUNT_PASSWORD_SAVE_BUTTON_SX`; the old ledger note describing local geometry was stale.
+
+### Source changes
+- Migrated Save password from generic `BUTTON_STYLES.primary` to semantic `BUTTON_STYLES.save`; the role remains a visual alias of the same primary appearance.
+- Reconciled the Section 10.1 row and corrected Section 11.90's next position to the auth-form sequence.
+
+### Preserved
+- Current-password requirement, validation, password-difference/match checks, expanded/reset behavior, API request, notification messages, disabled/submitting state and helper text.
+- No API, validation, auth or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- Save/form layout roles: **SHARED CONTRACTS APPLIED**.
+- Global field states and PasswordField/PasswordRequirements visual parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/VerifyEmailForm.tsx`. Give its Go to login action a semantic navigation role while preserving the current visual treatment.
