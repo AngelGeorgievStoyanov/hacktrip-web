@@ -52,6 +52,16 @@ export const LEGAL_BACK_LINK_SX = {
   '&:hover': { color: UI_COLORS.text.inverse },
 } as const;
 
+/** Unique native-button treatment for the Not Found route's home action. */
+export const NOT_FOUND_HOME_BUTTON_SX = {
+  color: UI_COLORS.text.inverse,
+  backgroundColor: UI_COLORS.action.contrastBackground,
+  padding: '10px 30px',
+  margin: '25px',
+  cursor: 'pointer',
+  border: 'none',
+} as const;
+
 const secondaryLightText = {
   ...secondary,
   '&:hover': {
