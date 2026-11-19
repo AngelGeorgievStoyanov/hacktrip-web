@@ -376,3 +376,8 @@ export const EMAIL_VERIFICATION_CARD_SX = {
   textAlign: 'center',
 } as const;
 export const EMAIL_VERIFICATION_TITLE_SX = { fontWeight: 700 } as const;
+
+/** Account profile form field stack. */
+export const PROFILE_FORM_SX = { ...ACCOUNT_FORM_FIELDS_SX, alignItems: 'stretch' } as const;
+/** Expanded change-password form field stack. */
+export const CHANGE_PASSWORD_FORM_SX = { ...ACCOUNT_FORM_FIELDS_SX, mt: 2 } as const;
