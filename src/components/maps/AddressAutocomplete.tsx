@@ -7,7 +7,7 @@ import type { TextFieldProps } from '@mui/material/TextField';
 import type { StackProps } from '@mui/material/Stack';
 import {
   ADDRESS_AUTOCOMPLETE_EXTRA_ACTION_SX, ADDRESS_AUTOCOMPLETE_FIELD_WRAP_SX,
-  ADDRESS_AUTOCOMPLETE_ROOT_SX, ADDRESS_AUTOCOMPLETE_ROW_SX,
+  ADDRESS_AUTOCOMPLETE_ROW_SX,
   ADDRESS_AUTOCOMPLETE_VARIANTS,
   getAddressAutocompleteRootSx, getAddressAutocompleteSearchButtonSx,
 } from '@/styles/presets/map-controls';
