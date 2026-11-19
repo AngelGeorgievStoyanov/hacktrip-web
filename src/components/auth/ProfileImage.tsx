@@ -15,6 +15,10 @@ import type { ImageDto } from '@/types';
 import { RemoveProfileImageIcon } from '@/constants/icons';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 import { UI_COLORS } from '@/constants/ui/colors';
+import {
+  PROFILE_IMAGE_UPLOAD_FIELD_SX, PROFILE_IMAGE_UPLOAD_PREVIEW_ROW_SX,
+  PROFILE_IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX, PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX,
+} from '@/styles/presets/image-upload';
 
 const ACCEPT_TYPES = (ACCEPTED_IMAGE_MIME_TYPES as readonly string[]).join(',');
 
@@ -208,9 +212,7 @@ export function ProfileImageUpload({
   }
 
   return (
-    <Box
-      sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', alignItems: 'center' }}
-    >
+    <Box sx={PROFILE_IMAGE_UPLOAD_FIELD_SX}>
       <CustomFileUploadButton
         handleFilesChange={handleFilesChange}
         images={[]}
@@ -222,33 +224,17 @@ export function ProfileImageUpload({
       />
       {selectedFile && previewUrl ? (
         <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            width: '100%',
-            maxWidth: 360,
-            p: 1,
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: 1,
-          }}
+          sx={PROFILE_IMAGE_UPLOAD_PREVIEW_ROW_SX}
         >
           <Box
             component="img"
             src={previewUrl}
             alt="Selected profile image preview"
-            sx={{ width: 55, height: 45, objectFit: 'cover', borderRadius: 1 }}
+            sx={PROFILE_IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX}
           />
           <Box
             component="span"
-            sx={{
-              flex: 1,
-              minWidth: 0,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
+            sx={PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX}
           >
             {selectedFile.name}
           </Box>
