@@ -152,6 +152,8 @@ export const BUTTON_STYLES = {
   navigationAction: primaryWide,
   danger,
   dangerText: { color: 'error.main' },
+  delete: danger,
+  deleteText: { color: 'error.main' },
   upload: primary,
   removeSelection: primary,
   secondary,
