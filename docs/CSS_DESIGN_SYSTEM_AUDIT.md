@@ -5086,8 +5086,8 @@ No application source code was changed. No branch was created. No build, tests, 
 
 ### Source changes
 1. `src/styles/presets/buttons.ts`
-   - Added `ICON_ACTION_STYLES` as the shared owner for keyboard `:focus-visible` treatment and semantic primary, danger, report and inverse image-control variants.
-   - Reused existing palette/UI color tokens and the already-established 2px focus outline with 3px offset; no new color token or size was introduced.
+   - Added `ICON_ACTION_STYLES` as the shared owner for the circular icon-action shape, keyboard `:focus-visible` treatment and semantic primary, danger, report and inverse image-control variants.
+   - Reused existing palette/UI color tokens and the already-established 2px focus outline with 3px offset. Existing MUI `small`/`medium`/`large` sizing remains the dimension contract; no new size or color token was introduced.
 2. `src/styles/presets/image-upload.ts`
    - Routed per-image remove, mobile remove-all and camera-upload icon controls through the shared danger/base/primary contracts.
    - Kept the desktop Remove All text button and all upload field/preview geometry unchanged.
@@ -5122,7 +5122,7 @@ No application source code was changed. No branch was created. No build, tests, 
 
 ### Preserved behavior and boundaries
 - Preserved handlers, mutations, pending/disabled states, accessible labels, tooltips, `aria-pressed`, `aria-expanded`, badge counts, like animation, social permissions and comment/reply state.
-- Preserved MUI `size` values, existing dynamic `color` props, overlay-specific padding, image-control backgrounds, lightbox positioning, profile-image geometry and PointCard reorder visibility.
+- Preserved MUI `size` values and their existing hit-area variants, existing dynamic `color` props, overlay-specific padding, image-control backgrounds, lightbox positioning, profile-image geometry and PointCard reorder visibility.
 - Destructive comment/reply and image-remove actions now select the shared danger role where that was already their existing semantic color. ReportButton retains its existing dynamic color and hover behavior through the named report role.
 - No component public API, route, API call, DTO, upload behavior, validation, authentication, backend or business logic changed.
 - This closes the audited icon-action group for the listed owners and consumers; it does not claim that every icon-only/native action in the repository has been exhaustively mapped. The broader action matrix and Stage 1 consumer maps remain open.
