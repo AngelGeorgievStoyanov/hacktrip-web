@@ -1,6 +1,6 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
-import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 /** Shared profile-image display, action and fullscreen-view contracts. */
 export const PROFILE_IMAGE_LOADING_SX = {
@@ -100,4 +100,11 @@ export const ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX = {
   flexShrink: 0,
   cursor: 'zoom-in',
   bgcolor: 'action.selected',
+} as const;
+
+
+/** Upload/replace action alignment for the admin profile-image editor. */
+export const ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX = {
+  ...BUTTON_STYLES.upload,
+  alignSelf: 'flex-start',
 } as const;
