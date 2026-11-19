@@ -16,7 +16,6 @@ import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import {
   ADMIN_PROFILE_AVATAR_INTERACTIVE_SX,
-  ADMIN_PROFILE_AVATAR_READONLY_SX,
   ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX,
 } from '@/styles/presets/profile-image';
 
