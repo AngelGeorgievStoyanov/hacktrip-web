@@ -3,7 +3,11 @@
 import { Box, Typography } from '@mui/material';
 import { CheckCircleOutline, RadioButtonUnchecked } from '@mui/icons-material';
 import { getPasswordRequirements } from '@/validations/shared';
-import { PASSWORD_REQUIREMENTS_LIST_SX, PASSWORD_REQUIREMENT_ITEM_SX } from '@/styles/presets/forms';
+import {
+  PASSWORD_REQUIREMENTS_LIST_SX,
+  PASSWORD_REQUIREMENT_ITEM_SX,
+  PASSWORD_REQUIREMENT_INVALID_ICON_SX,
+} from '@/styles/presets/forms';
 
 interface PasswordRequirementsProps {
   password: string;
@@ -33,7 +37,7 @@ export function PasswordRequirements({
           {requirement.valid ? (
             <CheckCircleOutline fontSize="small" color="success" />
           ) : (
-            <RadioButtonUnchecked fontSize="small" sx={{ color: 'text.disabled' }} />
+            <RadioButtonUnchecked fontSize="small" sx={PASSWORD_REQUIREMENT_INVALID_ICON_SX} />
           )}
           <Typography
             variant="caption"
