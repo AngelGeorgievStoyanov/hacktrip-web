@@ -36,6 +36,12 @@ export const theme = createTheme({
         ':root': {
           /* Variables are emitted only for values consumed by plain CSS/CSS Modules. */
           '--ht-spacing-footer-horizontal': `${UI_SIZES.footerHorizontalPadding}px`,
+          '--ht-pagination-item-min-size': `${UI_SIZES.paginationItemMinSize}px`,
+          '--ht-pagination-item-padding-y': `${UI_SIZES.paginationItemPaddingY}px`,
+          '--ht-pagination-item-padding-x': `${UI_SIZES.paginationItemPaddingX}px`,
+          '--ht-pagination-focus-outline-width': `${UI_SIZES.paginationFocusOutlineWidth}px`,
+          '--ht-pagination-focus-outline-offset': `${UI_SIZES.paginationFocusOutlineOffset}px`,
+          '--ht-font-weight-semibold': `${TYPOGRAPHY.fontWeightSemiBold}`,
           '--ht-about-font-family': ABOUT_EDITORIAL_TYPOGRAPHY.fontFamily,
           '--ht-about-font-weight': `${ABOUT_EDITORIAL_TYPOGRAPHY.fontWeight}`,
           '--ht-about-heading-margin': ABOUT_EDITORIAL_TYPOGRAPHY.headingMargin,
