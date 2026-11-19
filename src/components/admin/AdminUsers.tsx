@@ -27,7 +27,7 @@ import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { AppImage } from '@/components/images/AppImage';
 import type { ImageDto } from '@/types';
 import {
-  ADMIN_PROFILE_AVATAR_INTERACTIVE_SX,
+  ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX,
   ADMIN_PROFILE_AVATAR_READONLY_SX,
 } from '@/styles/presets/profile-image';
 
@@ -116,7 +116,7 @@ export function AdminUsers() {
                         }}
                         sx={
                           u.profileImage
-                            ? ADMIN_PROFILE_AVATAR_INTERACTIVE_SX
+                            ? ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX
                             : ADMIN_PROFILE_AVATAR_READONLY_SX
                         }
                       >
