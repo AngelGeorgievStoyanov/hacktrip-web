@@ -7908,3 +7908,53 @@ The shared preset map is not the only visual owner. Current source examples incl
 - No source changes were made; no MUI default values or visual states were guessed or normalized.
 - Next: build the actual token-to-theme proposal for buttons and fields together, separating shared base tokens from semantic variants. Before implementing it, reconcile current palette roles and the known primary/primary-hover mismatch, destructive colors, CSS variable bridge and existing feature presets. Then fix the two confirmed compile blockers in a separately approved source-change step.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.143 — Semantic token to MUI theme crosswalk (2026-11-19)
+
+### Color-token ownership crosswalk
+
+| Token group | Source owner | Current theme / CSS bridge | Finding |
+|---|---|---|---|
+| Brand primary | `UI_COLORS.brand.primary` = `#1976d2` | MUI `palette.primary.main`; CSS `--ht-color-primary` | Consistent base primary token. |
+| Brand primary hover | `UI_COLORS.brand.primaryHover` = `#4daf30` | CSS `--ht-color-primary-hover`; BUTTON_STYLES.primary and trip action presets consume it | **Unresolved semantic mismatch:** primary blue transitions to green on hover. Could be intentional legacy branding or accidental drift; do not change without confirming expected visual design. |
+| Secondary | `UI_COLORS.brand.secondary` = `#9c27b0` | MUI `palette.secondary.main` | Secondary palette exists, but BUTTON_STYLES.secondary is a separate gray/lavender surface treatment and does not use this purple palette. Name “secondary” therefore means different things in palette vs action preset. |
+| Feedback | `UI_COLORS.feedback.error/warning/info/success` | MUI semantic palette roles | Error/warning/info/success map to theme. Some danger actions bypass feedback.error. |
+| Destructive action | `UI_COLORS.action.danger` = `red`; `dangerHover` = `#ef0a0a` | Used by icon report hover and button danger hover; danger text presets use MUI `error.main` | **Three competing destructive color values/paths:** raw red, explicit hover red, and feedback error (#d32f2f). Establish whether “danger” is an action semantic distinct from feedback error or accidental duplication. |
+| Secondary action surface | `action.secondaryBackground`, `text.onSecondary`, `action.secondaryHoverText` | BUTTON_STYLES.secondary and legal back link use related but distinct tokens | Shared button surface and legal back background currently share a value but not a semantic token; decide whether this is coincidence or shared intent. |
+| Create-trip action | `action.createTrip*` | BUTTON_STYLES.createTrip | A special dark/light invert treatment, not the same as generic primary. Preserve as a distinct semantic role unless design confirms otherwise. |
+| Surface/text/border/action defaults | UI_COLORS.surface/text/border/action | MUI palette consumes canvas/paper/text/divider/action subset; many other roles remain in presets/CSS | Token existence does not mean all consumers resolve through the MUI theme. |
+| Map address field | `UI_COLORS.map.*` | MAP_ADDRESS_INPUT_SX uses map tokens directly | Feature-level map field styling is explicitly owned and should not be overwritten by a global field override. |
+| Legal/decorative | `UI_COLORS.legal/decorative` | A selected subset is exposed as CSS custom properties; legal preset/CSS Modules consume them | Separate editorial/legal semantics are appropriate; verify all variables have consumers before expanding bridge. |
+
+### CSS custom-property bridge audit
+
+Current `src/theme/index.ts` exposes:
+- Spacing: xxs, xs, sm, md, mdPlus, lg, xl, xxl and page gutters.
+- Shape: general border radius and legal TOC radius.
+- Typography: body1 size, semibold weight, About editorial type and button typography.
+- Sizes: wide button padding, pagination item dimensions, focus outline dimensions, footer horizontal padding.
+- Colors: primary, primary hover, page surface, primary/inverse text, contrast action background, danger hover, legal border/link/back background and decorative heading shadow.
+
+Current gaps:
+1. Not all UI_COLORS semantic groups are exposed as CSS variables. Secondary palette, feedback colors, action states, surface variants, borders and map roles remain consumed through MUI theme or TS presets.
+2. Some values are exposed even though most MUI consumers use the TS token directly; the CSS bridge should exist only where CSS Modules/plain CSS actually need it.
+3. The button typography values are exposed as individual CSS variables and also applied by MuiButton theme. Confirm the CSS consumers before removing either path.
+4. The bridge currently exposes `--ht-color-primary-hover` as green; this preserves current source behavior but also propagates the unresolved blue-to-green hover mismatch to CSS consumers.
+
+### Button/field token decisions required before implementation
+
+| Decision | Evidence | Safe action |
+|---|---|---|
+| Primary hover hue | Blue primary vs green primaryHover | Keep exact current value until visual/product intent is confirmed; centralization must not silently recolor. |
+| Danger vs feedback error | red / #ef0a0a / #d32f2f | Decide whether danger is a separate action palette or should derive from feedback.error; map all consumers first. |
+| Secondary naming | Purple palette secondary vs gray/lavender secondary button | Rename semantic concepts only after all consumers and CSS references are mapped; avoid ambiguous “secondary”. |
+| Button default variants | BUTTON_STYLES mostly only hover/layout; callers choose contained/outlined/text | Define semantic button variants only if the visual contract is stable across consumers; preserve each caller's variant otherwise. |
+| Field base states | TextField defaults only; other MUI controls not themed | First decide whether app should keep MUI's default visual system or establish a branded field base. Then apply the same token mapping to Select/Autocomplete/InputBase/Checkbox/Switch only where needed. |
+| CSS bridge | Theme exports a selective token subset | Add a variable only when a real CSS/CSS Module consumer exists; avoid mirroring the entire TypeScript token object into CSS. |
+
+### Result and next
+- The token-to-theme ownership gaps that directly affect button and field centralization are now explicit.
+- **No color, hover, palette, CSS variable or field value was changed.** Existing visual behavior is preserved pending design intent.
+- Next source-level work, after the token contract is approved: resolve the duplicate `ADMIN_NAVIGATION_SX` declaration and the undefined `SECONDARY_BUTTON_SX` reference, then implement the shared button/field contract in small, separately documented changes.
+- The global audit remains IN PROGRESS. No build, tests, lint, CI or browser validation was run.
