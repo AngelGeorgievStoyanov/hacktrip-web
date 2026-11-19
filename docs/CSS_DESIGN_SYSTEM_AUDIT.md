@@ -814,7 +814,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/NotFound.module.css` | Text colors and spacing partially consume --ht-* CSS variables. | Home CTA still defines local background, padding, margin and border; page background image/position/cover and layout are unique composition but need documented ownership. | CHANGE REQUIRED — shared action visual values are partly local. |
 | `src/components/home/HomeHero.tsx` | WelcomeHeading owns shared home heading composition. | Intro typography and 850px content width use HOME_HERO_INTRO_SX, composed from HOME_INTRO_SX. | MIGRATED — no React style prop or local visual object remains. |
 | `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_SX; trip listing delegates to shared TripList. | Heading remains a semantic h3 and uses the shared heading preset; no local visual declaration remains. | MIGRATED — heading/list composition uses shared owners. |
-| `src/components/images/ImageGallery.module.css` | Gallery spacing and image-button radius consume `--ht-spacing-*` and `--ht-shape-border-radius`; grid/stack variants are structural composition. | Native button reset, transparent background, clipping/overflow and aspect-ratio frame remain local; no card/panel surface. Cross-check focus-visible outline in `ImageGallery.tsx` and image frame presets. | PARTIAL — structural gallery module with some tokenized visuals. |
+| `src/components/images/ImageGallery.module.css` | Gallery row/stack/grid layout and image-button structure are CSS Module-owned; spacing and radius consume `--ht-spacing-*` / `--ht-shape-border-radius`; focus-visible outline consumes shared `--ht-focus-outline-*` variables. | Native button reset, transparent background, clipping/overflow and aspect-ratio frame remain unique structural composition; image frame and overlay parity are tracked in ImageGallery/AppImage entries. | PARTIAL — structure and shared visual tokens centralized; unique frame/caller parity remains. |
 | `src/components/layout/Footer.module.css` | Text color uses inherit; footer primary/inverse colors consume --ht-* variables. | Horizontal padding and footer spacing remain hardcoded; verify footer/header surface and shell visual role consistency. | PARTIAL — colors centralized through CSS variables, spacing incomplete. |
 | `src/components/layout/Footer.tsx` | Footer behavior is isolated to iOS landscape scroll compatibility; visual skin is Footer.module.css. | Horizontal padding now consumes `--ht-spacing-footer-horizontal` emitted from UI_SIZES.footerHorizontalPadding; colors use shared CSS variables. | MIGRATED — footer visuals consume centralized tokens; iOS scroll behavior unchanged. |
 | `src/components/layout/Header.tsx` | Header root/welcome/menu/toolbar/drawer Paper/nav layout use HEADER_* presets; navigation actions use BUTTON_STYLES.navigation. | Responsive state, route visibility and handlers remain component-owned; no local presentation object remains. | MIGRATED — application shell presentation centralized. |
@@ -6174,3 +6174,14 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next outstanding image consumer in Section 10.1: `src/components/images/ImageUploadField.tsx` / `CustomFileUploadButton.tsx` caller-state verification, then inspect the remaining account/admin profile image consumers.
+
+
+## 11.83 — ImageGallery CSS Module ledger reconciliation (2026-11-19)
+
+- Updated the Section 10.1 CSS Module row to record that focus-visible outline width/offset now consume shared theme variables, as implemented in Section 11.79.
+- Corrected the stale reference to a focus-visible sx rule in `ImageGallery.tsx`; the rule is in `ImageGallery.module.css`.
+- The module remains **PARTIAL** because unique frame ratios, clipping/overflow and caller-responsive parity still require verification; these are not duplicate shared skins.
+- No source change was needed in this reconciliation. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the profile/admin image consumers in Section 10.1, beginning with `src/components/auth/ProfileImage.tsx` and `src/components/admin/AdminUserProfileImage.tsx`.
