@@ -131,7 +131,7 @@ export function ChangePasswordForm({ expanded }: ChangePasswordFormProps) {
             variant="contained"
             disabled={submitting || !isValid}
             startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-            sx={[BUTTON_STYLES.primary, ACCOUNT_PASSWORD_SAVE_BUTTON_SX]}
+            sx={[BUTTON_STYLES.save, ACCOUNT_PASSWORD_SAVE_BUTTON_SX]}
           >
             Save password
           </Button>
