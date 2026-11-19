@@ -235,7 +235,7 @@ export function RegisterForm() {
             href="/resend-verification"
             disabled={isFormLocked}
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.secondary}
           >
             Resend verification email
           </Button>
