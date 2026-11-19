@@ -75,8 +75,6 @@ export function LoginForm() {
     }
   }
 
-  const SECONDARY_BUTTON_SX = BUTTON_STYLES.secondary;
-
   return (
     <WelcomeHeading>
       <Box
@@ -108,7 +106,7 @@ export function LoginForm() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
-                    sx={ICON_ACTION_STYLES.base}
+                    sx={ICON_ACTION_STYLES.passwordVisibility}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowPassword((visible) => !visible)}
                     onMouseDown={(event) => event.preventDefault()}
@@ -135,19 +133,19 @@ export function LoginForm() {
           variant="contained"
           disabled={submitting || !captchaToken}
           startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-          sx={BUTTON_STYLES.primary}
+          sx={BUTTON_STYLES.submit}
         >
           Login
         </Button>
         <Box sx={AUTH_FORM_ACTIONS_SX}>
-          <Button component={Link} href="/register" variant="contained" sx={SECONDARY_BUTTON_SX}>
+          <Button component={Link} href="/register" variant="contained" sx={BUTTON_STYLES.navigationSecondary}>
             Register
           </Button>
           <Button
             component={Link}
             href="/forgot-password"
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.navigationSecondary}
           >
             Forgot password?
           </Button>
@@ -155,7 +153,7 @@ export function LoginForm() {
             component={Link}
             href="/resend-verification"
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.navigationSecondary}
           >
             Resend verification email
           </Button>
