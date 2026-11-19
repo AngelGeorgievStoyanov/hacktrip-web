@@ -722,7 +722,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
 | `src/components/auth/ChangePasswordForm.tsx` | Save password uses semantic `BUTTON_STYLES.save` plus `ACCOUNT_PASSWORD_SAVE_BUTTON_SX`; form stack uses `CHANGE_PASSWORD_FORM_SX`; fields and requirements delegate to shared PasswordField/PasswordRequirements. | Verify TextField error/helper/disabled/focus states and pending/reset behavior against the global field contract; no component-local action geometry remains. | PARTIAL — Save and form layout contracts centralized; field/state parity remains open. |
 | `src/components/auth/VerifyEmailForm.tsx` | Card surface inherits `MuiCard`; card layout/title use `EMAIL_VERIFICATION_CARD_SX` and `EMAIL_VERIFICATION_TITLE_SX`; Go to login consumes semantic `BUTTON_STYLES.navigationLink`. | Verify success/error/loading states and responsive card content; no component-local action or card style remains. | PARTIAL — navigation and card presentation centralized; status/state parity remains open. |
-| `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets; primary Register action and two secondary actions consume `BUTTON_STYLES.primary` and a local alias of `BUTTON_STYLES.secondary`. | Secondary roles include navigation/alternate auth actions but currently share one generic secondary skin. TextField/Checkbox contract and locked-state treatment remain open. | PARTIAL. |
+| `src/components/auth/RegisterForm.tsx` | Register uses semantic `BUTTON_STYLES.create`; Login and Resend Verification links use `BUTTON_STYLES.navigationSecondary`; form/title/action row use shared auth presets; PasswordField, PasswordRequirements and Captcha are shared components. | Verify Checkbox/locked states, field error/helper/focus states, CAPTCHA lifecycle and submit/disabled parity against shared theme contracts; no local secondary button alias remains. | PARTIAL — action roles centralized; field/checkbox/captcha state parity remains open. |
 | `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
 | `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
@@ -6392,3 +6392,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/RegisterForm.tsx`. Map Register, alternate auth navigation and password/checkbox states before changing any role.
+
+
+## 11.93 — RegisterForm semantic Create and secondary-navigation roles (2026-11-19)
+
+### Source changes
+- Migrated Register to `BUTTON_STYLES.create`.
+- Added `BUTTON_STYLES.navigationSecondary` as a semantic alias of the existing secondary appearance and migrated Login/Resend Verification links to it.
+- Removed the component-local `SECONDARY_BUTTON_SX` alias; all three actions now select named semantic roles.
+- Reconciled the Section 10.1 RegisterForm row.
+
+### Preserved
+- Registration schema, accepted-terms validation, CAPTCHA token/reset lifecycle, locked/submitting state, success notification/redirect, login/resend destinations and password requirement behavior.
+- Existing action appearance is unchanged; Create remains primary and both alternate navigation actions retain the secondary skin.
+- No API, auth, validation, route or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Register/Create and secondary-navigation roles: **SOURCE MIGRATED**.
+- Field, Checkbox, CAPTCHA, password reveal and all pending/disabled state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/ProfileForm.tsx`. Migrate Edit Profile and Change Password to their semantic roles while preserving the existing appearance.
