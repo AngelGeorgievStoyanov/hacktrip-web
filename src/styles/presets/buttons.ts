@@ -159,6 +159,7 @@ export const BUTTON_STYLES = {
   removeSelection: primary,
   secondary,
   navigationSecondary: secondary,
+  disclosure: secondary,
   back: secondary,
   secondaryLightText,
   addPoints: secondaryLightText,
