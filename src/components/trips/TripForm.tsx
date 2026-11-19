@@ -27,7 +27,17 @@ import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
-import { DAY_NUMBER_FIELD_SX } from '@/styles/presets/forms';
+import {
+  DAY_NUMBER_FIELD_SX,
+  TRIP_FORM_LOCATION_WRAPPER_SX,
+  TRIP_FORM_SX,
+  TRIP_FORM_TITLE_SX,
+  TRIP_FORM_ERROR_SX,
+  TRIP_FORM_DAY_NUMBER_ROW_SX,
+  TRIP_FORM_PRICE_CURRENCY_ROW_SX,
+  TRIP_FORM_CURRENCY_WRAPPER_SX,
+  TRIP_FORM_ACTIONS_SX,
+} from '@/styles/presets/forms';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
   const normalize = (value: string) => value.toLowerCase().replace(/[\\s_-]/g, '');
@@ -327,7 +337,7 @@ export function TripForm() {
 
   return (
     <>
-      <Box sx={{ width: 'min(100%, 600px)', mx: 'auto', px: { xs: 2, sm: 0 }, mb: 1 }}>
+      <Box sx={TRIP_FORM_LOCATION_WRAPPER_SX}>
         <TripLocationPicker
           latitude={latitude}
           longitude={longitude}
@@ -340,45 +350,22 @@ export function TripForm() {
       <Card
         component="form"
         onSubmit={handleSubmit((values) => onSubmit(values, 'add-trip'))}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          boxSizing: 'border-box',
-          width: 'min(100%, 620px)',
-          mx: 'auto',
-          height: 'fit-content',
-          minWidth: 0,
-          p: { xs: 2, sm: '30px' },
-          mb: '5px',
-          gap: 1,
-          '& .MuiFormControl-root': {
-            m: '4px',
-            width: '100%',
-            minWidth: 0,
-          },
-          '& .MuiButton-root': {
-            m: 1,
-          },
-          '@media (max-width: 600px)': {
-            p: 2,
-          },
-        }}
+        sx={TRIP_FORM_SX}
       >
         <Typography
           variant="h5"
           component="h1"
-          sx={{ m: '10px auto', textTransform: 'uppercase', textAlign: 'center' }}
+          sx={TRIP_FORM_TITLE_SX}
         >
           Create trip
         </Typography>
         {serverError ? (
-          <Typography role="alert" color="error" variant="body2" sx={{ mx: 1 }}>
+          <Typography role="alert" color="error" variant="body2" sx={TRIP_FORM_ERROR_SX}>
             {serverError}
           </Typography>
         ) : null}
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', m: '4px' }}>
+        <Box sx={TRIP_FORM_DAY_NUMBER_ROW_SX}>
           <TextField
             label="Day"
             type="number"
@@ -432,17 +419,7 @@ export function TripForm() {
           helperText={errors.title?.message}
         />
 
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 1,
-            width: '100%',
-            minWidth: 0,
-            '& > *': { minWidth: 0, flex: '1 1 0' },
-            '@media (max-width: 480px)': { flexDirection: 'column' },
-          }}
-        >
+        <Box sx={TRIP_FORM_PRICE_CURRENCY_ROW_SX}>
           <TextField
             label="Price"
             type="number"
@@ -457,14 +434,7 @@ export function TripForm() {
             control={control}
             name="currency"
             render={({ field }) => (
-              <Box
-                sx={{
-                  flex: '0 0 150px',
-                  width: '150px',
-                  minWidth: 0,
-                  '@media (max-width: 480px)': { flex: '1 1 auto', width: '100%' },
-                }}
-              >
+              <Box sx={TRIP_FORM_CURRENCY_WRAPPER_SX}>
                 <TripSelectField
                   name={field.name}
                   label="Currency"
@@ -549,29 +519,7 @@ export function TripForm() {
           helperText={errors.description?.message}
         />
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            mt: 1,
-            '& .MuiButton-root': {
-              m: 1,
-              minWidth: { xs: 'calc(50% - 16px)', sm: '150px' },
-              maxWidth: '220px',
-              minHeight: 36,
-              px: 1.5,
-              py: 0.75,
-              fontSize: { xs: '0.7rem', sm: '0.75rem' },
-              lineHeight: 1.2,
-              whiteSpace: 'normal',
-              overflowWrap: 'anywhere',
-              textTransform: 'uppercase',
-            },
-          }}
-        >
+        <Box sx={TRIP_FORM_ACTIONS_SX}>
           <Button
             type="submit"
             variant="contained"
