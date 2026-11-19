@@ -12,10 +12,7 @@ import type { TripGroupResponse } from '@/types';
 import { tripGroupKeys } from '@/hooks/useTripGroup';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-
-const ACTION_BUTTON_BOX_SX = {
-  display: 'contents',
-};
+import { TRIP_ACTIONS_CONTENT_SX } from '@/styles/presets/layouts';
 
 /** Owner-only navigation and management actions for the selected trip group. */
 export function TripActions({
@@ -72,7 +69,7 @@ export function TripActions({
 
   if (section === 'navigation') {
     return (
-      <Box sx={ACTION_BUTTON_BOX_SX}>
+      <Box sx={TRIP_ACTIONS_CONTENT_SX}>
         <Button
           component={Link}
           href={`/trips/create?tripGroupId=${tripGroup.id}`}
@@ -94,7 +91,7 @@ export function TripActions({
   }
 
   return (
-    <Box sx={ACTION_BUTTON_BOX_SX}>
+    <Box sx={TRIP_ACTIONS_CONTENT_SX}>
       {isOwner ? (
         <>
           {selectedDay ? (
