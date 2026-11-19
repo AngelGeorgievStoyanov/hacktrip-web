@@ -1,0 +1,13 @@
+.objectFitCover {
+  object-fit: cover;
+}
+
+.objectFitContain {
+  object-fit: contain;
+}
+
+.profileLightbox {
+  width: 100%;
+  height: auto;
+  max-height: 85vh;
+}
