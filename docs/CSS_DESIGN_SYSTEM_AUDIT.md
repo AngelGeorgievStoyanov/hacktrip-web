@@ -732,7 +732,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
 | `src/components/CustomFileUploadButton.tsx` | Shared upload trigger used by generic image upload and profile-image selection; supports camera IconButton and text Button modes, max-count/disabled gating, accept/multiple and file-change forwarding. | Two distinct raw action renderings (IconButton vs contained Button) and local 30ch wrapper; no semantic Upload role or centralized icon-action state. Direct consumers: ImageUploadField, ProfileImage/ProfileImageUpload. | CHANGE REQUIRED — shared Upload action contract. |
 | `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback; object-fit and profile-lightbox behavior use CSS Module classes. Direct consumers remain mapped in this row. | No React `style` prop or style transport remains; preset-to-caller frame ratios, dimensions and responsive `sizes` parity still require review. | PARTIAL — style transport migrated; image preset/frame parity remains open. |
-| `src/components/images/ImageGallery.tsx` | Direct consumers: PointSection and DayImagesGallery. Owns gallery index state, empty-array null path, row/stack/grid composition, image open trigger and ImageLightbox; delegates images to AppImage and engagement overlay to EngagementBar. | CSS Module owns structural variants; runtime grid columns and focus-visible outline remain local sx. Image frame/preset ratios and overlay stacking/responsive states need explicit parity map. | PARTIAL — state and direct consumers mapped; frame/overlay visual contract open. |
+| `src/components/images/ImageGallery.tsx` | Direct consumers are PointSection and DayImagesGallery; gallery state and empty path are component-owned; images use AppImage and engagement overlays use EngagementBar. | CSS Module owns row/stack/grid structure and dynamic column classes; focus-visible outline consumes shared focus CSS variables; ImageLightbox is shared. Image frame ratios, overlay stacking and responsive caller parity remain open. | PARTIAL — structure and focus token ownership centralized; frame/overlay/caller verification remains. |
 | `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage, AdminUsers. Owns fullscreen Dialog open state via nullable index, close, previous/next wraparound, keyboard arrows and touch swipe; AppImage fills a contain-fit stage. | Local control colors are semantic tokens but positions/z-index/caption/stage geometry and IconButton role remain local. Invalid/empty image index closes by current image undefined. | CHANGE REQUIRED — shared lightbox surface and Close/Previous/Next icon-action contracts. |
 | `src/components/images/ImageUploadField.tsx` | Shared upload field and AppImage usage. | Local thumbnail dimensions/objectFit/radii, layout sx, raw remove/delete-all IconButtons and upload Button remain. | CHANGE REQUIRED. |
 | `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp uses EXPANDABLE_TEXT_COLLAPSED_SX; expanded state removes the clamp without local visual objects. | MIGRATED — disclosure presentation centralized; MUI owns the text-button default role. |
@@ -6083,3 +6083,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 image entry: `src/components/images/ImageGallery.tsx`. Inspect its runtime grid/focus styles and CSS Module consumers before making changes.
+
+
+## 11.79 — Shared focus tokens for TripPagination and ImageGallery (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 image entry after AppImage.
+- Inspected `ImageGallery.tsx`, `ImageGallery.module.css`, `image-gallery.ts` and the TripPagination CSS Module migrated in Section 11.73.
+- Confirmed ImageGallery's grid/stack/row composition is already class-based CSS Module structure; the earlier ledger statement that runtime grid/focus sx remained local was stale.
+
+### Source changes
+- Promoted the matching 2px focus outline width and 2px offset used by TripPagination and ImageGallery into shared `UI_SIZES.focusOutlineWidth` / `focusOutlineOffset` tokens.
+- Exposed the shared values through `--ht-focus-outline-width` and `--ht-focus-outline-offset` theme-generated CSS variables.
+- Updated both CSS Modules to consume the same focus variables; TripPagination retains its item-specific dimensions/padding tokens.
+- Reconciled the Section 10.1 ImageGallery row.
+
+### Preserved
+- Native image-button semantics, focus-visible behavior and outline values; gallery row/stack/grid layout, runtime column selection, image click/index state, overlay placement, ImageLightbox behavior and image preset selection.
+- No image URL, dimension, loading/priority, social or comment behavior changed.
+
+### Result and status
+- **4 source files changed** plus the Section 10.1 ledger: shared UI size token, theme CSS-variable bridge and two CSS Modules.
+- ImageGallery's local focus literals are now shared-token consumers; its unique structural CSS remains local.
+- Image frame ratios, overlay stacking and all responsive caller states remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 image entry: `src/components/images/ImageLightbox.tsx`. Inspect close/previous/next icon-action roles, surface and stage geometry before changing the component.
