@@ -23,6 +23,7 @@ import {
   POINT_LOCATION_PICKER_STACK_SX,
   POINT_LOCATION_ACTIONS_SX,
   MAP_PICKER_SNACKBAR_SX,
+  POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE,
 } from '@/styles/presets/map-controls';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
@@ -149,7 +150,7 @@ export function PointLocationPicker({
           type="button"
           variant="contained"
           onClick={handleClearLocation}
-          sx={BUTTON_STYLES.secondary}
+          sx={BUTTON_STYLES.removeMarker}
         >
           Remove Marker
         </Button>
@@ -158,7 +159,7 @@ export function PointLocationPicker({
           variant="outlined"
           onClick={handleUseMyLocation}
           disabled={locating}
-          startIcon={locating ? <CircularProgress size={14} /> : undefined}
+          startIcon={locating ? <CircularProgress size={POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE} /> : undefined}
         >
           Gps position
         </Button>
