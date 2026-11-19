@@ -5,6 +5,7 @@ import { Box, Typography, useMediaQuery } from '@mui/material';
 import { ScrambleHeading, type ScrambleHeadingHandle } from '@/components/common/ScrambleHeading';
 import { BREAKPOINTS, minWidthQuery } from '@/constants/ui';
 import { HOME_HEADING_SX } from '@/styles/presets/typography';
+import styles from './WelcomeHeading.module.css';
 
 interface WelcomeHeadingProps {
   /**
@@ -27,18 +28,10 @@ export function WelcomeHeading({ children }: WelcomeHeadingProps) {
 
   return (
     <Box
+      className={styles.root}
       onTouchStart={() => headingRef.current?.scramble()}
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: '0 25px',
-          marginBottom: '16px',
-        }}
-      >
+      <Box className={styles.headingGroup}>
         {singleLineHeading ? (
           <ScrambleHeading ref={headingRef} text="Welcome in Hack Trip!" />
         ) : (
