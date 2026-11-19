@@ -818,7 +818,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/layout/Footer.module.css` | Footer flex/column structure remains CSS Module-owned; horizontal padding uses `--ht-spacing-footer-horizontal`; primary/inverse colors consume theme CSS variables. | No local color or spacing literal remains; verify footer/header surface consistency through all route shells. | MIGRATED — footer visual values are token-backed; unique flex structure retained. |
 | `src/components/layout/Footer.tsx` | Footer behavior is isolated to iOS landscape scroll compatibility; visual skin is Footer.module.css. | Horizontal padding now consumes `--ht-spacing-footer-horizontal` emitted from UI_SIZES.footerHorizontalPadding; colors use shared CSS variables. | MIGRATED — footer visuals consume centralized tokens; iOS scroll behavior unchanged. |
 | `src/components/layout/Header.tsx` | Header root/welcome/menu/toolbar/drawer Paper/nav layout use HEADER_* presets; navigation actions use BUTTON_STYLES.navigation. | Responsive state, route visibility and handlers remain component-owned; no local presentation object remains. | MIGRATED — application shell presentation centralized. |
-| `src/components/placeholders/SocialObjectPlaceholder.tsx` | Placeholder colors consume UI_COLORS semantic tokens; image asset selection is data/state driven. | Overlay gradient, typography sizes, image object-fit style and geometry are local; React style on Next Image is a presentation exception candidate requiring approved abstraction. | PARTIAL — color tokens used, overlay contract remains local. |
+| `src/components/placeholders/SocialObjectPlaceholder.tsx` | Root, overlay gradient, title and description use named `SOCIAL_OBJECT_PLACEHOLDER_*` presets with semantic color tokens; decorative Next Image uses a CSS Module class for width/height/object-fit; image asset selection is state-driven. | No React `style` prop remains; unique absolute image/overlay composition is intentionally split between the preset and CSS Module. | MIGRATED — placeholder visual contract is preset/CSS Module-owned. |
 | `src/components/trips/PointsSection.tsx` | Pure composition wrapper delegates selected point rendering to PointSection. | No visual skin of its own; selected-point section wrapper is semantic structure only. Child surface is owned by PointSection. | PARTIAL — composition only; consumer trace required. |
 | `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
 | `src/components/common/ConfirmDialog.tsx` | Dialog Paper/surface and content/action spacing inherit shared MUI Dialog defaults; No uses semantic `BUTTON_STYLES.cancel`; Yes uses `BUTTON_STYLES.confirm`. | Verify focus trap/autofocus, Escape/backdrop close, repeated confirm calls and keyboard/disabled behavior; no component-local dialog or action geometry remains. | PARTIAL — Cancel/Confirm roles centralized; interaction/accessibility state parity remains open. |
@@ -7023,3 +7023,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next placeholder/common image entry in Section 10.1: `src/components/placeholders/SocialObjectPlaceholder.tsx`. Separate AppImage/Next Image configuration from prohibited React style props and preserve the unique overlay composition.
+
+
+## 11.122 — SocialObjectPlaceholder current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next placeholder/common image entry after ConfirmDialog.
+- Re-opened `SocialObjectPlaceholder.tsx`, its CSS Module and the `social-object-placeholder.ts` preset owner.
+- The old ledger note claiming local overlay/typography styles and a React style prop on Next Image was stale. The component uses named root/overlay/title/description presets; the decorative Image uses a CSS Module class for width/height/object-fit.
+- No React `style` prop or component-local sx object remains.
+
+### Result and status
+- Corrected the Section 10.1 SocialObjectPlaceholder row to **MIGRATED**.
+- Placeholder color, overlay, typography and image-fit ownership: **SHARED PRESET + CSS MODULE VERIFIED**.
+- Unique composition is retained without creating a duplicate global image style.
+- No source change, API, image asset or business logic change. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next trip-details composition entry: `src/components/trips/TripDetailsView.tsx`. Verify the sticky social shell and CSS Module layout against the named social/layout tokens and direct child surfaces.
