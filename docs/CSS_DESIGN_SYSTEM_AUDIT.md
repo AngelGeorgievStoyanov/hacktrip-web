@@ -6730,3 +6730,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the remaining common social components in Section 10.1; verify ReportButton's dialog Cancel/Submit roles and the shared social action wrappers before moving to the live-tracking feature.
+
+
+## 11.108 — ReportButton dialog/action contract verification (2026-11-19)
+
+### Scope and findings
+- Continued the shared social-action review after Section 11.107.
+- Re-opened `ReportButton.tsx` and verified the icon uses `ICON_ACTION_STYLES.report`; tooltip wrapper, reason field and error feedback use named social presets.
+- Dialog Paper inherits the shared `MuiDialog` surface. Cancel and Submit are native MUI text Buttons with no local sx skin; their default appearance is intentionally retained rather than duplicated in a new preset.
+- Report open/close, submit, pending, error and withdraw states are component/hook behavior, not local visual styling.
+
+### Result and status
+- Report icon/dialog surface/field/error presentation: **SHARED/THEME CONTRACTS VERIFIED**.
+- Cancel/Submit intentionally retain MUI text-button defaults; no source change was necessary.
+- Report dialog field-state and keyboard/focus parity remain part of the global field-state audit.
+- No API, report permission or mutation behavior changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Remove the remaining ad hoc badge/animation sx objects from shared LikeButton/FavoriteButton by moving them into the existing social preset owner.
