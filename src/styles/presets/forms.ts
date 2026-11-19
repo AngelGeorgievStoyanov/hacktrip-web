@@ -2,6 +2,7 @@ import type { Theme } from '@mui/material/styles';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
+import { UI_COLORS } from '@/constants/ui/colors';
 
 /** Compact day-number field: dimensions and non-editable numeric display. */
 export const DAY_NUMBER_FIELD_SX = {
@@ -309,7 +310,7 @@ export const EDIT_TRIP_IMAGE_TILE_SX = {
   width: '100%',
   aspectRatio: '1 / 1',
   overflow: 'hidden',
-  border: '1px solid var(--ht-color-border-subtle)',
+  border: `1px solid ${UI_COLORS.border.subtle}`,
   p: 0.5,
 } as const;
 export const EDIT_TRIP_IMAGE_PLACEHOLDER_SX = {
@@ -322,8 +323,8 @@ export const EDIT_TRIP_IMAGE_DELETE_SX = {
   position: 'absolute',
   top: 4,
   right: 4,
-  backgroundColor: 'var(--ht-color-action-trip-image-control-background)',
+  backgroundColor: UI_COLORS.action.tripImageControlBackground,
   '&:hover': {
-    backgroundColor: 'var(--ht-color-action-trip-image-control-background-hover)',
+    backgroundColor: UI_COLORS.action.tripImageControlBackgroundHover,
   },
 } as const;
