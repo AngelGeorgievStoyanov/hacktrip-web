@@ -101,7 +101,7 @@ export function ProfileForm() {
             variant="contained"
             disabled={submitting || ((!isDirty || !isValid) && !selectedImage)}
             startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-            sx={BUTTON_STYLES.primary}
+            sx={BUTTON_STYLES.edit}
           >
             EDIT PROFILE
           </Button>
@@ -110,7 +110,7 @@ export function ProfileForm() {
             variant="contained"
             onClick={() => setPasswordExpanded((current) => !current)}
             disabled={submitting}
-            sx={BUTTON_STYLES.secondary}
+            sx={BUTTON_STYLES.disclosure}
           >
             {passwordExpanded ? 'HIDE CHANGE PASSWORD' : 'CHANGE PASSWORD'}
           </Button>
