@@ -678,15 +678,15 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `app/(account)/layout.tsx` | RequireAuth owns access gating; Header/Footer are shared shell components. | Main content frame uses ACCOUNT_LAYOUT_MAIN_SX; no route-local visual declarations remain. | MIGRATED — account shell uses shared layout preset. |
 | `app/(admin)/layout.tsx` | CHANGE REQUIRED |
 | `app/(auth)/layout.tsx` | CHANGE REQUIRED |
-| `app/(public)/layout.tsx` | PARTIAL |
+| `app/(public)/layout.tsx` | Shared Header/Footer composition; public routes own their `<main>` elements. | Flex-fill wrapper now uses `PublicLayout.module.css` instead of React `style={{ flex: 1 }}`; shell order and footer positioning are preserved. | MIGRATED — no React style transport remains. |
 | `app/(account)/favorites/page.tsx` | Uses shared TripList; route fetches the viewer's favorites. | Page/content/heading/loading/error/empty-state presentation uses ACCOUNT_TRIPS_* and shared heading presets. | MIGRATED — no route-local presentation remains. |
 | `app/(account)/my-trips/page.tsx` | Uses shared TripList; Create Trip CTA uses BUTTON_STYLES.createTrip. | Page/content/heading/loading/error/empty-state presentation uses ACCOUNT_TRIPS_* and shared heading presets. | MIGRATED — no route-local presentation remains. |
 | `app/(account)/profile/page.tsx` | ProfileForm owns profile fields/actions/image behavior; shared PANEL surface owns panel skin. | Centered page frame and responsive profile panel now use ACCOUNT_PROFILE_PAGE_SX and ACCOUNT_PROFILE_PANEL_SX; no route-local sx remains. | MIGRATED — account profile route shell centralized. |
-| `app/(public)/about/page.tsx` | CHANGE REQUIRED |
-| `app/(public)/live-tracking/page.tsx` | CHANGE REQUIRED |
-| `app/(public)/page.tsx` | PARTIAL |
-| `app/(public)/trips/[id]/page.tsx` | Async public route resolves trip/day, builds metadata/JSON-LD and delegates presentation to TripDetailsView. | Route main now uses Box component=main with CENTERED_PAGE_MAIN_SX; no React style prop remains. SEO metadata, JSON-LD and notFound flow are unchanged. | MIGRATED — public trip route shell uses the shared page contract. |
-| `app/(public)/trips/page.tsx` | PARTIAL |
+| `app/(public)/about/page.tsx` | Editorial content structure is owned by AboutPage.module.css; images use Next Image and IMAGE_PRESETS for dimensions. | Replaced the page-local imageStyle object and all Image `style` props with `.aboutPageImage` plus wide/marker variants in the existing CSS Module. | MIGRATED — page-specific editorial image geometry remains CSS Module-owned. |
+| `app/(public)/live-tracking/page.tsx` | Moderator redirect gates access; LiveTracker owns tracking feature UI. | Main content gutter now uses LIVE_TRACKING_PAGE_MAIN_SX; React style prop removed. | MIGRATED — public route shell uses named tracking preset. |
+| `app/(public)/page.tsx` | HomeHero and HomeTrips own their feature composition. | Main uses CENTERED_PAGE_MAIN_SX; heading/intro styles are owned by shared home typography presets. | MIGRATED — no route-local presentation remains. |
+| `app/(public)/trips/[id]/page.tsx` | Async public route resolves trip/day, builds metadata/JSON-LD and delegates presentation to TripDetailsView. | Route main uses CENTERED_PAGE_MAIN_SX; no React style prop remains. | MIGRATED — public trip route shell uses shared page contract; SEO/JSON-LD/notFound logic is unchanged. |
+| `app/(public)/trips/page.tsx` | TripFilters, TripList, TripPagination and WelcomeHeading own their feature presentation. | Main uses CENTERED_PAGE_MAIN_SX; intro text uses TRIPS_INTRO_SX, including the 900px editorial width. | MIGRATED — no route-local ad hoc sx remains. |
 
 Page wrappers without visual declarations are not automatically migration targets. Their imported components are the actual styling consumers. Remaining route files need a confirmation pass for imported UI and overlooked local styles before being marked VERIFIED.
 
@@ -794,7 +794,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(public)/about/page.tsx` | SEO metadata uses `buildSeoMetadata`; content hierarchy uses semantic sections; page imports `WelcomeHeading` and the named `aboutIllustration` image preset for image dimensions/sizes. | Defines local `imageStyle` and passes React `style` props to every Next Image (display, dimensions, max-width, margin, padding, object-fit); migrate to AppImage/named image role or CSS Module structure plus shared image tokens. Audit direct Next Image use and preserve responsive sizing, spacing and image rendering. | CHANGE REQUIRED. |
 | `app/(public)/layout.tsx` | Shared Header/Footer composition; comment explains the flex-fill wrapper needed to keep Footer at the viewport bottom while pages own their `<main>`. | Wrapper uses React `style={{ flex: 1 }}`; move this structural shell rule to a semantic class/CSS Module or shared layout preset, preserving the shell behavior. | CHANGE REQUIRED. |
 | `app/(public)/privacy-policy/LegalPage.module.css` | Page/content surface, text, border, link and TOC radius use selected `--ht-*` variables; CSS Module appropriately owns legal-document layout and anchor scroll offsets. | Local padding/margins/gaps, fixed font-size/line-height, and Back-link padding/skin remain; classify reusable spacing/typography and migrate to tokens. The `.legalPageBack` anchor is a separate native Back visual contract that must align with shared Back semantics without losing link navigation. | CHANGE REQUIRED. |
-| `app/(public)/privacy-policy/page.tsx` | SEO metadata uses `buildSeoMetadata`; long-form terms/privacy content is data-driven through arrays and semantic sections; visual composition is delegated to `LegalPage.module.css`. | Native `.legalPageBack` anchor is the Back action consumer; verify its semantic consistency with shared BackButton while preserving href navigation. Check document headings/link typography against shared semantic typography; no React `style` or ad hoc `sx` found in this route. | CHANGE REQUIRED — native Back-link skin and typography parity remain. |
+| `app/(public)/privacy-policy/page.tsx` | Long-form legal content is data-driven; page/document composition and legal link roles are owned by LegalPage.module.css. | No React style or ad hoc sx exists. Legal document typography and `.legalPageBack` remain intentional editorial CSS Module variants using shared `--ht-*` color/shape tokens; retain native href navigation. | MIGRATED — route-specific legal document skin is token-backed and does not transport styles through React. |
 
 | `src/components/admin/AdminUserForm.tsx` | Admin user edit form; Save consumes `BUTTON_STYLES.save` (alias of primary), Delete uses `dangerText`, and navigation uses `BackButton`. | Save and Delete currently use different levels of destructive emphasis (filled primary vs text-only danger); confirm this is intentional. Back caller adds `alignSelf`/margin through sx. Form fields, pending state, confirmation and role-specific actions remain open. | CHANGE REQUIRED. |
 | `src/components/auth/ForgotPasswordForm.tsx` | Forgot-password form; submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` rendered as a Next Link. | Back caller supplies local margin via sx; primary submit and navigation roles are distinct but Back still aliases generic secondary. Audit shared field, captcha, loading/disabled and feedback states. | CHANGE REQUIRED. |
@@ -5286,7 +5286,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Counting rule going forward
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
-- Next execution: workstream 9 — Public route shells/editorial pages. Workstreams 1–8 have been closed in Sections 11.45–11.54. No build, tests, lint, CI or browser validation was run.
+- Next execution: workstream 10 — Shared surface/theme adoption. Workstreams 1–9 have been closed in Sections 11.45–11.55. No build, tests, lint, CI or browser validation was run.
 ## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
 
 ### Source changes
@@ -5508,3 +5508,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Updated the Profile route source; account shell/list pages were already migrated and verified against current branch.
 - **Workstream 8 — Account route shells: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
+## 11.55 — Public route shells and editorial pages (2026-11-19)
+
+### Source changes
+- Added `PublicLayout.module.css` and migrated the public layout's flex-fill wrapper from React `style` to a scoped structural class; Header/Footer order and short-page footer behavior remain unchanged.
+- Extended the existing AboutPage.module.css with shared image, wide-image and marker-image classes; removed the page-local imageStyle object and all seven Next Image style props. Image sources, alt text, width/height, sizes, priority and ordering remain unchanged.
+- Added `TRIPS_INTRO_SX` and migrated both normal and error-state Trips page introductions from caller-local max-width sx objects.
+- Added `LIVE_TRACKING_PAGE_MAIN_SX` and migrated the live-tracking route main gutter to a named preset.
+- Reconciled Home, Trips, public Trip Details and Privacy Policy routes. Home/trips/detail already used named page presets; Privacy Policy is fully CSS Module-owned with native href navigation and token-backed legal-specific typography/link roles.
+
+### Preserved
+- Public shell Header/Footer order and flex-fill behavior; Home/Trips server data, filtering, pagination, canonical/noindex metadata and SEO; public Trip Details metadata/JSON-LD/notFound flow.
+- About content, image URLs, alt text, dimensions, responsive image row and editorial structure.
+- Privacy document content, section IDs, anchors and native Back-to-Home href; live-tracking moderator redirect, noindex metadata and feature rendering.
+- No API, DTO, auth, route behavior, SEO content, data or business logic changed.
+
+### Result
+- Added one public layout CSS Module and updated About CSS Module, typography/tracking preset owners and four public route consumers; existing public route consumers were reconciled.
+- **Workstream 9 — Public route shells/editorial pages: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Workstream 10 — Shared surface/theme adoption. Reconcile remaining Card/Paper/Alert/Accordion/Popover and custom surface consumers against the existing `surface.ts`, Card and Dialog theme owners; do not redesign established token values.
