@@ -705,7 +705,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/points/PointActions.tsx` | Wrapper consumes `POINT_SOCIAL_ACTIONS_SX`; LikeButton, FavoriteButton and ReportButton own their interactions and consume shared `ICON_ACTION_STYLES`; SocialConfigStatus owns its feedback presentation. | Verify all rendered call sites and responsive parity with other social-action groups; no PointActions-local visual declaration remains. | PARTIAL — source presentation is centralized; exhaustive caller/route verification remains open. |
 | `src/components/points/PointList.tsx` | Delegates each item to `PointCard`; list container consumes `POINT_LIST_SX`; empty state consumes `POINT_LIST_EMPTY_SX`. | Verify all callers and responsive behavior of the composed PointCard list; no local visual declaration remains in this component. | PARTIAL — list and empty-state presentation are preset-owned; caller/responsive verification remains open. |
 | `src/components/trips/TripCard.tsx` | Details link consumes semantic `BUTTON_STYLES.navigationAction`; card surface uses `MuiCard`; content and image frames consume shared card/image presets. | Stepper Back/Next intentionally retain MUI MobileStepper's native text-button defaults; substantial card geometry/content presets and responsive/caller verification remain open. | PARTIAL — navigation role centralized; card composition and responsive/caller verification remain. |
-| `src/components/trips/TripActions.tsx` | Three non-destructive actions (Add Next Day Trip, Add/Edit Points, Edit Day) use `BUTTON_STYLES.tripAction`; Delete Day and Delete Trip use `tripActionDanger`. | Edit/Add semantics are grouped under one trip-specific appearance; destructive actions share one role. Verify parity with point/admin action roles and loading/disabled/focus states. | PARTIAL — not fully fixed. |
+| `src/components/trips/TripActions.tsx` | Add Next Day Trip uses `tripAdd`; Add/Edit Points uses `tripManage`; Edit Day uses `tripEdit`; Delete Day/Trip use `tripDelete`. All are semantic aliases of the existing trip action/danger treatments. | Shared trip action geometry remains centralized in the existing role owner; verify every caller and pending/disabled/focus state. | PARTIAL — semantic roles applied; caller/state parity remains open. |
 | `src/components/common/BackButton.tsx` | Shared Back action fixes MUI `variant="contained"` and applies `BUTTON_STYLES.back`; caller owns navigation behavior. | Caller `sx` is merged before the shared semantic role, so only non-overlapping placement/dimension values survive; nine callers are mapped in Section 11.7. | MIGRATED — shared Back role and caller-owned layout/navigation are explicit. |
 | `src/theme/components/card.ts` | All MUI Cards receive `getSurfaceStyles` from the theme: paper background, divider border, theme radius and semantic surface shadow. | Consumer sx remains responsible only for card geometry/content; custom social/image surfaces keep their own semantic contracts. | MIGRATED — global Card skin is centralized. |
 | `src/theme/components/dialog.ts` | MUI Dialog Paper receives `getSurfaceStyles`; ImageLightbox applies its documented semantic image-stage override. | ConfirmDialog, AdminImages, ImageLightbox, ProfileImage and ReportButton inherit the shared Dialog Paper contract. | MIGRATED — Dialog surface and image-stage exception are explicit. |
@@ -5836,3 +5836,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 trip entry: `src/components/trips/TripActions.tsx`. Verify its existing Add/Edit/Delete semantic contracts and caller-level layout before deciding whether any source change is required.
+
+
+## 11.68 — TripActions semantic role mapping (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 trip entry after TripCard.
+- Re-read `TripActions.tsx` and the shared button preset owner; confirmed the existing trip-specific geometry is already centralized in `tripAction` / `tripActionDanger`.
+
+### Source changes
+- Added semantic aliases `tripAdd`, `tripEdit`, `tripManage` and `tripDelete` while retaining the existing shared visual contracts.
+- Migrated Add Next Day Trip, Add/Edit Points, Edit Day, Delete Day and Delete Trip to the corresponding semantic roles.
+- No visual values or action dimensions changed; all aliases resolve to the existing trip action or destructive trip action preset.
+
+### Preserved
+- Owner gating, route destinations, day selection, confirmation text/flow, mutation pending states, delete callbacks, cache updates and redirects.
+- No API, route, data, validation or business logic changed.
+
+### Result and status
+- **2 source files changed**; the Section 10.1 TripActions row was reconciled.
+- Trip Add/Edit/Manage/Delete semantic ownership: **SOURCE MIGRATED**.
+- Exhaustive caller and interaction-state parity remains open; file status stays **PARTIAL** until verified.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next relevant trip action entry in Section 10.1: `src/components/trips/TripDetails.tsx`. Inspect its action roles and surface/content geometry before making changes.
