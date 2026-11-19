@@ -190,7 +190,7 @@ export function RegisterForm() {
           }
         />
         <FormControlLabel
-          sx={{ pointerEvents: isFormLocked ? 'none' : 'auto' }}
+          className={isFormLocked ? styles.locked : undefined}
           control={<Checkbox disabled={isFormLocked} {...register('acceptedTerms')} />}
           label={
             <>
