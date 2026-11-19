@@ -840,7 +840,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/placeholders/index.ts` | Barrel exports `SocialObjectPlaceholder`. | No rendered UI or styling declarations; visual implementation is in the already-inventoried placeholder component. | STRUCTURAL — export surface only. |
 | `src/components/placeholders/socialObjectPlaceholderAssets.ts` | Central list of five public SVG placeholder asset paths (mountain, beach, city, garden and fields); component selects from this data. | Contains asset references only, not SVG markup, colors, sizing or component styling. Visual treatment remains in `SocialObjectPlaceholder.tsx` and the SVG files themselves are outside this TS/CSS candidate filter. | DATA — asset registry, not a style owner. |
 | `src/components/tracking/index.ts` | Barrel exports `LiveTracker`. | No rendered UI or style declarations; visual implementation and action controls are in the already-inventoried `LiveTracker.tsx`. | STRUCTURAL — export surface only. |
-| `src/lib/images/renderTripOgImage.tsx` | Supporting dependency outside the 163-file candidate filter; centralizes OG/Twitter image composition and consumes `SEO_BRAND`, OG dimensions and image validation/fetch limits. | Uses inline `style` objects for Next `ImageResponse`/Satori rendering, with many local geometry/typography literals. This is not an ordinary DOM consumer: record as a renderer-specific Styling API exception candidate and assess whether Satori's style-object contract requires it; no exception approval or source change made in this audit batch. | SUPPORTING DEPENDENCY — OG image renderer; separate review required. |
+| `src/lib/images/renderTripOgImage.tsx` | Supporting dependency outside the DOM candidate set; centralizes Open Graph/Twitter image output through Next ImageResponse (Satori). | Its JSX `style` objects are renderer input required by ImageResponse; CSS Modules, browser stylesheets and MUI sx do not participate in this server-side rasterization. SEO_BRAND and OG dimensions are already centralized. Proposed narrow exception: allow renderer-only style objects in this exact file; approval pending. | EXCEPTION CANDIDATE — no source change; requires explicit approval before the exception is recorded as approved. |
 
 ## 11. Current status and exact next task
 
@@ -5629,3 +5629,19 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Workstream 12 — OG image renderer exception review. Inspect Satori's renderer-only style-object requirements and document the narrow exception; do not convert renderer configuration into DOM styling.
+## 11.58 — OG image renderer exception review (2026-11-19)
+
+### Evidence
+- `src/lib/images/renderTripOgImage.tsx` is the single composition owner used by both `app/opengraph-image.tsx` and `app/api/og/trips/[id]/route.ts` (and the Twitter metadata image entry point).
+- It returns Next.js `ImageResponse`, which rasterizes a JSX tree server-side through Satori. The `style` objects are Satori's rendering input; ordinary DOM CSS Modules, browser stylesheets, React/MUI `sx` and theme component overrides do not style this output.
+- Brand colors and image dimensions already come from `SEO_BRAND` and centralized OG constants. The remaining literal geometry/typography values describe one fixed 1200×630 generated composition, not recurring DOM component styles.
+- Moving these objects into DOM-oriented presets or CSS Modules would not reduce coupling to the renderer and would not be consumed by ImageResponse. A renderer-specific style module could centralize literals but would still need to pass style objects to Satori and would add indirection without eliminating the required API.
+
+### Recommendation — approval required
+- Approve a narrowly scoped Styling API exception for `src/lib/images/renderTripOgImage.tsx` only: Satori/ImageResponse JSX may use inline `style` objects for renderer-supported CSS properties.
+- Keep brand colors, typography values and OG dimensions centralized in their existing constants. Do not allow this exception in ordinary React DOM components, route pages or shared UI components.
+- No source change was made to the renderer, route, data loader, image fetching/validation or cache behavior.
+
+### Status
+- **Workstream 12 — OG image renderer exception review: REVIEW COMPLETE; APPROVAL PENDING.**
+- No build, tests, lint, CI or browser validation was run.
