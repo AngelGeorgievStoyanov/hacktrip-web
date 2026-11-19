@@ -8112,3 +8112,54 @@ The following source files were re-fetched from `feature/frontend-modernization`
 - This entry is documentation-only.
 - No application source, visual value, CSS class, token, preset or theme behavior was changed.
 - Branch remains `feature/frontend-modernization`.
+
+
+## 11.147 — Final consistency verification of the current audit state (2026-11-19)
+
+### Branch and repository integrity
+- Verified branch: `feature/frontend-modernization`.
+- Verified HEAD: `ad66e60a49f7ea69f607173247d443a627884d57`.
+- The HEAD commit changes only `docs/CSS_DESIGN_SYSTEM_AUDIT.md` (44 additions, 0 deletions). No application source file was changed by the latest audit commit.
+- Current repository tree is complete (not truncated): 293 tracked files, including 121 TSX, 129 TypeScript and 14 CSS files.
+
+### Inventory / ledger reconciliation
+- Current in-scope candidate inventory: **182 unique paths**.
+- Section 10.1 ledger: **183 unique paths**, comprising the 182 in-scope candidates plus the explicitly retained Satori/ImageResponse support file `src/lib/images/renderTripOgImage.tsx`.
+- Missing candidate paths: **0**.
+- Duplicate ledger paths: **0**.
+- Re-counted current result statuses directly from the ledger:
+  - 40 MIGRATED
+  - 12 CENTRALIZED
+  - 92 PARTIAL
+  - 20 STRUCTURAL
+  - 16 NON-VISUAL
+  - 1 DATA
+  - 1 APPROVED EXCEPTION
+  - 1 BLOCKER
+- The status totals reconcile to all **183** ledger rows. The inventory is complete; implementation and verification are not.
+
+### Final static color-literal verification
+- Re-fetched and scanned all **121/121 TSX** and **14/14 CSS** files from the current feature branch (135 files total).
+- The scan found no raw hexadecimal, RGB/RGBA, HSL/HSLA or simple named-color declarations in those TSX/CSS files.
+- This does not mean the project has no literal color values anywhere: semantic token definitions and feature presets legitimately contain values. The result is specifically that rendered TSX/CSS surfaces do not contain stray direct color literals under the scan patterns.
+- The earlier 264-file identifier sweep remains the recorded evidence for direct `UI_COLORS`, `ht-button` and `--ht-color-*` references across TS/TSX/CSS. Latest HEAD after that sweep is documentation-only, so the application source snapshot is unchanged.
+
+### Remaining blockers and closure decision
+1. `src/styles/presets/admin.ts`: duplicate exported `ADMIN_NAVIGATION_SX` declarations remain at lines 133 and 144.
+2. `src/components/auth/RegisterForm.tsx`: `SECONDARY_BUTTON_SX` remains referenced at line 238 without a declaration/import. The adjacent action uses `BUTTON_STYLES.navigationSecondary`; the matching exported preset exists in `src/styles/presets/buttons.ts`.
+3. `.ht-button` / `.ht-button--danger`: only global CSS selectors were found in the source scan. This remains likely orphaned legacy CSS, but the external/server-generated markup boundary has not been proven clear.
+4. Color semantics remain unresolved by design: blue primary vs green hover, action-danger vs feedback-error, and purple palette-secondary vs gray/lavender secondary-action surface. No values were changed by assumption.
+5. The 92 PARTIAL rows remain the active file-level work queue. They contain both remaining implementation contracts and caller/state/responsive verification; they are not 92 confirmed defects.
+
+### Final verdict
+- **Inventory completeness: PASS (182/182 candidate paths accounted for).**
+- **Ledger integrity: PASS (183 unique rows; no missing or duplicate paths).**
+- **Static inline-style/color-literal scan: PASS for the recorded scan scope.**
+- **Source blocker status: FAIL / OPEN (two confirmed source blockers).**
+- **Legacy CSS disposition: OPEN.**
+- **Implementation and visual verification: INCOMPLETE (92 PARTIAL rows; no build, tests, lint, CI or browser QA run).**
+- Therefore the global CSS/design-system migration audit **must not be marked complete yet**. The next execution should resolve the two minimal source blockers, decide the legacy CSS boundary, then process the 92 PARTIAL rows in their existing ledger order. Do not repeat completed audits or re-open rows without new evidence.
+
+### Change boundary
+- Documentation-only final consistency entry.
+- No application source, style preset, token, CSS selector or visual value was changed.
