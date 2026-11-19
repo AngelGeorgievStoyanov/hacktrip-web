@@ -17,7 +17,7 @@ import {
 } from '@/constants/trips';
 import { PAGE_MAX } from '@/constants/pagination';
 import { CENTERED_PAGE_MAIN_SX } from '@/styles/presets/layouts';
-import { HOME_INTRO_SX } from '@/styles/presets/typography';
+import { TRIPS_INTRO_SX } from '@/styles/presets/typography';
 
 interface TripsPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -94,7 +94,7 @@ export default async function TripsPage({ searchParams }: TripsPageProps) {
 
   const intro = (
     <WelcomeHeading>
-      <Typography component="p" sx={[HOME_INTRO_SX, { maxWidth: 900 }]}>
+      <Typography component="p" sx={TRIPS_INTRO_SX}>
         Discover destinations, photos and experiences shared by the HackTrip community. Explore
         interesting places and personal recommendations from around the world, then share your own
         discoveries.
