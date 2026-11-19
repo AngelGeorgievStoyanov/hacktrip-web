@@ -66,3 +66,19 @@ export const ADMIN_PAGE_TITLE_SX = {
   marginBlockStart: '0.67em',
   marginBlockEnd: '0.67em',
 } as const;
+
+
+/** Not Found page h3/h4 roles preserve the existing browser heading scale. */
+export const NOT_FOUND_TITLE_SX = {
+  fontSize: '1.17em',
+  fontWeight: 700,
+  marginBlockStart: '1em',
+  marginBlockEnd: '1em',
+} as const;
+
+export const NOT_FOUND_SUBTITLE_SX = {
+  fontSize: '1em',
+  fontWeight: 700,
+  marginBlockStart: '1.33em',
+  marginBlockEnd: '1.33em',
+} as const;
