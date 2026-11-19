@@ -309,7 +309,7 @@ Confirmed local declarations:
 | `src/components/layout/Footer.module.css` | Footer structure and typography are CSS Module-owned. | Horizontal padding now consumes `--ht-spacing-footer-horizontal` emitted from UI_SIZES; primary/inverse colors remain CSS-variable-owned. | MIGRATED — recurring spacing/color values centralized. |
 | `src/components/trips/TripDetailsView.module.css` | Unique responsive grid/flex, container-query rearrangement and component-specific positioning. | Retained as the structural owner for 1200px shell, 320–450px / 600px / 500px grid tracks, 1120px container-query stacking/order and 600px responsive gaps. The 20px TripDetails card margins are page-specific parent placement, not a reusable visual skin; shared spacing/gutters continue to use `--ht-spacing-*` and page tokens where applicable. | STRUCTURAL — intentional CSS Module ownership; no duplicate shared card/button skin remains. |
 | `src/components/trips/TripList.module.css` | Empty-state typography/margins | Use shared typography/spacing |
-| `src/components/trips/TripPagination.module.css` | Outer margin | Use shared pagination spacing |
+| `src/components/trips/TripPagination.module.css` | Unique list/nav structure and scoped pagination selectors | All recurring visual values now consume theme-generated pagination, spacing, color, shape and typography variables; no local color, radius, size, padding, focus or font-weight literals remain. | MIGRATED — structural CSS Module with token-backed visual values |
 
 ### 5.4 Shared/common, navigation and images
 
@@ -379,7 +379,7 @@ Confirmed local declarations:
 | `src/components/trips/PointsSection.tsx` | No style matches in initial scan | Inspect full file/imports before marking VERIFIED |
 | `src/components/trips/DayImagesGallery.tsx` | Delegates populated days to ImageGallery; empty days render SocialObjectPlaceholder. | Empty-day parent frame uses DAY_IMAGE_PLACEHOLDER_FRAME_SX; gallery frame/controls are owned by ImageGallery and its presets. | MIGRATED — no component-local presentation remains; parent placeholder geometry is preserved. |
 | `src/components/trips/TripList.tsx` | Renders `TripCard`; list references `cardListStyle`, empty-state heading uses `headingTextStyle`. | Both presentation presets are applied through prohibited React `style`; empty-state typography and list composition need migration to approved sx/className/token consumers. | CHANGE REQUIRED — React style violations. |
-| `src/components/trips/TripPagination.tsx` | Crawlable `<nav>` with real Next links and `aria-current`; structural classes are in `TripPagination.module.css`. | No semantic pagination visual preset for link/active/disabled states; class module owns only list layout. | CHANGE REQUIRED — role styling missing. |
+| `src/components/trips/TripPagination.tsx` | Crawlable `<nav>` with real Next links and `aria-current`; native anchor/span semantics are preserved. | Link, active and focus states are implemented in the scoped CSS Module and consume theme-generated CSS variables for color, radius, dimensions, spacing and focus treatment. | MIGRATED — native pagination role styling is token-backed; route/query behavior remains component-owned. |
 | `src/components/trips/TripSelectField.tsx` | TextField/Autocomplete/MenuItem inherit MUI theme defaults; component owns no local visual object. | Searchable and fallback fields retain MUI shared component contracts. | MIGRATED — no local visual migration required. |
 | `src/components/maps/AddressAutocomplete.tsx` | Shared Autocomplete/TextField composition with semantic `form`, `pointPicker` and `tripPicker` variants; retains behavior props, direction and `textFieldProps`. | Caller-level `inputSx`, `buttonSx` and `containerSx` have been removed; named owner presets now control input, search-button and container presentation. | SOURCE MIGRATED — visual variants owned centrally. |
 | `src/components/maps/GoogleMapView.tsx` | Shared Google Maps renderer; Box owns canvas/loading geometry; InfoWindowF is the SDK InfoWindow and receives caller-provided ReactNode. | Renderer frame/loading geometry now consume getGoogleMapFrameSx/getGoogleMapLoadingSx; map SDK owns map controls and InfoWindow chrome. | MIGRATED — renderer-owned layout centralized; SDK internals remain intentionally external. |
@@ -5956,3 +5956,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue reconciling the next trip navigation consumer in Section 10.1, beginning with `TripPagination.tsx`; verify its native-link destinations, active/focus states and CSS Module ownership without converting crawlable links into buttons.
+
+
+## 11.73 — TripPagination native-link visual token migration (2026-11-19)
+
+### Scope and preflight
+- Continued with the next trip-navigation entry in Section 10.1 after TripMapSection.
+- Inspected `TripPagination.tsx`, `TripPagination.module.css`, the UI size/spacing/typography owners and the theme CSS-variable bridge.
+- Preserved the component's crawlable native-link design; no MUI Button conversion was considered appropriate.
+
+### Source changes
+- Added central tokens for pagination item minimum size (32px), vertical/horizontal padding (6px/10px), focus outline width/offset (2px/2px), semibold weight (600) and outer spacing (20px via the 8px spacing scale).
+- Exposed those values through theme-generated CSS variables.
+- Migrated `TripPagination.module.css` to consume the variables for outer spacing, item dimensions/padding, focus outline and current-page font weight. Existing primary/hover colors, shape radius and list gap already consumed theme variables and remain unchanged.
+- Reconciled both Section 10.1 entries for the TSX component and its CSS Module.
+
+### Preserved
+- Real href destinations, search/group/transport/sort query preservation, Previous/Next availability, current-page `aria-current`, anchor keyboard behavior and list semantics.
+- Exact existing values and visual intent; no redesign.
+- No API, route, SEO, data or business logic changed.
+
+### Result and status
+- **5 source files changed**: UI sizes, spacing, typography, theme CSS-variable bridge and TripPagination CSS Module.
+- TripPagination link/active/focus visual contract: **SOURCE MIGRATED**.
+- Native navigation semantics and query behavior: **PRESERVED**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue through the existing trip list/navigation register; verify `TripDaysNav.tsx` and `TripFilters.tsx` against the current branch rather than trusting their historical status labels.
