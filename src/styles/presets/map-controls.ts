@@ -65,6 +65,9 @@ export const getGoogleMapContainerStyle = (height: number | string) => ({
 /** Shared loading indicator size for the map renderer. */
 export const GOOGLE_MAP_LOADING_INDICATOR_SIZE = 28;
 
+/** Compact geolocation loading indicator used beside the point-picker action. */
+export const POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE = 14;
+
 /** Point picker outer stack and action row retain their feature-specific responsive layout. */
 export const POINT_LOCATION_PICKER_STACK_SX = {
   width: '100%',
@@ -159,5 +162,5 @@ export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
 } as const;
 
 export const TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX = {
-  ...BUTTON_STYLES.secondary, minHeight: 56, whiteSpace: 'nowrap',
+  ...BUTTON_STYLES.removeMarker, minHeight: 56, whiteSpace: 'nowrap',
 } as const;
