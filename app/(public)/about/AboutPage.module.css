@@ -76,8 +76,8 @@
   width: 100%;
   height: auto;
   max-width: 640px;
-  margin: 20px auto;
-  padding: 12px;
+  margin: var(--ht-spacing-md-plus) auto;
+  padding: var(--ht-spacing-sm);
   box-sizing: border-box;
   object-fit: contain;
 }
