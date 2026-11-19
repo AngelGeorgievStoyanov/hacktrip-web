@@ -815,7 +815,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/home/HomeHero.tsx` | WelcomeHeading owns shared home heading composition. | Intro typography and 850px content width use HOME_HERO_INTRO_SX, composed from HOME_INTRO_SX. | MIGRATED — no React style prop or local visual object remains. |
 | `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_SX; trip listing delegates to shared TripList. | Heading remains a semantic h3 and uses the shared heading preset; no local visual declaration remains. | MIGRATED — heading/list composition uses shared owners. |
 | `src/components/images/ImageGallery.module.css` | Gallery row/stack/grid layout and image-button structure are CSS Module-owned; spacing and radius consume `--ht-spacing-*` / `--ht-shape-border-radius`; focus-visible outline consumes shared `--ht-focus-outline-*` variables. | Native button reset, transparent background, clipping/overflow and aspect-ratio frame remain unique structural composition; image frame and overlay parity are tracked in ImageGallery/AppImage entries. | PARTIAL — structure and shared visual tokens centralized; unique frame/caller parity remains. |
-| `src/components/layout/Footer.module.css` | Text color uses inherit; footer primary/inverse colors consume --ht-* variables. | Horizontal padding and footer spacing remain hardcoded; verify footer/header surface and shell visual role consistency. | PARTIAL — colors centralized through CSS variables, spacing incomplete. |
+| `src/components/layout/Footer.module.css` | Footer flex/column structure remains CSS Module-owned; horizontal padding uses `--ht-spacing-footer-horizontal`; primary/inverse colors consume theme CSS variables. | No local color or spacing literal remains; verify footer/header surface consistency through all route shells. | MIGRATED — footer visual values are token-backed; unique flex structure retained. |
 | `src/components/layout/Footer.tsx` | Footer behavior is isolated to iOS landscape scroll compatibility; visual skin is Footer.module.css. | Horizontal padding now consumes `--ht-spacing-footer-horizontal` emitted from UI_SIZES.footerHorizontalPadding; colors use shared CSS variables. | MIGRATED — footer visuals consume centralized tokens; iOS scroll behavior unchanged. |
 | `src/components/layout/Header.tsx` | Header root/welcome/menu/toolbar/drawer Paper/nav layout use HEADER_* presets; navigation actions use BUTTON_STYLES.navigation. | Responsive state, route visibility and handlers remain component-owned; no local presentation object remains. | MIGRATED — application shell presentation centralized. |
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Placeholder colors consume UI_COLORS semantic tokens; image asset selection is data/state driven. | Overlay gradient, typography sizes, image object-fit style and geometry are local; React style on Next Image is a presentation exception candidate requiring approved abstraction. | PARTIAL — color tokens used, overlay contract remains local. |
@@ -6983,3 +6983,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next common shell entry in Section 10.1: `src/components/layout/Footer.module.css`. Centralize repeated footer spacing while keeping its unique layout/flow in the CSS Module.
+
+
+## 11.120 — Footer CSS Module current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next common shell entry after LegalPage.
+- Re-opened `Footer.module.css` and `Footer.tsx`.
+- The old ledger claim that horizontal padding/footer spacing remained hardcoded was stale. The module already consumes `--ht-spacing-footer-horizontal` and shared primary/inverse color variables; Footer.tsx's iOS landscape scroll behavior is separately isolated.
+- No duplicate Footer preset or source change was required.
+
+### Result and status
+- Corrected the Section 10.1 Footer.module.css row to **MIGRATED**.
+- Footer spacing/color ownership: **THEME CSS VARIABLES VERIFIED**.
+- Unique flex structure and route-shell composition remain local/structural as intended.
+- No source change, API, route or behavior change. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next common component entry: `src/components/common/ConfirmDialog.tsx`. Centralize Cancel/Confirm roles and dialog content/action spacing while preserving the shared Dialog surface.
