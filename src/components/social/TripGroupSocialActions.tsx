@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useState } from 'react';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
@@ -109,6 +111,7 @@ export function TripGroupSocialActions({
         <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
           <span>
             <IconButton
+            sx={ICON_ACTION_STYLES.base}
               onClick={() => {
                 likeAnimation.requestPlay();
                 likeMutation.mutate();
@@ -138,6 +141,7 @@ export function TripGroupSocialActions({
         >
           <span>
             <IconButton
+            sx={ICON_ACTION_STYLES.base}
               onClick={() => favoriteMutation.mutate()}
               disabled={favoriteMutation.isPending}
               aria-label={
@@ -162,6 +166,7 @@ export function TripGroupSocialActions({
         <Tooltip title={reported ? 'Withdraw trip group report' : 'Report trip group'} arrow>
           <span>
             <IconButton
+            sx={ICON_ACTION_STYLES.base}
               onClick={() => {
                 if (reported) {
                   reportActions.unreport();
@@ -189,6 +194,7 @@ export function TripGroupSocialActions({
       ) : null}
       <Tooltip title={shareCopied ? 'Link copied' : 'Share trip group'} arrow>
         <IconButton
+            sx={ICON_ACTION_STYLES.base}
           onClick={() => void handleShare()}
           aria-label={shareCopied ? 'Link copied' : 'Share trip group'}
         >
