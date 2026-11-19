@@ -24,6 +24,8 @@ import {
   POINT_FORM_FIND_MAP_BUTTON_SX,
   POINT_FORM_ACTIONS_SX,
   POINT_FORM_ACTION_BUTTON_SX,
+  FORM_FULL_WIDTH_ALERT_SX,
+  FORM_ACTION_LOADING_INDICATOR_SIZE,
 } from '@/styles/presets/forms';
 
 interface PointFormProps {
@@ -238,7 +240,7 @@ export function PointForm({
         {isEdit ? 'EDIT POINT' : 'ADD POINT'}
       </Typography>
       {serverError ? (
-        <Alert severity="error" sx={{ width: '100%' }}>
+        <Alert severity="error" sx={FORM_FULL_WIDTH_ALERT_SX}>
           {serverError}
         </Alert>
       ) : null}
@@ -268,7 +270,7 @@ export function PointForm({
           variant="outlined"
           onClick={() => void handleFindInMap()}
           disabled={findingLocation || !isLoaded || !watch('name').trim()}
-          startIcon={findingLocation ? <CircularProgress size={16} /> : undefined}
+          startIcon={findingLocation ? <CircularProgress size={FORM_ACTION_LOADING_INDICATOR_SIZE} /> : undefined}
           sx={POINT_FORM_FIND_MAP_BUTTON_SX}
         >
           FIND IN MAP
@@ -276,7 +278,7 @@ export function PointForm({
       </Box>
 
       {locationError ? (
-        <Alert severity="error" sx={{ width: '100%' }}>
+        <Alert severity="error" sx={FORM_FULL_WIDTH_ALERT_SX}>
           {locationError}
         </Alert>
       ) : null}
@@ -311,7 +313,7 @@ export function PointForm({
             (isEdit ? (!isDirty || !isValid) && files.length === 0 : !isDirty || !isValid) ||
             existingImages.length + uploadedImageCount + files.length > MAX_IMAGES_PER_ENTITY
           }
-          startIcon={submitting ? <CircularProgress size={16} /> : undefined}
+          startIcon={submitting ? <CircularProgress size={FORM_ACTION_LOADING_INDICATOR_SIZE} /> : undefined}
           sx={[isEdit ? BUTTON_STYLES.edit : BUTTON_STYLES.create, POINT_FORM_ACTION_BUTTON_SX]}
         >
           {isEdit ? 'EDIT POINT' : createdPointId ? 'RETRY IMAGE UPLOAD' : 'ADD POINT'}
