@@ -727,8 +727,8 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
 | `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
 | `src/components/maps/GoogleMapView.tsx` | Shared renderer owns SDK loading, map frame/loading geometry, Google Maps `mapContainerStyle` config and loading indicator size through named map-controls contracts; markers, paths, InfoWindow, fit-bounds/focus behavior and map events remain feature API. | Verify all direct consumers, loading/error states, frame dimensions and responsive map interactions; Google Maps SDK options are configuration objects, not React inline style props. | PARTIAL — renderer geometry/config centralized; caller/state parity remains open. |
-| `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | AddressAutocomplete now consumes the named point-picker variant; GPS and clear-marker actions retain their existing roles; Snackbar/Alert state and externally forwarded findInMapTrigger are unchanged. | PARTIAL — map action semantics and feedback states remain open. |
-| `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; frame/hint and responsive composition remain feature-specific, while autocomplete and marker-clear visuals now consume named presets. No GPS action/find trigger. | PARTIAL — remaining map action and state contracts stay open; do not merge behavior blindly. |
+| `src/components/maps/PointLocationPicker.tsx` | Uses shared GoogleMapView and named point-picker/autocomplete/action/Snackbar presets; Remove Marker uses semantic `BUTTON_STYLES.removeMarker`; GPS loading indicator size is named in map-controls. | Verify browser geolocation permission/error, find-in-map trigger, marker drag/click, snackbar and responsive action states; point-specific behavior remains separate from TripLocationPicker. | PARTIAL — map/action presentation centralized; geolocation and caller state parity remain open. |
+| `src/components/maps/TripLocationPicker.tsx` | Uses shared GoogleMapView and named trip map frame/hint/autocomplete contracts; Remove Marker uses semantic `BUTTON_STYLES.removeMarker` through its named preset. | Verify map-click/drag, search, marker-clear and responsive hint/frame states; remains intentionally separate from PointLocationPicker (no GPS/find-in-map action). | PARTIAL — map/action presentation centralized; caller state parity remains open. |
 | `src/components/trips/TripSelectField.tsx` | TextField and Autocomplete renderInput inherit the shared `MuiTextField` defaults (`outlined` / `medium`); no feature-local field skin or sx object. | MUI owns outlined input, label, helper, focus, error and disabled defaults; verify the config-loading/free-text/searchable branches and their caller states. | PARTIAL — shared MUI field baseline verified; caller/state parity remains open. |
 | `src/components/CustomFileUploadButton.tsx` | Shared upload trigger with text Button and camera IconButton modes; both consume the semantic `upload` role through `image-upload.ts`. | Container width and text/icon mode geometry remain in named presets; verify direct consumers, disabled/max-count states and accessible file-input behavior. | PARTIAL — Upload role centralized; consumer/state parity remains open. |
 | `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback; object-fit and profile-lightbox behavior use CSS Module classes. Direct consumers remain mapped in this row. | No React `style` prop or style transport remains; preset-to-caller frame ratios, dimensions and responsive `sizes` parity still require review. | PARTIAL — style transport migrated; image preset/frame parity remains open. |
@@ -6812,3 +6812,27 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with `PointLocationPicker.tsx` and `TripLocationPicker.tsx`; keep their distinct GPS/find-in-map versus trip search/marker-clear semantics separate while auditing shared map/action contracts.
+
+
+## 11.112 — Map picker Remove Marker role and GPS loading token (2026-11-19)
+
+### Source changes
+- Added `BUTTON_STYLES.removeMarker` as a semantic alias of the existing secondary appearance.
+- Migrated PointLocationPicker's Remove Marker action to the shared role and reused it in TripLocationPicker's existing marker-clear preset.
+- Added `POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE` to the map-controls preset owner and replaced the component-local 14px CircularProgress literal.
+- Reconciled both Section 10.1 map-picker rows.
+
+### Preserved
+- Point picker GPS permission/error flow, find-in-map trigger, coordinate synchronization, marker click/drag, address-to-point-name behavior and Snackbar.
+- Trip picker map click/drag, address search, marker clear, center/zoom and hint behavior. Point and trip pickers remain separate implementations.
+- Existing Remove Marker appearance and GPS loading indicator size.
+- No API, coordinate, map, route or business logic changed.
+
+### Result and status
+- **3 source files changed** plus the Section 10.1 ledger reconciliation.
+- Remove Marker role and GPS loading size: **SOURCE MIGRATED**.
+- Geolocation/search/marker and responsive caller state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining map/social components in Section 10.1; verify AddressAutocomplete and map picker callers, then proceed to the remaining auth/common/admin action owners.
