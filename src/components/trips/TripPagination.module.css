@@ -33,8 +33,8 @@
 }
 
 .link:focus-visible {
-  outline: var(--ht-pagination-focus-outline-width) solid var(--ht-color-primary);
-  outline-offset: var(--ht-pagination-focus-outline-offset);
+  outline: var(--ht-focus-outline-width) solid var(--ht-color-primary);
+  outline-offset: var(--ht-focus-outline-offset);
 }
 
 .current {
