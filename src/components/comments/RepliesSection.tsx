@@ -242,9 +242,8 @@ export function RepliesSection({
             {canDelete ? (
               <Tooltip title="Delete reply" arrow>
                 <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.danger}
                   size="small"
-                  color="error"
                   aria-label="Delete reply"
                   onClick={() =>
                     void confirm('Delete this reply?', 'Delete Confirmation').then((confirmed) => {
