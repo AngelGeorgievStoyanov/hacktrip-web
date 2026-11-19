@@ -271,14 +271,15 @@ Confirmed local declarations:
 | `src/constants/ui/typography.ts` | MUI typography tokens | Add a named editorial role only if required |
 | `src/constants/ui/z-index.ts` | App layering scale | Replace repeated raw z-index values |
 | `src/constants/ui/index.ts` | Token barrel | Maintain consistent exports |
-| `src/theme/index.ts` | MUI theme + CSS variables | Extend the CSS-variable bridge for all CSS Module consumers |
+| `src/theme/index.ts` | Central MUI theme composes palette, typography, shape, spacing, z-index, CSS variables and component overrides. | MuiCard, MuiDialog and MuiPaper outlined variants now share surface owners; Drawer elevation remains unaffected. | MIGRATED — surface theme registration complete for current consumers. |
 | `src/theme/palette.ts` | MUI palette from UI_COLORS | Keep this as the single palette mapping |
 | `src/theme/shape.ts` | MUI radius | Derive from semantic shape tokens |
 | `src/theme/shadows.ts` | Semantic elevation resolver | Keep one MUI elevation resolver |
 | `src/theme/typography.ts` | MUI typography mapping | Keep one MUI typography mapping |
-| `src/theme/components/surface.ts` | Shared Card/Panel/Dialog surface resolver | Keep one surface-skin contract |
-| `src/theme/components/card.ts` | MUI Card override | Preserve; remove local surface overrides from consumers |
-| `src/theme/components/dialog.ts` | Dialog Paper surface | Align dialog states |
+| `src/theme/components/surface.ts` | Shared elevated surface resolver for Card/Dialog/Panel. | Also exports the outlined, non-elevated Paper surface contract; both variants derive background, divider, radius and shadow behavior from the active MUI theme. | MIGRATED — one shared owner for elevated and outlined application surfaces. |
+| `src/theme/components/card.ts` | All MUI Cards receive getSurfaceStyles from the theme: paper background, divider border, theme radius and semantic surface shadow. | Card consumers use theme surface; component sx is reserved for geometry/content layout. | MIGRATED — global Card skin is centralized. |
+| `src/theme/components/dialog.ts` | MUI Dialog Paper receives getSurfaceStyles from the shared surface owner. | ImageLightbox and ConfirmDialog use the same Dialog surface; ImageLightbox's imageLightbox background remains an explicit semantic variant. | MIGRATED — shared Dialog surface with documented image-lightbox variant. |
+| `src/theme/components/paper.ts` | MUI Paper outlined variant override | Apply shared outlined surface skin to bordered Paper containers; preserve elevated Drawer Paper behavior. |
 | `src/theme/components/button.ts` | Typography/radius only | Add shared global interaction behavior |
 | `src/theme/components/text-field.ts` | Defaults only | Define the complete field contract and states |
 | `src/constants/images/presets.ts` | Named image roles; style/objectFit | Verify all consumers; cleanly separate frame/fit/size roles |
@@ -330,7 +331,7 @@ Confirmed local declarations:
 | `src/components/images/ImageUploadField.tsx` | Named image-upload presets own root/header/status/count/limit, scrollable preview list/rows/thumbnails/filename, processing indicator sizing and remove controls; CustomFileUploadButton owns both upload trigger modes. | Warning Alert remains MUI-theme-owned; verify warning/focus/disabled parity in the shared feedback/action audit. | PARTIAL — upload-specific local sx migrated. |
 | `src/components/auth/ProfileImage.tsx` | Existing profile image display still uses AppImage presets, Dialog and image tokens; separate ProfileImageUpload now uses shared upload trigger, preview-row, thumbnail, filename and remove presets. | Existing circular frame, existing-image delete control, fullscreen stage and close control remain local. | PARTIAL — selected-file upload flow centralized; existing-image presentation remains open. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Local image button dimensions + raw Delete/Upload | Reuse profile-image/action roles |
-| `src/components/admin/AdminImages.tsx` | Preview uses MUI Dialog and inherits MuiDialog.paper surface; inventory tables use ADMIN_TABLE_CONTAINER_SX. | Missing-thumbnail toolbar/alerts, pagination rows, preview trigger/thumb/url cell, close action, DialogContent and image stage now use ADMIN_* presets; no component-local presentation object remains. | MIGRATED — image inventory and preview presentation use shared admin/image/button contracts. |
+| `src/components/admin/AdminImages.tsx` | TableContainer component=Paper uses MuiPaper outlined surface; preview Dialog inherits MuiDialog surface. | ADMIN_TABLE_CONTAINER_SX owns width only; outlined Paper and Dialog surfaces are theme-owned; preview image background remains a documented semantic imageLightbox variant. | MIGRATED — table and preview surfaces are theme-owned. |
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Local overlay/text sizes/gradient | Use shared placeholder overlay tokens/typography |
 
 ### 5.5 Auth, profile and admin
@@ -351,9 +352,9 @@ Confirmed local declarations:
 | `src/components/admin/AdminUsers.tsx` | User entries render MUI Card with theme-owned surface; profile preview delegates to ImageLightbox; avatar states and pagination actions use existing presets. | User grid/card/content/identity/action/pagination spacing now consume ADMIN_* presets; Edit/Delete use primary/danger text roles. | MIGRATED — user directory composition and actions use shared admin/profile/button contracts. |
 | `src/components/admin/AdminNavigation.tsx` | Local navigation layout and active/inactive styles | Use shared Navigation role |
 | `src/components/admin/AdminDashboard.tsx` | Link-based admin navigation | Verify link/button role parity |
-| `src/components/admin/AdminFailedLogs.tsx` | Admin table uses TableContainer component=Paper and ADMIN_TABLE_CONTAINER_SX. | Bulk-selection toolbar uses ADMIN_SELECTION_TOOLBAR_SX; Delete selected uses BUTTON_STYLES.dangerText; pagination and table surface use shared presets/theme. | MIGRATED — table, selection, pagination and destructive action contracts are shared. |
-| `src/components/admin/AdminReports.tsx` | Admin table uses TableContainer component=Paper and ADMIN_TABLE_CONTAINER_SX. | Pagination uses ADMIN_PAGINATION_*; report deletion now uses BUTTON_STYLES.dangerText; table surface and controls inherit MUI theme. | MIGRATED — table, pagination and destructive action contracts are shared. |
-| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Admin table uses TableContainer component=Paper and ADMIN_TABLE_CONTAINER_SX. | Diagnostic field/pre/details layout and expanded-cell padding use ADMIN_* presets; table/pagination use shared contracts; View/Hide remains a MUI disclosure action. | MIGRATED — diagnostic disclosure and table composition use shared contracts. |
+| `src/components/admin/AdminFailedLogs.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override. | ADMIN_TABLE_CONTAINER_SX owns width only; outlined Paper background/border/radius are theme-owned; bulk toolbar/action/pagination use shared presets. | MIGRATED — table surface and actions are theme/preset-owned. |
+| `src/components/admin/AdminReports.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override; Card/Dialog surfaces remain theme-owned. | ADMIN_TABLE_CONTAINER_SX now owns width only; outlined Paper background/border/radius are theme-owned. | MIGRATED — table surface and pagination/action contracts are shared. |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override. | ADMIN_TABLE_CONTAINER_SX owns width only; outlined Paper surface and diagnostic/table layouts are theme/preset-owned. | MIGRATED — table surface and diagnostic composition centralized. |
 
 ### 5.6 Points, trips, maps and tracking
 
@@ -5286,7 +5287,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Counting rule going forward
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
-- Next execution: workstream 10 — Shared surface/theme adoption. Workstreams 1–9 have been closed in Sections 11.45–11.55. No build, tests, lint, CI or browser validation was run.
+- Next execution: workstream 11 — Shared common controls and application shell. Workstreams 1–10 have been closed in Sections 11.45–11.56. No build, tests, lint, CI or browser validation was run.
 ## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
 
 ### Source changes
@@ -5550,3 +5551,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Added one legal return-link semantic preset; updated the legal page and CSS Module; consolidated Home/Trips intro variants; reconciled all public route/page owners.
 - **Workstream 9 — Public route shells and editorial pages: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
+## 11.56 — Shared surface/theme adoption (2026-11-19)
+
+### Source changes
+- Added `getOutlinedSurfaceStyles(theme)` to `src/theme/components/surface.ts` for bordered Paper surfaces without elevation.
+- Added `src/theme/components/paper.ts`; MuiPaper outlined variants now receive theme background, divider border, shape radius and no shadow. Elevated Paper instances retain their existing MUI elevation behavior.
+- Registered `MuiPaper` in `src/theme/index.ts`.
+- Reduced `ADMIN_TABLE_CONTAINER_SX` to width only; its former local border radius is now owned by the shared Paper theme.
+
+### Consumer reconciliation
+- AdminReports, AdminFailedLogs, AdminRouteNotFoundLogs and AdminImages use `TableContainer component={Paper} variant="outlined"`; all now receive the shared outlined surface contract.
+- Header Drawer Paper uses elevation 12 and is intentionally not affected by the outlined-only override.
+- All MUI Cards continue to receive `getSurfaceStyles` through `card.ts`; all MUI Dialog Papers receive it through `dialog.ts`. ImageLightbox's imageLightbox background remains an explicit semantic variant layered on top.
+- PANEL_SX uses the same elevated surface resolver. No Accordion or Popover component consumers were found in the current source tree.
+
+### Preserved
+- Card elevation, Dialog surface, ImageLightbox image-specific background, outlined admin table semantics, Drawer elevation and all table/dialog interactions.
+- No API, DTO, data, route, business logic or content changes.
+
+### Result
+- Added one theme component override, extended the shared surface resolver and registered it centrally; four Paper table consumers now inherit the outlined surface from theme.
+- **Workstream 10 — Shared surface/theme adoption: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Workstream 11 — Shared common controls and application shell. Continue from the existing Header/BackButton/NotificationProvider/error-state ownership maps; do not redo the already-migrated Header top navigation, ConfirmDialog action roles or icon actions.
