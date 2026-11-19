@@ -8,7 +8,8 @@ import type { StackProps } from '@mui/material/Stack';
 import {
   ADDRESS_AUTOCOMPLETE_EXTRA_ACTION_SX, ADDRESS_AUTOCOMPLETE_FIELD_WRAP_SX,
   ADDRESS_AUTOCOMPLETE_ROOT_SX, ADDRESS_AUTOCOMPLETE_ROW_SX,
-  ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX, ADDRESS_AUTOCOMPLETE_VARIANTS,
+  ADDRESS_AUTOCOMPLETE_VARIANTS,
+  getAddressAutocompleteRootSx, getAddressAutocompleteSearchButtonSx,
 } from '@/styles/presets/map-controls';
 import { MAP_SEARCH_MIN_LENGTH } from '@/constants/maps';
 import type { MapPosition } from '@/lib/maps';
@@ -119,7 +120,7 @@ export function AddressAutocomplete({
   );
 
   return (
-    <Stack spacing={0.5} sx={{ ...ADDRESS_AUTOCOMPLETE_ROOT_SX, ...layout.container }}>
+    <Stack spacing={0.5} sx={getAddressAutocompleteRootSx(variant)}>
       <Stack
         direction={direction}
         spacing={0.5}
@@ -153,7 +154,7 @@ export function AddressAutocomplete({
             onClick={() => void handleSearch()}
             disabled={searching || !isLoaded || value.trim().length < MAP_SEARCH_MIN_LENGTH}
             startIcon={searching ? <CircularProgress size={14} /> : undefined}
-            sx={{ ...ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX, ...layout.button }}
+            sx={getAddressAutocompleteSearchButtonSx(variant)}
           >
             Search
           </Button>
