@@ -715,7 +715,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/points/CreatePointPage.tsx` | Uses MUI Card theme surface for its Card and central size token for content width. | Local layout `sx` and page composition remain; verify all nested form and action consumers. | PARTIAL — not fully fixed. |
 
 
-| `src/components/admin/AdminFailedLogs.tsx` | Uses Paper table, Checkbox selection and direct pagination Buttons. | Map checkbox and pagination contracts; inspect ADMIN_TABLE_CONTAINER_SX / ADMIN_PAGINATION_SX consumers and all states. | PARTIAL — direct action roles remain. |
+| `src/components/admin/AdminFailedLogs.tsx` | Outlined Paper table inherits shared surface; selected-row Delete uses `BUTTON_STYLES.deleteText`; Checkbox selection remains MUI-owned; Previous/Next use `ADMIN_PAGINATION_BUTTON_SX` and `ADMIN_PAGINATION_SX`. | Verify checkbox indeterminate/selected states, delete confirmation/pending/error states and responsive table behavior; no local table or pagination skin remains. | PARTIAL — action and pagination contracts centralized; selection/state parity remains open. |
 | `src/components/admin/AdminImages.tsx` | Outlined Paper table inherits the shared surface; all Previous/Next controls consume `ADMIN_PAGINATION_BUTTON_SX`; preview trigger, thumbnail, URL cell, close control, dialog content and image stage consume named `ADMIN_IMAGE_*` presets. | Verify toolbar Generate/Select action roles, Checkbox states, responsive table behavior and all preview/selection/pending states; no local preview IconButton position or image spacing object remains in the component. | PARTIAL — table, pagination and preview presentation centralized; action/state parity remains open. |
 | `src/components/admin/AdminReports.tsx` | Outlined Paper table inherits shared surface; Delete uses semantic `BUTTON_STYLES.deleteText`; Previous/Next consume `ADMIN_PAGINATION_BUTTON_SX`. | Verify delete confirmation/pending/error states, row content and responsive table behavior; no local table surface or pagination styling remains. | PARTIAL — action and pagination roles centralized; row/state verification remains open. |
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
@@ -6285,3 +6285,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next admin table entry in Section 10.1: `src/components/admin/AdminFailedLogs.tsx`. Verify its selection, delete/clear actions, pagination and row states against the shared action contracts.
+
+
+## 11.88 — AdminFailedLogs semantic Delete and pagination verification (2026-11-19)
+
+### Source changes
+- Migrated Delete selected from generic `dangerText` to the semantic `BUTTON_STYLES.deleteText` role introduced in Section 11.87.
+- Confirmed the outlined Paper surface, Checkbox defaults and Previous/Next pagination sizing already use their shared theme/component contracts.
+- Reconciled the Section 10.1 AdminFailedLogs row.
+
+### Preserved
+- Selected-ID Set behavior, select-all/toggle-one logic, confirmation flow, delete mutation, query invalidation, selection reset, pending/disabled and error states.
+- No API, data, authorization or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- Delete and pagination roles: **SHARED CONTRACTS APPLIED**.
+- Checkbox state parity, confirmation/mutation state and responsive table verification remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 admin table entry: `src/components/admin/AdminRouteNotFoundLogs.tsx`. Verify disclosure, Delete/Clear actions and pagination contracts.
