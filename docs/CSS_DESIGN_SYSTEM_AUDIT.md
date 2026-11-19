@@ -5138,3 +5138,43 @@ No application source code was changed. No branch was created. No build, tests, 
 - Global button/action work remains open for text actions, map controls, trip/point management, admin forms/tables, pagination/stepper and remaining native controls.
 - Next: **11.40 — complete the next shared semantic action group across map, point/trip management and admin consumers**, reusing the Section 11.12 dependency map and existing presets. Do not reopen the completed icon-action group or restart inventory.
 - Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
+
+
+## 11.40 — Trip edit controls and Admin Users action roles (2026-11-19)
+
+### Scope and preflight
+- Continued from Section 11.39 NEXT using the existing Section 11.12 C1 action ownership map; no new audit or inventory was created.
+- Confirmed target branch: `feature/frontend-modernization`.
+- Inspected current branch source for `PointLocationPicker`, `TripLocationPicker`, `AddressAutocomplete`, `TripMapSection`, `TripActions`, `PointActions`, `PointForm`, `TripForm`, `EditTripLayout` and `AdminUsers`, plus the shared button and map-control preset owners.
+- The map picker/search/clear-marker actions, PointForm and TripForm primary/add actions, TripActions navigation/management actions, TripMapSection MobileStepper slots and PointForm search action were already using the existing semantic preset or MUI theme-owned default. They were intentionally not given duplicate local styling.
+
+### Source changes
+1. `src/components/trips/EditTripLayout.tsx`
+   - Replaced the local day-number ButtonGroup geometry with the existing `DAY_NUMBER_BUTTON_GROUP_SX` owner.
+   - Applied the existing `BUTTON_STYLES.dayDecrement` and `dayIncrement` contracts to the decrease/increase controls.
+   - Applied `BUTTON_STYLES.primary` to the explicit Set/Change Day action.
+   - Composed the existing image-delete overlay geometry and background colors with `ICON_ACTION_STYLES.danger`; the feature-specific overlay position and trip-image control colors remain local to the image owner.
+2. `src/components/admin/AdminUsers.tsx`
+   - Applied `BUTTON_STYLES.primary` to Edit User.
+   - Applied `BUTTON_STYLES.dangerText` to Delete, retaining its existing `color="error"` behavior and confirmation flow.
+
+### Verified and intentionally preserved
+- Map picker controls retain their existing semantic ownership in `map-controls.ts` and `buttons.ts`; no new map button preset was needed.
+- Trip creation and trip management actions in `TripForm` and `TripActions` already consume shared primary/trip-action contracts.
+- TripMapSection's Next/Back controls are supplied to MUI `MobileStepper` as its native slots and retain the theme-owned default rather than receiving a conflicting filled-button skin.
+- Admin user pagination remains on the existing MUI default button contract; this batch does not invent a new pagination appearance.
+- Preserved button handlers, day-number locking and bounds, disabled/submitting states, selected-day behavior, image deletion lifecycle, confirmation, routing, pagination state and authorization visibility.
+- No API, DTO, route, backend, data, validation or business logic changed.
+
+### Result
+- **2 source files changed**; 9 related map/point/trip/admin files were inspected and existing contracts retained where already correct.
+- Trip edit day-number controls and image deletion now reuse the existing shared semantic owners; Admin Users edit/delete actions now explicitly consume the existing primary/danger roles.
+- No new token, preset, component or public API was introduced.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- Trip edit day controls and Admin Users action roles: **SOURCE CHANGES APPLIED**.
+- Map picker, trip action and stepper paths inspected in this bounded group: **EXISTING SHARED/THEME CONTRACTS RETAINED**.
+- The global C1 action workstream remains open: remaining auth/admin pages, admin logs/reports, TripPagination/TripDaysNav/TripFilters, remaining point actions, common feedback/error/retry actions and exhaustive native button/link call-site mapping still need verification and migration where required.
+- Next: **11.41 — continue the remaining admin/auth form action consumers and pagination/day-navigation contracts** from Section 11.12. Do not repeat the already-migrated trip edit and icon-action controls.
+- Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
