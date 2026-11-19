@@ -12,7 +12,7 @@ export const UI_SPACING = {
   lg: 3,
   xl: 4,
   xxl: 6,
-  paginationOuter: 2.5,
+  mdPlus: 2.5,
 } as const;
 
 /** Existing public page gutter retained until all page layouts are migrated. */
