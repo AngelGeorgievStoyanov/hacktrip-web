@@ -35,6 +35,7 @@ import {
   TRIP_FORM_ERROR_SX,
   TRIP_FORM_DAY_NUMBER_ROW_SX,
   TRIP_FORM_PRICE_CURRENCY_ROW_SX,
+  TRIP_FORM_PRICE_FIELD_SX,
   TRIP_FORM_CURRENCY_WRAPPER_SX,
   TRIP_FORM_ACTIONS_SX,
 } from '@/styles/presets/forms';
@@ -427,7 +428,7 @@ export function TripForm() {
             error={!!errors.price}
             helperText={errors.price?.message}
             slotProps={{ htmlInput: { min: 0, max: 1000000, step: 'any' } }}
-            sx={{ flex: 1 }}
+            sx={TRIP_FORM_PRICE_FIELD_SX}
           />
 
           <Controller
