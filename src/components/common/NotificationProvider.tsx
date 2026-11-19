@@ -9,7 +9,6 @@ import type { SnackbarCloseReason } from '@mui/material/Snackbar';
 import { NOTIFICATION_DEFAULTS } from '@/constants/notifications';
 import type { NotificationOptions, NotificationPosition } from '@/constants/notifications';
 import { NOTIFICATION_ALERT_SX } from '@/styles/presets/feedback';
-import { NOTIFICATION_ALERT_SX } from '@/styles/presets/feedback';
 
 interface NotificationApi {
   success: (message: string, options?: NotificationOptions) => void;
