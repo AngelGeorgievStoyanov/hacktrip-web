@@ -101,3 +101,7 @@ export const getSocialOverlaySx = (size: 'small' | 'medium') => [
     },
   },
 ] as const;
+
+/** Report dialog and tooltip-wrapper layout contracts. */
+export const REPORT_BUTTON_TOOLTIP_WRAPPER_SX = { display: 'inline-flex' } as const;
+export const REPORT_BUTTON_REASON_FIELD_SX = { mt: 1 } as const;
