@@ -18,6 +18,7 @@ import { UI_COLORS } from '@/constants/ui/colors';
 import {
   PROFILE_IMAGE_UPLOAD_FIELD_SX, PROFILE_IMAGE_UPLOAD_PREVIEW_ROW_SX,
   PROFILE_IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX, PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX,
+  IMAGE_UPLOAD_REMOVE_BUTTON_SX,
 } from '@/styles/presets/image-upload';
 
 const ACCEPT_TYPES = (ACCEPTED_IMAGE_MIME_TYPES as readonly string[]).join(',');
@@ -241,6 +242,7 @@ export function ProfileImageUpload({
           <Tooltip title="Remove selected image" arrow>
             <IconButton
               aria-label="Remove selected image"
+              sx={IMAGE_UPLOAD_REMOVE_BUTTON_SX}
               onClick={() => onSelectedFileChange(null)}
               size="small"
             >
