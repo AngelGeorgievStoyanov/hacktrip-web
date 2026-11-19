@@ -315,15 +315,15 @@ Confirmed local declarations:
 
 | File | Finding | Required action |
 |---|---|---|
-| `src/components/common/BackButton.tsx` | Shared BackButton fixes contained variant and applies BUTTON_STYLES.back; caller owns destination and navigation behavior. | Shared semantic Back role is always merged last; callers use sx only for layout placement/dimensions. No caller can replace the shared visual role through sx. | MIGRATED — shared Back appearance centralized; caller-owned navigation/layout retained. |
-| `src/components/common/ConfirmDialog.tsx` | MUI Dialog Paper inherits `MuiDialog.paper` → `getSurfaceStyles`. | Cancel and Confirm are both direct `contained` primary Buttons, so semantic action roles are indistinguishable; dialog spacing remains default/local composition. | PARTIAL — surface centralized, action roles missing. |
-| `src/components/common/NotFound.tsx` | Shared 404 experience uses a native Home button with scoped CSS Module. | Countdown, timeout cleanup and router replacement are behavior-owned; the unique hero CTA remains page-specific and token-backed in NotFound.module.css. | MIGRATED — unique 404 CTA retained as an intentional CSS Module variant; no React style transport. |
-| `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp now uses EXPANDABLE_TEXT_COLLAPSED_SX; no component-local visual object remains. Expanded text and disclosure state remain behavior-owned. | MIGRATED — disclosure clamp presentation centralized. |
+| `src/components/common/BackButton.tsx` | MIGRATED — shared Back role; caller-owned layout/navigation preserved. |
+| `src/components/common/ConfirmDialog.tsx` | MIGRATED — shared primary/secondary action roles; Dialog surface theme-owned. |
+| `src/components/common/NotFound.tsx` | MIGRATED — 404 hero remains CSS Module; Home CTA uses NOT_FOUND_HOME_BUTTON_SX. |
+| `src/components/common/ExpandableText.tsx` | MIGRATED — collapsed text clamp preset; MUI owns disclosure button defaults. |
 | `src/components/common/PasswordField.tsx` | TextField defaults inherit MUI theme; visibility IconButton uses ICON_ACTION_STYLES.base. | Password visibility interaction and maxLength remain behavior-only; no local presentation object remains. | MIGRATED — shared theme/icon-action contract consumed. |
 | `src/components/common/PasswordRequirements.tsx` | Password validation state is computed by shared getPasswordRequirements. | List and item layout now consume PASSWORD_REQUIREMENTS_LIST_SX and PASSWORD_REQUIREMENT_ITEM_SX; success/neutral colors use MUI palette roles. | MIGRATED — layout and feedback colors use shared contracts. |
-| `src/components/common/NotificationProvider.tsx` | Shared Snackbar + Alert provider; severity and placement are data-driven from notification constants. | Alert width uses NOTIFICATION_ALERT_SX; severity variants inherit MUI Alert defaults and notification constants own placement/duration. | MIGRATED — provider-local presentation removed. |
-| `src/components/layout/Header.tsx` | MUI AppBar/Toolbar and Drawer; Drawer Paper retains explicit elevation 12. | Header root/welcome/menu/toolbar/drawer Paper/nav layout and desktop/mobile navigation spacing use named HEADER_* presets; all header navigation buttons use BUTTON_STYLES.navigation. | MIGRATED — application header shell centralized; responsive drawer state/keyboard/logout behavior preserved. |
-| `src/components/layout/Footer.tsx` | CSS Module consumer | Use shared footer/page gutter |
+| `src/components/common/NotificationProvider.tsx` | MIGRATED — Alert width preset; MUI owns severity and Snackbar states. |
+| `src/components/layout/Header.tsx` | MIGRATED — header shell and navigation consume HEADER_* and BUTTON_STYLES presets. |
+| `src/components/layout/Footer.tsx` | MIGRATED — CSS Module uses centralized footer spacing/color variables. |
 | `src/components/CustomFileUploadButton.tsx` | Camera IconButton and contained Button-as-label now consume named upload-trigger presets; wrapper width is centralized. | Verify shared Upload semantic action role and disabled/focus state parity with theme. | PARTIAL — trigger geometry/skin centralized. |
 | `src/components/images/AppImage.tsx` | Central preset resolver; no arbitrary style prop | Preserve boundary; define a named preset for each shared image role |
 | `src/components/images/ImageGallery.tsx` | CSS Module + local `sx` | Use shared image button/frame presets |
@@ -350,7 +350,7 @@ Confirmed local declarations:
 | `src/components/auth/Captcha.tsx` | Local CAPTCHA container `sx` | Keep integration geometry; tokenize spacing |
 | `src/components/admin/AdminUserForm.tsx` | Admin edit panel composes PANEL_SX and COLUMN_STACK_SX; Save/Delete use shared button roles. | Panel dimensions/padding, password field stack and back-button placement now consume ADMIN_USER_FORM_* presets; field controls inherit MUI theme. | MIGRATED — admin user edit composition and actions use shared contracts. |
 | `src/components/admin/AdminUsers.tsx` | User entries render MUI Card with theme-owned surface; profile preview delegates to ImageLightbox; avatar states and pagination actions use existing presets. | User grid/card/content/identity/action/pagination spacing now consume ADMIN_* presets; Edit/Delete use primary/danger text roles. | MIGRATED — user directory composition and actions use shared admin/profile/button contracts. |
-| `src/components/admin/AdminNavigation.tsx` | Admin navigation uses native Next.js links rendered as MUI Buttons. | Container geometry uses ADMIN_NAVIGATION_SX; active/inactive appearance remains the MUI contained/text + primary/inherit semantic variant, avoiding duplicate action presets. | MIGRATED — navigation layout and states have explicit owners. |
+| `src/components/admin/AdminNavigation.tsx` | MIGRATED — nav layout preset; MUI variant/color own active states. |
 | `src/components/admin/AdminDashboard.tsx` | Link-based admin navigation | Verify link/button role parity |
 | `src/components/admin/AdminFailedLogs.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override. | ADMIN_TABLE_CONTAINER_SX owns width only; outlined Paper background/border/radius are theme-owned; bulk toolbar/action/pagination use shared presets. | MIGRATED — table surface and actions are theme/preset-owned. |
 | `src/components/admin/AdminReports.tsx` | TableContainer component=Paper uses the global MuiPaper outlined surface override; Card/Dialog surfaces remain theme-owned. | ADMIN_TABLE_CONTAINER_SX now owns width only; outlined Paper background/border/radius are theme-owned. | MIGRATED — table surface and pagination/action contracts are shared. |
@@ -1423,7 +1423,7 @@ Continue only with the exact outstanding paths listed in this section; do not re
 | `app/(admin)/admin/route-not-found-logs/page.tsx` | Route wrapper delegates to AdminRouteNotFoundLogs; no direct visual declarations. Remaining: AdminRouteNotFoundLogs owns table/disclosure/pagination controls and must be tracked independently. Status: NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/users/[userId]/page.tsx` | Route delegates to AdminUserForm in a semantic section; no local style declaration. Remaining: AdminUserForm owns form fields/actions and must be tracked independently. Status: NON-VISUAL ROUTE — child owns UI. |
 | `app/(admin)/admin/users/page.tsx` | Route wrapper delegates to AdminUsers; no direct visual declarations. Remaining: AdminUsers owns user table, filters and actions and must be tracked independently. Status: NON-VISUAL ROUTE — child owns UI. |
-| `app/(admin)/layout.tsx` | Admin route shell uses ROUTE_CONTENT_PADDING but applies it via React style prop on main. Remaining: Move shared shell spacing to approved styling API; verify AdminNavigation and page content composition under this layout. Status: CHANGE REQUIRED. |
+| `app/(admin)/layout.tsx` | Main uses ROUTE_LAYOUT_MAIN_SX; no React style prop remains. Status: MIGRATED. |
 
 ### Findings
 - Both route shells (account/admin) pass the shared ROUTE_CONTENT_PADDING through a React style prop. This violates the approved styling API policy even though the spacing token itself is centralized.
@@ -5625,7 +5625,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - No auth, route, API, data or business logic changed.
 
 ### Result
-- Added header/feedback preset ownership and extended UI size/CSS-variable bridge; updated Header, ExpandableText, NotificationProvider, AdminNavigation, Footer CSS and global error page.
+- Added header/feedback preset ownership and extended UI size/CSS-variable bridge; updated Header, ExpandableText, NotificationProvider, AdminNavigation, NotFound CTA, admin/auth route shells, Footer CSS and global error page.
 - **Workstream 11 — Shared common controls and application shell: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
 
