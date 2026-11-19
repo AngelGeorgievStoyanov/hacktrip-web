@@ -7267,3 +7267,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Direct inline JSX styling violations in the scanned TSX scope remain at **zero**, excluding the explicitly approved Satori/ImageResponse renderer.
 - Next audit item: continue the original inventory's source-level scan for indirect `sx={localObject}` usage and any presentation objects whose names do not identify them as style constants. Do not turn this into semantic-button or caller-state work.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.132 — Indirect sx usage scan: component files (2026-11-19)
+
+### Scope and method
+- Continued the exact Section 11.131 task on the existing `feature/frontend-modernization` branch.
+- Read the current source of all **82 tracked `src/components/**/*.tsx` files** from the branch tree.
+- Checked JSX `sx={identifier}` and `sx={helper(...)}` references, React `style=` props, and locally declared style-like constants.
+- Reviewed the non-obvious candidates in source rather than treating every `sx={...}` reference as a violation.
+
+### Findings
+- The component-level `sx` references inspected resolve to named shared presets/helpers imported from `src/styles/presets/*`, or to MUI's `visuallyHidden` utility. Dynamic helpers such as `getGoogleMapFrameSx`, `getAddressAutocompleteRootSx`, `getPointCardMoveButtonSx` and `getSocialLikeAnimationSx` remain in their designated shared preset owners.
+- No React `style=` prop was found in the 82 component files.
+- Google Maps `mapContainerStyle` in `GoogleMapView.tsx` is an SDK configuration prop, not a React DOM style prop.
+- One existing API escape hatch remains visible: `BackButton.tsx` builds `mergedSx` from caller-provided `sx` and the shared `BUTTON_STYLES.back`. This does not introduce a local visual object, but it allows callers to override the shared Back contract. It is already identified in Section 4.2 and is recorded here for cross-reference; do not silently count it as a new inline-style object or change it during this narrowly scoped scan.
+- No new component-local presentation object requiring extraction was confirmed in this pass.
+
+### Result
+- **82/82 component TSX files inspected** for indirect sx references and React style props.
+- No new app-owned inline React style prop or ad hoc local sx object was confirmed in this component-file pass.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue the same source-level check across the remaining UI-bearing `app/**/*.tsx` route/layout files (the earlier 121-file direct scan included these, but this indirect-object pass has not yet rechecked them).
+- Then inspect declarations and call sites for any remaining non-style-named objects passed to `sx`, and reconcile the final count. Preserve the documented Satori/ImageResponse exception and keep SDK configuration objects outside the React-style count.
