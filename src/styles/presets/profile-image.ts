@@ -97,7 +97,17 @@ export const ADMIN_PROFILE_AVATAR_READONLY_SX = {
   cursor: 'default',
 } as const;
 
+/** Avatar used as a native button in the admin profile-image editor. */
 export const ADMIN_PROFILE_AVATAR_INTERACTIVE_SX = {
   ...ADMIN_PROFILE_AVATAR_SX,
+  bgcolor: 'action.selected',
+} as const;
+
+/** Avatar used as a clickable display surface in the admin users list. */
+export const ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX = {
+  width: 88,
+  height: 88,
+  flexShrink: 0,
+  cursor: 'zoom-in',
   bgcolor: 'action.selected',
 } as const;
