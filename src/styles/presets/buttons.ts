@@ -54,6 +54,22 @@ export const TRIP_ACTION_BUTTON_LAYOUT_SX = {
   boxSizing: 'border-box',
 } as const;
 
+/** Shared top-level navigation link spacing and hit-area contract. */
+const navigation = {
+  margin: '2px',
+  padding: '2px',
+  boxSizing: 'content-box',
+} as const;
+
+/** Shared active/inactive admin navigation action roles. */
+const adminNavigationActive = {
+  fontWeight: 600,
+} as const;
+
+const adminNavigationInactive = {
+  fontWeight: 400,
+} as const;
+
 /** Shared primary action treatment for trip navigation and management. */
 const tripAction = {
   ...primary,
@@ -97,4 +113,7 @@ export const BUTTON_STYLES = {
   tripActionDanger,
   dayIncrement: dayNumberButton,
   dayDecrement: dayNumberButton,
+  navigation,
+  adminNavigationActive,
+  adminNavigationInactive,
 } as const;
