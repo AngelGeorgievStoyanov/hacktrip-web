@@ -372,7 +372,7 @@ Confirmed local declarations:
 | `src/components/trips/TripDetailsView.tsx` | CSS Module owns the unique responsive page grid/row composition; child features own their content. | Sticky day-navigation shell uses `getTripDetailsStickyHeaderSx`; `TripDetailsView.module.css` remains responsible for unique page grid and container-query layout. | MIGRATED — shell geometry centralized without moving unique page layout out of its CSS Module. |
 | `src/components/trips/TripFilters.tsx` | Local select/filter style objects | Use common field/select contract |
 | `src/components/trips/TripForm.tsx` | Uses semantic `create`, `add` and `addPoints` action roles; day stepper uses named increment/decrement contracts; Back uses shared `BackButton`; form, upload and action geometry consume named presets. | Field-state/theme contract, upload/remove actions, loading/disabled/focus parity and full caller verification remain open. | PARTIAL — action roles centralized; form/field and state audit remains. |
-| `src/components/trips/EditTripLayout.tsx` | Map picker, image upload, trip selects, day stepper, button roles and image placeholder are shared components/presets. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile/delete control and placeholder frame now consume EDIT_TRIP_* presets. Day input alignment moved from React style to preset sx. | PARTIAL — route-specific geometry is centralized; remaining review is field/error state consistency and shared field adoption. |
+| `src/components/trips/EditTripLayout.tsx` | Day decrement/increment use shared stepper roles; Set/Change Day and Edit Your Trip use semantic `BUTTON_STYLES.edit`; image delete uses `ICON_ACTION_STYLES.danger` plus named overlay geometry; Back uses shared `BackButton`. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile/delete control and placeholder frame consume EDIT_TRIP_* presets. Field/error state consistency and shared field adoption remain open. | PARTIAL — action roles and route-specific geometry are centralized; field/state audit remains. |
 | `src/components/trips/TripDaysNav.tsx` | Local page-item colors/spacing | Use shared day-navigation role/states |
 | `src/components/trips/TripMapSection.tsx` | Renders MUI Card with theme-owned surface; map and SDK InfoWindow are delegated to GoogleMapView. | Card frame and MobileStepper container use TRIP_MAP_SECTION_CARD_SX and TRIP_MAP_SECTION_STEPPER_SX. Back/Next controls inherit MUI Button defaults; point selection/focus and keyboard navigation remain feature-owned. | MIGRATED — feature composition uses named map-control presets and shared MUI defaults. |
 | `src/components/trips/PointSection.tsx` | MUI Card inherits shared surface; ImageGallery, placeholder, PointActions, CommentsToggle and ExpandableText are shared components. | Card/content/empty-image/description/title/note/action-row geometry now use named `trip-details.ts` and `image-gallery.ts` presets; description wrapper no longer uses React style. | MIGRATED — point detail presentation centralized while preserving its image-frame parent geometry. |
@@ -5910,3 +5910,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 trip entry: `src/components/trips/EditTripLayout.tsx`. Re-check the existing day-number, trip-image delete and action presets before changing anything; do not duplicate the work already recorded in Section 11.40.
+
+
+## 11.71 — EditTripLayout semantic Edit actions (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 trip entry after TripForm.
+- Re-read `EditTripLayout.tsx` and confirmed the day stepper, image-delete icon and layout geometry were already consuming their shared contracts, as recorded in Section 11.40.
+
+### Source changes
+- Migrated Set/Change Day and Edit Your Trip from generic `BUTTON_STYLES.primary` to the semantic `BUTTON_STYLES.edit` role.
+- The Edit role is an alias of the existing primary appearance, so no visual values or interaction states changed.
+- Corrected the Section 10.1 row to explicitly record the existing shared stepper, image-delete and Back contracts.
+
+### Preserved
+- Day-number bounds/locking/confirmation, trip update and reorder flow, image deletion confirmation and pending state, upload/retry lifecycle, navigation and responsive geometry.
+- No API, DTO, validation, route, data or business logic changed.
+
+### Result and status
+- **1 source file changed**; the Section 10.1 EditTripLayout row was reconciled.
+- Edit action roles and existing day-stepper/image-delete/Back contracts: **SOURCE MIGRATED / VERIFIED**.
+- Form-field states, error presentation, upload/remove action family and complete responsive/caller verification remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 trip entry after EditTripLayout. Inspect the remaining trip feature components in their existing ledger order; do not repeat the already-migrated day/image actions from Section 11.40.
