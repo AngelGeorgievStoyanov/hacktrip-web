@@ -111,7 +111,7 @@ export function TripGroupSocialActions({
         <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
           <span>
             <IconButton
-            sx={ICON_ACTION_STYLES.like}
+              sx={ICON_ACTION_STYLES.like}
               onClick={() => {
                 likeAnimation.requestPlay();
                 likeMutation.mutate();
@@ -131,7 +131,7 @@ export function TripGroupSocialActions({
                 )}
               </Badge>
             </IconButton>
-          </Box>
+          </span>
         </Tooltip>
       ) : null}
       {isAuthenticated && canFavorite ? (
@@ -141,7 +141,7 @@ export function TripGroupSocialActions({
         >
           <span>
             <IconButton
-            sx={ICON_ACTION_STYLES.favorite}
+              sx={ICON_ACTION_STYLES.favorite}
               onClick={() => favoriteMutation.mutate()}
               disabled={favoriteMutation.isPending}
               aria-label={
@@ -159,14 +159,14 @@ export function TripGroupSocialActions({
                 {favorited ? <BookmarkRemoveIcon /> : <BookmarkAddIcon />}
               </Badge>
             </IconButton>
-          </Box>
+          </span>
         </Tooltip>
       ) : null}
       {isAuthenticated && canReport ? (
         <Tooltip title={reported ? 'Withdraw trip group report' : 'Report trip group'} arrow>
           <span>
             <IconButton
-            sx={ICON_ACTION_STYLES.report}
+              sx={ICON_ACTION_STYLES.report}
               onClick={() => {
                 if (reported) {
                   reportActions.unreport();
@@ -182,7 +182,7 @@ export function TripGroupSocialActions({
             >
               {reported ? <ReportOffIcon /> : <ReportIcon />}
             </IconButton>
-          </Box>
+          </span>
         </Tooltip>
       ) : null}
       {isAuthenticated && canComment ? (
@@ -194,7 +194,7 @@ export function TripGroupSocialActions({
       ) : null}
       <Tooltip title={shareCopied ? 'Link copied' : 'Share trip group'} arrow>
         <IconButton
-            sx={ICON_ACTION_STYLES.share}
+          sx={ICON_ACTION_STYLES.share}
           onClick={() => void handleShare()}
           aria-label={shareCopied ? 'Link copied' : 'Share trip group'}
         >
