@@ -306,7 +306,7 @@ Confirmed local declarations:
 | `src/components/common/NotFound.module.css` | Home button skin | Use shared CTA role; keep page layout/background |
 | `src/components/images/ImageGallery.module.css` | Gallery structure; shared variables | Verify selectors/consumers; preserve structure |
 | `src/components/layout/Footer.module.css` | Literal horizontal padding | Use shared page/container gutter |
-| `src/components/trips/TripDetailsView.module.css` | Unique responsive grid/flex, container query rearrangement and component-specific positioning; spacing partly uses `--ht-spacing-*`. | Literal max widths, grid tracks and `20px` content margins remain local geometry; classify which are truly unique and move repeated spacing to tokens. No card skin found. | PARTIAL — structural module with residual geometry literals. |
+| `src/components/trips/TripDetailsView.module.css` | Unique responsive grid/flex, container-query rearrangement and component-specific positioning. | Retained as the structural owner for 1200px shell, 320–450px / 600px / 500px grid tracks, 1120px container-query stacking/order and 600px responsive gaps. The 20px TripDetails card margins are page-specific parent placement, not a reusable visual skin; shared spacing/gutters continue to use `--ht-spacing-*` and page tokens where applicable. | STRUCTURAL — intentional CSS Module ownership; no duplicate shared card/button skin remains. |
 | `src/components/trips/TripList.module.css` | Empty-state typography/margins | Use shared typography/spacing |
 | `src/components/trips/TripPagination.module.css` | Outer margin | Use shared pagination spacing |
 
@@ -685,7 +685,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `app/(public)/about/page.tsx` | CHANGE REQUIRED |
 | `app/(public)/live-tracking/page.tsx` | CHANGE REQUIRED |
 | `app/(public)/page.tsx` | PARTIAL |
-| `app/(public)/trips/[id]/page.tsx` | PARTIAL |
+| `app/(public)/trips/[id]/page.tsx` | Async public route resolves trip/day, builds metadata/JSON-LD and delegates presentation to TripDetailsView. | Route main now uses Box component=main with CENTERED_PAGE_MAIN_SX; no React style prop remains. SEO metadata, JSON-LD and notFound flow are unchanged. | MIGRATED — public trip route shell uses the shared page contract. |
 | `app/(public)/trips/page.tsx` | PARTIAL |
 
 Page wrappers without visual declarations are not automatically migration targets. Their imported components are the actual styling consumers. Remaining route files need a confirmation pass for imported UI and overlooked local styles before being marked VERIFIED.
@@ -5457,3 +5457,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Workstream 8 — Account route shells. Inspect route layout wrappers and shared account page/loading/error owners; do not redo ProfileForm/auth form migration.
+## 11.53 — Trip Details and gallery composition (2026-11-19)
+
+### Source changes
+- Public Trip Details route now renders its main shell through `Box component="main"` and `CENTERED_PAGE_MAIN_SX`; removed the remaining React `style` prop and corrected the route to consume the existing `*_SX` contract.
+- Reconciled `TripDetails` against `trip-details.ts`: card/header/title, price row, metadata, description, expand toggle, action column and social row are preset-owned; currency/expand controls use shared icon-action roles.
+- Reconciled `PointSection`: Card/content/title/note/description/action row and populated/empty image parent frames use the existing trip-details/image-gallery presets. No React style prop remains.
+- Reconciled `DayImagesGallery`: populated image composition remains delegated to ImageGallery; the empty-day square frame remains parent-owned through `DAY_IMAGE_PLACEHOLDER_FRAME_SX`.
+- `TripDetailsView` continues to use `getTripDetailsStickyHeaderSx` and `STICKY_SOCIAL_SX`; its CSS Module remains the sole owner of the route-specific grid, responsive ordering and container-query behavior.
+
+### Ownership decisions
+- Kept TripDetailsView.module.css. Its 1200px page shell, two distinct grid tracks, 1120px container-query stack/order and 600px responsive gaps are unique structural composition, not reusable card/button skins.
+- Kept the 20px margins on the Trip Details card in the page CSS Module: this is the parent-owned placement of that card in this one route, not a shared spacing contract. Existing `--ht-spacing-*` variables remain in use for shared responsive gaps.
+- Kept parent frame ownership separate from SocialObjectPlaceholder and ImageGallery; no parent width/aspect-ratio rules were moved into child placeholders/gallery internals.
+
+### Preserved
+- Trip/day selection, query-string history replacement, comments targets/counts, selected-point state, social actions, image gallery/lightbox behavior, map selection and point navigation.
+- Server trip fetch, day resolution, notFound handling, metadata/canonical and JSON-LD generation.
+- No API, DTO, validation, routing, SEO data, auth or business logic changed.
+
+### Result
+- One public route source changed; existing trip-details/image-gallery/layout preset owners and child components were reconciled without duplicating their contracts.
+- **Workstream 7 — Trip Details/gallery composition: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
