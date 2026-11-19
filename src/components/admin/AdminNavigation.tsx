@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Box, Button } from '@mui/material';
+import { ADMIN_NAVIGATION_SX } from '@/styles/presets/admin';
 
 const sections = [
   { href: '/admin/users', label: 'Users' },
@@ -19,15 +20,7 @@ export function AdminNavigation() {
     <Box
       component="nav"
       aria-label="Admin navigation"
-      sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 1,
-        mb: 3,
-        pb: 2,
-        borderBottom: 1,
-        borderColor: 'divider',
-      }}
+      sx={ADMIN_NAVIGATION_SX}
     >
       {sections.map((section) => {
         const active = pathname === section.href || pathname.startsWith(section.href + '/');
