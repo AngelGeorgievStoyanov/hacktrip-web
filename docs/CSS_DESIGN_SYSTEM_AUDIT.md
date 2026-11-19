@@ -7349,3 +7349,140 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Result and next
 - The original inline `sx` / React `style` migration scan is complete for all tracked TSX files in the current branch.
 - No further source migration is indicated by this inventory. Any next work should begin from a separately approved item in the existing audit list, not from a speculative expansion of this completed scan.
+
+
+## 11.135 — Global design-system audit: current-branch inventory and first findings (2026-11-19)
+
+### Scope and current branch
+- Re-fetched the complete recursive tree for `feature/frontend-modernization`; current HEAD before this documentation update was `f31a40b570fbad5434c42cefe4aec0adf44f05de`.
+- The repository contains **293 tracked files**. The live presentation/design-system candidate inventory is now **182 files**, superseding the historical 163-file estimate:
+  - `app/`: **43**
+  - `src/components/`: **97**
+  - `src/constants/ui/` and `src/constants/images/`: **11**
+  - `src/theme/`: **11**
+  - `src/styles/presets/`: **20**
+- Reconciled the Section 10.1 file ledger against the current tree: **126/182 candidate paths** have an individual ledger row; **56/182** do not. The earlier 127 total included one path outside this current candidate set.
+- Missing individual ledger rows by category: app **4**, components **13**, tokens/image presets **11**, theme **8**, style presets **20**. These are ledger gaps, not proof that every file is uninspected; the exact paths are the current reconciliation target.
+
+### Repository-wide source coverage completed in this pass
+- Re-scanned all **121 tracked TSX files**: 36 App Router files, 81 component files and 4 other source TSX files.
+- Re-read all **14 CSS files** (global CSS plus 13 CSS Modules).
+- Re-read the complete UI token/image-preset, MUI theme and shared preset foundation: **42 files** across `src/constants/ui/`, `src/constants/images/`, `src/theme/` and `src/styles/presets/`.
+- Checked page/component styling usage for named `sx` presets, conditional/helper `sx`, React `style`, direct MUI `color`/`variant`/`size` props, CSS Module usage and obvious presentation literals.
+- This is a source-level architecture pass. It does not constitute browser visual QA, and no build, tests, lint, CI or browser checks were run.
+
+### Confirmed findings — centralization is not yet complete
+
+1. **Duplicate exported declaration in `src/styles/presets/admin.ts`.**
+   - `ADMIN_NAVIGATION_SX` is exported twice in the same module (lines 133 and 144), with identical object bodies.
+   - This is a real duplicate declaration and is expected to trigger a TypeScript duplicate block-scoped variable diagnostic. It has not been build-verified because build execution remains outside the approved audit scope.
+
+2. **Unresolved style identifier in `src/components/auth/RegisterForm.tsx`.**
+   - The Resend Verification button uses `SECONDARY_BUTTON_SX` (line 237).
+   - The identifier is neither imported nor declared in the component file; the current repository tree also contains no ambient `.d.ts` declaration file.
+   - Treat this as a likely TypeScript name-resolution error until a build/typecheck is explicitly authorized. Do not silently replace it without checking the intended shared semantic role.
+
+3. **Button styling is shared, but the semantic contract is incomplete.**
+   - `src/theme/components/button.ts` globally owns typography and radius only; action colors, hover behavior and role-specific layout remain split between `BUTTON_STYLES`, `ICON_ACTION_STYLES`, direct MUI props and a few native/CSS contracts.
+   - Several names in `BUTTON_STYLES` are aliases of the same object (for example primary/submit/create/add/edit/save, and secondary/cancel/back/disclosure/navigationSecondary). This may be intentional visual equivalence, but the source currently does not establish distinct contracts for all named roles. Verify each role and state before claiming universal action consistency.
+   - Direct MUI props such as dynamic `color`, `variant` and `size` still determine visual states in social controls, admin navigation, fields and other components. They are not automatically violations, but their semantic ownership and consistency remain part of the global audit.
+
+4. **Field styling is not a complete global contract.**
+   - `src/theme/components/text-field.ts` sets only the default `variant="outlined"` and `size="medium"`.
+   - Shared form presets cover several compositions, and map autocomplete has a named variant, but the complete default/hover/focus/error/disabled/read-only contract for TextField, Select, Autocomplete, Checkbox, Radio, Switch and native controls is not yet established by the theme.
+   - Continue the field-family and consumer/state matrix before declaring field centralization complete.
+
+5. **Semantic color ownership still has inconsistencies and incomplete CSS exposure.**
+   - `src/constants/ui/colors.ts` defines `brand.primary` as blue while `brand.primaryHover` is green; destructive values are split between literal `red`, `feedback.error` and a separate danger-hover value.
+   - `src/theme/index.ts` exposes only a subset of the semantic token map as CSS custom properties. CSS Modules consume the exposed variables, while some preset values remain direct literals (for example the translucent search background/hover in `src/styles/presets/trip-filters.ts`).
+   - Preserve the current visual values until all consumers and intended semantics are mapped; do not normalize colors by guesswork.
+
+6. **A legacy global button skin remains as a parallel path.**
+   - `app/globals.css` still defines `.ht-button` and danger hover rules. Section 11.7 recorded zero literal consumers in the then-scanned app/src source set.
+   - Reconfirm against the current complete tree and server-rendered output before deciding whether this is dead CSS or an externally supplied class contract. It must not be counted as an active shared role merely because it exists.
+
+7. **CSS Modules are mostly using the token bridge, but the bridge and repeated metrics need reconciliation.**
+   - The About, Legal, Footer, ImageGallery, TripDetailsView and TripPagination modules consume `--ht-*` variables for many shared values; several modules are predominantly structural.
+   - Other module declarations still contain literal spacing/geometry (for example WelcomeHeading padding/margin and Legal page-specific typography/spacing). These may be legitimate page-specific composition, but each repeated value must be compared against the shared token scale and documented as either shared or intentionally local.
+   - CSS Modules remain an allowed structural mechanism; they must not become a second owner for repeated colors, typography, radius, shadows or recurring control skins.
+
+### Confirmed clean boundaries in this pass
+- The 121-file TSX scan found no new app-owned inline `sx={{...}}` object or React DOM `style={{...}}` prop beyond the already documented Satori/`ImageResponse` renderer exception.
+- Named `sx` references generally resolve to shared presets/helpers; route wrappers predominantly consume shared page/layout presets.
+- Google Maps SDK configuration objects such as `mapContainerStyle` remain excluded from React DOM style findings.
+- The CSS Modules reviewed use classes for structural composition; their existence is not itself a centralization violation.
+
+### Exact current ledger gaps — 56 paths
+
+**app — 4**
+- `app/(public)/PublicLayout.module.css`
+- `app/globals.css`
+- `app/layout.tsx`
+- `app/providers.tsx`
+
+**components — 13**
+- `src/components/auth/RegisterForm.module.css`
+- `src/components/common/WelcomeHeading.module.css`
+- `src/components/images/AppImage.module.css`
+- `src/components/placeholders/SocialObjectPlaceholder.module.css`
+- `src/components/social/FavoriteButton.tsx`
+- `src/components/social/LikeAnimation.tsx`
+- `src/components/social/LikeButton.tsx`
+- `src/components/social/ReportButton.tsx`
+- `src/components/social/SocialConfigStatus.tsx`
+- `src/components/trips/TripDetailsView.module.css`
+- `src/components/trips/TripList.tsx`
+- `src/components/trips/TripPagination.module.css`
+- `src/components/trips/TripPagination.tsx`
+
+**tokens and image presets — 11**
+- `src/constants/images/index.ts`
+- `src/constants/images/presets.ts`
+- `src/constants/ui/breakpoints.ts`
+- `src/constants/ui/colors.ts`
+- `src/constants/ui/index.ts`
+- `src/constants/ui/shadows.ts`
+- `src/constants/ui/shape.ts`
+- `src/constants/ui/sizes.ts`
+- `src/constants/ui/spacing.ts`
+- `src/constants/ui/typography.ts`
+- `src/constants/ui/z-index.ts`
+
+**theme — 8**
+- `src/theme/components/button.ts`
+- `src/theme/components/paper.ts`
+- `src/theme/components/text-field.ts`
+- `src/theme/index.ts`
+- `src/theme/palette.ts`
+- `src/theme/shadows.ts`
+- `src/theme/shape.ts`
+- `src/theme/typography.ts`
+
+**style presets — 20**
+- `src/styles/presets/admin.ts`
+- `src/styles/presets/buttons.ts`
+- `src/styles/presets/cards.ts`
+- `src/styles/presets/comments.ts`
+- `src/styles/presets/feedback.ts`
+- `src/styles/presets/forms.ts`
+- `src/styles/presets/header.ts`
+- `src/styles/presets/image-gallery.ts`
+- `src/styles/presets/image-upload.ts`
+- `src/styles/presets/layouts.ts`
+- `src/styles/presets/map-controls.ts`
+- `src/styles/presets/pagination.ts`
+- `src/styles/presets/panels.ts`
+- `src/styles/presets/profile-image.ts`
+- `src/styles/presets/social-object-placeholder.ts`
+- `src/styles/presets/social.ts`
+- `src/styles/presets/tracking.ts`
+- `src/styles/presets/trip-details.ts`
+- `src/styles/presets/trip-filters.ts`
+- `src/styles/presets/typography.ts`
+
+### Next execution
+1. Reconcile the 56 missing Section 10.1 rows and update stale historical candidate counts to the current 182-file inventory without rewriting the historical baseline.
+2. Resolve the two concrete source blockers (`ADMIN_NAVIGATION_SX` duplicate export and `SECONDARY_BUTTON_SX` unresolved reference) only after confirming the intended semantic contract; keep source changes separate from the audit record.
+3. Complete the global semantic-role matrix for buttons/icon actions, fields, cards/surfaces, typography, spacing, colors, breakpoints, image roles and CSS-variable consumers across every page and component.
+4. For each page, record its route → rendered component tree → style owner/preset/theme/CSS Module chain and verify responsive/interaction states. Mark a file VERIFIED only when its declarations, all consumers and behavior are reconciled.
+5. Stage 1 remains IN PROGRESS. No source changes were made in this audit pass. No build, tests, lint, CI or browser validation was run.
