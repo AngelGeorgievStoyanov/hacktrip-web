@@ -4936,3 +4936,43 @@ No application source code was changed. No branch was created. No build, tests, 
 - Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
 - Next: continue with the already-audited ProfileImage display/delete/fullscreen composition and its admin profile-image counterpart. Re-read Sections 11.17–11.18 and this entry before editing; keep profile avatar, pending upload preview and fullscreen image as distinct states.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.35 — Profile image display, delete and fullscreen compositions (2026-11-19)
+
+### Scope and ownership
+- Re-read Sections 11.17–11.18 and 11.34 before editing; retained the established distinction between the persisted profile image and the separately selected upload preview.
+- Confirmed current branch `feature/frontend-modernization`; no branch was created.
+- Exact rendered consumers covered:
+  - `ProfileImage` → `ProfileForm`.
+  - `AdminUserProfileImage` → `AdminUserForm`.
+  - `AdminUsers` → profile avatars in the user list and the shared `ImageLightbox`.
+  - Both admin flows continue to use `ImageLightbox` as their fullscreen image viewer; the personal profile flow retains its existing profile-specific Dialog composition.
+- The `ProfileImageUpload` selected-file preview remains a distinct state and continues to consume the existing image-upload presets. It was not merged with the persisted profile-image display.
+
+### Source changes
+1. `src/styles/presets/profile-image.ts` — new shared owner for profile-image loading, personal profile container, delete trigger/icon, circular view trigger, fullscreen stage/close control and compact admin avatar variants.
+2. `src/components/auth/ProfileImage.tsx` — replaced local display/loading/delete/fullscreen sx objects with named profile-image presets. Existing profile upload selection/preview continues to use the image-upload presets and its own object-URL lifecycle.
+3. `src/components/admin/AdminUserProfileImage.tsx` — replaced the admin profile avatar's local sx with the shared admin avatar preset. Upload, replace, delete confirmation, query/mutation states and shared ImageLightbox behavior remain in this owner.
+4. `src/components/admin/AdminUsers.tsx` — replaced duplicated profile avatar sizing/interaction sx with shared admin avatar variants. Existing no-image icon, selected-image state and shared ImageLightbox remain unchanged.
+
+### Preserved behavior and boundaries
+- Personal profile image loading, absent-image rendering, delete confirmation, deleting lock, success/error notifications, fullscreen open/close and refresh-token reload remain unchanged.
+- Profile image and pending upload preview remain independent. Single-file validation, file-input reset, object URL creation/revocation, preview removal and upload selection were not altered.
+- Admin detail flow retains query loading/error/empty states, one-image upload limit, upload/replace/delete mutations, query-cache updates and fullscreen viewer state.
+- Admin users list retains its per-user image selection and alt text, no-image icon and shared lightbox selection/close behavior.
+- The personal profile fullscreen Dialog remains distinct from the shared gallery ImageLightbox; no attempt was made to merge them.
+- No API, backend, upload validation, cache, notification, confirmation or business logic changes.
+
+### Result
+- **4 source files changed** (1 new shared preset and 3 existing components).
+- Profile display/delete/fullscreen presentation now has a named shared owner; both admin avatar consumers use the same compact avatar contract.
+- The pending profile upload preview remains on its existing upload-specific contract.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- ProfileImage display/delete/fullscreen and admin profile-image compositions: **SOURCE CHANGES APPLIED**.
+- Section 11.17 consumer graph remains valid; the exact current-branch component owners and parent consumers were preserved.
+- Stage 1 global inventory remains IN PROGRESS and does not block these bounded migrations.
+- Next: continue with the separately audited SocialObjectPlaceholder owner and its five direct consumers (`PointSection`, `DayImagesGallery`, `TripCard`, `EditPointPage`, `EditTripLayout`). Keep parent-owned frame/aspect-ratio geometry separate from the placeholder's fill/overlay/typography.
+- No build, tests, lint, CI or browser validation was run.
