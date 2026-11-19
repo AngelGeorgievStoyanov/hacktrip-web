@@ -39,7 +39,7 @@ export function PointSection({
     <section aria-label="Trip points">
       <Card sx={POINT_SECTION_CARD_SX}>
         <CardContent sx={POINT_SECTION_CONTENT_SX}>
-          <Typography variant="h5" component="div" sx={[CARD_TEXT_INSET_SX, POINT_SECTION_TITLE_SX]}>
+          <Typography variant="h5" component="div" sx={POINT_SECTION_TITLE_SX}>
             Point name: {point.name}
           </Typography>
 
