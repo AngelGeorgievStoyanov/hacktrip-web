@@ -61,15 +61,6 @@ const navigation = {
   boxSizing: 'content-box',
 } as const;
 
-/** Shared active/inactive admin navigation action roles. */
-const adminNavigationActive = {
-  fontWeight: 600,
-} as const;
-
-const adminNavigationInactive = {
-  fontWeight: 400,
-} as const;
-
 /** Shared primary action treatment for trip navigation and management. */
 const tripAction = {
   ...primary,
@@ -114,6 +105,4 @@ export const BUTTON_STYLES = {
   dayIncrement: dayNumberButton,
   dayDecrement: dayNumberButton,
   navigation,
-  adminNavigationActive,
-  adminNavigationInactive,
 } as const;
