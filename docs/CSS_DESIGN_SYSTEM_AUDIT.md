@@ -380,10 +380,10 @@ Confirmed local declarations:
 | `src/components/trips/TripList.tsx` | Renders `TripCard`; list references `cardListStyle`, empty-state heading uses `headingTextStyle`. | Both presentation presets are applied through prohibited React `style`; empty-state typography and list composition need migration to approved sx/className/token consumers. | CHANGE REQUIRED — React style violations. |
 | `src/components/trips/TripPagination.tsx` | Crawlable `<nav>` with real Next links and `aria-current`; structural classes are in `TripPagination.module.css`. | No semantic pagination visual preset for link/active/disabled states; class module owns only list layout. | CHANGE REQUIRED — role styling missing. |
 | `src/components/trips/TripSelectField.tsx` | TextField usage | Use common field contract |
-| `src/components/maps/AddressAutocomplete.tsx` | Shared Autocomplete/TextField composition; accepts caller `inputSx`, `buttonSx`, `containerSx`, direction and `textFieldProps`. | Broad caller style injection allows feature-specific visual drift; define a constrained map-search variant and central field/button roles while preserving layout customization. | CHANGE REQUIRED — shared control has unrestricted visual overrides. |
+| `src/components/maps/AddressAutocomplete.tsx` | Shared Autocomplete/TextField composition with semantic `form`, `pointPicker` and `tripPicker` variants; retains behavior props, direction and `textFieldProps`. | Caller-level `inputSx`, `buttonSx` and `containerSx` have been removed; named owner presets now control input, search-button and container presentation. | SOURCE MIGRATED — visual variants owned centrally. |
 | `src/components/maps/GoogleMapView.tsx` | Shared Google Maps renderer; Box owns canvas/loading geometry; `InfoWindowF` is the SDK InfoWindow and receives caller-provided ReactNode. | SDK owns map controls and InfoWindow chrome; current trip map caller passes marker title only. No app Card/Paper/Dialog or custom surface is rendered here. Keep map canvas geometry integration-specific. | STRUCTURAL — no app-owned panel skin. |
-| `src/components/maps/PointLocationPicker.tsx` | Primary/secondary presets + local container/button `sx` | Use shared map field/action/panel |
-| `src/components/maps/TripLocationPicker.tsx` | Map wrapper and autocomplete compose shared `MAP_ADDRESS_INPUT_SX` and `BUTTON_STYLES`; hint background uses `UI_COLORS.map.pickerHintBackground`. | Primary button re-declares `primary.main` and disabled colors before shared preset; hint padding and marker-clear sizing remain local. No Card/Paper panel. | PARTIAL — duplicate primary skin remains. |
+| `src/components/maps/PointLocationPicker.tsx` | Uses the `pointPicker` AddressAutocomplete variant and shared point-picker action-row presets; secondary marker removal remains a semantic secondary action. | Address field/search/container styling now belongs to the shared map-control variant; GPS, marker removal, map selection and find-in-map behavior remain feature-owned. | SOURCE MIGRATED — autocomplete caller overrides removed. |
+| `src/components/maps/TripLocationPicker.tsx` | Uses the `tripPicker` AddressAutocomplete variant, shared map frame/hint presets and named marker-removal button preset. | Address input/search/container styling and marker-clear button geometry are centrally owned; map hint and feature-specific map state remain unchanged. No Card/Paper panel. | SOURCE MIGRATED — autocomplete caller overrides removed. |
 | `src/components/tracking/LiveTracker.tsx` | Local surface `sx` + raw Start/Stop/Reset/Follow buttons | Use shared panel and tracking action roles |
 
 ### 5.7 Comments and social
@@ -723,10 +723,10 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets; primary Register action and two secondary actions consume `BUTTON_STYLES.primary` and a local alias of `BUTTON_STYLES.secondary`. | Secondary roles include navigation/alternate auth actions but currently share one generic secondary skin. TextField/Checkbox contract and locked-state treatment remain open. | PARTIAL. |
 | `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
 | `src/components/auth/ProfileImage.tsx` | Uses AppImage, Dialog and shared UI color/shadow tokens in some controls. | Local image frame dimensions/radii, IconButton positions, thumbnail sx and overlay states remain. | CHANGE REQUIRED. |
-| `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Autocomplete. | Local inputSx/containerSx and direct action Button remain; establish a named map-field variant inheriting the base field contract. | PARTIAL. |
+| `src/components/maps/AddressAutocomplete.tsx` | Uses MUI TextField and Google Places Autocomplete with named form/point/trip variants. | Shared presets own the field, search-button, wrapper and extra-action geometry; the public API no longer accepts arbitrary sx overrides. | SOURCE MIGRATED — variant contract applied. |
 | `src/components/maps/GoogleMapView.tsx` | Shared renderer owns Google Maps SDK loading, map canvas wrapper, markers, path, InfoWindow, fit-bounds/focus behavior and map events; feature controls/state remain with callers. | Direct consumers: PointLocationPicker, TripLocationPicker, TripMapSection, PointCard. Local Box geometry and loading CircularProgress size remain; Google Maps SDK controls are not MUI theme components. | PARTIAL — renderer ownership mapped; loading/canvas geometry contract open. |
-| `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | Local responsive action row/sx; GPS and clear-marker actions use different generic roles; local Snackbar+Alert error state; findInMapTrigger is externally forwarded by page owner. | CHANGE REQUIRED — semantic Search/Locate/Remove/Navigation and feedback states. |
-| `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; local map hint, frame, button height/disabled skin and responsive composition. No GPS action/find trigger. | CHANGE REQUIRED — shared visual roles after behavior comparison; do not merge behavior blindly. |
+| `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | AddressAutocomplete now consumes the named point-picker variant; GPS and clear-marker actions retain their existing roles; Snackbar/Alert state and externally forwarded findInMapTrigger are unchanged. | PARTIAL — map action semantics and feedback states remain open. |
+| `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; frame/hint and responsive composition remain feature-specific, while autocomplete and marker-clear visuals now consume named presets. No GPS action/find trigger. | PARTIAL — remaining map action and state contracts stay open; do not merge behavior blindly. |
 | `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
 | `src/components/CustomFileUploadButton.tsx` | Shared upload trigger used by generic image upload and profile-image selection; supports camera IconButton and text Button modes, max-count/disabled gating, accept/multiple and file-change forwarding. | Two distinct raw action renderings (IconButton vs contained Button) and local 30ch wrapper; no semantic Upload role or centralized icon-action state. Direct consumers: ImageUploadField, ProfileImage/ProfileImageUpload. | CHANGE REQUIRED — shared Upload action contract. |
 | `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback. Direct consumers: ProfileImage, ImageGallery, ImageLightbox, AdminUserProfileImage, AdminUsers, EditPointPage, TripCard, EditTripLayout. | Preset rendering is centralized but still passed through React style to Next Image/fallback; audit actual caller frames and preset sizing before migration. | CHANGE REQUIRED — prohibited style transport and preset/frame parity. |
@@ -4814,3 +4814,44 @@ No application source code was changed. No branch was created. No build, tests, 
 - PointCard/PointList/CreatePointPage style migration: **SOURCE CHANGES APPLIED**.
 - Next: continue through the next already-audited owner family and trace the shared owner to every direct consumer before changing legacy styles.
 - Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
+
+
+## 11.32 — AddressAutocomplete and all direct consumers (2026-11-19)
+
+### Scope and preflight
+- Re-read the approved ownership architecture, Styling API policy (Section 1.4), map owner/caller graph (Sections 11.17–11.18), token/theme/preset owner findings (Section 11.26) and the completed map renderer migration (Section 11.31).
+- Confirmed branch: `feature/frontend-modernization`; starting HEAD: `a1144c1c239129f1733c266b75fe446da799fb95`.
+- Reused the existing direct-consumer graph. Exact branch-ref fetches and repository search confirmed the three consumers: `PointForm`, `PointLocationPicker` and `TripLocationPicker`.
+- Chose an end-to-end shared-owner migration because the three caller overrides were the same unresolved styling API issue recorded in Section 11.17. The point and trip picker variants remain distinct; no behavior consolidation was attempted.
+
+### Source changes
+1. `src/styles/presets/map-controls.ts`
+   - Added named AddressAutocomplete root, row, field-wrapper, search-button and extra-action layout contracts.
+   - Added semantic `form`, `pointPicker` and `tripPicker` variants. Existing map field colors, responsive sizing, primary button treatment and disabled state were moved without changing their values.
+   - Added the named TripLocationPicker marker-removal button contract.
+2. `src/components/maps/AddressAutocomplete.tsx`
+   - Removed the public `inputSx`, `buttonSx` and `containerSx` escape hatches and their MUI style types.
+   - Added a constrained semantic `variant` prop, defaulting to `form`.
+   - Replaced component-local wrapper/search/extra-action sx objects with named presets.
+   - Preserved Google Places selection, geocoder fallback, keyboard Enter search, loading/disabled state, notices, callbacks and TextField error/helper props.
+3. `src/components/maps/PointLocationPicker.tsx`
+   - Switched to `variant="pointPicker"`; removed caller-owned autocomplete field, button and container sx.
+   - Preserved its responsive direction, GPS locate, marker clearing, map click/drag, coordinate synchronization, external find-in-map trigger and Snackbar feedback.
+4. `src/components/maps/TripLocationPicker.tsx`
+   - Switched to `variant="tripPicker"`; removed caller-owned autocomplete field, button and container sx.
+   - Moved marker-clear button geometry into a named preset.
+   - Preserved its separate address state, map click/drag, map hint, marker clearing and info feedback. It remains behaviorally distinct from PointLocationPicker.
+5. `src/components/points/PointForm.tsx`
+   - Explicitly selects the `form` variant; existing label, validation/error/helper text and no-search-button behavior remain unchanged.
+
+### Result
+- **5 source files changed** across the shared map-control preset owner, AddressAutocomplete and all three direct consumers.
+- The unrestricted caller-level styling API is removed. No direct consumer passes arbitrary sx into AddressAutocomplete.
+- Shared field/search/container presentation now flows from `src/styles/presets/map-controls.ts` to the shared component and its consumers.
+- No API, backend, data, validation, geocoding, map interaction, form submission or business logic changes.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- AddressAutocomplete owner and all direct consumers: **SOURCE CHANGES APPLIED**.
+- Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
+- Next: migrate the already-audited `ImageUploadField` and `CustomFileUploadButton` owner chain, including all direct consumers, processing/error/limit states and preview/remove controls. Re-read this document and the relevant owner/caller sections before editing.
