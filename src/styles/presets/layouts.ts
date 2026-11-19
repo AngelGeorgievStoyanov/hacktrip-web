@@ -173,3 +173,6 @@ export const ACCOUNT_PROFILE_PANEL_SX = (theme: Theme) => ({
   height: 'fit-content',
   p: { xs: 2, sm: '30px' },
 } as const);
+
+/** Header Drawer Paper sizing; elevation remains an explicit MUI slot prop. */
+export const HEADER_DRAWER_PAPER_SX = { height: 'auto' } as const;
