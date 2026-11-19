@@ -5935,3 +5935,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 trip entry after EditTripLayout. Inspect the remaining trip feature components in their existing ledger order; do not repeat the already-migrated day/image actions from Section 11.40.
+
+
+## 11.72 — TripMapSection map and stepper contract verification (2026-11-19)
+
+### Scope and preflight
+- Continued with the next trip/map consumer in the existing Section 10.1 register.
+- Re-read `TripMapSection.tsx` and verified the current `map-controls.ts` preset ownership.
+
+### Findings
+- The Card frame consumes `TRIP_MAP_SECTION_CARD_SX`; its surface is inherited from the shared `MuiCard` theme contract.
+- The MobileStepper container consumes `TRIP_MAP_SECTION_STEPPER_SX`.
+- Back/Next slot controls are native MUI Buttons using the MobileStepper text-button defaults. No competing custom visual skin is present, so no redundant preset was introduced.
+- Google Maps rendering, route path, marker selection, overview/focus state and responsive scroll adjustment remain feature behavior.
+
+### Result and status
+- The existing Section 10.1 **MIGRATED** status is accurate; no source change was required.
+- Map frame, surface and stepper container: **SHARED CONTRACTS VERIFIED**.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue reconciling the next trip navigation consumer in Section 10.1, beginning with `TripPagination.tsx`; verify its native-link destinations, active/focus states and CSS Module ownership without converting crawlable links into buttons.
