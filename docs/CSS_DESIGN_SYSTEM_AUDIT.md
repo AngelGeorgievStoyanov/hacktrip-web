@@ -652,7 +652,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `src/components/social/LikeButton.tsx` | PARTIAL |
 | `src/components/social/ReportButton.tsx` | MIGRATED — tooltip wrapper, dialog field spacing, error feedback and visually-hidden status use named sx contracts; no React style prop remains. |
 | `src/hooks/useBackground.tsx` | MIGRATED — dynamic background uses Next Image fill/unoptimized inside a fixed CSS Module layer; preload/decode lifecycle preserved; no React style prop remains. |
-| `src/components/social/SocialConfigStatus.tsx` | PARTIAL |
+| `src/components/social/SocialConfigStatus.tsx` | MIGRATED — compact loading wrapper now consumes `SOCIAL_CONFIG_STATUS_WRAPPER_SX`; no local inline sx or React style prop remains. |
 | `src/components/social/TripGroupSocialActions.tsx` | CHANGE REQUIRED |
 | `src/components/tracking/LiveTracker.tsx` | CHANGE REQUIRED |
 | `src/components/trips/DayImagesGallery.tsx` | PARTIAL |
@@ -7249,3 +7249,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue the same approved audit list by checking for indirect/local style constants and callback-built sx values that a direct JSX-prop scan cannot classify on its own. Preserve the Satori exception; do not broaden this pass into semantic action-role or unrelated state-parity work.
+
+
+## 11.131 — Component-local style constant follow-up (2026-11-19)
+
+### Scope and findings
+- Followed the direct JSX scan with a declaration scan across all **81 `src/components/**/*.tsx` files** for component-local constants named as sx/style presentation objects (including `*_SX`, `*_STYLE`, `Style` and `Styles` suffixes).
+- No additional component-local sx/style constant declarations were found by that targeted naming scan.
+- Existing shared preset imports and runtime style helpers remain in their designated preset owners; this step did not reclassify SDK configuration objects or the approved Satori renderer exception.
+
+### Documentation reconciliation
+- Updated the original Section 5.7 SocialConfigStatus finding and its status row: the only local compact loading sx object is now preset-owned.
+- AddressAutocomplete's two inline compositions and the SocialConfigStatus/LikeButton findings are tracked in Sections 11.128–11.130.
+
+### Result and next
+- No additional source changes were required in this scan.
+- Direct inline JSX styling violations in the scanned TSX scope remain at **zero**, excluding the explicitly approved Satori/ImageResponse renderer.
+- Next audit item: continue the original inventory's source-level scan for indirect `sx={localObject}` usage and any presentation objects whose names do not identify them as style constants. Do not turn this into semantic-button or caller-state work.
+- No build, tests, lint, CI or browser validation was run.
