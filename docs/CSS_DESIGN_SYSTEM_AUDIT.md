@@ -704,7 +704,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/points/PointForm.tsx` | Uses semantic `BUTTON_STYLES.create`, `add` and `edit` roles; Find in Map consumes `POINT_FORM_FIND_MAP_BUTTON_SX`; shared `BackButton` owns Back appearance. | Point-specific action width/responsive sizing remains in `POINT_FORM_ACTION_BUTTON_SX`; Back navigation and form state remain component-owned. Remaining field, upload, icon and disabled/loading contracts still require review. | PARTIAL — action roles and map-search presentation centralized; form/field and state verification remain open. |
 | `src/components/points/PointActions.tsx` | Wrapper consumes `POINT_SOCIAL_ACTIONS_SX`; LikeButton, FavoriteButton and ReportButton own their interactions and consume shared `ICON_ACTION_STYLES`; SocialConfigStatus owns its feedback presentation. | Verify all rendered call sites and responsive parity with other social-action groups; no PointActions-local visual declaration remains. | PARTIAL — source presentation is centralized; exhaustive caller/route verification remains open. |
 | `src/components/points/PointList.tsx` | Delegates each item to `PointCard`; list container consumes `POINT_LIST_SX`; empty state consumes `POINT_LIST_EMPTY_SX`. | Verify all callers and responsive behavior of the composed PointCard list; no local visual declaration remains in this component. | PARTIAL — list and empty-state presentation are preset-owned; caller/responsive verification remains open. |
-| `src/components/trips/TripCard.tsx` | Details navigation uses `BUTTON_STYLES.primaryWide`; card surface uses `MuiCard`; content consumes shared card presets. | Details is navigation but uses generic primary-wide action styling. Stepper Buttons remain direct MUI defaults; substantial geometry/content sx and responsive/caller verification remain. | PARTIAL — not fully fixed. |
+| `src/components/trips/TripCard.tsx` | Details link consumes semantic `BUTTON_STYLES.navigationAction`; card surface uses `MuiCard`; content and image frames consume shared card/image presets. | Stepper Back/Next intentionally retain MUI MobileStepper's native text-button defaults; substantial card geometry/content presets and responsive/caller verification remain open. | PARTIAL — navigation role centralized; card composition and responsive/caller verification remain. |
 | `src/components/trips/TripActions.tsx` | Three non-destructive actions (Add Next Day Trip, Add/Edit Points, Edit Day) use `BUTTON_STYLES.tripAction`; Delete Day and Delete Trip use `tripActionDanger`. | Edit/Add semantics are grouped under one trip-specific appearance; destructive actions share one role. Verify parity with point/admin action roles and loading/disabled/focus states. | PARTIAL — not fully fixed. |
 | `src/components/common/BackButton.tsx` | Shared Back action fixes MUI `variant="contained"` and applies `BUTTON_STYLES.back`; caller owns navigation behavior. | Caller `sx` is merged before the shared semantic role, so only non-overlapping placement/dimension values survive; nine callers are mapped in Section 11.7. | MIGRATED — shared Back role and caller-owned layout/navigation are explicit. |
 | `src/theme/components/card.ts` | All MUI Cards receive `getSurfaceStyles` from the theme: paper background, divider border, theme radius and semantic surface shadow. | Consumer sx remains responsible only for card geometry/content; custom social/image surfaces keep their own semantic contracts. | MIGRATED — global Card skin is centralized. |
@@ -5811,3 +5811,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 trip entry: `src/components/trips/TripCard.tsx`. Inspect the Details navigation role, stepper controls, card geometry and all callers before making changes.
+
+
+## 11.67 — TripCard Details navigation role and ledger reconciliation (2026-11-19)
+
+### Scope and preflight
+- Continued in Section 10.1 order after the point components.
+- Inspected `TripCard.tsx`, the shared card presets, button presets and MUI Button theme override.
+
+### Source changes
+- Added `BUTTON_STYLES.navigationAction` as a semantic alias of the existing `primaryWide` treatment.
+- Migrated the TripCard Details link to `navigationAction`; its contained appearance, wide padding, dimensions and hover behavior are unchanged.
+- The MobileStepper Back/Next controls remain native MobileStepper slot Buttons using MUI's text-button defaults. No duplicate custom style was added where the theme/default component contract already applies.
+
+### Preserved
+- Details href generation, selected-day query behavior, pagination, image selection, touch-swipe navigation, disabled stepper bounds, card layout and responsive dimensions.
+- No API, route, data, SEO or business logic changed.
+
+### Result and status
+- **2 source files changed**; the Section 10.1 TripCard row was reconciled.
+- TripCard Details navigation role: **SOURCE MIGRATED**.
+- MobileStepper defaults: **INTENTIONALLY RETAINED**; card geometry/content and full responsive/caller verification remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 trip entry: `src/components/trips/TripActions.tsx`. Verify its existing Add/Edit/Delete semantic contracts and caller-level layout before deciding whether any source change is required.
