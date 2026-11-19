@@ -6748,3 +6748,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Remove the remaining ad hoc badge/animation sx objects from shared LikeButton/FavoriteButton by moving them into the existing social preset owner.
+
+
+## 11.109 — Like/Favorite badge and animation sx centralization (2026-11-19)
+
+### Source changes
+- Added `getSocialBadgeSx(size)` to the shared social preset owner; small badge dimensions now have one named consumer API.
+- Migrated LikeButton and FavoriteButton away from inline conditional badge sx objects.
+- Migrated LikeButton's inline icon animation sx object to the existing `getSocialLikeAnimationSx` preset helper.
+- This completes the dynamic presentation ownership used by the shared Like/Favorite controls and TripGroupSocialActions.
+
+### Preserved
+- Small/medium badge appearance, counts, zero-count visibility, like animation values/timing, mutation state, pressed state, tooltip/aria labels and social API behavior.
+- No visual values or social behavior changed.
+
+### Result and status
+- **3 source files changed**.
+- Shared Like/Favorite badge and like-animation presentation: **PRESET-OWNED**.
+- Consumer permission/config, responsive overlay and mutation state parity remain **PARTIAL** under the social workstream.
+- No API, data, route or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining common/social consumer verification in Section 10.1, then move to `src/components/tracking/LiveTracker.tsx` and the maps/tracking action contracts.
