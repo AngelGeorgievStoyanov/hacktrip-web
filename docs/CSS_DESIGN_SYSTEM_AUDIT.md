@@ -330,7 +330,7 @@ Confirmed local declarations:
 | `src/components/images/ImageUploadField.tsx` | Named image-upload presets own root/header/status/count/limit, scrollable preview list/rows/thumbnails/filename, processing indicator sizing and remove controls; CustomFileUploadButton owns both upload trigger modes. | Warning Alert remains MUI-theme-owned; verify warning/focus/disabled parity in the shared feedback/action audit. | PARTIAL — upload-specific local sx migrated. |
 | `src/components/auth/ProfileImage.tsx` | Existing profile image display still uses AppImage presets, Dialog and image tokens; separate ProfileImageUpload now uses shared upload trigger, preview-row, thumbnail, filename and remove presets. | Existing circular frame, existing-image delete control, fullscreen stage and close control remain local. | PARTIAL — selected-file upload flow centralized; existing-image presentation remains open. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Local image button dimensions + raw Delete/Upload | Reuse profile-image/action roles |
-| `src/components/admin/AdminImages.tsx` | Preview uses MUI `Dialog` and inherits `MuiDialog.paper` surface; inventory tables use `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | Standalone Paper skin is not covered by general `MuiPaper` override; preview Dialog inherits shared surface but image-stage geometry/close control are local; selection, action and pagination controls remain direct MUI. | PARTIAL — Dialog surface centralized; Paper/table and actions need contracts. |
+| `src/components/admin/AdminImages.tsx` | Preview uses MUI Dialog and inherits MuiDialog.paper surface; inventory tables use ADMIN_TABLE_CONTAINER_SX. | Missing-thumbnail toolbar/alerts, pagination rows, preview trigger/thumb/url cell, close action, DialogContent and image stage now use ADMIN_* presets; no component-local presentation object remains. | MIGRATED — image inventory and preview presentation use shared admin/image/button contracts. |
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Local overlay/text sizes/gradient | Use shared placeholder overlay tokens/typography |
 
 ### 5.5 Auth, profile and admin
@@ -347,13 +347,13 @@ Confirmed local declarations:
 | `src/components/auth/ProfileForm.tsx` | Account field stack and primary/secondary actions already use shared contracts. | Heading, disabled-email readability, action-row layout and button spacing now consume ACCOUNT_FORM_* presets. | PARTIAL — profile form presentation centralized; verify profile-image/password-expansion composition and shared field error/helper states. |
 | `src/components/auth/ProfileImage.tsx` | See image findings | Use shared image/action roles |
 | `src/components/auth/Captcha.tsx` | Local CAPTCHA container `sx` | Keep integration geometry; tokenize spacing |
-| `src/components/admin/AdminUserForm.tsx` | Imports and applies `PANEL_SX(theme)` to its rendered form panel; Save/Delete button presets are already used. | Panel caller still adds local layout/padding; field states and semantic Delete role need mapping. This is a direct rendered `PANEL_SX` consumer. | PARTIAL — shared panel skin composed with local geometry. |
-| `src/components/admin/AdminUsers.tsx` | User entries render MUI `Card` and inherit `MuiCard` → `getSurfaceStyles`; profile preview delegates to `ImageLightbox`. | Card content/grid geometry remains local; Edit/Delete are direct MUI Buttons with different raw props; pagination buttons and state are not semantic presets. | PARTIAL — base Card surface centralized only. |
+| `src/components/admin/AdminUserForm.tsx` | Admin edit panel composes PANEL_SX and COLUMN_STACK_SX; Save/Delete use shared button roles. | Panel dimensions/padding, password field stack and back-button placement now consume ADMIN_USER_FORM_* presets; field controls inherit MUI theme. | MIGRATED — admin user edit composition and actions use shared contracts. |
+| `src/components/admin/AdminUsers.tsx` | User entries render MUI Card with theme-owned surface; profile preview delegates to ImageLightbox; avatar states and pagination actions use existing presets. | User grid/card/content/identity/action/pagination spacing now consume ADMIN_* presets; Edit/Delete use primary/danger text roles. | MIGRATED — user directory composition and actions use shared admin/profile/button contracts. |
 | `src/components/admin/AdminNavigation.tsx` | Local navigation layout and active/inactive styles | Use shared Navigation role |
 | `src/components/admin/AdminDashboard.tsx` | Link-based admin navigation | Verify link/button role parity |
-| `src/components/admin/AdminFailedLogs.tsx` | Admin table uses `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | General `MuiPaper` surface override is absent; direct selection, retry/delete and pagination controls remain uncentralized. | PARTIAL — table layout preset, no shared Paper skin. |
-| `src/components/admin/AdminReports.tsx` | Admin table uses `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | General `MuiPaper` surface override is absent; Resolve/Delete and pagination actions remain raw MUI roles/states. | PARTIAL — table layout preset, no shared Paper skin. |
-| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Admin table uses `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | General `MuiPaper` surface override is absent; expanded-row surface, raw action buttons and pagination remain local. | PARTIAL — table layout preset, no shared Paper skin. |
+| `src/components/admin/AdminFailedLogs.tsx` | Admin table uses TableContainer component=Paper and ADMIN_TABLE_CONTAINER_SX. | Bulk-selection toolbar uses ADMIN_SELECTION_TOOLBAR_SX; Delete selected uses BUTTON_STYLES.dangerText; pagination and table surface use shared presets/theme. | MIGRATED — table, selection, pagination and destructive action contracts are shared. |
+| `src/components/admin/AdminReports.tsx` | Admin table uses TableContainer component=Paper and ADMIN_TABLE_CONTAINER_SX. | Pagination uses ADMIN_PAGINATION_*; report deletion now uses BUTTON_STYLES.dangerText; table surface and controls inherit MUI theme. | MIGRATED — table, pagination and destructive action contracts are shared. |
+| `src/components/admin/AdminRouteNotFoundLogs.tsx` | Admin table uses TableContainer component=Paper and ADMIN_TABLE_CONTAINER_SX. | Diagnostic field/pre/details layout and expanded-cell padding use ADMIN_* presets; table/pagination use shared contracts; View/Hide remains a MUI disclosure action. | MIGRATED — diagnostic disclosure and table composition use shared contracts. |
 
 ### 5.6 Points, trips, maps and tracking
 
@@ -5377,4 +5377,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Migrated the remaining EditPointPage parent composition into named EDIT_POINT_* presets: root page, loading/error, map frame, responsive content ordering, form card, image section/grid/tile/delete overlay and empty-image frame. The image tile and placeholder retain their own parent-owned geometry.
 - All reviewed map feature components now reference named presets or MUI theme defaults for presentation; no direct React style prop or component-local visual object remains in these map/page compositions.
 - **Workstream 3 — Map renderer and map feature composition: COMPLETE.** No map lifecycle, coordinates, GPS, autocomplete, marker, selection, API or navigation behavior changed.
+- No build, tests, lint, CI or browser validation was run.
+## 11.50 — Admin tables and actions (2026-11-19)
+
+### Source changes
+- Added src/styles/presets/admin.ts as the owner for admin directory cards, bulk-selection toolbar, route diagnostics, image inventory/preview and user-edit panel composition.
+- Migrated AdminUsers grid/cards/content/identity/action spacing and pagination wrapper; existing profile avatar modes, preview, role visibility and primary/danger action roles remain.
+- Migrated AdminFailedLogs selection toolbar and assigned the shared danger-text role to Delete selected.
+- Migrated AdminReports destructive Delete to BUTTON_STYLES.dangerText; existing table/pagination contracts retained.
+- Migrated AdminRouteNotFoundLogs diagnostic field/pre/details layout and expanded-cell state to named admin presets; View/Hide remains a native MUI disclosure action.
+- Migrated AdminImages missing-thumbnail layout, alert/toolbar spacing, pagination rows, preview trigger/thumbnail/url cell, close action, DialogContent and full-image stage to named admin presets.
+- Migrated AdminUserForm panel geometry, password-field stack and Back placement to admin presets; Save/Delete retain existing semantic button roles.
+
+### Preserved
+- Admin API requests, pagination state and limits, filtering/role visibility, selection behavior, bulk operations, confirmation flows, delete mutations, query invalidation and error handling.
+- Route diagnostic expand/collapse behavior and content formatting; image preview open/close, image URLs, sizing/fit and selection/thumbnail generation behavior.
+- Admin user authorization rules, field registration, role/status controls, optional password update, profile image handling and routing.
+- No API, DTO, validation, authorization, route, data or business logic changed.
+
+### Result
+- Added one shared preset owner and updated six admin source components; all six ledger rows refreshed.
+- **Workstream 4 — Admin tables and actions: COMPLETE.** Admin navigation/shell remains tracked under the separate application-shell workstream.
 - No build, tests, lint, CI or browser validation was run.
