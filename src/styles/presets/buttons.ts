@@ -165,6 +165,7 @@ export const BUTTON_STYLES = {
   primaryWide,
   navigationAction: primaryWide,
   navigationLink: primary,
+  findLocation: primary,
   danger,
   dangerText: { color: 'error.main' },
   delete: danger,
