@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -167,6 +169,7 @@ export function RepliesSection({
             <Tooltip title="Save reply" arrow>
               <span>
                 <IconButton
+            sx={ICON_ACTION_STYLES.base}
                   type="submit"
                   aria-label="Save reply"
                   disabled={updateMutation.isPending}
@@ -177,6 +180,7 @@ export function RepliesSection({
             </Tooltip>
             <Tooltip title="Cancel edit" arrow>
               <IconButton
+            sx={ICON_ACTION_STYLES.base}
                 type="button"
                 aria-label="Cancel edit"
                 onClick={() => {
@@ -223,6 +227,7 @@ export function RepliesSection({
             {canEdit ? (
               <Tooltip title="Edit reply" arrow>
                 <IconButton
+            sx={ICON_ACTION_STYLES.base}
                   size="small"
                   aria-label="Edit reply"
                   onClick={() => {
@@ -237,6 +242,7 @@ export function RepliesSection({
             {canDelete ? (
               <Tooltip title="Delete reply" arrow>
                 <IconButton
+            sx={ICON_ACTION_STYLES.base}
                   size="small"
                   color="error"
                   aria-label="Delete reply"
@@ -287,6 +293,7 @@ export function RepliesSection({
           <Tooltip title="Reply" arrow>
             <span>
               <IconButton
+            sx={ICON_ACTION_STYLES.base}
                 type="submit"
                 aria-label="Reply"
                 disabled={!reply.trim() || createMutation.isPending}
@@ -298,6 +305,7 @@ export function RepliesSection({
           </Tooltip>
           <Tooltip title="Cancel reply" arrow>
             <IconButton
+            sx={ICON_ACTION_STYLES.base}
               type="button"
               aria-label="Cancel reply"
               onClick={() => {
