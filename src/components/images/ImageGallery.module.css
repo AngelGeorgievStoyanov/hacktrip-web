@@ -13,6 +13,18 @@
   max-width: 520px;
 }
 
+.gridColumns1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gridColumns2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gridColumns3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .stack {
   flex-direction: column;
 }
@@ -47,6 +59,11 @@
   line-height: 0;
   border-radius: var(--ht-shape-border-radius);
   overflow: hidden;
+}
+
+.imageButton:focus-visible {
+  outline: 2px solid var(--ht-color-primary);
+  outline-offset: 2px;
 }
 
 .gridImageButton {
