@@ -738,7 +738,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp uses EXPANDABLE_TEXT_COLLAPSED_SX; expanded state removes the clamp without local visual objects. | MIGRATED — disclosure presentation centralized; MUI owns the text-button default role. |
 | `src/components/common/NotFound.tsx` | 404 hero structure remains in NotFound.module.css; Home CTA remains a native button rendered through MUI Box. | CTA presentation uses NOT_FOUND_HOME_BUTTON_SX and semantic colors; countdown/router behavior remains component-owned. | MIGRATED — 404 hero structure and Home action have separate owners. |
 | `src/components/common/NotificationProvider.tsx` | Snackbar/Alert inherit MUI severity and variant states; Alert width uses NOTIFICATION_ALERT_SX. | No custom surface skin; placement/duration/close behavior remains notification-constant/provider owned. | MIGRATED — notification presentation contract centralized. |
-| `src/components/common/PasswordField.tsx` | Shared TextField owner with local visibility state and reveal/hide IconButton; forwards react-hook-form registration, error/helperText, disabled, maxLength and autocomplete. | Direct consumers: RegisterForm, ResetPasswordForm, ChangePasswordForm, AdminUserForm. Reveal/hide IconButton has no semantic icon-action preset; field states depend on TextField defaults and theme. | PARTIAL — consumer graph closed; icon-action and field state contract open. |
+| `src/components/common/PasswordField.tsx` | Shared TextField owner; reveal/hide IconButton consumes `ICON_ACTION_STYLES.passwordVisibility`; forwards react-hook-form registration, error/helperText, disabled, maxLength and autocomplete. | Verify all mapped consumers, TextField error/helper/focus/disabled states and reveal/hide keyboard/focus behavior against the global field contract. | PARTIAL — icon-action role centralized; field-state and consumer parity remain open. |
 | `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_SX typography preset and MUI typography; unique wrapper/heading-group geometry is owned by `WelcomeHeading.module.css`. | Inline layout sx was moved to the CSS Module while preserving flex alignment, 25px horizontal padding and 16px bottom margin. Touch handling, responsive heading split and scramble behavior remain unchanged. | MIGRATED — unique layout is CSS Module-owned; typography remains preset-owned. |
 | `src/components/comments/CommentsSection.tsx` | Uses shared comments panel/card and social action presets; MUI Card surface is theme-backed. | React style prop on list, local comment/card spacing and many IconButtons/TextFields remain; map all edit/delete/reply/report states. | CHANGE REQUIRED. |
 | `src/components/comments/CommentsToggle.tsx` | Uses MUI IconButton for comments disclosure. | React style prop on wrapper and local heading margin remain; disclosure state should use shared contract. | CHANGE REQUIRED. |
@@ -6526,3 +6526,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth entry: `src/components/auth/PasswordField.tsx`. Verify password visibility IconButton roles and field state contracts across all mapped consumers.
+
+
+## 11.99 — Shared PasswordField visibility action role (2026-11-19)
+
+### Source changes
+- Migrated the shared PasswordField reveal/hide IconButton from generic `ICON_ACTION_STYLES.base` to semantic `ICON_ACTION_STYLES.passwordVisibility`.
+- The new role is an alias of the existing base appearance, so dimensions, colors, hover/focus and edge placement remain unchanged.
+- Reconciled the Section 10.1 PasswordField row; LoginForm already consumes the same role as recorded in Section 11.96.
+
+### Preserved
+- Password visibility state, labels, disabled behavior, mouse-down focus retention, registration forwarding, maxLength, autocomplete, error/helper text and all direct consumer behavior.
+- No validation, auth, API or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- Shared password visibility icon role: **SOURCE MIGRATED**.
+- Global TextField visual states and all consumer parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/ChangePasswordForm.tsx` has its Save role migrated; verify the remaining auth forms and global field contract before declaring the auth workstream complete.
