@@ -24,6 +24,7 @@ import ImageUploadField from '@/components/images/ImageUploadField';
 import { TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX } from '@/styles/presets/image-upload';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
