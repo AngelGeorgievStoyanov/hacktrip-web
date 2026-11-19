@@ -278,7 +278,7 @@ export default function ImageUploadField({
               onClick={removeAllFiles}
               disabled={processing}
               size="large"
-              sx={IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX}
+              sx={IMAGE_UPLOAD_REMOVE_ALL_ICON_SX}
             >
               <DeleteAllImagesIcon fontSize="large" />
             </IconButton>
@@ -288,7 +288,7 @@ export default function ImageUploadField({
             variant="contained"
             onClick={removeAllFiles}
             disabled={processing}
-            sx={{ alignSelf: 'flex-start' }}
+            sx={IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX}
           >
             Remove all images
           </Button>
