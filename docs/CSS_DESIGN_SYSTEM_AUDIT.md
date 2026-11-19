@@ -721,7 +721,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Outlined Paper table inherits shared surface; Previous/Next use `ADMIN_PAGINATION_BUTTON_SX`; diagnostic fields/details/expanded cell use named `ADMIN_DIAGNOSTIC_*` and `ADMIN_ROUTE_*` presets. View/Hide disclosure uses MUI Button defaults with `aria-expanded` / `aria-controls`. | Verify expanded-row content, focus/keyboard and responsive table states; no local typography, spacing or button skin remains in the component. | PARTIAL — table, disclosure and pagination presentation use shared/theme contracts; responsive/state parity remains open. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
 | `src/components/auth/ChangePasswordForm.tsx` | Save password uses semantic `BUTTON_STYLES.save` plus `ACCOUNT_PASSWORD_SAVE_BUTTON_SX`; form stack uses `CHANGE_PASSWORD_FORM_SX`; fields and requirements delegate to shared PasswordField/PasswordRequirements. | Verify TextField error/helper/disabled/focus states and pending/reset behavior against the global field contract; no component-local action geometry remains. | PARTIAL — Save and form layout contracts centralized; field/state parity remains open. |
-| `src/components/auth/VerifyEmailForm.tsx` | Uses MUI Card and `BUTTON_STYLES.primary` for the Go to login action. | The action is navigation but currently uses generic primary styling; Card content/heading sx and complete status/field state contract remain open. | CHANGE REQUIRED. |
+| `src/components/auth/VerifyEmailForm.tsx` | Card surface inherits `MuiCard`; card layout/title use `EMAIL_VERIFICATION_CARD_SX` and `EMAIL_VERIFICATION_TITLE_SX`; Go to login consumes semantic `BUTTON_STYLES.navigationLink`. | Verify success/error/loading states and responsive card content; no component-local action or card style remains. | PARTIAL — navigation and card presentation centralized; status/state parity remains open. |
 | `src/components/auth/RegisterForm.tsx` | Uses shared auth form layout/title/action presets; primary Register action and two secondary actions consume `BUTTON_STYLES.primary` and a local alias of `BUTTON_STYLES.secondary`. | Secondary roles include navigation/alternate auth actions but currently share one generic secondary skin. TextField/Checkbox contract and locked-state treatment remain open. | PARTIAL. |
 | `src/components/auth/ProfileForm.tsx` | Uses shared account field preset; `BUTTON_STYLES.primary` for Edit Profile; `BUTTON_STYLES.secondary` for Change Password; shared `BackButton` for navigation. | The Edit/Change Password semantic roles are still generic primary/secondary. Field/heading sx and action layout remain local; the Back caller currently has no local sx override. | CHANGE REQUIRED. |
 | `src/components/auth/ProfileImage.tsx` | Existing-image display, circular frame, delete trigger, fullscreen stage/close control and loading state consume named `profile-image.ts` presets; image rendering uses AppImage presets. ProfileImageUpload uses shared upload/preview/remove presets and the semantic Upload role. | No component-local sx object remains; verify image aspect-ratio/caller behavior and all loading/deleting/fullscreen states. | MIGRATED — profile image presentation and upload composition are preset-owned. |
@@ -6371,3 +6371,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/VerifyEmailForm.tsx`. Give its Go to login action a semantic navigation role while preserving the current visual treatment.
+
+
+## 11.92 — VerifyEmailForm semantic navigation action (2026-11-19)
+
+### Source changes
+- Added `BUTTON_STYLES.navigationLink` as a semantic alias of the existing primary appearance (without the wide padding of `navigationAction`).
+- Migrated Go to login to `navigationLink`; no color, dimensions, typography or hover values changed.
+- Reconciled the Section 10.1 VerifyEmailForm row.
+
+### Preserved
+- Verification token flow, success/error/loading status, notification timing, tab-sync event, redirect timeout/cancellation and login destination.
+- No API, auth, route or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- VerifyEmailForm navigation and Card presentation: **SHARED CONTRACTS APPLIED**.
+- Status-state and responsive content verification remains **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/RegisterForm.tsx`. Map Register, alternate auth navigation and password/checkbox states before changing any role.
