@@ -38,6 +38,20 @@ const createTrip = {
   },
 } as const;
 
+/** Legal-document return link keeps its native anchor navigation and page-specific tone. */
+export const LEGAL_BACK_LINK_SX = {
+  display: 'inline-block',
+  mt: '18px',
+  py: '10px',
+  px: '24px',
+  borderRadius: 'var(--ht-shape-border-radius)',
+  backgroundColor: UI_COLORS.legal.backBackground,
+  color: UI_COLORS.text.primary,
+  textDecoration: 'none',
+  fontWeight: 600,
+  '&:hover': { color: UI_COLORS.text.inverse },
+} as const;
+
 const secondaryLightText = {
   ...secondary,
   '&:hover': {
