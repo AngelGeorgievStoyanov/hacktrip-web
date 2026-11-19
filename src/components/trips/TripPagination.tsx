@@ -30,7 +30,10 @@ export function TripPagination({
       <ul className={styles.list}>
         {page > 1 ? (
           <li>
-            <Link href={buildTripsUrl({ search, group, transport, sort, page: page - 1 })}>
+            <Link
+              className={styles.link}
+              href={buildTripsUrl({ search, group, transport, sort, page: page - 1 })}
+            >
               Previous
             </Link>
           </li>
@@ -38,11 +41,12 @@ export function TripPagination({
         {pages.map((pageNumber) => (
           <li key={pageNumber}>
             {pageNumber === page ? (
-              <span aria-current="page" aria-label={'Page ' + pageNumber}>
+              <span className={styles.current} aria-current="page" aria-label={'Page ' + pageNumber}>
                 {pageNumber}
               </span>
             ) : (
               <Link
+                className={styles.link}
                 href={buildTripsUrl({
                   search,
                   group,
@@ -59,7 +63,10 @@ export function TripPagination({
         ))}
         {hasNextPage ? (
           <li>
-            <Link href={buildTripsUrl({ search, group, transport, sort, page: page + 1 })}>
+            <Link
+              className={styles.link}
+              href={buildTripsUrl({ search, group, transport, sort, page: page + 1 })}
+            >
               Next
             </Link>
           </li>
