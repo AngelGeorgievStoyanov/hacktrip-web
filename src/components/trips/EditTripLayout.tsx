@@ -323,7 +323,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                 variant="contained"
                 onClick={setSelectedDayNumber}
                 disabled={submitting || dayNumber === selectedDay.dayNumber}
-                sx={BUTTON_STYLES.primary}
+                sx={BUTTON_STYLES.edit}
               >
                 {dayNumberLocked ? 'CHANGE DAY' : 'SET DAY'}
               </Button>
@@ -444,7 +444,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               !selectedDay || submitting || !isValid || (!isDirty && newImages.length === 0)
             }
             startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-            sx={BUTTON_STYLES.primary}
+            sx={BUTTON_STYLES.edit}
           >
             EDIT YOUR TRIP
           </Button>
