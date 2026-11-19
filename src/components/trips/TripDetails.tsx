@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type CSSProperties } from 'react';
+import { useState } from 'react';
 import {
   Typography,
   Card,
@@ -24,10 +24,11 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
 import {
-  CARD_HEADING_TEXT_STYLE,
-  CARD_TEXT_BLOCK_STYLE,
-  CARD_TEXT_INSET_SX,
-} from '@/styles/presets/cards';
+  TRIP_DETAILS_CARD_SX, TRIP_DETAILS_HEADER_SX, TRIP_DETAILS_TITLE_SX,
+  TRIP_DETAILS_PRICE_ROW_SX, TRIP_DETAILS_PRICE_LABEL_SX, TRIP_DETAILS_PRICE_VALUE_SX,
+  TRIP_DETAILS_METADATA_SX, TRIP_DETAILS_DESCRIPTION_SX, getTripDetailsDescriptionToggleSx,
+  TRIP_DETAILS_ACTIONS_COLUMN_SX, TRIP_DETAILS_SOCIAL_ROW_SX,
+} from '@/styles/presets/trip-details';
 import { TRIP_ACTION_BUTTON_LAYOUT_SX } from '@/styles/presets/buttons';
 
 interface TripDetailsProps {
@@ -40,9 +41,6 @@ interface TripDetailsProps {
   toggleTripComments: (target: CommentTarget) => void;
   onDayDeleted: (updatedTripGroup: TripGroupResponse) => void;
 }
-
-const NAME_STYLE: CSSProperties = CARD_HEADING_TEXT_STYLE;
-const LINE_STYLE: CSSProperties = CARD_TEXT_BLOCK_STYLE;
 
 /**
  * Trip Information Panel — standalone visual section matching legacy UI.
@@ -85,25 +83,12 @@ export function TripDetails({
 
   return (
     <Card
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        minWidth: '320px',
-        maxWidth: '450px',
-        margin: '20px',
-        padding: '25px',
-      }}
+      sx={TRIP_DETAILS_CARD_SX}
     >
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          mb: 1,
-        }}
+        sx={TRIP_DETAILS_HEADER_SX}
       >
-        <Typography variant="h5" component="div" style={NAME_STYLE}>
+        <Typography variant="h5" component="div" sx={TRIP_DETAILS_TITLE_SX}>
           TRIP NAME : {day.title ?? tripGroup.days[0]?.title ?? 'Trip'}
         </Typography>
         {isAuthenticated && canFavorite ? (
@@ -117,11 +102,11 @@ export function TripDetails({
       </Box>
 
       {day.price != null ? (
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-          <Typography variant="subtitle1" component="h5" style={LINE_STYLE}>
+        <Box sx={TRIP_DETAILS_PRICE_ROW_SX}>
+          <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_METADATA_SX}>
             PRICE OF THE TRIP:
           </Typography>
-          <Typography variant="subtitle1" component="h5" style={{ ...LINE_STYLE, margin: 0 }}>
+          <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_PRICE_VALUE_SX}>
             {day.price}
             {day.currency?.code ? ` ${day.currency.code}` : ''}
           </Typography>
@@ -160,7 +145,7 @@ export function TripDetails({
             <Typography
               variant="subtitle1"
               component="div"
-              sx={{ ...LINE_STYLE, ...CARD_TEXT_INSET_SX, marginTop: '10px' }}
+              sx={TRIP_DETAILS_DESCRIPTION_SX}
             >
               Description: {day.description}
             </Typography>
@@ -178,11 +163,7 @@ export function TripDetails({
                   onClick={handleExpandClick}
                   aria-expanded={expanded}
                   aria-label={expanded ? 'Show less' : 'Show more'}
-                  sx={{
-                    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 150ms',
-                    marginLeft: 'auto',
-                  }}
+                  sx={getTripDetailsDescriptionToggleSx(expanded)}
                 >
                   <ExpandMoreIcon />
                 </IconButton>
@@ -204,14 +185,7 @@ export function TripDetails({
       </Typography>
 
       <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          gap: 1,
-          mt: 1,
-          width: '100%',
-        }}
+        sx={TRIP_DETAILS_ACTIONS_COLUMN_SX}
       >
         <TripActions tripGroup={tripGroup} tripId={day.id} section="navigation" />
         <TripActions
@@ -229,7 +203,7 @@ export function TripDetails({
         </BackButton>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%', mt: 1 }}>
+      <Box sx={TRIP_DETAILS_SOCIAL_ROW_SX}>
         <EngagementBar
           targetType="trip"
           targetId={day.id}
