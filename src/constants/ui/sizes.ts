@@ -15,6 +15,6 @@ export const UI_SIZES = {
   paginationItemMinSize: 32,
   paginationItemPaddingY: 6,
   paginationItemPaddingX: 10,
-  paginationFocusOutlineWidth: 2,
-  paginationFocusOutlineOffset: 2,
+  focusOutlineWidth: 2,
+  focusOutlineOffset: 2,
 } as const;
