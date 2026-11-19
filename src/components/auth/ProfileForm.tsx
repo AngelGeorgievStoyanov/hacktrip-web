@@ -15,9 +15,8 @@ import { updateProfileSchema } from '@/validations/auth';
 import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { ACCOUNT_FORM_FIELDS_SX } from '@/styles/presets/forms';
+import { ACCOUNT_FORM_FIELDS_SX, ACCOUNT_FORM_TITLE_SX, ACCOUNT_FORM_ACTIONS_SX, ACCOUNT_FORM_READONLY_FIELD_SX } from '@/styles/presets/forms';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { UI_COLORS } from '@/constants/ui/colors';
 
 export function ProfileForm() {
   const { user, updateUser } = useAuth();
@@ -70,7 +69,7 @@ export function ProfileForm() {
         onSubmit={handleSubmit(onSubmit)}
         sx={{ ...ACCOUNT_FORM_FIELDS_SX, alignItems: 'stretch' }}
       >
-        <Typography variant="h5" component="h2" sx={{ textAlign: 'center', my: 1 }}>
+        <Typography variant="h5" component="h2" sx={ACCOUNT_FORM_TITLE_SX}>
           {user?.firstName ? `${user.firstName}'s  PROFILE` : 'PROFILE'}
         </Typography>
         <TextField
@@ -79,13 +78,7 @@ export function ProfileForm() {
           autoComplete="email"
           value={user?.email ?? ''}
           disabled
-          sx={{
-            '& .MuiInputBase-input.Mui-disabled': {
-              WebkitTextFillColor: UI_COLORS.text.primary,
-              cursor: 'default',
-            },
-            '& .MuiInputLabel-root.Mui-disabled': { color: 'text.secondary' },
-          }}
+          sx={ACCOUNT_FORM_READONLY_FIELD_SX}
         />
         <TextField
           label="First Name"
@@ -102,18 +95,7 @@ export function ProfileForm() {
           helperText={errors.lastName?.message}
         />
         <ProfileImageUpload selectedFile={selectedImage} onSelectedFileChange={setSelectedImage} />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 1,
-            mt: 1,
-            '& .MuiButton-root': { m: '2px' },
-          }}
-        >
+        <Box sx={ACCOUNT_FORM_ACTIONS_SX}>
           <Button
             type="submit"
             variant="contained"
