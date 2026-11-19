@@ -331,3 +331,48 @@ export const EDIT_TRIP_IMAGE_DELETE_SX = {
 
 /** Flexible price field inside the trip create price/currency row. */
 export const TRIP_FORM_PRICE_FIELD_SX = { flex: 1 } as const;
+
+/** Profile page heading and action-row contracts. */
+export const ACCOUNT_FORM_TITLE_SX = { textAlign: 'center', my: 1 } as const;
+export const ACCOUNT_FORM_ACTIONS_SX = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: 1,
+  mt: 1,
+  '& .MuiButton-root': { m: '2px' },
+} as const;
+
+/** Disabled email field remains readable while retaining the disabled interaction state. */
+export const ACCOUNT_FORM_READONLY_FIELD_SX = {
+  '& .MuiInputBase-input.Mui-disabled': {
+    WebkitTextFillColor: UI_COLORS.text.primary,
+    cursor: 'default',
+  },
+  '& .MuiInputLabel-root.Mui-disabled': { color: 'text.secondary' },
+} as const;
+
+/** Small action alignment for the expanded change-password form. */
+export const ACCOUNT_PASSWORD_SAVE_BUTTON_SX = {
+  alignSelf: 'flex-start',
+  m: '2px',
+} as const;
+
+/** Consistent margin for back links inside standalone auth forms. */
+export const AUTH_FORM_BACK_BUTTON_SX = { m: '5px' } as const;
+
+/** Verification status card and heading. */
+export const EMAIL_VERIFICATION_CARD_SX = {
+  ...COLUMN_STACK_SX,
+  alignItems: 'center',
+  width: '100%',
+  maxWidth: 560,
+  boxSizing: 'border-box',
+  mx: 'auto',
+  p: { xs: 3, sm: 4 },
+  color: 'text.primary',
+  textAlign: 'center',
+} as const;
+export const EMAIL_VERIFICATION_TITLE_SX = { fontWeight: 700 } as const;
