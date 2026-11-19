@@ -22,6 +22,7 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
+import { ADMIN_SELECTION_TOOLBAR_SX } from '@/styles/presets/admin';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 
 function formatDate(value: string | null): string {
@@ -84,7 +85,7 @@ export function AdminFailedLogs() {
       ) : null}
       {queryError ? <Alert severity="error">{getGenericErrorMessage(queryError)}</Alert> : null}
       {selected.size > 0 ? (
-        <Box sx={{ my: 1, display: 'flex', gap: 1, alignItems: 'center' }}>
+        <Box sx={ADMIN_SELECTION_TOOLBAR_SX}>
           <Typography>{selected.size} selected</Typography>
           <Button
             color="error"
