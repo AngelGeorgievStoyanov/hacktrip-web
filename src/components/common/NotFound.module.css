@@ -19,11 +19,3 @@
   align-items: center;
 }
 
-.homeButton {
-  color: var(--ht-color-text-inverse);
-  background: var(--ht-color-action-contrast-background);
-  padding: 10px 30px;
-  margin: 25px;
-  cursor: pointer;
-  border: none;
-}
