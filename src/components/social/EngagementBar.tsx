@@ -150,7 +150,7 @@ export function EngagementBar({
             arrow
           >
             <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.disclosure}
               onClick={toggleComments}
               aria-label={
                 isCommentsOpen
