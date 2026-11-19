@@ -103,7 +103,7 @@ export const POINT_CARD_CONTAINER_SX = {
 } as const;
 
 export const getPointCardMoveButtonSx = (visible: boolean) => ({
-  ...ICON_ACTION_STYLES.base,
+  ...ICON_ACTION_STYLES.reorder,
   visibility: visible ? 'visible' : 'hidden',
   p: 0.25,
 } as const);
