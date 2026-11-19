@@ -133,7 +133,7 @@ export function ReportButton({
       {isAuthenticated && done ? (
         <Box component="span" role="status" sx={visuallyHidden}>
           Reported. Thank you.
-        </span>
+        </Box>
       ) : null}
     </>
   );
