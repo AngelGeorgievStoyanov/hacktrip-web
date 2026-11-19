@@ -5673,3 +5673,8 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - The only approved inline-style exception is `src/lib/images/renderTripOgImage.tsx`, for Satori/ImageResponse rendering only.
 - SEO metadata, structured data, canonical/sitemap rules, OG image data and SEO brand constants remain in their dedicated SEO modules. This approval does not authorize styling exceptions elsewhere in the app.
 - **All 12 coordinated migration workstreams are now closed at the source/audit level.** This does not mean the migration has passed runtime, visual-regression, accessibility or production validation; those checks have not been run.
+
+### Remaining work after the migration batches
+- Reconcile the historical Section 10.1 ledger and older NEXT TASK blocks against the completed Sections 11.28–11.60. Some legacy rows still show pre-migration statuses (for example TripPagination and image/social owners); these are stale historical records, not evidence that those migrations were not performed.
+- Then, with explicit user permission, run the agreed validation sequence (typecheck/build/lint/tests as applicable) and browser/visual checks. No such validation has been run in this migration pass.
+- No further Styling API exception is currently identified beyond the approved Satori SEO image renderer.
