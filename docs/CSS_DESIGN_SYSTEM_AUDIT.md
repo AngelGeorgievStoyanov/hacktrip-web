@@ -717,7 +717,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | `src/components/admin/AdminFailedLogs.tsx` | Uses Paper table, Checkbox selection and direct pagination Buttons. | Map checkbox and pagination contracts; inspect ADMIN_TABLE_CONTAINER_SX / ADMIN_PAGINATION_SX consumers and all states. | PARTIAL — direct action roles remain. |
 | `src/components/admin/AdminImages.tsx` | Outlined Paper table inherits the shared surface; all Previous/Next controls consume `ADMIN_PAGINATION_BUTTON_SX`; preview trigger, thumbnail, URL cell, close control, dialog content and image stage consume named `ADMIN_IMAGE_*` presets. | Verify toolbar Generate/Select action roles, Checkbox states, responsive table behavior and all preview/selection/pending states; no local preview IconButton position or image spacing object remains in the component. | PARTIAL — table, pagination and preview presentation centralized; action/state parity remains open. |
-| `src/components/admin/AdminReports.tsx` | Paper table uses shared admin table container preset. | Direct action and pagination Buttons need semantic contracts; verify row states. | CHANGE REQUIRED. |
+| `src/components/admin/AdminReports.tsx` | Outlined Paper table inherits shared surface; Delete uses semantic `BUTTON_STYLES.deleteText`; Previous/Next consume `ADMIN_PAGINATION_BUTTON_SX`. | Verify delete confirmation/pending/error states, row content and responsive table behavior; no local table surface or pagination styling remains. | PARTIAL — action and pagination roles centralized; row/state verification remains open. |
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
 | `src/components/auth/ChangePasswordForm.tsx` | Password-change form consumes `BUTTON_STYLES.primary` for Save password. | The primary role is only a generic visual contract; local `alignSelf` and margin are merged into the same sx object. Field, pending/disabled and validation states remain part of the field/action audit. | PARTIAL. |
@@ -6264,3 +6264,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 admin feature entry: `src/components/admin/AdminReports.tsx`. Verify report actions, pagination, row state and existing table surface presets.
+
+
+## 11.87 — Shared DeleteText role for admin image/user/report actions (2026-11-19)
+
+### Source changes
+- Added `BUTTON_STYLES.delete` (filled destructive role) and `BUTTON_STYLES.deleteText` (text destructive role) as semantic aliases of the existing danger treatments.
+- Migrated the existing text-style Delete actions in AdminReports, AdminUsers and AdminUserProfileImage to `deleteText`; their current error color and visual appearance are unchanged.
+- Reconciled the Section 10.1 AdminReports row: its Paper surface and pagination were already shared; Delete now has an explicit semantic role.
+
+### Preserved
+- Delete confirmation flows, permission/role visibility, mutation pending states, query invalidation, error handling and pagination behavior.
+- No API, data, authorization or business logic changed.
+
+### Result and status
+- **4 source files changed** plus the Section 10.1 AdminReports ledger row.
+- AdminReports/AdminUsers/AdminUserProfileImage text Delete actions: **SEMANTIC ROLE CENTRALIZED**.
+- AdminReports row and responsive/state verification remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next admin table entry in Section 10.1: `src/components/admin/AdminFailedLogs.tsx`. Verify its selection, delete/clear actions, pagination and row states against the shared action contracts.
