@@ -13,6 +13,10 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
+import {
+  ADMIN_PROFILE_AVATAR_INTERACTIVE_SX,
+  ADMIN_PROFILE_AVATAR_READONLY_SX,
+} from '@/styles/presets/profile-image';
 
 export function AdminUserProfileImage({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
@@ -69,7 +73,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
             type="button"
             aria-label="Open profile image"
             onClick={() => setLightboxOpen(true)}
-            sx={{ width: 88, height: 88, cursor: 'zoom-in', p: 0, border: 0 }}
+            sx={ADMIN_PROFILE_AVATAR_INTERACTIVE_SX}
           >
             <AppImage
               image={image}
