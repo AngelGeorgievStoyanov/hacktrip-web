@@ -7577,7 +7577,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Coverage and method
 - Re-fetched the live recursive tree at the current branch head and enumerated all route-group page files, route-group layouts, root/error boundaries and the supporting metadata/image endpoints.
-- Read the current source of all **28 page entry points** across account, admin, auth, public and global error/not-found routes, plus the four shared layout/root entry points. The matrix below records each page's direct rendered component tree and the style-owner chain visible in source.
+- Read the current source of all **26 page entry points** across account, admin, auth, public and global error/not-found routes, plus the four shared layout/root entry points. The matrix below records each page's direct rendered component tree and the style-owner chain visible in source.
 - This is a route-composition/source-ownership pass, not a complete recursive audit of every descendant component's internal states. Descendant component declarations and all their callers still need to be reconciled against Section 10.1 and the semantic matrices.
 - No build, tests, lint, CI or browser checks were run.
 
@@ -7648,7 +7648,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 |`app/robots.ts`, `app/sitemap.ts` | Metadata endpoints; no rendered UI. | SEO route coverage only; excluded from visual style ownership. |
 
 ### Route matrix result
-- All **28 page entry points** are mapped to their direct component entry and first-level style-owner chain.
+- All **26 page entry points** are mapped to their direct component entry and first-level style-owner chain.
 - Shared route shells and global error/not-found boundaries are mapped separately.
 - The matrix exposes the remaining cross-cutting checks rather than marking pages fully verified: descendant state coverage, responsive behavior, MUI field/action states, image frame ratios, CSS Module breakpoints and route-specific interaction states.
 - Next pass: walk the component descendants and their direct consumers for each route group, reconcile each with the Section 10.1 ledger, then mark a route VERIFIED only after its full component/style/state chain is closed.
