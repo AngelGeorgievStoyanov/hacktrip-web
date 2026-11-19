@@ -170,6 +170,7 @@ export const BUTTON_STYLES = {
   deleteText: { color: 'error.main' },
   upload: primary,
   removeSelection: primary,
+  removeMarker: secondary,
   secondary,
   navigationSecondary: secondary,
   disclosure: secondary,
