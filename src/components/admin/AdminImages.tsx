@@ -1,7 +1,5 @@
 'use client';
 
-import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
-
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -30,7 +28,7 @@ import {
 } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { adminApi } from '@/api/admin';
-import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
+import { ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
