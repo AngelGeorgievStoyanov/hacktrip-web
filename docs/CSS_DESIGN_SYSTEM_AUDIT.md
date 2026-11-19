@@ -701,7 +701,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | File | Already centralized / confirmed | Still remaining | Current result |
 |---|---|---|---|
 | `src/components/points/PointCard.tsx` | Edit uses `BUTTON_STYLES.edit`; Delete uses `BUTTON_STYLES.delete`; move-up/down controls use semantic `ICON_ACTION_STYLES.reorder` plus named visibility/padding; Card surface inherits `MuiCard`; text inset/wrap, map height and action row use named card presets. Direct caller: PointList → CreatePointPage. | Point-specific card geometry remains intentionally in `cards.ts`; verify visual parity at mobile/desktop widths and disabled/permission/boundary states through CreatePointPage. | PARTIAL — all component styling is preset-owned; responsive/state verification remains open. |
-| `src/components/points/PointForm.tsx` | Uses semantic `BUTTON_STYLES.create`, `add` and `edit` roles; Find in Map consumes `POINT_FORM_FIND_MAP_BUTTON_SX`; shared `BackButton` owns Back appearance. | Point-specific action width/responsive sizing remains in `POINT_FORM_ACTION_BUTTON_SX`; Back navigation and form state remain component-owned. Remaining field, upload, icon and disabled/loading contracts still require review. | PARTIAL — action roles and map-search presentation centralized; form/field and state verification remain open. |
+| `src/components/points/PointForm.tsx` | Create/Edit uses semantic `create` / `edit`; Add next day uses `add`; Find in Map uses `findLocation`; Back uses shared `BackButton`; form/action geometry, full-width Alerts and compact loading indicators use named presets/constants; upload delegates to ImageUploadField. | Verify TextField/Autocomplete error/helper/focus states, upload retry/remove and existing-image counts, location-error/loading, submitting/disabled and both create/edit caller flows. | PARTIAL — action/layout/alert/loading contracts centralized; field/upload/caller state parity remains open. |
 | `src/components/points/PointActions.tsx` | Wrapper consumes `POINT_SOCIAL_ACTIONS_SX`; LikeButton, FavoriteButton and ReportButton own their interactions and consume shared `ICON_ACTION_STYLES`; SocialConfigStatus owns its feedback presentation. | Verify all rendered call sites and responsive parity with other social-action groups; no PointActions-local visual declaration remains. | PARTIAL — source presentation is centralized; exhaustive caller/route verification remains open. |
 | `src/components/points/PointList.tsx` | Delegates each item to `PointCard`; list container consumes `POINT_LIST_SX`; empty state consumes `POINT_LIST_EMPTY_SX`. | Verify all callers and responsive behavior of the composed PointCard list; no local visual declaration remains in this component. | PARTIAL — list and empty-state presentation are preset-owned; caller/responsive verification remains open. |
 | `src/components/trips/TripCard.tsx` | Details link consumes semantic `BUTTON_STYLES.navigationAction`; card surface uses `MuiCard`; content and image frames consume shared card/image presets. | Stepper Back/Next intentionally retain MUI MobileStepper's native text-button defaults; substantial card geometry/content presets and responsive/caller verification remain open. | PARTIAL — navigation role centralized; card composition and responsive/caller verification remain. |
@@ -7144,3 +7144,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 entry: `src/components/points/PointForm.tsx`. Audit its field, image upload/remove, loading/disabled and caller-owned navigation states; do not repeat the already-migrated action roles.
+
+
+## 11.127 — PointForm alert/loading and Find Location contracts (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 point entry after PointCard.
+- Re-opened `PointForm.tsx` and `forms.ts`; confirmed Create/Edit/Add/Back and form/action layout roles were already centralized.
+- Found two repeated local full-width Alert sx objects, two identical 16px action loading sizes, and a generic Primary alias for Find in Map.
+
+### Source changes
+- Added semantic `BUTTON_STYLES.findLocation` as an alias of the existing primary appearance and migrated the Find in Map preset to it.
+- Added `FORM_FULL_WIDTH_ALERT_SX` and migrated both local Alert sx objects.
+- Added `FORM_ACTION_LOADING_INDICATOR_SIZE` and migrated both 16px CircularProgress literals.
+- Reconciled the Section 10.1 PointForm row.
+
+### Preserved
+- Existing 100% Alert width and 16px loading indicator size, all button appearances, map geocoding, location error handling, point create/edit, image upload/retry, cache updates and navigation.
+- No API, validation, route, data or business logic changed.
+
+### Result and status
+- **3 source files changed** plus the Section 10.1 ledger reconciliation.
+- PointForm action/layout/Alert/loading presentation: **PRESET-OWNED**.
+- Field, upload, location and caller-state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 point entry: `src/components/points/PointActions.tsx`. Verify all call sites and disabled/pending states for shared Like/Favorite/Report controls, then `PointList.tsx` responsive composition.
