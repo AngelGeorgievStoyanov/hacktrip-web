@@ -10,6 +10,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface ConfirmDialogContextValue {
   confirm: (message: string, title?: string) => Promise<boolean>;
@@ -51,10 +52,10 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
           <DialogContentText>{message}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleClose(false)} color="primary" variant="contained">
+          <Button onClick={() => handleClose(false)} variant="contained" sx={BUTTON_STYLES.secondary}>
             No
           </Button>
-          <Button onClick={() => handleClose(true)} color="primary" variant="contained" autoFocus>
+          <Button onClick={() => handleClose(true)} variant="contained" sx={BUTTON_STYLES.primary} autoFocus>
             Yes
           </Button>
         </DialogActions>
