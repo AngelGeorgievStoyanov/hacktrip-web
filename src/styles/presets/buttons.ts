@@ -158,6 +158,7 @@ export const BUTTON_STYLES = {
   upload: primary,
   removeSelection: primary,
   secondary,
+  navigationSecondary: secondary,
   back: secondary,
   secondaryLightText,
   addPoints: secondaryLightText,
