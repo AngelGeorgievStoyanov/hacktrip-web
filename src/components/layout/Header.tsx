@@ -104,7 +104,7 @@ export function Header() {
             {link.label}
           </Button>
         ))}
-        <Button onClick={() => void handleLogout()} color="inherit" sx={NAV_BUTTON_SX}>
+        <Button onClick={() => void handleLogout()} color="inherit" sx={BUTTON_STYLES.navigation}>
           LOGOUT
         </Button>
       </>
@@ -181,7 +181,7 @@ export function Header() {
                 component={Link}
                 href={link.href}
                 color="inherit"
-                sx={NAV_BUTTON_SX}
+                sx={BUTTON_STYLES.navigation}
               >
                 {link.label}
               </Button>
