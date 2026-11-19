@@ -5038,3 +5038,39 @@ No application source code was changed. No branch was created. No build, tests, 
 - ConfirmDialog cancel/confirm action-role migration: **SOURCE CHANGE APPLIED**.
 - Next: continue the **application-wide design-system migration**, not a BackButton/ConfirmDialog-only task. Use the existing Section 11.12 dependency map and audited route/component records to migrate the remaining shared contracts and all affected consumers across the full app: global actions and navigation; cards, panels, dialogs and tables; fields/forms; page/layout/typography/CSS; images/social/maps/tracking. Work owner-first and then migrate each complete consumer group end-to-end. Reuse existing tokens, theme overrides and presets wherever they fit; add a new shared contract only for a proven missing semantic role. Do not restart route audits or create another inventory.
 - Stage 1 remains IN PROGRESS for its exhaustive maps, but it does not block this bounded migration.
+
+## 11.38 — Shared top-level navigation button contract (2026-11-19)
+
+### Scope and preflight
+- Continued the application-wide migration from the existing action/navigation ownership map (Sections 11.12, 11.17–11.18 and 11.26); no new inventory or audit document was created.
+- Confirmed the target branch is `feature/frontend-modernization`. No branch was created.
+- Inspected the current-branch shared button preset owner, public Header navigation and AdminNavigation implementation.
+- Kept navigation semantics separate from feature actions: top-level Header links share one spacing contract, while admin active/inactive state remains expressed through the existing MUI `variant` and `color` theme API.
+
+### Source changes
+1. `src/styles/presets/buttons.ts`
+   - Added `BUTTON_STYLES.navigation` as the shared owner of the existing Header navigation item spacing and box-sizing values.
+   - Reused existing button preset exports; no new token or visual value was introduced.
+2. `src/components/layout/Header.tsx`
+   - Removed the local `NAV_BUTTON_SX` visual constant.
+   - Applied `BUTTON_STYLES.navigation` consistently to desktop navigation links, authenticated logout, and the authenticated welcome/profile link.
+   - Mobile Drawer links retain their existing full-width stacked composition and are not forced into the desktop spacing contract.
+
+### Verified and intentionally preserved
+- `src/components/admin/AdminNavigation.tsx) was inspected as the parallel navigation consumer. Its active/inactive `contained`/`text` variants and `primary`/`inherit` colors already express semantic states through the MUI theme; no redundant sx preset was added.
+- Header route definitions, authentication-dependent links, moderator visibility, logout flow, responsive drawer breakpoint, drawer open/close and keyboard behavior remain unchanged.
+- Header-specific Toolbar and drawer geometry remain local structural composition, not part of the shared button skin.
+- No routing, authorization, session, API, backend or business logic changes.
+
+### Result
+- **2 source files changed**: one shared preset owner and the Header consumer.
+- The repeated Header navigation item spacing now has one owner; the AdminNavigation state styling remains on the existing theme contract.
+- No arbitrary new visual values, component API, or navigation behavior was introduced.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- Header top-level navigation spacing: **SOURCE CHANGES APPLIED**.
+- AdminNavigation active/inactive state contract: **VERIFIED; existing MUI theme variants retained**.
+- This is one bounded package in the wider app migration, not completion of the global action/navigation family.
+- Next: continue with the audited shared icon-action family (edit/delete/remove/close/reorder controls) and trace its owner through image, profile, comments/social, points and admin consumers before changing individual controls.
+- No build, tests, lint, CI or browser validation was run.
