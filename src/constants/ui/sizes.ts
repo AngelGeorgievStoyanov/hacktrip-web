@@ -11,4 +11,5 @@ export const UI_SIZES = {
   pointCardTextInset: 10,
   wideButtonPaddingY: 10,
   wideButtonPaddingX: 50,
+  footerHorizontalPadding: 20,
 } as const;
