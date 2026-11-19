@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { Badge, IconButton, Tooltip, Typography } from '@mui/material';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -34,6 +36,7 @@ export function CommentsToggle({ count, open, onToggle, emptyLabel }: CommentsTo
         arrow
       >
         <IconButton
+            sx={ICON_ACTION_STYLES.base}
           onClick={onToggle}
           aria-label={open ? 'Hide comments' : count > 0 ? `Show ${count} comments` : 'Add comment'}
           aria-expanded={open}
