@@ -95,4 +95,4 @@ export const POINT_SECTION_NOTE_SX = {
   ...CARD_TEXT_BLOCK_STYLE,
   padding: '0px 25px',
 } as const;
-export const POINT_SECTION_TITLE_SX = CARD_HEADING_TEXT_STYLE;
+export const POINT_SECTION_TITLE_SX = { ...CARD_TEXT_INSET_SX, ...CARD_HEADING_TEXT_STYLE } as const;
