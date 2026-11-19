@@ -15,7 +15,7 @@ import { updateProfileSchema } from '@/validations/auth';
 import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { ACCOUNT_FORM_FIELDS_SX, ACCOUNT_FORM_TITLE_SX, ACCOUNT_FORM_ACTIONS_SX, ACCOUNT_FORM_READONLY_FIELD_SX } from '@/styles/presets/forms';
+import { PROFILE_FORM_SX, ACCOUNT_FORM_TITLE_SX, ACCOUNT_FORM_ACTIONS_SX, ACCOUNT_FORM_READONLY_FIELD_SX } from '@/styles/presets/forms';
 import { UI_SIZES } from '@/constants/ui/sizes';
 
 export function ProfileForm() {
@@ -67,7 +67,7 @@ export function ProfileForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={{ ...ACCOUNT_FORM_FIELDS_SX, alignItems: 'stretch' }}
+        sx={PROFILE_FORM_SX}
       >
         <Typography variant="h5" component="h2" sx={ACCOUNT_FORM_TITLE_SX}>
           {user?.firstName ? `${user.firstName}'s  PROFILE` : 'PROFILE'}
