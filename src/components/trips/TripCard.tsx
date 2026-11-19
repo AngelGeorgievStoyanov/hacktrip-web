@@ -136,18 +136,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
 
   return (
     <Card
-      sx={[
-        TRIP_CARD_SX,
-        {
-          width: '352px',
-          maxWidth: 'calc(100vw - 40px)',
-          height: TRIP_CARD_HEIGHT,
-          minHeight: TRIP_CARD_HEIGHT,
-          maxHeight: TRIP_CARD_HEIGHT,
-          boxSizing: 'border-box',
-          overflow: 'hidden',
-        },
-      ]}
+      sx={[TRIP_CARD_SX, TRIP_CARD_CONTAINER_SX]}
     >
       <Box sx={TRIP_CARD_HEADER_SX}>
         <Typography gutterBottom variant="h5" sx={[CARD_TEXT_INSET_SX, TRIP_CARD_TITLE_SX]}>
