@@ -564,7 +564,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `src/styles/presets/layouts.ts` | PARTIAL |
 | `src/styles/presets/map-controls.ts` | PARTIAL |
 | `src/styles/presets/panels.ts` | PARTIAL |
-| `src/styles/presets/social.ts` | PARTIAL |
+| `src/styles/presets/social.ts` | MIGRATED — social action rows, overlays, sticky surface, error feedback, dynamic size/animation and ReportButton dialog/wrapper contracts are centralized. |
 | `src/styles/presets/typography.ts` | PARTIAL |
 
 ### Stylesheets
@@ -5662,5 +5662,5 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Result
 - Two previously identified ordinary React style-prop owners migrated; one CSS Module added; social preset owner extended.
-- The remaining known `style` objects are confined to `src/lib/images/renderTripOgImage.tsx`, where they are the required Satori/ImageResponse renderer input described in Section 11.58.
+- Final current-branch spot-check of the previously flagged shared DOM owners (ScrambleHeading, WelcomeHeading, AppImage, SocialObjectPlaceholder, TripList, TripDetails, PointSection, CommentsSection, CommentsToggle, TripGroupSocialActions, ReportButton and useBackground) found no remaining React `style` prop. The only known remaining `style` objects are confined to `src/lib/images/renderTripOgImage.tsx`, the Satori/ImageResponse renderer.
 - No build, tests, lint, CI or browser validation was run.
