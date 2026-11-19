@@ -15,18 +15,7 @@ export default function ProfilePage() {
       sx={ACCOUNT_PROFILE_PAGE_SX}
     >
       <Box
-        sx={(theme) => ({
-          ...PANEL_SX(theme),
-          boxSizing: 'border-box',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 2,
-          width: '100%',
-          maxWidth: 600,
-          height: 'fit-content',
-          p: { xs: 2, sm: '30px' },
-        })}
+        sx={ACCOUNT_PROFILE_PANEL_SX}
       >
         <ProfileForm />
       </Box>
