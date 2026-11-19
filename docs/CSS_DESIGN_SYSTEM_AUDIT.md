@@ -799,7 +799,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(public)/privacy-policy/page.tsx` | SEO metadata and long-form terms/privacy content remain data-driven; document structure is owned by LegalPage.module.css. | Return anchor keeps native href navigation and now consumes LEGAL_BACK_LINK_SX from the shared button preset owner; legal document typography/layout remains page-specific. | MIGRATED — legal return action centralized; no React style transport. |
 
 | `src/components/admin/AdminUserForm.tsx` | Save uses `BUTTON_STYLES.save`; Delete uses semantic `BUTTON_STYLES.deleteText`; Back uses shared `BackButton` with named `ADMIN_USER_FORM_BACK_SX`; panel and password field stack use named admin/layout presets. | Verify admin/manager field visibility, PasswordField/PasswordRequirements states, Switch/Select states, save/delete pending and confirmation behavior; no component-local button skin remains. | PARTIAL — action and panel roles centralized; field/state parity remains open. |
-| `src/components/auth/ForgotPasswordForm.tsx` | Forgot-password form; submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` rendered as a Next Link. | Back caller supplies local margin via sx; primary submit and navigation roles are distinct but Back still aliases generic secondary. Audit shared field, captcha, loading/disabled and feedback states. | CHANGE REQUIRED. |
+| `src/components/auth/ForgotPasswordForm.tsx` | Send reset link uses semantic `BUTTON_STYLES.submit`; Back to login uses shared `BackButton` with `AUTH_FORM_BACK_BUTTON_SX`; form/title/back-row use named auth presets; CAPTCHA and TextField remain shared/theme components. | Verify CAPTCHA reset/disabled behavior, field error/helper/focus states and submit pending state; no local action or back-navigation geometry remains. | PARTIAL — Submit/Back/form layout centralized; field/CAPTCHA state parity remains open. |
 | `src/components/auth/LoginForm.tsx` | Login form uses `BUTTON_STYLES.primary` for Login and a local `SECONDARY_BUTTON_SX` alias of `BUTTON_STYLES.secondary` for three alternate/navigation actions (register and related auth actions). | One generic secondary skin is reused for multiple different secondary semantics; password reveal is a separate IconButton role. Audit fields, password visibility, disabled/loading and focus states. | CHANGE REQUIRED. |
 | `src/components/auth/ResendVerificationForm.tsx` | Resend verification submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Back caller adds local margin via sx; generic primary/secondary aliases do not encode the distinct submit/navigation roles. Audit captcha, fields, loading/disabled and feedback states. | CHANGE REQUIRED. |
 | `src/components/auth/ResetPasswordForm.tsx` | Reset password submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Generic primary and Back/secondary contracts remain; audit password fields, requirements, validation, loading/disabled and feedback states. | CHANGE REQUIRED. |
@@ -6438,3 +6438,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/ForgotPasswordForm.tsx`. Give the submit and Back navigation actions explicit semantic roles, preserving the existing appearance.
+
+
+## 11.95 — ForgotPasswordForm semantic Submit role (2026-11-19)
+
+### Source changes
+- Added `BUTTON_STYLES.submit` as a semantic alias of the existing primary appearance.
+- Migrated Send reset link from generic Primary to Submit.
+- Back to login already uses the shared BackButton and named auth back-action geometry; corrected the Section 10.1 row accordingly.
+
+### Preserved
+- Forgot-password schema, CAPTCHA token/reset lifecycle, request payload, success notification, error handling and submitting/disabled state.
+- Existing button appearance, Back link destination and form layout.
+- No API, auth, validation, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Submit and Back roles: **SOURCE MIGRATED**.
+- Field and CAPTCHA state parity remains **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/LoginForm.tsx`. Give Login and alternate navigation actions semantic roles; verify password reveal separately through PasswordField.
