@@ -90,6 +90,31 @@ const dayNumberButton = {
   '&:hover': { backgroundColor: 'primary.dark' },
 } as const;
 
+/** Shared keyboard-focus and semantic tone contracts for icon-only actions. */
+const iconActionBase = {
+  '&:focus-visible': {
+    outline: '2px solid',
+    outlineColor: 'primary.main',
+    outlineOffset: 3,
+  },
+} as const;
+
+export const ICON_ACTION_STYLES = {
+  base: iconActionBase,
+  primary: { ...iconActionBase, color: 'primary.main' },
+  danger: { ...iconActionBase, color: 'error.main' },
+  report: {
+    ...iconActionBase,
+    '&:hover': { color: UI_COLORS.action.danger },
+  },
+  imageControl: {
+    ...iconActionBase,
+    color: UI_COLORS.text.inverse,
+    backgroundColor: UI_COLORS.surface.imageControl,
+    '&:hover': { backgroundColor: UI_COLORS.surface.imageControlHover },
+  },
+} as const;
+
 export const BUTTON_STYLES = {
   primary,
   save: primary,
