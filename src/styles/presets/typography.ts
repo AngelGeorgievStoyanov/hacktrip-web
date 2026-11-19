@@ -54,3 +54,7 @@ export const TRIPS_INTRO_SX = {
   lineHeight: 1.6,
   maxWidth: 900,
 } as const;
+
+/** Page-specific intro widths compose the shared intro typography treatment. */
+export const HOME_HERO_INTRO_SX = { ...HOME_INTRO_SX, maxWidth: 850 } as const;
+export const TRIPS_PAGE_INTRO_SX = { ...HOME_INTRO_SX, maxWidth: 900 } as const;
