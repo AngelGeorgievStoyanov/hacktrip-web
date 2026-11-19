@@ -147,6 +147,7 @@ export const BUTTON_STYLES = {
   edit: primary,
   save: primary,
   primaryWide,
+  navigationAction: primaryWide,
   danger,
   dangerText: { color: 'error.main' },
   secondary,
