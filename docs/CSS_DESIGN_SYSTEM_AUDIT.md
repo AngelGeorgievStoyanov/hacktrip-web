@@ -594,8 +594,8 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `src/components/common/PasswordRequirements.tsx` | PARTIAL |
 | `src/components/common/ScrambleHeading.tsx` | PARTIAL |
 | `src/components/common/WelcomeHeading.tsx` | CHANGE REQUIRED |
-| `src/components/home/HomeHero.tsx` | CHANGE REQUIRED |
-| `src/components/home/HomeTrips.tsx` | CHANGE REQUIRED |
+| `src/components/home/HomeHero.tsx` | WelcomeHeading owns shared home heading composition. | Intro typography and 850px content width use HOME_HERO_INTRO_SX, composed from HOME_INTRO_SX. | MIGRATED — no React style prop or local visual object remains. |
+| `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_SX; trip listing delegates to shared TripList. | Heading remains a semantic h3 and uses the shared heading preset; no local visual declaration remains. | MIGRATED — heading/list composition uses shared owners. |
 | `src/components/images/AppImage.tsx` | PARTIAL |
 | `src/components/images/ImageGallery.tsx` | PARTIAL |
 | `src/components/images/ImageLightbox.tsx` | CHANGE REQUIRED |
@@ -686,7 +686,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `app/(public)/live-tracking/page.tsx` | Moderator redirect gates access; LiveTracker owns tracking feature UI. | Main content gutter now uses LIVE_TRACKING_PAGE_MAIN_SX; React style prop removed. | MIGRATED — public route shell uses named tracking preset. |
 | `app/(public)/page.tsx` | HomeHero and HomeTrips own their feature composition. | Main uses CENTERED_PAGE_MAIN_SX; heading/intro styles are owned by shared home typography presets. | MIGRATED — no route-local presentation remains. |
 | `app/(public)/trips/[id]/page.tsx` | Async public route resolves trip/day, builds metadata/JSON-LD and delegates presentation to TripDetailsView. | Route main uses CENTERED_PAGE_MAIN_SX; no React style prop remains. | MIGRATED — public trip route shell uses shared page contract; SEO/JSON-LD/notFound logic is unchanged. |
-| `app/(public)/trips/page.tsx` | TripFilters, TripList, TripPagination and WelcomeHeading own their feature presentation. | Main uses CENTERED_PAGE_MAIN_SX; intro text uses TRIPS_INTRO_SX, including the 900px editorial width. | MIGRATED — no route-local ad hoc sx remains. |
+| `app/(public)/trips/page.tsx` | TripFilters, TripList, TripPagination and WelcomeHeading own their feature presentation. | Main uses CENTERED_PAGE_MAIN_SX; intro uses TRIPS_PAGE_INTRO_SX composed from HOME_INTRO_SX, including the 900px editorial width. | MIGRATED — no route-local ad hoc sx or React style remains. |
 
 Page wrappers without visual declarations are not automatically migration targets. Their imported components are the actual styling consumers. Remaining route files need a confirmation pass for imported UI and overlooked local styles before being marked VERIFIED.
 
@@ -794,7 +794,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(public)/about/page.tsx` | SEO metadata and semantic content hierarchy remain; image dimensions/sizes use the named `aboutIllustration` preset. | Next Image instances consume `.aboutPageImage`, `.aboutPageImageWide`, `.aboutPageImageMarkers` and `.aboutPageImageRow` classes; responsive max widths and image frame geometry remain owned by AboutPage.module.css. | MIGRATED — no React style prop remains; unique editorial image composition retained. |
 | `app/(public)/layout.tsx` | Shared Header/Footer composition; pages own their `<main>`. | Flex-fill wrapper uses `.publicLayoutContent` in PublicLayout.module.css; preserves footer-at-bottom behavior without React style transport. | MIGRATED — structural shell rule is CSS Module-owned. |
 | `app/(public)/privacy-policy/LegalPage.module.css` | Page/content surface, text, border, link and TOC radius use selected `--ht-*` variables; CSS Module appropriately owns legal-document layout and anchor scroll offsets. | Local padding/margins/gaps, fixed font-size/line-height, and Back-link padding/skin remain; classify reusable spacing/typography and migrate to tokens. The `.legalPageBack` anchor is a separate native Back visual contract that must align with shared Back semantics without losing link navigation. | CHANGE REQUIRED. |
-| `app/(public)/privacy-policy/page.tsx` |
+| `app/(public)/privacy-policy/page.tsx` | SEO metadata and long-form terms/privacy content remain data-driven; document structure is owned by LegalPage.module.css. | Return anchor keeps native href navigation and now consumes LEGAL_BACK_LINK_SX from the shared button preset owner; legal document typography/layout remains page-specific. | MIGRATED — legal return action centralized; no React style transport. |
 
 | `src/components/admin/AdminUserForm.tsx` | Admin user edit form; Save consumes `BUTTON_STYLES.save` (alias of primary), Delete uses `dangerText`, and navigation uses `BackButton`. | Save and Delete currently use different levels of destructive emphasis (filled primary vs text-only danger); confirm this is intentional. Back caller adds `alignSelf`/margin through sx. Form fields, pending state, confirmation and role-specific actions remain open. | CHANGE REQUIRED. |
 | `src/components/auth/ForgotPasswordForm.tsx` | Forgot-password form; submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` rendered as a Next Link. | Back caller supplies local margin via sx; primary submit and navigation roles are distinct but Back still aliases generic secondary. Audit shared field, captcha, loading/disabled and feedback states. | CHANGE REQUIRED. |
@@ -5524,7 +5524,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - No API, DTO, auth, route behavior, SEO content, data or business logic changed.
 
 ### Result
-- Added one public layout CSS Module and updated About CSS Module, typography/tracking preset owners and four public route consumers; existing public route consumers were reconciled.
+- Added one legal return-link semantic preset; updated the legal page, AboutPage.module.css usage, typography and tracking preset consumers; existing PublicLayout.module.css and public route shell contracts were reconciled.
 - **Workstream 9 — Public route shells/editorial pages: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
 
