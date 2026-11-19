@@ -4,8 +4,12 @@ import { useRef, useState, type ReactNode } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import { Alert, Box, Button, CircularProgress, Stack, TextField } from '@mui/material';
 import type { TextFieldProps } from '@mui/material/TextField';
-import type { SxProps, Theme } from '@mui/material/styles';
 import type { StackProps } from '@mui/material/Stack';
+import {
+  ADDRESS_AUTOCOMPLETE_EXTRA_ACTION_SX, ADDRESS_AUTOCOMPLETE_FIELD_WRAP_SX,
+  ADDRESS_AUTOCOMPLETE_ROOT_SX, ADDRESS_AUTOCOMPLETE_ROW_SX,
+  ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX, ADDRESS_AUTOCOMPLETE_VARIANTS,
+} from '@/styles/presets/map-controls';
 import { MAP_SEARCH_MIN_LENGTH } from '@/constants/maps';
 import type { MapPosition } from '@/lib/maps';
 
@@ -17,9 +21,7 @@ interface AddressAutocompleteProps {
   label?: string;
   size?: 'small' | 'medium';
   buttonVariant?: 'text' | 'outlined' | 'contained';
-  inputSx?: SxProps<Theme>;
-  buttonSx?: SxProps<Theme>;
-  containerSx?: SxProps<Theme>;
+  variant?: 'form' | 'pointPicker' | 'tripPicker';
   direction?: StackProps['direction'];
   showSearchButton?: boolean;
   extraAction?: ReactNode;
@@ -36,9 +38,7 @@ export function AddressAutocomplete({
   label = 'Search address',
   size = 'small',
   buttonVariant = 'outlined',
-  inputSx,
-  buttonSx,
-  containerSx,
+  variant = 'form',
   direction = { xs: 'column', sm: 'row' },
   showSearchButton = true,
   extraAction,
@@ -93,6 +93,8 @@ export function AddressAutocomplete({
     setNotice(null);
   }
 
+  const layout = ADDRESS_AUTOCOMPLETE_VARIANTS[variant];
+
   const addressField = (
     <TextField
       {...textFieldProps}
@@ -112,25 +114,20 @@ export function AddressAutocomplete({
               }
             }
       }
-      sx={inputSx}
+      sx={layout.input}
     />
   );
 
   return (
-    <Stack spacing={0.5} sx={containerSx}>
+    <Stack spacing={0.5} sx={{ ...ADDRESS_AUTOCOMPLETE_ROOT_SX, ...layout.container }}>
       <Stack
         direction={direction}
         spacing={0.5}
         alignItems="stretch"
-        sx={{ width: '100%', minWidth: 0 }}
+        sx={ADDRESS_AUTOCOMPLETE_ROW_SX}
       >
         <Box
-          sx={{
-            flex: '1 1 0',
-            width: '100%',
-            minWidth: 0,
-            '& .MuiFormControl-root': { width: '100%' },
-          }}
+          sx={ADDRESS_AUTOCOMPLETE_FIELD_WRAP_SX}
         >
           {supportsAutocomplete ? (
             <Autocomplete
@@ -156,26 +153,14 @@ export function AddressAutocomplete({
             onClick={() => void handleSearch()}
             disabled={searching || !isLoaded || value.trim().length < MAP_SEARCH_MIN_LENGTH}
             startIcon={searching ? <CircularProgress size={14} /> : undefined}
-            sx={{
-              flex: '0 1 auto',
-              width: { xs: '100%', sm: 'auto' },
-              minWidth: 0,
-              whiteSpace: 'nowrap',
-              ...((buttonSx ?? {}) as object),
-            }}
+            sx={{ ...ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX, ...layout.button }}
           >
             Search
           </Button>
         ) : null}
         {extraAction ? (
           <Box
-            sx={{
-              flex: '1 1 0',
-              width: '100%',
-              minWidth: 0,
-              display: 'flex',
-              '& > *': { width: '100%' },
-            }}
+            sx={ADDRESS_AUTOCOMPLETE_EXTRA_ACTION_SX}
           >
             {extraAction}
           </Box>
