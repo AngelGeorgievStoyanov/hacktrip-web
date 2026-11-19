@@ -382,9 +382,8 @@ export function CommentsSection({
                       {canDelete ? (
                         <Tooltip title="Delete comment" arrow>
                           <IconButton
-            sx={ICON_ACTION_STYLES.base}
+                            sx={ICON_ACTION_STYLES.danger}
                             size="small"
-                            color="error"
                             aria-label="Delete comment"
                             onClick={() =>
                               void confirm(
