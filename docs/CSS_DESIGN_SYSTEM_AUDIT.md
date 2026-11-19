@@ -808,7 +808,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/trips/TripForm.tsx` | Uses semantic `create`, `add` and `addPoints` action roles; day stepper uses named increment/decrement contracts; Back uses shared `BackButton`; form, upload and action geometry consume named presets. | Field-state/theme contract, upload/remove actions, loading/disabled/focus parity and full caller verification remain open. | PARTIAL — action roles centralized; form/field and state audit remains. |
 
 | `src/components/admin/AdminNavigation.tsx` | Admin nav links are Next links rendered as MUI Buttons. | Container uses ADMIN_NAVIGATION_SX; active/inactive appearance remains explicit MUI contained/text and primary/inherit states. | MIGRATED — navigation layout and states have explicit owners. |
-| `src/components/admin/AdminUsers.tsx` | MUI Card/CardContent surfaces inherit MuiCard; Avatar, Divider, Stack and shared admin pagination layout preset are used. | Card content geometry and avatar dimensions remain local; Edit/Delete and Previous/Next are direct Buttons with inconsistent role props; all states remain to map. | PARTIAL — surface base centralized, action and content contracts incomplete. |
+| `src/components/admin/AdminUsers.tsx` | Card/CardContent surface inherits `MuiCard`; card content, identity and action row use named `ADMIN_USER_CARD_*` presets; Avatar uses shared profile-image presets; Edit uses `BUTTON_STYLES.edit`, Delete uses `dangerText`, and Previous/Next use `ADMIN_PAGINATION_BUTTON_SX`; preview delegates to ImageLightbox. | Verify all role-visibility, delete-confirmation, mutation and responsive states; no local card/avatar/pagination style object remains. | PARTIAL — presentation roles centralized; caller/state parity remains open. |
 | `src/components/auth/Captcha.tsx` | Uses MUI Box for the external CAPTCHA container; no custom panel or field preset. | Container min-height, disabled opacity and pointer-events are local runtime presentation; third-party widget owns its internal appearance. | PARTIAL — external widget boundary; wrapper state styling remains local. |
 | `src/components/common/PasswordRequirements.tsx` | Shared password rule feedback derives from getPasswordRequirements; success/secondary/disabled colors use palette semantics. | Direct consumers: RegisterForm, ResetPasswordForm, ChangePasswordForm, AdminUserForm. Local list/grid spacing and responsive two-column layout remain in sx; success/invalid icon treatment has no named feedback preset. | PARTIAL — behavior shared; layout/feedback visual contract remains local. |
 | `src/components/common/NotFound.module.css` | Text colors and spacing partially consume --ht-* CSS variables. | Home CTA still defines local background, padding, margin and border; page background image/position/cover and layout are unique composition but need documented ownership. | CHANGE REQUIRED — shared action visual values are partly local. |
@@ -6238,3 +6238,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 admin image/table entry in order: `src/components/admin/AdminUsers.tsx` and verify the Edit/Delete, pagination and avatar contracts against the current source.
+
+
+## 11.86 — AdminUsers semantic Edit role and ledger reconciliation (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 admin user/image consumer.
+- Re-opened `AdminUsers.tsx` and verified the current admin card, profile avatar, pagination and lightbox preset consumers.
+- Found that Edit User still used the generic Primary role even though the dedicated Edit role had been introduced in Section 11.63.
+
+### Source changes
+- Migrated Edit User to `BUTTON_STYLES.edit`; its current visual treatment remains identical to Primary.
+- Delete already consumes `BUTTON_STYLES.dangerText`; Previous/Next already consume the shared admin pagination preset.
+- Reconciled the Section 10.1 row to record the existing `ADMIN_USER_CARD_*` and profile-avatar preset ownership.
+
+### Preserved
+- Admin/manager role visibility, route href, delete confirmation, mutation/invalidation, pagination state, profile image preview and lightbox behavior.
+- No API, role/authorization, route, data or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- AdminUsers Edit/Delete/pagination/avatar roles: **SHARED CONTRACTS APPLIED**.
+- Responsive/caller and authorization/mutation state verification remains **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 admin feature entry: `src/components/admin/AdminReports.tsx`. Verify report actions, pagination, row state and existing table surface presets.
