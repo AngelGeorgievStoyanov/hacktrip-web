@@ -7273,7 +7273,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Scope and method
 - Continued the exact Section 11.131 task on the existing `feature/frontend-modernization` branch.
-- Read the current source of all **82 tracked `src/components/**/*.tsx` files** from the branch tree.
+- Read the current source of all **81 tracked `src/components/**/*.tsx` files** from the branch tree.
 - Checked JSX `sx={identifier}` and `sx={helper(...)}` references, React `style=` props, and locally declared style-like constants.
 - Reviewed the non-obvious candidates in source rather than treating every `sx={...}` reference as a violation.
 
@@ -7285,7 +7285,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - No new component-local presentation object requiring extraction was confirmed in this pass.
 
 ### Result
-- **82/82 component TSX files inspected** for indirect sx references and React style props.
+- **81/81 component TSX files inspected** for indirect sx references and React style props.
 - No new app-owned inline React style prop or ad hoc local sx object was confirmed in this component-file pass.
 - No application source files were changed. No build, tests, lint, CI or browser validation was run.
 
@@ -7318,3 +7318,34 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Next
 - Perform a final repository-wide source scan for non-style-named local objects passed to `sx`, computed/callback sx expressions and React `style` props outside `app/` and `src/components/` (including any remaining UI-bearing `src/**/*.tsx` files).
 - Reconcile the exception list and inventory counts after that scan. Preserve the Satori/ImageResponse exception and do not count Google Maps SDK configuration props as React `style` props.
+
+
+## 11.134 — Final indirect style scan: remaining source TSX files (2026-11-19)
+
+### Scope and method
+- Completed the remaining source-level scan on `feature/frontend-modernization`.
+- Re-read the current recursive Git tree and confirmed **121 tracked TSX files total**: **36** under `app/`, **81** under `src/components/`, and **4** remaining files elsewhere under `src/`.
+- Inspected all **4/4 remaining source TSX files**:
+  - `src/hooks/useAuth.tsx`
+  - `src/hooks/useBackground.tsx`
+  - `src/lib/images/renderTripOgImage.tsx`
+  - `src/seo/SiteStructuredData.tsx`
+- Checked for non-style-named local objects passed to JSX `sx`, computed/callback `sx` expressions, and React DOM `style=` props.
+
+### Findings
+- `useAuth.tsx` and `useBackground.tsx` contain no MUI `sx` usage and no React DOM `style=` prop. The `Image` component's `className` in `useBackground.tsx` is CSS Module styling, not an inline style.
+- `SiteStructuredData.tsx` contains no `sx` or React `style=` prop. Its `dangerouslySetInnerHTML` is structured-data script output, not styling.
+- `renderTripOgImage.tsx` contains inline `style` objects exclusively as input to Next.js `ImageResponse` (Satori) rendering. These are the previously approved renderer-specific exception and are not React DOM styling violations for this migration inventory.
+- No non-style-named local object passed to `sx`, no computed/callback `sx` expression, and no additional React DOM `style=` prop was found in the four remaining files.
+- The current tree confirms **81** component TSX files, correcting the **82** count previously written in Sections 11.132. The component scan coverage is therefore **81/81**, not 82/82.
+
+### Final reconciliation
+- All **121/121 tracked TSX files** are now covered by the direct and indirect source scans: 36 App Router files, 81 component files, and these 4 remaining source files.
+- No outstanding app-owned inline MUI `sx` object or React DOM `style=` prop was identified in the scanned repository TSX files.
+- The only retained `style`-attribute matches are the approved Satori/`ImageResponse` renderer objects in `src/lib/images/renderTripOgImage.tsx`.
+- Google Maps SDK configuration such as `mapContainerStyle` remains excluded because it is not a React DOM `style` prop.
+- No application source files were changed in this final scan. No build, tests, lint, CI or browser validation was run.
+
+### Result and next
+- The original inline `sx` / React `style` migration scan is complete for all tracked TSX files in the current branch.
+- No further source migration is indicated by this inventory. Any next work should begin from a separately approved item in the existing audit list, not from a speculative expansion of this completed scan.
