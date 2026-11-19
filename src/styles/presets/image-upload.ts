@@ -35,7 +35,7 @@ export const CUSTOM_FILE_UPLOAD_ICON_BUTTON_SX = { color: 'primary.main' } as co
 
 /** Feature-owned wrappers around the shared field; upload behavior remains in the parent forms. */
 export const TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX = { mt: 1, mx: '4px', minWidth: 0 } as const;
-export const getIMAGE_UPLOAD_SUBMITTING_WRAPPER_SX = (isSubmitting: boolean) => ({
+export const getImageUploadSubmittingWrapperSx = (isSubmitting: boolean) => ({
   pointerEvents: isSubmitting ? 'none' : 'auto',
   opacity: isSubmitting ? 0.7 : 1,
 } as const);
