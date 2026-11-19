@@ -5219,3 +5219,41 @@ No application source code was changed. No branch was created. No build, tests, 
 - Remaining C1 work includes TripPagination native-link visual states, TripFilters field/search contracts, admin log/report detail actions, remaining point/trip actions, common feedback/error/retry actions and exhaustive native button/link call-site mapping.
 - Next: continue with **TripPagination + TripFilters**, then reconcile the original Section 10.1 ledger against current branch source before reporting the real remaining migration count.
 - Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
+
+
+## 11.42 — TripPagination native-link states and TripFilters shared presentation (2026-11-19)
+
+### Scope and preflight
+- Continued from Section 11.41 NEXT using the existing trip-list styling ownership and CSS/token architecture; no new audit document or inventory was created.
+- Confirmed TripPagination is a crawlable native-link component with real href destinations and an aria-current page marker. Kept it as native Next.js links/spans; no MUI Button conversion.
+- Confirmed TripFilters owned legacy styled-components and several local sx objects for the toolbar, three selectors and search field. Moved the complete presentation contract into one shared preset owner.
+
+### Source changes
+1. Added `src/styles/presets/trip-filters.ts`:
+   - Centralized responsive toolbar/select-group layout, selector sizing, inverse label/select colors, search surface, icon placement, native search-button styling and InputBase sizing.
+   - Preserved the existing 670px stacking breakpoint, 600px search-width breakpoint, 200/180px selector minimum widths, margins, search minimum width, 12ch-to-20ch focus expansion and original MUI transition timing.
+2. Updated `src/components/trips/TripFilters.tsx`:
+   - Removed component-local styled components and local sx constants.
+   - All selector/search visual values now come from the named trip-filter preset owner.
+   - Preserved query state, choice loading, filter-on-select behavior, Enter/click search submission, URL construction and page reset.
+3. Updated `src/components/trips/TripPagination.module.css` and `TripPagination.tsx`:
+   - Kept CSS Modules responsible for this component's unique pagination structure and native-link states.
+   - Shared visual values use existing CSS variables already emitted by the MUI theme; no unregistered CSS variable was introduced.
+   - Added explicit link/current-page classes and keyboard-visible focus styling while retaining actual hrefs, aria-current, accessible labels and page list generation.
+
+### Preserved and verified
+- TripPagination still renders native Next.js links with real destinations for Previous, adjacent pages and Next. The current page remains a non-link span with aria-current="page".
+- TripFilters still resets to page 1 on each changed filter and preserves search/group/transport/sort query parameters.
+- Preserved all existing labels, option values, controlled input state, keyboard Enter handling and responsive breakpoints.
+- No API, route, DTO, data, validation, authentication, backend or business logic changed.
+
+### Result
+- **4 existing source files updated and 1 shared preset file added**.
+- TripPagination link/current-page visual states and TripFilters visual contracts now have explicit ownership; no style prop or ad hoc local style objects remain in TripFilters.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- TripPagination native-link visual states: **SOURCE CHANGES APPLIED**.
+- TripFilters search/select/toolbar presentation: **SOURCE CHANGES APPLIED**.
+- Next: reconcile every candidate in Section 10.1 against current `feature/frontend-modernization` source, including all completed Sections 11.28–11.42, and report the verified remaining migration count by category. Do not use the old PARTIAL/CHANGE REQUIRED labels as a remaining count without source-level verification.
+- Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
