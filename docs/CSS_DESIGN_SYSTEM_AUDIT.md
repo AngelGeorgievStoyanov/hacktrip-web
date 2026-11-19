@@ -384,7 +384,7 @@ Confirmed local declarations:
 | `src/components/maps/GoogleMapView.tsx` | Shared Google Maps renderer; Box owns canvas/loading geometry; InfoWindowF is the SDK InfoWindow and receives caller-provided ReactNode. | Renderer frame/loading geometry now consume getGoogleMapFrameSx/getGoogleMapLoadingSx; map SDK owns map controls and InfoWindow chrome. | MIGRATED — renderer-owned layout centralized; SDK internals remain intentionally external. |
 | `src/components/maps/PointLocationPicker.tsx` | Uses pointPicker AddressAutocomplete variant and shared point-picker action-row presets; secondary marker removal remains a semantic secondary action. | GPS, marker removal, map selection and find-in-map behavior remain feature-owned; all local presentation references use shared map/button presets. | MIGRATED — feature controls and map layout use shared contracts. |
 | `src/components/maps/TripLocationPicker.tsx` | Uses tripPicker AddressAutocomplete variant, shared map frame/hint presets and named marker-removal button preset. | Address input/search/container styling and marker-clear button geometry are centrally owned; map hint and feature-specific map state remain unchanged. | MIGRATED — feature controls and map layout use shared contracts. |
-| `src/components/tracking/LiveTracker.tsx` | Local surface `sx` + raw Start/Stop/Reset/Follow buttons | Use shared panel and tracking action roles |
+| `src/components/tracking/LiveTracker.tsx` | GoogleMap/Polyline SDK owns map rendering; component owns GPS follow state, controls and telemetry composition. | Map frame/loading, action row/status, responsive stats grid/stat frame/value and Polyline/map-container SDK configuration now consume `tracking.ts`; Start/Stop use semantic primary/danger roles. Reset/Follow retain MUI defaults. | MIGRATED — all app-owned tracking presentation centralized; SDK configuration remains intentionally explicit in the shared preset owner. |
 
 ### 5.7 Comments and social
 
@@ -5286,7 +5286,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 ### Counting rule going forward
 - **12 remaining coordinated workstreams** is the actionable planning count as of this reconciliation, not a count of individual files or atomic style declarations.
 - Do not report 92 as remaining, and do not decrement a workstream merely because one of its files was touched. Close a workstream only after its shared owner, mapped consumers, residual responsibilities and preserved behavior have been reconciled in source.
-- Next execution: workstream 1, beginning with shared card/action owners and then its direct consumers. No build, tests, lint, CI or browser validation was run.
+- Next execution: workstream 7 — Trip Details/gallery composition. Workstreams 1–6 have been closed in Sections 11.45–11.52. No build, tests, lint, CI or browser validation was run.
 ## 11.44 — Point/trip card and action layout reconciliation (2026-11-19)
 
 ### Source changes
@@ -5416,3 +5416,22 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Added one comments preset owner; updated five comment/social consumers and the social preset owner; reconciled three previously migrated social button consumers.
 - **Workstream 5 — Comments/social interactions: COMPLETE.**
 - No build, tests, lint, CI or browser validation was run.
+## 11.52 — Live tracking controls and surface (2026-11-19)
+
+### Source changes
+- Added `src/styles/presets/tracking.ts` as the owner for LiveTracker map frame, loading state, control row/status, telemetry grid/stat frame/value, and Google Maps SDK configuration.
+- Migrated `LiveTracker.tsx` away from component-local `TRACKING_SURFACE_SX` and inline visual objects.
+- Start tracking uses the shared primary role; Stop tracking uses the shared danger role. Reset and Center on my location retain MUI default text-button styling because they are non-destructive utility actions.
+- Google Maps `mapContainerStyle` and Polyline `options` remain SDK-required configuration objects, now centralized in the tracking preset owner; they are not React `style` props.
+
+### Preserved
+- GPS collection, start/stop/reset behavior, follow toggle and map pan, Google Maps load/unmount lifecycle, drag-to-disable-follow, route path/marker, telemetry values/formatting, session-only storage notice, loading and warning states.
+- No GPS, tracking hook, API, data, route, backend or business logic changed.
+
+### Result
+- One shared tracking preset owner and one migrated component; the Section 10.1 LiveTracker row is reconciled.
+- **Workstream 6 — Live tracking controls/surface: COMPLETE.**
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Workstream 7 — Trip Details/gallery composition. Continue from the existing Section 10.1 and Sections 11.12/11.34 ownership maps; do not redo image gallery or image component migrations already closed in 11.34.
