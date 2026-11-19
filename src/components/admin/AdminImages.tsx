@@ -96,7 +96,7 @@ function DatabaseImages() {
           <List dense>{stringList(data.items, 'No database images.')}</List>
           {pagination && (pagination.totalPages ?? 0) > 1 ? (
             <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
-              <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+              <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
                 Previous
               </Button>
               <Typography>
@@ -136,11 +136,11 @@ function OrphanImages() {
           <Typography variant="h6">Database only ({data.databaseOnly.length})</Typography>
           <List dense>{stringList(data.databaseOnly, 'None.')}</List>
           <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
-            <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </Button>
             <Typography>Page {page}</Typography>
-            <Button disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
+            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
               Next
             </Button>
           </Box>
