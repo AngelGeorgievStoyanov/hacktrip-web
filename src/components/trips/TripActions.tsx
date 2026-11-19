@@ -74,7 +74,7 @@ export function TripActions({
           component={Link}
           href={`/trips/create?tripGroupId=${tripGroup.id}`}
           variant="contained"
-          sx={BUTTON_STYLES.tripAction}
+          sx={BUTTON_STYLES.tripAdd}
         >
           ADD NEXT DAY TRIP
         </Button>
@@ -82,7 +82,7 @@ export function TripActions({
           component={Link}
           href={`/trips/create/points?tripGroupId=${tripGroup.id}&tripId=${tripId}`}
           variant="contained"
-          sx={BUTTON_STYLES.tripAction}
+          sx={BUTTON_STYLES.tripManage}
         >
           ADD OR EDIT POINTS FOR YOUR TRIP
         </Button>
@@ -99,7 +99,7 @@ export function TripActions({
               component={Link}
               href={`/trips/${tripGroup.id}/edit?dayId=${selectedDay.id}`}
               variant="contained"
-              sx={BUTTON_STYLES.tripAction}
+              sx={BUTTON_STYLES.tripEdit}
             >
               EDIT DAY {selectedDay.dayNumber}
             </Button>
@@ -118,7 +118,7 @@ export function TripActions({
                 })
               }
               disabled={deleteDayMutation.isPending}
-              sx={BUTTON_STYLES.tripActionDanger}
+              sx={BUTTON_STYLES.tripDelete}
             >
               DELETE DAY {selectedDay?.dayNumber}
             </Button>
@@ -136,7 +136,7 @@ export function TripActions({
               })
             }
             disabled={deleteMutation.isPending}
-            sx={BUTTON_STYLES.tripActionDanger}
+            sx={BUTTON_STYLES.tripDelete}
           >
             DELETE TRIP
           </Button>
