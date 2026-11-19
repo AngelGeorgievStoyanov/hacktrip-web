@@ -128,3 +128,14 @@ export const ADMIN_USER_FORM_BACK_SX = {
 
 /** Password-field disclosure stack in the admin user editor. */
 export const ADMIN_USER_PASSWORD_FIELDS_SX = { display: 'flex', flexDirection: 'column', gap: 1 } as const;
+
+/** Admin section navigation layout; active/inactive button states remain MUI variants. */
+export const ADMIN_NAVIGATION_SX = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  gap: 1,
+  mb: 3,
+  pb: 2,
+  borderBottom: 1,
+  borderColor: 'divider',
+} as const;
