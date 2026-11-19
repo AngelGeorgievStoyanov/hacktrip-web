@@ -2,6 +2,22 @@ import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SHAPE } from '@/constants/ui/shape';
 import { MAP_POINT_PICKER_HEIGHT } from '@/constants/maps';
 import { BREAKPOINTS, mediaDown } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+
+/** Shared layout and semantic variants for the AddressAutocomplete owner. */
+export const ADDRESS_AUTOCOMPLETE_ROOT_SX = { width: '100%', minWidth: 0 } as const;
+export const ADDRESS_AUTOCOMPLETE_ROW_SX = { width: '100%', minWidth: 0 } as const;
+export const ADDRESS_AUTOCOMPLETE_FIELD_WRAP_SX = {
+  flex: '1 1 0', width: '100%', minWidth: 0,
+  '& .MuiFormControl-root': { width: '100%' },
+} as const;
+export const ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX = {
+  flex: '0 1 auto', width: { xs: '100%', sm: 'auto' }, minWidth: 0, whiteSpace: 'nowrap',
+} as const;
+export const ADDRESS_AUTOCOMPLETE_EXTRA_ACTION_SX = {
+  flex: '1 1 0', width: '100%', minWidth: 0, display: 'flex',
+  '& > *': { width: '100%' },
+} as const;
 
 /** Shared visual treatment for address autocomplete fields in map pickers. */
 export const MAP_ADDRESS_INPUT_SX = {
@@ -104,4 +120,35 @@ export const TRIP_MAP_SECTION_STEPPER_SX = {
   maxWidth: 600,
   flexGrow: 1,
   maxHeight: '25px',
+} as const;
+
+
+/** Feature-specific presentation is selected semantically; callers cannot inject sx objects. */
+export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
+  form: { container: {}, input: {}, button: {} },
+  pointPicker: {
+    container: {
+      width: { xs: '100%', sm: 'auto' },
+      flex: { xs: '0 1 auto', sm: '1 1 190px' },
+      minWidth: 0, maxWidth: { xs: 420, sm: 420 },
+      alignSelf: { xs: 'center', sm: 'stretch' },
+    },
+    input: { ...MAP_ADDRESS_INPUT_SX, width: '100%', minWidth: 0 },
+    button: { width: { xs: '100%', sm: 'auto' }, minHeight: 40, m: 0, ...BUTTON_STYLES.primary },
+  },
+  tripPicker: {
+    container: { width: '100%' },
+    input: { ...MAP_ADDRESS_INPUT_SX, m: 0 },
+    button: {
+      m: 0, minHeight: 56, backgroundColor: 'primary.main',
+      '&.Mui-disabled': {
+        backgroundColor: 'primary.main', color: UI_COLORS.text.inverse, opacity: 1,
+      },
+      ...BUTTON_STYLES.primary,
+    },
+  },
+} as const;
+
+export const TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX = {
+  ...BUTTON_STYLES.secondary, minHeight: 56, whiteSpace: 'nowrap',
 } as const;
