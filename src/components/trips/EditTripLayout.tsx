@@ -36,7 +36,7 @@ import { PANEL_SX } from '@/styles/presets/panels';
 import { FORM_CONTROL_INSET_SX } from '@/styles/presets/forms';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
 
 interface EditTripLayoutProps {
@@ -329,22 +329,14 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               />
               <ButtonGroup
                 disabled={dayNumberLocked || submitting}
-                sx={{
-                  m: 1,
-                  '& .MuiButton-root': {
-                    m: 0,
-                    p: 0,
-                    maxWidth: 100,
-                    height: UI_SIZES.compactControlHeight,
-                    width: 50,
-                  },
-                }}
+                sx={DAY_NUMBER_BUTTON_GROUP_SX}
               >
                 <Button
                   type="button"
                   variant="contained"
                   aria-label="Decrease day number"
                   disabled={dayNumberLocked || submitting || dayNumber <= 1}
+                  sx={BUTTON_STYLES.dayDecrement}
                   onClick={() => changeDayNumber(-1)}
                 >
                   <RemoveIcon fontSize="small" />
@@ -354,6 +346,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                   variant="contained"
                   aria-label="Increase day number"
                   disabled={dayNumberLocked || submitting || dayNumber >= DAY_NUMBER_MAX}
+                  sx={BUTTON_STYLES.dayIncrement}
                   onClick={() => changeDayNumber(1)}
                 >
                   <AddIcon fontSize="small" />
@@ -364,6 +357,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                 variant="contained"
                 onClick={setSelectedDayNumber}
                 disabled={submitting || dayNumber === selectedDay.dayNumber}
+                sx={BUTTON_STYLES.primary}
               >
                 {dayNumberLocked ? 'CHANGE DAY' : 'SET DAY'}
               </Button>
@@ -545,13 +539,13 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                       color="error"
                       disabled={submitting || deletingImageId !== null}
                       onClick={() => void deleteExistingImage(image.id)}
-                      sx={{
+                      sx={[ICON_ACTION_STYLES.danger, {
                         position: 'absolute',
                         top: 4,
                         right: 4,
                         backgroundColor: UI_COLORS.action.tripImageControlBackground,
                         '&:hover': { backgroundColor: UI_COLORS.action.tripImageControlBackgroundHover },
-                      }}
+                      }]}
                     >
                       {deletingImageId === image.id ? (
                         <CircularProgress size={UI_SIZES.smallIndicator} />
