@@ -37,7 +37,7 @@ export function CommentsToggle({ count, open, onToggle, emptyLabel }: CommentsTo
         arrow
       >
         <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.disclosure}
           onClick={onToggle}
           aria-label={open ? 'Hide comments' : count > 0 ? `Show ${count} comments` : 'Add comment'}
           aria-expanded={open}
