@@ -81,7 +81,7 @@ export function LikeButton({
       <Tooltip title={liked ? 'Unlike' : 'Like'} arrow>
         <span>
           <IconButton
-            sx={ICON_ACTION_STYLES.base}
+            sx={ICON_ACTION_STYLES.like}
             onClick={() => {
               likeAnimation.requestPlay();
               mutation.mutate();
