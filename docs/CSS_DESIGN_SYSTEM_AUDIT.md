@@ -5178,3 +5178,44 @@ No application source code was changed. No branch was created. No build, tests, 
 - The global C1 action workstream remains open: remaining auth/admin pages, admin logs/reports, TripPagination/TripDaysNav/TripFilters, remaining point actions, common feedback/error/retry actions and exhaustive native button/link call-site mapping still need verification and migration where required.
 - Next: **11.41 — continue the remaining admin/auth form action consumers and pagination/day-navigation contracts** from Section 11.12. Do not repeat the already-migrated trip edit and icon-action controls.
 - Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
+
+
+## 11.41 — Shared admin pagination and trip day-navigation contracts (2026-11-19)
+
+### Scope and preflight
+- Continued from Section 11.40 NEXT using the existing Section 11.12 action-role matrix; no new inventory was created.
+- Re-read the current auth form consumers, AdminUserForm, AdminUsers, AdminReports, AdminFailedLogs, AdminRouteNotFoundLogs, AdminImages, TripDaysNav and TripPagination.
+- Auth form primary/secondary/back actions and AdminUserForm Save/Delete/Back already consume existing semantic presets; they were retained without redundant overrides.
+- The trip day navigation had a component-local selected/hover/spacing style. Admin user, report, failed-login, route-not-found and image-inventory tables repeated default Previous/Next button sizing.
+- TripPagination remains a crawlable native-link component; its CSS module currently owns list structure only. It was not converted to MUI buttons or altered in a way that could compromise real hrefs and aria-current semantics.
+
+### Source changes
+1. Added `src/styles/presets/pagination.ts`:
+   - `ADMIN_PAGINATION_BUTTON_SX` centralizes the shared Previous/Next minimum width for admin data tables.
+   - `TRIP_DAY_PAGE_ITEM_SX` centralizes the existing day-number margin, selected colors and hover colors using semantic UI tokens.
+2. Updated `src/components/admin/AdminReports.tsx`, `AdminFailedLogs.tsx`, `AdminRouteNotFoundLogs.tsx`, `AdminUsers.tsx` and `AdminImages.tsx`:
+   - All audited Previous/Next controls now consume `ADMIN_PAGINATION_BUTTON_SX`.
+   - Existing layout presets, page state, disabled conditions, fetching behavior, API calls and labels are unchanged.
+3. Updated `src/components/trips/TripDaysNav.tsx`:
+   - Removed the local `PAGE_ITEM_SX` declaration and consumes `TRIP_DAY_PAGE_ITEM_SX`.
+   - Preserved AppBar shell geometry, pagination count/selection, day-number labels, URL updates, client-side `onSelect` behavior and scroll behavior.
+
+### Preserved and intentionally outstanding
+- Auth form actions and AdminUserForm actions were already correctly using the existing shared roles; no unnecessary changes were made.
+- Admin pagination row geometry remains owned by `ADMIN_PAGINATION_SX` / `IMAGE_PAGINATION_ROW_SX`; this package centralizes only the repeated button contract.
+- TripPagination remains native anchors with real destinations and `aria-current`; its link/active/focus visual contract remains open for a separate CSS-variable/preset migration.
+- TripFilters and its styled search/select composition remain open; they were not mixed into this pagination package.
+- No API, route, DTO, data, validation, authentication, backend or business logic changed.
+
+### Result
+- **7 source files changed**: 1 new shared preset owner and 6 consumers.
+- All repeated admin Previous/Next controls in the five audited admin tables now share one semantic sizing contract; trip day-page item states now have one shared preset owner.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- Admin table pagination button sizing: **SOURCE CHANGES APPLIED** across AdminUsers, AdminReports, AdminFailedLogs, AdminRouteNotFoundLogs and AdminImages.
+- Trip day-navigation item states: **SOURCE CHANGES APPLIED**.
+- Auth/AdminUserForm actions: **EXISTING SHARED CONTRACTS VERIFIED**; no duplicate styling added.
+- Remaining C1 work includes TripPagination native-link visual states, TripFilters field/search contracts, admin log/report detail actions, remaining point/trip actions, common feedback/error/retry actions and exhaustive native button/link call-site mapping.
+- Next: continue with **TripPagination + TripFilters**, then reconcile the original Section 10.1 ledger against current branch source before reporting the real remaining migration count.
+- Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
