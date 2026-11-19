@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useState } from 'react';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -167,6 +169,7 @@ export function EngagementBar({
             arrow
           >
             <IconButton
+            sx={ICON_ACTION_STYLES.base}
               onClick={toggleComments}
               aria-label={
                 isCommentsOpen
