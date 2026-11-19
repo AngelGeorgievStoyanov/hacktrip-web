@@ -165,7 +165,7 @@ export function AdminUsers() {
                     {canManage ? (
                       <Button
                         color="error"
-                        sx={BUTTON_STYLES.dangerText}
+                        sx={BUTTON_STYLES.deleteText}
                         onClick={() =>
                           void confirm(
                             'Are you sure you want to delete this user?',
