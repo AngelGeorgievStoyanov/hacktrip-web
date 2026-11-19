@@ -703,7 +703,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/points/PointCard.tsx` | Edit Point uses `BUTTON_STYLES.edit`; Delete Point uses `BUTTON_STYLES.danger`; move-up/down IconButtons consume `ICON_ACTION_STYLES.base`; Card surface is inherited from `MuiCard`; text inset/button margin use named card presets. | Point-specific move visibility/padding, card geometry/padding and action-row layout remain in the card preset owner; description wrapping and caller/state verification remain open. | PARTIAL — action roles and icon base are centralized; card layout and full state/caller verification remain. |
 | `src/components/points/PointForm.tsx` | Uses semantic `BUTTON_STYLES.create`, `add` and `edit` roles; Find in Map consumes `POINT_FORM_FIND_MAP_BUTTON_SX`; shared `BackButton` owns Back appearance. | Point-specific action width/responsive sizing remains in `POINT_FORM_ACTION_BUTTON_SX`; Back navigation and form state remain component-owned. Remaining field, upload, icon and disabled/loading contracts still require review. | PARTIAL — action roles and map-search presentation centralized; form/field and state verification remain open. |
 | `src/components/points/PointActions.tsx` | Wrapper consumes `POINT_SOCIAL_ACTIONS_SX`; LikeButton, FavoriteButton and ReportButton own their interactions and consume shared `ICON_ACTION_STYLES`; SocialConfigStatus owns its feedback presentation. | Verify all rendered call sites and responsive parity with other social-action groups; no PointActions-local visual declaration remains. | PARTIAL — source presentation is centralized; exhaustive caller/route verification remains open. |
-| `src/components/points/PointList.tsx` | Delegates each item to the shared `PointCard`. | List layout remains local; verify responsive/layout requirements and empty state typography. | PARTIAL — not fully fixed. |
+| `src/components/points/PointList.tsx` | Delegates each item to `PointCard`; list container consumes `POINT_LIST_SX`; empty state consumes `POINT_LIST_EMPTY_SX`. | Verify all callers and responsive behavior of the composed PointCard list; no local visual declaration remains in this component. | PARTIAL — list and empty-state presentation are preset-owned; caller/responsive verification remains open. |
 | `src/components/trips/TripCard.tsx` | Details navigation uses `BUTTON_STYLES.primaryWide`; card surface uses `MuiCard`; content consumes shared card presets. | Details is navigation but uses generic primary-wide action styling. Stepper Buttons remain direct MUI defaults; substantial geometry/content sx and responsive/caller verification remain. | PARTIAL — not fully fixed. |
 | `src/components/trips/TripActions.tsx` | Three non-destructive actions (Add Next Day Trip, Add/Edit Points, Edit Day) use `BUTTON_STYLES.tripAction`; Delete Day and Delete Trip use `tripActionDanger`. | Edit/Add semantics are grouped under one trip-specific appearance; destructive actions share one role. Verify parity with point/admin action roles and loading/disabled/focus states. | PARTIAL — not fully fixed. |
 | `src/components/common/BackButton.tsx` | Shared Back action fixes MUI `variant="contained"` and applies `BUTTON_STYLES.back`; caller owns navigation behavior. | Caller `sx` is merged before the shared semantic role, so only non-overlapping placement/dimension values survive; nine callers are mapped in Section 11.7. | MIGRATED — shared Back role and caller-owned layout/navigation are explicit. |
@@ -5789,3 +5789,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 point entry: `src/components/points/PointList.tsx`. Verify list geometry, empty-state typography and all rendered callers before deciding whether any migration is required.
+
+
+## 11.66 — PointList preset verification and stale-ledger correction (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 point entry after PointActions.
+- Inspected `PointList.tsx`, `layouts.ts` and `typography.ts` on the target branch.
+
+### Findings
+- The list container already consumes `POINT_LIST_SX` from the shared layout preset owner.
+- The empty state already consumes `POINT_LIST_EMPTY_SX` from the shared typography preset owner.
+- Every populated row delegates to the shared `PointCard`; sorting and item identity remain component behavior.
+- No local visual declaration or duplicate preset was found in PointList. No source change was necessary.
+
+### Result and status
+- Section 10.1 was corrected to record the current preset consumers instead of describing the layout as local.
+- PointList container and empty-state presentation: **SHARED PRESETS VERIFIED**.
+- Caller and responsive composition verification remains open; the file remains **PARTIAL** rather than being declared fully complete.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 trip entry: `src/components/trips/TripCard.tsx`. Inspect the Details navigation role, stepper controls, card geometry and all callers before making changes.
