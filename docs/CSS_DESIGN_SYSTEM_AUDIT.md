@@ -710,7 +710,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/theme/components/card.ts` | All MUI Cards receive `getSurfaceStyles` from the theme: paper background, divider border, theme radius and semantic surface shadow. | Consumer sx remains responsible only for card geometry/content; custom social/image surfaces keep their own semantic contracts. | MIGRATED — global Card skin is centralized. |
 | `src/theme/components/dialog.ts` | MUI Dialog Paper receives `getSurfaceStyles`; ImageLightbox applies its documented semantic image-stage override. | ConfirmDialog, AdminImages, ImageLightbox, ProfileImage and ReportButton inherit the shared Dialog Paper contract. | MIGRATED — Dialog surface and image-stage exception are explicit. |
 | `src/theme/components/surface.ts` | Defines elevated getSurfaceStyles and outlined getOutlinedSurfaceStyles from active theme values. | Adopted by MuiCard, MuiDialog.paper, MuiPaper.outlined and PANEL_SX; no blanket default Paper override is applied. | MIGRATED — shared surface roles and variant boundary confirmed. |
-| `src/components/trips/PointSection.tsx` | Card surface inherits the shared MUI Card theme; text inset references the shared card preset. | Contains a React `style` prop for the text wrapper (must be migrated under policy 1.4); local Card/content layout and multiple local `sx` values remain. | CHANGE REQUIRED. |
+| `src/components/trips/PointSection.tsx` | Card surface inherits `MuiCard`; title, content, image frame, empty image frame, note, description and action row consume named `trip-details.ts` / `image-gallery.ts` presets. ImageGallery, PointActions, CommentsToggle and ExpandableText are shared child components. | No React `style` prop or component-local sx object remains; verify responsive composition through all parent routes and child states. | MIGRATED — PointSection presentation and child composition use shared contracts. |
 | `src/components/points/EditPointPage.tsx` | Uses MUI Card theme surface for its Card. | Local layout `sx`, local IconButton styling and other page composition remain; inspect against shared point form/action roles. | CHANGE REQUIRED. |
 | `src/components/points/CreatePointPage.tsx` | Uses MUI Card theme surface for its Card and central size token for content width. | Local layout `sx` and page composition remain; verify all nested form and action consumers. | PARTIAL — not fully fixed. |
 
@@ -6028,3 +6028,21 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue from the next outstanding trip/image entry in Section 10.1; keep SEO/social-image rendering separate under the approved Section 11.58 boundary.
+
+
+## 11.76 — PointSection current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next point-section entry in Section 10.1.
+- Re-opened `PointSection.tsx` and verified the current `trip-details.ts` and `image-gallery.ts` preset consumers.
+- The earlier ledger note claiming a React `style` prop was stale: the current component has no React style prop and no component-local sx object.
+- Card/content/title/note/description/action-row and image-frame presentation are all named-preset-owned; image, social, comment and expandable-text behavior is delegated to shared child components.
+
+### Result and status
+- Corrected the Section 10.1 PointSection row to reflect the current branch.
+- PointSection presentation: **MIGRATED / VERIFIED**.
+- Parent-route responsive parity and delegated child-state verification remain part of their respective component entries; no duplicate PointSection preset was added.
+- No API, route, data or business logic changed. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 trip field entry: `src/components/trips/TripSelectField.tsx`. Verify its TextField/Autocomplete contract and existing theme defaults before adding or changing a preset.
