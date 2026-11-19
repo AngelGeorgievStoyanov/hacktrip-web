@@ -5013,3 +5013,28 @@ No application source code was changed. No branch was created. No build, tests, 
 - Stage 1 global inventory remains IN PROGRESS and does not block these bounded migrations.
 - Next: continue with the next pending owner family already listed in this audit; re-read the relevant ownership/consumer sections and latest NEXT before editing.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.37 — ConfirmDialog semantic action roles (2026-11-19)
+
+### Scope
+- Continued the approved common-primitives and semantic-actions workstream using the existing ownership map in Sections 11.12, 11.17 and 11.18. No new inventory or audit document was created.
+- ConfirmDialogProvider is the single global owner; its direct consumers remain unchanged.
+- Reused the existing `BUTTON_STYLES.primary` and `BUTTON_STYLES.secondary` contracts. No new preset or token was introduced.
+
+### Source change
+1. `src/components/common/ConfirmDialog.tsx`
+   - The negative/cancel action now consumes `BUTTON_STYLES.secondary`.
+   - The affirmative/confirm action now consumes `BUTTON_STYLES.primary`.
+   - Removed duplicated raw `color="primary"` button styling props; retained contained variants, labels, autofocus, click handlers and dialog-close resolution behavior.
+
+### Result
+- **1 source file changed.** The shared confirmation dialog now communicates opposite action semantics through the existing centralized button contracts.
+- Promise<boolean> behavior, provider API, all consumers and confirmation flow are unchanged.
+- No new preset, token, component or branch was created.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- ConfirmDialog cancel/confirm action-role migration: **SOURCE CHANGE APPLIED**.
+- Next: continue the same common-primitives action workstream with BackButton and the already-defined button role contracts; reuse existing presets and avoid adding roles unless the current contract demonstrably cannot represent the action.
+- Stage 1 remains IN PROGRESS for its exhaustive maps, but it does not block this bounded migration.
