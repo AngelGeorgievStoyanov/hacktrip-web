@@ -119,8 +119,6 @@ export function RegisterForm() {
     }
   }
 
-  const SECONDARY_BUTTON_SX = BUTTON_STYLES.secondary;
-
   return (
     <WelcomeHeading>
       <Box
@@ -218,7 +216,7 @@ export function RegisterForm() {
           variant="contained"
           disabled={isFormLocked || !isValid || !captchaToken}
           startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-          sx={BUTTON_STYLES.primary}
+          sx={BUTTON_STYLES.create}
         >
           Register
         </Button>
@@ -228,7 +226,7 @@ export function RegisterForm() {
             href="/login"
             disabled={submitting}
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.navigationSecondary}
           >
             Already have an account? Login
           </Button>
