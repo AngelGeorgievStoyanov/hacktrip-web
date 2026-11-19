@@ -94,7 +94,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onDelete(point)}
             disabled={disabled || !point.permissions.canDelete}
-            sx={[BUTTON_STYLES.danger, POINT_CARD_ACTION_BUTTON_SX]}
+            sx={[BUTTON_STYLES.delete, POINT_CARD_ACTION_BUTTON_SX]}
           >
             DELETE POINT
           </Button>
