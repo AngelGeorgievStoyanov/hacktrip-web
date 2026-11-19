@@ -83,7 +83,7 @@ export function ResendVerificationForm() {
           variant="contained"
           disabled={submitting || !captchaToken}
           startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-          sx={BUTTON_STYLES.primary}
+          sx={BUTTON_STYLES.submit}
         >
           Resend verification email
         </Button>
