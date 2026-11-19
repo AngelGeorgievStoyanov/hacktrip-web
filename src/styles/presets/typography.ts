@@ -46,15 +46,6 @@ export const POINT_LIST_EMPTY_SX = {
   textAlign: 'center',
 } as const;
 
-/** Public trip-list introduction retains its editorial width constraint. */
-export const TRIPS_INTRO_SX = {
-  m: '0 20px 24px',
-  textAlign: 'center',
-  ...HEADING_TEXT_SX,
-  lineHeight: 1.6,
-  maxWidth: 900,
-} as const;
-
 /** Page-specific intro widths compose the shared intro typography treatment. */
 export const HOME_HERO_INTRO_SX = { ...HOME_INTRO_SX, maxWidth: 850 } as const;
 export const TRIPS_PAGE_INTRO_SX = { ...HOME_INTRO_SX, maxWidth: 900 } as const;
