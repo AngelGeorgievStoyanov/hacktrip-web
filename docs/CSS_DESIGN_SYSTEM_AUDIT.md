@@ -7680,3 +7680,50 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Route-level ownership is now more precise than the page import list: key shared descendants and style owners are recorded, and the remaining gaps are explicit.
 - Next: trace Account/Auth descendants (forms, profile, trip/point editors), then Admin descendants; after those trees, consolidate the button/icon-action and field-family semantic matrices without changing visual values by guesswork.
 - No application source files were changed. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.139 — Account, authentication and admin descendant ownership pass (2026-11-19)
+
+### Account and editor descendant trees
+
+| Route family | Rendered descendant chain | Style ownership / open checks |
+|---|---|---|
+| Profile /profile | ProfileForm → ProfileImage + profile fields + ProfileImageUpload + expandable ChangePasswordForm → PasswordField/PasswordRequirements. | Account profile/form presets + profile-image/image-upload presets + theme Card/TextField/Button. TextField error/read-only/disabled states and native file input states still need one family-level matrix. |
+| Create/Edit Trip | TripForm or EditTripLayout → TripSelectField + TextField/Controller fields + TripLocationPicker → AddressAutocomplete/GoogleMapView + ImageUploadField → CustomFileUploadButton/AppImage. | TRIP_FORM_*/EDIT_TRIP_* form presets + map-controls + image-upload + shared button/size tokens + theme surfaces/fields. Verify create vs edit parity for field errors, disabled/pending, selected map location, image add/remove and responsive columns. |
+| Create/Edit Point | CreatePointPage/EditPointPage → PointList/PointCard where applicable + PointLocationPicker + PointForm → AddressAutocomplete/GoogleMapView + ImageUploadField. | CREATE_POINT_*/EDIT_POINT_*/POINT_FORM_* + card/map-controls/image-upload/button presets. Verify permission/error/loading, GPS/find-in-map, marker, form validation, image deletion and responsive composition. |
+| Favorites / My Trips | Account listing page → TripList → TripCard → AppImage/SocialObjectPlaceholder + day/image pagination and social count presentation. | ACCOUNT_TRIPS_* + TripList/TripCard/image presets + theme Card. Shared with Home/Trips; verify identical card dimensions and interaction states across all four callers. |
+
+### Authentication descendant tree
+
+| Form | Rendered descendants / state owners | Style ownership / open checks |
+|---|---|---|
+| LoginForm | WelcomeHeading → AUTH_FORM form → email/password TextFields + password visibility IconButton + Captcha + submit/navigation actions. | AUTH_FORM_SX/AUTH_FORM_TITLE_SX/AUTH_FORM_ACTIONS_SX + BUTTON_STYLES/ICON_ACTION_STYLES + theme TextField/Button. Direct TextField and password adornment states must join the field/icon action matrix. |
+| ForgotPasswordForm / ResendVerificationForm | WelcomeHeading → AUTH_FORM form → email TextField + Captcha + submit + shared BackButton. | Shared auth form, submit and BackButton roles; verify enumeration-safe success/error and captcha lifecycle; TextField state is still theme default rather than a named app field role. |
+| ResetPasswordForm | WelcomeHeading → AUTH_FORM form/success panel → PasswordField + PasswordRequirements + submit or navigation action. | Shared auth form, password and button roles; verify token-missing/invalid/success/pending and delayed redirect states. |
+| VerifyEmailForm | WelcomeHeading → Card → status/loading + login action. | EMAIL_VERIFICATION_CARD_SX/TITLE_SX + theme Card/Button + Alert/notification provider; verify idle/loading/success/error and redirect. |
+| RegisterForm | WelcomeHeading → AUTH_FORM form → TextFields/PasswordField/PasswordRequirements + terms Checkbox + Captcha + Register/Login/Resend actions. | Auth form, typography, button and UI size presets + RegisterForm.module.css locked state + theme fields. Confirm the unresolved Resend action identifier before source repair; Checkbox and CAPTCHA state contracts remain open. |
+| Shared auth primitives | PasswordField/PasswordRequirements, Captcha, BackButton, WelcomeHeading and NotificationProvider are reused across auth/account/admin forms. | Password visibility uses ICON_ACTION_STYLES; BackButton uses BUTTON_STYLES.back; NotificationProvider uses NOTIFICATION_ALERT_SX; WelcomeHeading has a CSS Module with local spacing. Verify all callers before changing shared primitives. |
+
+### Admin descendant tree
+
+| Route family | Rendered descendants | Style ownership / open checks |
+|---|---|---|
+| Admin navigation | AdminLayout → AdminNavigation → Link-backed MUI Buttons with active/inactive variant and color props. | Container uses ADMIN_NAVIGATION_SX; active state is direct MUI variant/color. Its imported preset currently contains duplicate exported declarations, so this route depends on a confirmed source blocker. Complete active/focus/hover/disabled navigation role before changing defaults. |
+| Admin users | AdminUsers → user grid/cards → Avatar/AppImage + ImageLightbox + role-gated actions + pagination. | ADMIN_USERS_*/ADMIN_USER_CARD_* + profile-image + pagination + theme Card/Dialog; verify manager/admin action visibility, avatar preview, delete and empty/loading/error states. |
+| Admin user edit | AdminUserForm → profile image editor + TextFields/Select/MenuItem/Switch + PasswordField/Requirements + BackButton/actions. | ADMIN_USER_FORM_* + account form/password/button/profile-image presets + theme surface. **Gap:** Select, Switch and native/controlled fields do not inherit a complete app field-family contract from MuiTextField. |
+| Admin images | AdminImages → cloud/database lists + image inventory table + tabs/checkbox selection + preview Dialog + pagination. | ADMIN_IMAGES_* + ADMIN_TABLE_CONTAINER_SX + ADMIN_PAGINATION_BUTTON_SX + theme Paper/Dialog. Several toolbar/tab/checkbox states still use MUI defaults; verify all selection, preview, pagination and responsive table states. |
+| Admin reports / failed logs / route-not-found logs | Admin table components → Paper/Table/Checkbox or expandable diagnostic rows + delete actions + pagination. | Theme outlined Paper + admin/layout/pagination/button/diagnostic presets; direct MUI table hover, checkbox, disclosure and destructive action props need a unified state review. |
+
+### Cross-cutting findings
+
+1. **Auth forms share composition but not a complete field contract.** Most auth pages reuse AUTH_FORM_SX and named action roles, but TextField focus/error/helper/disabled behavior is still inherited from MUI defaults. PasswordField composes the same baseline with an icon action. This is a consistent default today, not a fully app-defined field system.
+2. **The field-family gap extends beyond auth.** AdminUserForm uses Select and Switch; TripFilters uses Select/InputBase/InputLabel; trip/point editors use TextField and Autocomplete. A central field contract must cover TextField, Select, Autocomplete, InputBase, Checkbox, Radio, Switch and native controls, or explicitly document which remain MUI-native.
+3. **Trip and point editor layouts are preset-owned but feature-specific.** CreatePointPage and EditPointPage use separate route geometry and share PointForm/map/upload children. EditTripLayout and TripForm share fields/select/map/upload primitives but have different create/edit responsibilities. Do not merge their layout presets solely because the forms look related.
+4. **Admin navigation is a concrete integration blocker.** AdminNavigation imports ADMIN_NAVIGATION_SX from a module with two declarations of that name. The container role is intended to be one shared preset; remove the duplicate declaration in a separately approved source-fix task.
+5. **MUI defaults are not the same as centralization.** Paper/Card/Dialog have explicit theme surface owners, while several Table, Tabs, Checkbox, Switch, Select and Button states are still native MUI defaults or direct props. Record these as deliberate defaults or promote them to semantic roles only after the role/state matrix is complete.
+
+### Result and next
+- Account, authentication and admin descendant ownership has now been traced for the primary route components and shared form/editor primitives.
+- Remaining work is concentrated in the full field-family matrix, button/icon-action semantic matrix, page/component responsive states and caller parity; no source style should be changed by visual guesswork.
+- Next: inspect every current BUTTON_STYLES and ICON_ACTION_STYLES consumer, classify role equivalence vs accidental aliasing, then map direct MUI button props and icon-button states to the semantic role owner.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
