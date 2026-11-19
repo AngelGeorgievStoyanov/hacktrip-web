@@ -82,7 +82,7 @@ export const TRIP_FILTER_SEARCH_INPUT_SX = {
   '& .MuiInputBase-input': {
     padding: '8px 8px 8px 0',
     paddingLeft: 'calc(1em + 32px)',
-    transition: 'width 200ms',
+    transition: 'width 300ms cubic-bezier(0.4, 0, 0.2, 1)',
     width: '100%',
     '@media (min-width:600px)': {
       width: '12ch',
