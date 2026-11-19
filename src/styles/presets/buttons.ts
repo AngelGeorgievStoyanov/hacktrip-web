@@ -142,6 +142,8 @@ export const ICON_ACTION_STYLES = {
 
 export const BUTTON_STYLES = {
   primary,
+  create: primary,
+  add: primary,
   edit: primary,
   save: primary,
   primaryWide,
