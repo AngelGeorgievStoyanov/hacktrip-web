@@ -323,12 +323,12 @@ Confirmed local declarations:
 | `src/components/common/NotificationProvider.tsx` | Shared Snackbar + Alert provider; severity and placement are data-driven from notification constants. | Alert width is local `sx`; no custom Card/Paper surface. Confirm consistent global Alert/Snackbar states in theme overrides. | PARTIAL — shared provider, small local presentation override. |
 | `src/components/layout/Header.tsx` | MUI AppBar/Toolbar and Drawer; drawer Paper uses local elevation 12 and height auto; breakpoint and menu icon size use shared constants. | Desktop and drawer navigation Buttons are direct MUI defaults; local `NAV_BUTTON_SX`, toolbar padding, Drawer Paper treatment and IconButton sizing lack semantic Navigation/Menu contracts. | CHANGE REQUIRED — navigation and Drawer surface parity incomplete. |
 | `src/components/layout/Footer.tsx` | CSS Module consumer | Use shared footer/page gutter |
-| `src/components/CustomFileUploadButton.tsx` | Raw IconButton and Button | Use shared Upload/Select and icon roles |
+| `src/components/CustomFileUploadButton.tsx` | Camera IconButton and contained Button-as-label now consume named upload-trigger presets; wrapper width is centralized. | Verify shared Upload semantic action role and disabled/focus state parity with theme. | PARTIAL — trigger geometry/skin centralized. |
 | `src/components/images/AppImage.tsx` | Central preset resolver; no arbitrary style prop | Preserve boundary; define a named preset for each shared image role |
 | `src/components/images/ImageGallery.tsx` | CSS Module + local `sx` | Use shared image button/frame presets |
 | `src/components/images/ImageLightbox.tsx` | MUI Dialog Paper inherits shared Dialog surface then intentionally overrides background with `UI_COLORS.surface.imageLightbox`; close/previous/next share local `controlSx`. | Overlay icon control appearance and three repeated position/z-index rules are local; caption and image-stage composition need named lightbox/overlay contracts. | PARTIAL — dedicated Dialog surface variant, overlay controls local. |
-| `src/components/images/ImageUploadField.tsx` | Local preview geometry/radius/objectFit + raw buttons | Use image-preview preset + Remove/Upload roles |
-| `src/components/auth/ProfileImage.tsx` | Fullscreen preview uses MUI Dialog; image stage consumes `imageLightbox`/`imageControl` color tokens; image rendering delegates to AppImage presets. | Dialog Paper itself has shared Dialog surface but inner stage overrides it; circular frame, remove control, preview border/radius/shadow and close control remain local. | PARTIAL — image surface tokens exist, component geometry/actions remain local. |
+| `src/components/images/ImageUploadField.tsx` | Named image-upload presets own root/header/status/count/limit, scrollable preview list/rows/thumbnails/filename, processing indicator sizing and remove controls; CustomFileUploadButton owns both upload trigger modes. | Warning Alert remains MUI-theme-owned; verify warning/focus/disabled parity in the shared feedback/action audit. | PARTIAL — upload-specific local sx migrated. |
+| `src/components/auth/ProfileImage.tsx` | Existing profile image display still uses AppImage presets, Dialog and image tokens; separate ProfileImageUpload now uses shared upload trigger, preview-row, thumbnail, filename and remove presets. | Existing circular frame, existing-image delete control, fullscreen stage and close control remain local. | PARTIAL — selected-file upload flow centralized; existing-image presentation remains open. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Local image button dimensions + raw Delete/Upload | Reuse profile-image/action roles |
 | `src/components/admin/AdminImages.tsx` | Preview uses MUI `Dialog` and inherits `MuiDialog.paper` surface; inventory tables use `TableContainer component={Paper}` and `ADMIN_TABLE_CONTAINER_SX`. | Standalone Paper skin is not covered by general `MuiPaper` override; preview Dialog inherits shared surface but image-stage geometry/close control are local; selection, action and pagination controls remain direct MUI. | PARTIAL — Dialog surface centralized; Paper/table and actions need contracts. |
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Local overlay/text sizes/gradient | Use shared placeholder overlay tokens/typography |
@@ -584,7 +584,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 
 | File | Status |
 |---|---|
-| `src/components/CustomFileUploadButton.tsx` | CHANGE REQUIRED |
+| `src/components/CustomFileUploadButton.tsx` | PARTIAL — Upload trigger visuals now use named presets; semantic action/theme state audit remains open. |
 | `src/components/common/BackButton.tsx` | CHANGE REQUIRED |
 | `src/components/common/ConfirmDialog.tsx` | CHANGE REQUIRED |
 | `src/components/common/ExpandableText.tsx` | PARTIAL |
@@ -599,7 +599,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `src/components/images/AppImage.tsx` | PARTIAL |
 | `src/components/images/ImageGallery.tsx` | PARTIAL |
 | `src/components/images/ImageLightbox.tsx` | CHANGE REQUIRED |
-| `src/components/images/ImageUploadField.tsx` | CHANGE REQUIRED |
+| `src/components/images/ImageUploadField.tsx` | PARTIAL — upload layout, preview, count, limit, processing and remove visuals use named presets; Alert/theme state parity remains open. |
 | `src/components/layout/Footer.tsx` | PARTIAL |
 | `src/components/layout/Header.tsx` | CHANGE REQUIRED |
 | `src/components/maps/AddressAutocomplete.tsx` | PARTIAL |
@@ -617,7 +617,7 @@ Statuses are intentionally conservative. PARTIAL means inspected, not migrated/v
 | `src/components/auth/ForgotPasswordForm.tsx` | CHANGE REQUIRED |
 | `src/components/auth/LoginForm.tsx` | PARTIAL |
 | `src/components/auth/ProfileForm.tsx` | CHANGE REQUIRED |
-| `src/components/auth/ProfileImage.tsx` | CHANGE REQUIRED |
+| `src/components/auth/ProfileImage.tsx` | PARTIAL — ProfileImageUpload selection/preview/remove composition now uses shared upload presets; existing image display/delete/lightbox controls remain open. |
 | `src/components/auth/RegisterForm.tsx` | PARTIAL |
 | `src/components/auth/ResendVerificationForm.tsx` | CHANGE REQUIRED |
 | `src/components/auth/ResetPasswordForm.tsx` | CHANGE REQUIRED |
@@ -3233,12 +3233,12 @@ The same TripCard/EditPointPage/EditTripLayout compositions may select AppImage 
 `ImageUploadField` public props are only `files`, `setFiles`, optional `existingCount` and optional `maxImages`. It has no public sx/style/className or render-slot prop.
 
 - It owns the upload row, CustomFileUploadButton integration, processing indicator, uploaded count, max-image warning, compression/error warning, preview list, remove-one and remove-all controls.
-- Current visual composition is largely local sx: flex layout, preview scroll container, preview row border/radius/padding, fixed 55×45 preview image, text overflow and remove controls.
-- Its error state is a local warning Alert; processing state disables file selection/removal and displays CircularProgress; max-count state displays inline error Typography.
+- Upload-specific composition now consumes `src/styles/presets/image-upload.ts`: root/header/status/count/limit, scrollable preview list/row, 55×45 thumbnail, filename wrapping and remove/remove-all action geometry. No caller styling props were introduced.
+- Its error state remains a local warning Alert; processing still disables file selection/removal and displays CircularProgress; max-count still displays inline error Typography. These states now retain their existing behavior while their surrounding presentation is named and centralized.
 - It delegates actual file input/button behavior to `CustomFileUploadButton`. That child is a separate shared visual owner and must be included in the later action/upload field matrix.
 - Direct consumers confirmed from exact branch-ref fetches: `PointForm.tsx`, `TripForm.tsx`, `EditTripLayout.tsx`, `AdminUserProfileImage.tsx`. Profile image upload does not use ImageUploadField; it has a separate single-file `ProfileImageUpload` implementation in `ProfileImage.tsx`.
 
-**Ownership conclusion:** do not pass route-specific styling into ImageUploadField. Centralize upload field visuals at this owner and its CustomFileUploadButton child; keep surrounding form spacing with each caller. Compare the separate profile upload flow before designing a common upload contract.
+**Ownership conclusion:** do not pass route-specific styling into ImageUploadField. The shared upload field and CustomFileUploadButton visuals now live in `src/styles/presets/image-upload.ts`; caller-specific form spacing remains at the route owner. ProfileImageUpload retains its separate single-file validation/object-URL lifecycle but reuses the same preview and trigger contracts.
 
 ### E. Profile image and password subflows
 
@@ -3248,7 +3248,7 @@ The same TripCard/EditPointPage/EditTripLayout compositions may select AppImage 
 
 - `ProfileImage` owns loading/no-image/image-present/deleting/fullscreen states. It uses AppImage presets `profile` and `profileLightbox`, local circular image/button geometry, local dialog content surface and icon controls.
 - Delete action uses shared `useConfirm`; success/error uses shared `useNotification`.
-- `ProfileImageUpload` is not the generic ImageUploadField. It validates a single selected file, owns object URL lifecycle and preview/remove controls, and delegates selection to CustomFileUploadButton.
+- `ProfileImageUpload` remains distinct from generic ImageUploadField. It validates one selected file and owns its object URL lifecycle; selection uses CustomFileUploadButton, while field/preview/thumbnail/filename/remove visuals now consume shared image-upload presets.
 - The existing image and pending upload are distinct states and should not be collapsed into one component without preserving the current behavior.
 
 #### Change password
@@ -3293,11 +3293,11 @@ ThemeProvider / CssBaseline
 | AddressAutocomplete | loading/searching, info notice, disabled search | TextField/Button/Alert in shared component; caller sx overrides | Field focus/error/disabled, button variants, info feedback and caller override removal |
 | PointLocationPicker | maps loading, locating, map/address selection, error notice | Map frame, Buttons, Snackbar/Alert local sx | Shared map controls, loading/disabled/error states and responsive arrangement |
 | TripLocationPicker | maps loading, address search, map selection, info notice | Separate map/address implementation | Compare with point picker; unify visual contracts without assuming behavior equivalence |
-| ImageUploadField | processing, error, image limit, previews, remove-one/remove-all | Local preview/list/upload layout and warning Alert | Shared upload row, preview, remove action, processing/disabled and warning states |
+| ImageUploadField | processing, error, image limit, previews, remove-one/remove-all | Named image-upload presets for layout, previews and actions; warning Alert remains local/theme-owned | Verify warning Alert theme parity and disabled/focus states; upload-specific local sx removed |
 | AppImage | loading delegated to Next Image, thumbnail fallback, error/placeholder | IMAGE_PRESETS + inline style transport | Preset rendering contract and fallback frame contract without React style |
 | SocialObjectPlaceholder | asset pending/selected | Local Box/Image/overlay/Typography | Shared placeholder surface/overlay/typography; parent owns aspect ratio |
 | ProfileImage | loading, empty, image, deleting, fullscreen | Local circular image controls and Dialog | Shared avatar/image frame, icon action, dialog surface, disabled/loading |
-| ProfileImageUpload | selected file, validation error, preview, remove | Local upload/preview controls | Compare with generic ImageUploadField; one shared file-selection contract if behavior permits |
+| ProfileImageUpload | selected file, validation error, preview, remove | Shared CustomFileUploadButton and image-upload preview presets; validation/object URL lifecycle remains local | Keep separate single-file validation and lifecycle; verify shared action disabled/focus state parity |
 | ChangePasswordForm | collapsed/expanded, validation, submitting | Shared fields/button presets plus local margins | Password field and form-action contracts |
 | ConfirmDialogProvider | closed/open, confirm/cancel | Global MUI Dialog and two raw Buttons | Semantic Confirm vs Cancel action presets and shared dialog surface |
 | NotificationProvider | hidden/visible, four severities, duration/position | Global Snackbar + Alert; defaults from notification constants | Shared severity/variant/placement/close contracts and theme ownership |
@@ -4855,3 +4855,41 @@ No application source code was changed. No branch was created. No build, tests, 
 - AddressAutocomplete owner and all direct consumers: **SOURCE CHANGES APPLIED**.
 - Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
 - Next: migrate the already-audited `ImageUploadField` and `CustomFileUploadButton` owner chain, including all direct consumers, processing/error/limit states and preview/remove controls. Re-read this document and the relevant owner/caller sections before editing.
+
+
+## 11.33 — ImageUploadField, CustomFileUploadButton and profile upload consumers (2026-11-19)
+
+### Scope and preflight
+- Re-read Styling API policy (Section 1.4), the shared image/upload ownership graph and route composition (Sections 11.13, 11.17–11.18), the owner-layer token/preset audit (Section 11.26), and the immediately preceding NEXT in Section 11.32.
+- Confirmed branch: `feature/frontend-modernization`. No branch was created.
+- Exact direct-consumer searches and branch-ref source reads confirmed:
+  - `ImageUploadField`: `PointForm`, `TripForm`, `EditTripLayout`, `AdminUserProfileImage`.
+  - `CustomFileUploadButton`: `ImageUploadField` and `ProfileImageUpload` in `ProfileImage.tsx`.
+- The two upload flows remain distinct: generic multi-image validation/compression/limit handling versus single profile-image validation/object-URL handling.
+
+### Source changes
+1. `src/styles/presets/image-upload.ts` — new shared owner for upload field root/header/status/count/limit, processing indicator size, preview list/row/thumbnail/filename, remove/remove-all actions, profile selected-file preview, upload trigger modes and caller wrapper geometry.
+2. `src/components/images/ImageUploadField.tsx` — replaced local upload layout, count/limit/processing sizing, preview list/row/thumbnail/filename and remove control sx with named presets. Warning Alert and all upload state logic remain local.
+3. `src/components/CustomFileUploadButton.tsx` — both camera IconButton and standard contained Button modes now consume named upload-trigger presets; the 30ch wrapper is centralized. Disabled calculation, max-count gate, accept/multiple and file input forwarding are unchanged.
+4. `src/components/auth/ProfileImage.tsx` — ProfileImageUpload now consumes shared profile field/preview/thumbnail/filename/remove presets while retaining its independent one-file validation and object-URL lifecycle. Existing ProfileImage display/delete/fullscreen Dialog behavior was not migrated in this package.
+5. `src/components/points/PointForm.tsx` — removed the redundant width-only wrapper around ImageUploadField; the shared field already owns width 100%.
+6. `src/components/trips/TripForm.tsx` — moved the existing upload wrapper inset into `TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX`.
+7. `src/components/trips/EditTripLayout.tsx` — moved the submitting pointer-events/opacity wrapper into `getImageUploadSubmittingWrapperSx`; the submitting state and upload retry behavior are unchanged.
+8. `src/components/admin/AdminUserProfileImage.tsx` — no caller-specific override was needed; it receives the shared owner migration directly.
+
+### Preserved behavior
+- Generic upload: maximum image count, existing-count accounting, 25 MB input limit, JPEG compression/quality fallback, 2 MB compressed cap, sequential processing, object URL cleanup, retryable selected files, processing lock, warning/error messages and remove-one/remove-all.
+- Shared trigger: camera/text modes, disabled state, maximum count, accepted MIME types, multiple selection and native input reset/forwarding.
+- Profile upload: one-file MIME/size validation, input reset, object URL cleanup, preview and selected-file removal.
+- No API, backend, business logic, upload concurrency, data, validation rule or route behavior changes.
+
+### Result
+- **7 source files changed** (one new preset file and six existing component/consumer files).
+- Upload-specific visual values now flow through one named preset owner; the two upload flows retain separate state/validation behavior.
+- Existing image display/lightbox styling in ProfileImage and broader AdminUserProfileImage avatar/action styling remain outside this bounded migration.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- ImageUploadField + CustomFileUploadButton owner chain and all confirmed direct consumers: **SOURCE CHANGES APPLIED**.
+- Stage 1 global inventory remains IN PROGRESS; it does not block these bounded migrations.
+- Next: migrate the already-audited `ImageGallery` owner and both direct consumers (`PointSection`, `DayImagesGallery`) end-to-end, including its CSS Module, responsive grid/focus states, AppImage frames and ImageLightbox composition. Re-read this document and Sections 11.17–11.18 before editing.
