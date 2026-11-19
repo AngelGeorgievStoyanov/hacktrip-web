@@ -19,6 +19,7 @@ export const PROFILE_IMAGE_CONTAINER_SX = {
 } as const;
 
 export const PROFILE_IMAGE_DELETE_TRIGGER_SX = {
+  ...ICON_ACTION_STYLES.base,
   display: 'flex',
   p: 0,
   border: 0,
@@ -28,11 +29,6 @@ export const PROFILE_IMAGE_DELETE_TRIGGER_SX = {
   position: 'relative',
   translate: '0 28px',
   zIndex: 1,
-  '&:focus-visible': {
-    outline: '2px solid',
-    outlineColor: 'primary.main',
-    outlineOffset: 3,
-  },
 } as const;
 
 export const PROFILE_IMAGE_DELETE_ICON_SX = {
@@ -41,6 +37,7 @@ export const PROFILE_IMAGE_DELETE_ICON_SX = {
 } as const;
 
 export const PROFILE_IMAGE_VIEW_TRIGGER_SX = {
+  ...ICON_ACTION_STYLES.base,
   display: 'block',
   position: 'relative',
   width: '100%',
@@ -52,11 +49,6 @@ export const PROFILE_IMAGE_VIEW_TRIGGER_SX = {
   boxShadow: UI_SHADOWS.profileImageControl,
   cursor: 'pointer',
   background: 'transparent',
-  '&:focus-visible': {
-    outline: '2px solid',
-    outlineColor: 'primary.main',
-    outlineOffset: 3,
-  },
 } as const;
 
 export const PROFILE_IMAGE_FULLSCREEN_STAGE_SX = {
