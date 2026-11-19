@@ -16,7 +16,6 @@ import {
   TRIP_LOCATION_HINT_SX,
   TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX,
 } from '@/styles/presets/map-controls';
-import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface TripLocationPickerProps {
   latitude: string;
