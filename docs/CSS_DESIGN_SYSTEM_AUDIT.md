@@ -716,7 +716,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 
 | `src/components/admin/AdminFailedLogs.tsx` | Uses Paper table, Checkbox selection and direct pagination Buttons. | Map checkbox and pagination contracts; inspect ADMIN_TABLE_CONTAINER_SX / ADMIN_PAGINATION_SX consumers and all states. | PARTIAL — direct action roles remain. |
-| `src/components/admin/AdminImages.tsx` | Uses shared admin table/pagination presets and Dialog for preview. | Multiple direct pagination Buttons, local preview IconButton positioning, local image/status spacing and surface details remain. | CHANGE REQUIRED. |
+| `src/components/admin/AdminImages.tsx` | Outlined Paper table inherits the shared surface; all Previous/Next controls consume `ADMIN_PAGINATION_BUTTON_SX`; preview trigger, thumbnail, URL cell, close control, dialog content and image stage consume named `ADMIN_IMAGE_*` presets. | Verify toolbar Generate/Select action roles, Checkbox states, responsive table behavior and all preview/selection/pending states; no local preview IconButton position or image spacing object remains in the component. | PARTIAL — table, pagination and preview presentation centralized; action/state parity remains open. |
 | `src/components/admin/AdminReports.tsx` | Paper table uses shared admin table container preset. | Direct action and pagination Buttons need semantic contracts; verify row states. | CHANGE REQUIRED. |
 | `src/components/admin/AdminRouteNotFoundLogs.tsx` | Paper table uses shared admin table container preset. | Direct pagination Buttons, disclosure/expand action and local typography/spacing sx remain. | CHANGE REQUIRED. |
 | `src/components/admin/AdminUserProfileImage.tsx` | Avatar/zoom trigger uses shared admin profile-image preset; Delete uses `BUTTON_STYLES.dangerText`; Upload/Replace uses semantic `BUTTON_STYLES.upload` through `ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX`; table/layout and image preview delegate to shared owners. | Verify mutation pending/disabled states and responsive alignment across the AdminUserForm caller; no component-local sx object remains. | PARTIAL — action and avatar presentation centralized; caller/state verification remains open. |
@@ -6213,3 +6213,28 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the remaining admin image controls and image preset/caller parity; do not duplicate the already-centralized AppImage, ImageLightbox or profile-image roles.
+
+
+## 11.85 — AdminImages pagination contract completion (2026-11-19)
+
+### Scope and preflight
+- Continued with the remaining admin image inventory controls after the profile-image consumers.
+- Re-opened `AdminImages.tsx` and confirmed the preview trigger, thumbnail, close control, dialog content and preview frame already consume named `ADMIN_IMAGE_*` presets.
+- Found three Previous/Next controls in the Database and Orphan image tabs that did not yet consume the shared admin pagination width preset.
+
+### Source changes
+- Applied `ADMIN_PAGINATION_BUTTON_SX` to the remaining Database Previous and Orphan Previous/Next controls.
+- Reconciled the Section 10.1 AdminImages row to reflect current shared surface, pagination and preview ownership.
+
+### Preserved
+- Page state, query keys, disabled conditions, selection behavior, 100-image generation limit, thumbnail generation mutation, preview open/close, URLs, error/result alerts and table contents.
+- No API, data, route or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- All audited AdminImages Previous/Next controls: **SHARED PAGINATION CONTRACT APPLIED**.
+- Toolbar action semantics, Checkbox states, responsive table behavior and complete preview/selection/pending parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 admin image/table entry in order: `src/components/admin/AdminUsers.tsx` and verify the Edit/Delete, pagination and avatar contracts against the current source.
