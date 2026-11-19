@@ -7577,7 +7577,7 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Coverage and method
 - Re-fetched the live recursive tree at the current branch head and enumerated all route-group page files, route-group layouts, root/error boundaries and the supporting metadata/image endpoints.
-- Read the current source of all **26 page entry points** across account, admin, auth, public and global error/not-found routes, plus the four shared layout/root entry points. The matrix below records each page's direct rendered component tree and the style-owner chain visible in source.
+- Read the current source of all **26 page entry points** across account, admin, auth, public and global error/not-found routes, plus the six shared layout/root entry points. The matrix below records each page's direct rendered component tree and the style-owner chain visible in source.
 - This is a route-composition/source-ownership pass, not a complete recursive audit of every descendant component's internal states. Descendant component declarations and all their callers still need to be reconciled against Section 10.1 and the semantic matrices.
 - No build, tests, lint, CI or browser checks were run.
 
@@ -7652,3 +7652,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Shared route shells and global error/not-found boundaries are mapped separately.
 - The matrix exposes the remaining cross-cutting checks rather than marking pages fully verified: descendant state coverage, responsive behavior, MUI field/action states, image frame ratios, CSS Module breakpoints and route-specific interaction states.
 - Next pass: walk the component descendants and their direct consumers for each route group, reconcile each with the Section 10.1 ledger, then mark a route VERIFIED only after its full component/style/state chain is closed.
+
+
+## 11.138 — Public-route descendant component ownership pass (2026-11-19)
+
+### Descendant trees confirmed from source
+
+| Route family | Rendered descendant chain | Style ownership / open checks |
+|---|---|---|
+| Home / | HomeHero → WelcomeHeading → HomeTrips → TripList → TripCard → AppImage / SocialObjectPlaceholder and day/image controls. | Home intro/title presets → TripList layout/typography presets → TripCard card/image presets → AppImage image presets/CSS Module → theme Card surface. Confirm the WelcomeHeading module's remaining 25px/16px geometry against shared spacing and verify card/image frame ratios. |
+| Trips /trips | TripFilters → AppBar/Toolbar → group/transport/sort Selects + InputBase search → WelcomeHeading/intro → TripList/TripCard → TripPagination. | Filter preset + Typography presets + card/image presets + TripPagination CSS Module. Gap: MuiTextField theme defaults do not cover Select, InputBase or InputLabel; filter controls have only partial direct preset coverage. Map label, hover, focus, selected, disabled and keyboard states as a dedicated field-family contract. Search surface still contains local translucent rgba values. |
+| Trip details /trips/[id] | TripDetailsView → sticky TripDaysNav + TripGroupSocialActions/SocialConfigStatus/CommentsToggle; primary row → TripDetails/TripActions/EngagementBar/FavoriteButton + DayImagesGallery/ImageGallery/AppImage/ImageLightbox; map row → TripMapSection/GoogleMapView + PointsSection/PointSection/PointActions; conditional CommentsSection/RepliesSection. | TripDetailsView CSS Module owns page grid/container queries; trip-details, pagination, social, card, map-controls, image-gallery, comments and buttons presets own repeated presentation; MuiCard/MuiDialog theme owns surfaces. Keep selected-day and comment-target state in the view. Verify all day/point/image comment targets, sticky header, mobile map stepper and image overlay states. |
+| Live tracking /live-tracking | LiveTracker → useGoogleMapsLoader + useLiveTracking → GoogleMap/MarkerF/PolylineF + action row + telemetry grid. | Tracking presets own map frame, SDK options, status, action row and telemetry; Google Maps container/polyline objects are SDK config, not React style. Start/Stop use semantic roles; Reset/Follow still use MUI defaults. Verify permission denial, loading, active/stopped/error and follow/pan states. |
+| About /about | AboutPage CSS Module → WelcomeHeading CSS Module → editorial sections and Next Image assets. | About page owns editorial composition; image dimensions/sizes use named image presets where applicable. Verify all image frames and compare repeated editorial spacing/type values against the intentionally separate About editorial token set. |
+| Privacy /privacy-policy | LegalPage CSS Module → long-form terms sections, TOC anchors and native return link. | CSS Module owns document structure; legal link uses LEGAL_BACK_LINK_SX; theme emits legal CSS variables. Verify TOC anchor/focus, long-content readability and responsive padding; retain unique legal/editorial values where no shared role exists. |
+
+### Cross-component findings from the descendant pass
+
+1. **Trip filter field family is not yet centrally complete.** The page uses MUI Select, InputBase and InputLabel directly. The current MuiTextField theme override only sets TextField variant/size, so it cannot establish a complete shared contract for these filter controls. Do not assume the theme currently standardizes every field family.
+2. **Trip-day navigation and card pagination are separate owners.** TripDaysNav uses MUI Pagination with TRIP_DAY_PAGE_ITEM_SX; TripCard uses MUI Pagination/MobileStepper defaults; public TripPagination is native anchors with a CSS Module. Keep these distinct semantic patterns, but verify shared focus/selected/disabled behavior and avoid accidental visual drift.
+3. **Trip Details has intentionally layered layout ownership.** The CSS Module owns the parent responsive grid/container query; presets own sticky header, metadata, point/image/map/comment surfaces and action rows; theme owns Card/Dialog surfaces. Do not move the parent grid into a generic preset or collapse frame-specific child geometry without preserving the existing ordering and width thresholds.
+4. **Map breakpoint responsibilities differ.** TripMapSection uses the named BREAKPOINTS.tripDetails threshold for mobile scroll behavior, while TripDetailsView CSS uses a 1120px container threshold for stacking and 600px media spacing. These control different behaviors; verify their interaction rather than forcing them to one number.
+5. **Social interaction colors remain partly component-prop-owned.** Like/Favorite/Report and TripGroupSocialActions use shared icon-action/presentation presets, but active/inactive state also uses direct MUI color props. Complete the semantic action-state matrix before centralizing these props or changing their appearance.
+
+### Result and next
+- The first public-route descendant pass is complete for Home, Trips, Trip Details, Live Tracking, About and Privacy Policy.
+- Route-level ownership is now more precise than the page import list: key shared descendants and style owners are recorded, and the remaining gaps are explicit.
+- Next: trace Account/Auth descendants (forms, profile, trip/point editors), then Admin descendants; after those trees, consolidate the button/icon-action and field-family semantic matrices without changing visual values by guesswork.
+- No application source files were changed. No build, tests, lint, CI or browser validation was run.
