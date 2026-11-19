@@ -7095,3 +7095,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the remaining public/legal and common CSS Module rows in Section 10.1; inspect the current CSS source before changing any value already tokenized.
+
+
+## 11.125 — Section 10.1 migration progress snapshot (2026-11-19)
+
+### Operational register status
+- Total entries in the existing Section 10.1 register: **127**.
+- **40 MIGRATED**.
+- **51 PARTIAL** — presentation ownership is partly centralized or source migration is complete, but caller/state/responsive verification or a specific remaining contract is still open.
+- **0 CHANGE REQUIRED** — every visual candidate has now been inspected and classified; there are no untouched rows left in that status.
+- **36 other classified entries** — structural exports/wrappers, data/asset registries, approved exceptions or other non-visual/scoped records. They are not independent UI migrations.
+
+### Important interpretation
+- This is a first-pass migration/reconciliation milestone, **not** final audit closure.
+- The 51 PARTIAL rows remain active work. They must be closed or explicitly retained as unique structural composition after their listed caller/state checks; they are not silently treated as complete.
+- The 36 non-visual/scoped entries remain in the register so the original 127-entry inventory is preserved.
+- SEO remains separate. The only approved React-style exception remains the Satori/ImageResponse renderer in `src/lib/images/renderTripOgImage.tsx`, as recorded in Section 11.58.
+- No build, tests, lint, CI or browser validation has been run.
+
+### Current position and next exact item
+- Current document position: **Section 11.125**, after the current-source reconciliation/migration batches in Sections 11.63–11.124.
+- Continue the original Section 10.1 order through the remaining **PARTIAL** entries, starting with `src/components/points/PointCard.tsx`: verify card geometry ownership, move-button visibility/padding, and responsive/caller behavior. Then proceed to PointForm, PointActions, PointList, TripCard and TripActions in the same register order.
