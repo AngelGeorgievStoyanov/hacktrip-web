@@ -820,7 +820,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/layout/Header.tsx` | Header root/welcome/menu/toolbar/drawer Paper/nav layout use HEADER_* presets; navigation actions use BUTTON_STYLES.navigation. | Responsive state, route visibility and handlers remain component-owned; no local presentation object remains. | MIGRATED — application shell presentation centralized. |
 | `src/components/placeholders/SocialObjectPlaceholder.tsx` | Root, overlay gradient, title and description use named `SOCIAL_OBJECT_PLACEHOLDER_*` presets with semantic color tokens; decorative Next Image uses a CSS Module class for width/height/object-fit; image asset selection is state-driven. | No React `style` prop remains; unique absolute image/overlay composition is intentionally split between the preset and CSS Module. | MIGRATED — placeholder visual contract is preset/CSS Module-owned. |
 | `src/components/trips/PointsSection.tsx` | Pure composition wrapper delegates selected point rendering to PointSection. | No visual skin of its own; selected-point section wrapper is semantic structure only. Child surface is owned by PointSection. | PARTIAL — composition only; consumer trace required. |
-| `src/components/trips/TripDetailsView.tsx` | Uses CSS Module for unique trip-detail layout; sticky social controls consume STICKY_SOCIAL_SX and spacing token PAGE_CONTENT_PADDING. | Sticky shell geometry/background and component composition remain local; actual surfaces are delegated to TripDetails, gallery, comments and map children; no Card/Paper here. | PARTIAL — composition/layout owner; child surface contracts remain to audit. |
+| `src/components/trips/TripDetailsView.tsx` | Sticky header uses `getTripDetailsStickyHeaderSx()`; sticky social surface uses `STICKY_SOCIAL_SX`; main trip info/images/map/points/comments composition uses CSS Module container-query layout and shared child components. | Unique grid/container-query geometry remains local; repeated 20px info-row margins now use the shared `--ht-spacing-md-plus` token. | PARTIAL — sticky shell and repeated spacing centralized; unique responsive composition retained. |
 | `src/components/common/ConfirmDialog.tsx` | Dialog Paper/surface and content/action spacing inherit shared MUI Dialog defaults; No uses semantic `BUTTON_STYLES.cancel`; Yes uses `BUTTON_STYLES.confirm`. | Verify focus trap/autofocus, Escape/backdrop close, repeated confirm calls and keyboard/disabled behavior; no component-local dialog or action geometry remains. | PARTIAL — Cancel/Confirm roles centralized; interaction/accessibility state parity remains open. |
 | `app/api/og/trips/[id]/route.ts` | Server route parses trip/day parameters, loads OG data and delegates image generation to `renderTripOgImage`; sets immutable cache headers. | No UI or CSS declarations in the route. Visual implementation is in the supporting renderer `src/lib/images/renderTripOgImage.tsx`; route cache/data behavior is not a styling concern. | STRUCTURAL — server image endpoint only. |
 | `app/error.tsx` | Global route error uses MUI Alert and Typography; retry action is a MUI Button. | Page layout uses GLOBAL_ERROR_PAGE_SX and retry uses BUTTON_STYLES.primary; Alert severity inherits MUI defaults. | MIGRATED — global error composition/action centralized. |
@@ -7041,3 +7041,31 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next trip-details composition entry: `src/components/trips/TripDetailsView.tsx`. Verify the sticky social shell and CSS Module layout against the named social/layout tokens and direct child surfaces.
+
+
+## 11.123 — TripDetailsView sticky shell and shared 20px spacing token (2026-11-19)
+
+### Scope and findings
+- Continued with the next trip-details composition entry after SocialObjectPlaceholder.
+- Re-opened `TripDetailsView.tsx`, its CSS Module, the sticky social preset and the UI spacing/theme bridge.
+- The earlier ledger note that sticky shell geometry/background remained local was stale: the sticky header and social surface already consume named presets.
+- The CSS Module's unique container-query grid remains appropriate, but its repeated 20px info-row margins matched the 20px spacing already used by TripPagination.
+
+### Source changes
+- Promoted the 20px spacing value from the pagination-specific `paginationOuter` token to generic `UI_SPACING.mdPlus`, exposed as `--ht-spacing-md-plus`.
+- Added the missing `--ht-spacing-xl` and `--ht-spacing-xxl` theme variables required by the existing spacing scale; this also completes the CSS-variable bridge consumed by LegalPage.
+- Updated TripPagination and TripDetailsView CSS Modules to consume the generic token.
+- Reconciled the Section 10.1 TripDetailsView row.
+
+### Preserved
+- Exact 20px spacing, container-query breakpoints, grid columns/order, sticky header/social behavior, active-day state, comment placement and all child component ownership.
+- No API, route, data, SEO or business logic changed.
+
+### Result and status
+- **4 source files changed** plus the Section 10.1 ledger reconciliation.
+- Repeated 20px spacing and the full used spacing-variable bridge: **SHARED TOKENS APPLIED**.
+- Unique TripDetailsView responsive grid/container-query geometry remains **CSS MODULE-OWNED**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the remaining CSS Module/token audit entries in Section 10.1; inspect About and public page geometry only after all shared-token candidates are verified.
