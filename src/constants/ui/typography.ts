@@ -9,6 +9,7 @@ export const TYPOGRAPHY = {
   fontWeightLight: 300,
   fontWeightRegular: 400,
   fontWeightMedium: 500,
+  fontWeightSemiBold: 600,
   fontWeightBold: 700,
   h1: { fontSize: '6rem', fontWeight: 300, lineHeight: 1.167, letterSpacing: '-0.01562em' },
   h2: { fontSize: '3.75rem', fontWeight: 300, lineHeight: 1.2, letterSpacing: '-0.00833em' },
