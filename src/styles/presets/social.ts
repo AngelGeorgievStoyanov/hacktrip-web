@@ -11,6 +11,13 @@ export const SOCIAL_ACTIONS_SX = {
   flexWrap: 'wrap',
 } as const;
 
+/** Compact social-action alignment used by the point editor action row. */
+export const POINT_SOCIAL_ACTIONS_SX = {
+  ...SOCIAL_ACTIONS_SX,
+  gap: 0.25,
+  my: 0,
+} as const;
+
 /** Compact count badge metrics shared by small social action buttons and image overlays. */
 export const SOCIAL_BADGE_COMPACT_STYLE = {
   fontSize: '0.65rem',
