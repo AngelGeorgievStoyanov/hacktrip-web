@@ -9,11 +9,10 @@ import { ExpandableText } from '@/components/common/ExpandableText';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
 import {
-  CARD_CONTENT_TOP_PADDING,
-  CARD_HEADING_TEXT_STYLE,
-  CARD_TEXT_BLOCK_STYLE,
-  CARD_TEXT_INSET_SX,
-} from '@/styles/presets/cards';
+  POINT_SECTION_CARD_SX, POINT_SECTION_CONTENT_SX, POINT_SECTION_EMPTY_IMAGE_FRAME_SX,
+  POINT_SECTION_DESCRIPTION_SX, POINT_SECTION_ACTION_ROW_SX, POINT_SECTION_NOTE_SX,
+  POINT_SECTION_TITLE_SX,
+} from '@/styles/presets/trip-details';
 import { POINT_SECTION_IMAGE_FRAME_SX } from '@/styles/presets/image-gallery';
 
 interface PointSectionProps {
@@ -22,14 +21,6 @@ interface PointSectionProps {
   togglePointComments: (target: CommentTarget) => void;
 }
 
-const POINT_CARD_STYLE = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  maxWidth: '500px',
-  margin: '20px auto',
-  ...CARD_CONTENT_TOP_PADDING,
-} as const;
 
 export function PointSection({
   point,
@@ -46,9 +37,9 @@ export function PointSection({
 
   return (
     <section aria-label="Trip points">
-      <Card sx={POINT_CARD_STYLE}>
-        <CardContent sx={{ width: '100%', boxSizing: 'border-box' }}>
-          <Typography variant="h5" component="div" sx={[CARD_TEXT_INSET_SX, POINT_NAME_STYLE]}>
+      <Card sx={POINT_SECTION_CARD_SX}>
+        <CardContent sx={POINT_SECTION_CONTENT_SX}>
+          <Typography variant="h5" component="div" sx={[CARD_TEXT_INSET_SX, POINT_SECTION_TITLE_SX]}>
             Point name: {point.name}
           </Typography>
 
@@ -64,24 +55,24 @@ export function PointSection({
               />
             </Box>
           ) : (
-            <Box sx={{ ...POINT_SECTION_IMAGE_FRAME_SX, aspectRatio: '1 / 1' }}>
+            <Box sx={POINT_SECTION_EMPTY_IMAGE_FRAME_SX}>
               <SocialObjectPlaceholder />
             </Box>
           )}
 
           {point.lat === null || point.lng === null ? (
-            <Typography variant="body2" sx={POINT_NOTE_STYLE}>
+            <Typography variant="body2" sx={POINT_SECTION_NOTE_SX}>
               NO MAP MARKER ADDED
             </Typography>
           ) : null}
 
           {point.description ? (
-            <div style={{ ...CARD_TEXT_INSET_SX, marginTop: '10px' }}>
+            <Box sx={POINT_SECTION_DESCRIPTION_SX}>
               <ExpandableText text={point.description} />
-            </div>
+            </Box>
           ) : null}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+          <Box sx={POINT_SECTION_ACTION_ROW_SX}>
             <PointActions point={point} />
             <CommentsToggle
               count={point.social.comments.count}
@@ -94,10 +85,3 @@ export function PointSection({
     </section>
   );
 }
-
-const POINT_NAME_STYLE = CARD_HEADING_TEXT_STYLE;
-
-const POINT_NOTE_STYLE = {
-  ...CARD_TEXT_BLOCK_STYLE,
-  padding: '0px 25px',
-} as const;
