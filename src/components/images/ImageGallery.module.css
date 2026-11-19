@@ -62,8 +62,8 @@
 }
 
 .imageButton:focus-visible {
-  outline: 2px solid var(--ht-color-primary);
-  outline-offset: 2px;
+  outline: var(--ht-focus-outline-width) solid var(--ht-color-primary);
+  outline-offset: var(--ht-focus-outline-offset);
 }
 
 .gridImageButton {
