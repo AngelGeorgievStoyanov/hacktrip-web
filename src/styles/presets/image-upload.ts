@@ -21,8 +21,8 @@ export const IMAGE_UPLOAD_PREVIEW_ROW_SX = {
 export const IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX = { width: 55, height: 45, objectFit: 'cover', flexShrink: 0 } as const;
 export const IMAGE_UPLOAD_PREVIEW_FILENAME_SX = { flex: 1, minWidth: 0, overflowWrap: 'anywhere' } as const;
 export const IMAGE_UPLOAD_REMOVE_BUTTON_SX = ICON_ACTION_STYLES.danger;
-export const IMAGE_UPLOAD_REMOVE_ALL_ICON_SX = { ...ICON_ACTION_STYLES.base, alignSelf: 'flex-start' } as const;
-export const IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX = { ...BUTTON_STYLES.primary, alignSelf: 'flex-start' } as const;
+export const IMAGE_UPLOAD_REMOVE_ALL_ICON_SX = { ...ICON_ACTION_STYLES.removeSelection, alignSelf: 'flex-start' } as const;
+export const IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX = { ...BUTTON_STYLES.removeSelection, alignSelf: 'flex-start' } as const;
 
 export const PROFILE_IMAGE_UPLOAD_FIELD_SX = { display: 'flex', flexDirection: 'column', gap: 1, width: '100%', alignItems: 'center' } as const;
 export const PROFILE_IMAGE_UPLOAD_PREVIEW_ROW_SX = { ...IMAGE_UPLOAD_PREVIEW_ROW_SX, width: '100%', maxWidth: 360 } as const;
@@ -30,8 +30,8 @@ export const PROFILE_IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX = { ...IMAGE_UPLOAD_PREVI
 export const PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX = { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } as const;
 
 export const CUSTOM_FILE_UPLOAD_BUTTON_CONTAINER_SX = { width: '30ch' } as const;
-export const CUSTOM_FILE_UPLOAD_BUTTON_SX = BUTTON_STYLES.primary;
-export const CUSTOM_FILE_UPLOAD_ICON_BUTTON_SX = ICON_ACTION_STYLES.primary;
+export const CUSTOM_FILE_UPLOAD_BUTTON_SX = BUTTON_STYLES.upload;
+export const CUSTOM_FILE_UPLOAD_ICON_BUTTON_SX = ICON_ACTION_STYLES.upload;
 
 /** Feature-owned wrappers around the shared field; upload behavior remains in the parent forms. */
 export const TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX = { mt: 1, mx: '4px', minWidth: 0 } as const;
