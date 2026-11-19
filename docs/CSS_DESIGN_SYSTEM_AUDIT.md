@@ -802,7 +802,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/auth/ForgotPasswordForm.tsx` | Send reset link uses semantic `BUTTON_STYLES.submit`; Back to login uses shared `BackButton` with `AUTH_FORM_BACK_BUTTON_SX`; form/title/back-row use named auth presets; CAPTCHA and TextField remain shared/theme components. | Verify CAPTCHA reset/disabled behavior, field error/helper/focus states and submit pending state; no local action or back-navigation geometry remains. | PARTIAL — Submit/Back/form layout centralized; field/CAPTCHA state parity remains open. |
 | `src/components/auth/LoginForm.tsx` | Login uses semantic `BUTTON_STYLES.submit`; Register/Forgot Password/Resend Verification links use `navigationSecondary`; password reveal uses `ICON_ACTION_STYLES.passwordVisibility`; form/title/action row use named auth presets. | Verify TextField error/helper/focus states, CAPTCHA lifecycle, password visibility and submit/disabled parity; no component-local secondary action alias remains. | PARTIAL — action/icon roles centralized; field/CAPTCHA/state parity remains open. |
 | `src/components/auth/ResendVerificationForm.tsx` | Resend verification uses semantic `BUTTON_STYLES.submit`; Back to login uses shared `BackButton` with named auth back-action geometry; form/title/CAPTCHA use shared auth components/presets. | Verify email field error/helper/focus states, CAPTCHA reset/disabled behavior and submit pending state; no local action or Back geometry remains. | PARTIAL — Submit/Back roles centralized; field/CAPTCHA state parity remains open. |
-| `src/components/auth/ResetPasswordForm.tsx` | Reset password submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Generic primary and Back/secondary contracts remain; audit password fields, requirements, validation, loading/disabled and feedback states. | CHANGE REQUIRED. |
+| `src/components/auth/ResetPasswordForm.tsx` | Reset password uses semantic `BUTTON_STYLES.submit`; success-state Go to login uses `BUTTON_STYLES.navigationLink`; Back to login uses shared `BackButton`; form/title and back row use named auth presets; PasswordField/PasswordRequirements are shared. | Verify password field error/helper/focus states, token error/success state, redirect and submit pending/disabled parity; no local action geometry remains. | PARTIAL — Submit/navigation/Back roles centralized; field/requirements/state parity remains open. |
 | `src/components/trips/EditTripLayout.tsx` | Set/Change Day and Edit Your Trip use semantic `BUTTON_STYLES.edit`; day decrement/increment use shared stepper roles; image delete uses `ICON_ACTION_STYLES.danger` plus named overlay geometry; Back uses shared `BackButton`. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile and placeholder frame use named EDIT_TRIP_* presets. Field/error state consistency and shared field adoption remain open. | PARTIAL — action roles and route-specific geometry centralized; field/state audit remains. |
 | `src/components/trips/TripDetails.tsx` | MUI Card inherits the shared surface; header, title, price, metadata, description, action and social-row presentation use `trip-details.ts`; currency/description IconButtons use `ICON_ACTION_STYLES.base`; Back uses shared `BackButton`. | No component-local visual owner remains; verify full responsive/caller parity and shared field/feedback states where applicable. | MIGRATED — trip details presentation and action composition centralized. |
 | `src/components/trips/TripForm.tsx` | Uses semantic `create`, `add` and `addPoints` action roles; day stepper uses named increment/decrement contracts; Back uses shared `BackButton`; form, upload and action geometry consume named presets. | Field-state/theme contract, upload/remove actions, loading/disabled/focus parity and full caller verification remain open. | PARTIAL — action roles centralized; form/field and state audit remains. |
@@ -6504,3 +6504,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/ResetPasswordForm.tsx`. Migrate its submit role and verify password/requirements state contracts.
+
+
+## 11.98 — ResetPasswordForm semantic Submit/navigation roles (2026-11-19)
+
+### Source changes
+- Migrated Reset password from generic Primary to `BUTTON_STYLES.submit`.
+- Added the semantic `BUTTON_STYLES.navigationLink` role to the success-state Go to login action.
+- Back to login already uses shared BackButton; reconciled the Section 10.1 row.
+
+### Preserved
+- Reset-token validation, password schema/requirements, API request, success/error notifications, success redirect timer/cancellation, disabled/submitting state and login destinations.
+- Existing visual appearance; both new aliases preserve the existing primary skin.
+- No API, auth, validation, route, data or business logic changed.
+
+### Result and status
+- **1 source file changed** plus the Section 10.1 ledger reconciliation.
+- Submit/navigation/Back roles: **SOURCE MIGRATED**.
+- Password field/requirements and token/success/pending state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth entry: `src/components/auth/PasswordField.tsx`. Verify password visibility IconButton roles and field state contracts across all mapped consumers.
