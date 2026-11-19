@@ -8,7 +8,16 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import type { ImageDto } from '@/types';
-import { UI_COLORS } from '@/constants/ui/colors';
+import {
+  IMAGE_LIGHTBOX_CLOSE_CONTROL_SX,
+  IMAGE_LIGHTBOX_COUNTER_SX,
+  IMAGE_LIGHTBOX_DIALOG_PAPER_SX,
+  IMAGE_LIGHTBOX_IMAGE_FRAME_SX,
+  IMAGE_LIGHTBOX_NEXT_CONTROL_SX,
+  IMAGE_LIGHTBOX_PREVIOUS_CONTROL_SX,
+  IMAGE_LIGHTBOX_ROOT_SX,
+  IMAGE_LIGHTBOX_STAGE_SX,
+} from '@/styles/presets/image-gallery';
 
 interface ImageLightboxProps {
   images: readonly ImageDto[];
@@ -17,12 +26,6 @@ interface ImageLightboxProps {
   onIndexChange: (index: number) => void;
   onClose: () => void;
 }
-
-const controlSx = {
-  color: UI_COLORS.text.inverse,
-  bgcolor: UI_COLORS.surface.imageControl,
-  '&:hover': { bgcolor: UI_COLORS.surface.imageControlHover },
-};
 
 export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: ImageLightboxProps) {
   const touchStartX = useRef<number | null>(null);
@@ -51,10 +54,10 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
       open={current !== undefined}
       onClose={onClose}
       fullScreen
-      slotProps={{ paper: { sx: { bgcolor: UI_COLORS.surface.imageLightbox } } }}
+      slotProps={{ paper: { sx: IMAGE_LIGHTBOX_DIALOG_PAPER_SX } }}
     >
       <Box
-        sx={{ position: 'relative', width: '100%', height: '100%' }}
+        sx={IMAGE_LIGHTBOX_ROOT_SX}
         onTouchStart={(event) => {
           touchStartX.current = event.touches[0].clientX;
         }}
@@ -76,21 +79,11 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
             <IconButton
               aria-label="Close image"
               onClick={onClose}
-              sx={{ position: 'absolute', top: 8, right: 8, zIndex: 2, ...controlSx }}
+              sx={IMAGE_LIGHTBOX_CLOSE_CONTROL_SX}
             >
               <CloseIcon />
             </IconButton>
-            <Typography
-              variant="caption"
-              sx={{
-                position: 'absolute',
-                top: 18,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                color: UI_COLORS.text.inverse,
-                zIndex: 2,
-              }}
-            >
+            <Typography variant="caption" sx={IMAGE_LIGHTBOX_COUNTER_SX}>
               {index + 1} / {count}
             </Typography>
             {count > 1 ? (
@@ -98,49 +91,22 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
                 <IconButton
                   aria-label="Previous image"
                   onClick={() => onIndexChange((index - 1 + count) % count)}
-                  sx={{
-                    position: 'absolute',
-                    left: 8,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    zIndex: 2,
-                    ...controlSx,
-                  }}
+                  sx={IMAGE_LIGHTBOX_PREVIOUS_CONTROL_SX}
                 >
                   <ChevronLeftIcon />
                 </IconButton>
                 <IconButton
                   aria-label="Next image"
                   onClick={() => onIndexChange((index + 1) % count)}
-                  sx={{
-                    position: 'absolute',
-                    right: 8,
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    zIndex: 2,
-                    ...controlSx,
-                  }}
+                  sx={IMAGE_LIGHTBOX_NEXT_CONTROL_SX}
                 >
                   <ChevronRightIcon />
                 </IconButton>
               </>
             ) : null}
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                display: 'grid',
-                placeItems: 'center',
-                p: { xs: 1, sm: 3 },
-              }}
-            >
-              <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
-                <AppImage
-                  src={current.url}
-                  alt={alt}
-                  preset="lightbox"
-                  sizes="100vw"
-                />
+            <Box sx={IMAGE_LIGHTBOX_STAGE_SX}>
+              <Box sx={IMAGE_LIGHTBOX_IMAGE_FRAME_SX}>
+                <AppImage src={current.url} alt={alt} preset="lightbox" sizes="100vw" />
               </Box>
             </Box>
           </>
