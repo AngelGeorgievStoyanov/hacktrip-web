@@ -14,16 +14,6 @@ export const metadata: Metadata = buildSeoMetadata({
   canonicalPath: '/about',
 });
 
-const imageStyle = {
-  display: 'block',
-  width: '100%',
-  height: 'auto',
-  maxWidth: 640,
-  margin: '20px auto',
-  padding: '12px',
-  boxSizing: 'border-box' as const,
-  objectFit: 'contain' as const,
-};
 
 export default function AboutPage() {
   return (
@@ -44,7 +34,7 @@ export default function AboutPage() {
             height={630}
             priority
             fetchPriority="high"
-            style={{ ...imageStyle, maxWidth: 760 }}
+            className={`${styles.aboutPageImage} ${styles.aboutPageImageWide}`}
           />
 
           <section aria-labelledby="create-trips">
@@ -70,7 +60,7 @@ export default function AboutPage() {
             width={ABOUT_IMAGE.width}
             height={ABOUT_IMAGE.height}
             sizes={ABOUT_IMAGE.sizes}
-            style={{ ...imageStyle, maxWidth: 520 }}
+            className={`${styles.aboutPageImage} ${styles.aboutPageImageMarkers}`}
           />
 
           <section aria-labelledby="discover-places">
@@ -89,7 +79,7 @@ export default function AboutPage() {
               width={ABOUT_IMAGE.width}
               height={ABOUT_IMAGE.height}
               sizes={ABOUT_IMAGE.sizes}
-              style={imageStyle}
+              className={styles.aboutPageImage}
             />
             <Image
               src="https://storage.googleapis.com/hack-trip/hack-trip-points1.1.png"
@@ -97,7 +87,7 @@ export default function AboutPage() {
               width={ABOUT_IMAGE.width}
               height={ABOUT_IMAGE.height}
               sizes={ABOUT_IMAGE.sizes}
-              style={imageStyle}
+              className={styles.aboutPageImage}
             />
           </div>
 
@@ -116,7 +106,7 @@ export default function AboutPage() {
               width={ABOUT_IMAGE.width}
               height={ABOUT_IMAGE.height}
               sizes={ABOUT_IMAGE.sizes}
-              style={imageStyle}
+              className={styles.aboutPageImage}
             />
             <Image
               src="https://storage.googleapis.com/hack-trip/hack-trip-points2.1.png"
@@ -124,7 +114,7 @@ export default function AboutPage() {
               width={ABOUT_IMAGE.width}
               height={ABOUT_IMAGE.height}
               sizes={ABOUT_IMAGE.sizes}
-              style={imageStyle}
+              className={styles.aboutPageImage}
             />
           </div>
 
@@ -143,7 +133,7 @@ export default function AboutPage() {
             width={ABOUT_IMAGE.width}
             height={ABOUT_IMAGE.height}
             sizes={ABOUT_IMAGE.sizes}
-            style={imageStyle}
+            className={styles.aboutPageImage}
           />
 
           <section aria-labelledby="travel-community">
