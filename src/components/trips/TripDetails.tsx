@@ -29,7 +29,7 @@ import {
   TRIP_DETAILS_METADATA_SX, TRIP_DETAILS_DESCRIPTION_SX, getTripDetailsDescriptionToggleSx,
   TRIP_DETAILS_ACTIONS_COLUMN_SX, TRIP_DETAILS_SOCIAL_ROW_SX,
 } from '@/styles/presets/trip-details';
-import { TRIP_ACTION_BUTTON_LAYOUT_SX } from '@/styles/presets/buttons';
+import { TRIP_ACTION_BUTTON_LAYOUT_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 interface TripDetailsProps {
   tripGroup: TripGroupResponse;
@@ -112,7 +112,7 @@ export function TripDetails({
           </Typography>
           {day.currency?.name ? (
             <Tooltip title={day.currency.name} arrow>
-              <IconButton size="small" aria-label="Currency info">
+              <IconButton size="small" aria-label="Currency info" sx={ICON_ACTION_STYLES.base}>
                 <InfoIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>
@@ -163,7 +163,7 @@ export function TripDetails({
                   onClick={handleExpandClick}
                   aria-expanded={expanded}
                   aria-label={expanded ? 'Show less' : 'Show more'}
-                  sx={getTripDetailsDescriptionToggleSx(expanded)}
+                  sx={[ICON_ACTION_STYLES.base, getTripDetailsDescriptionToggleSx(expanded)]}
                 >
                   <ExpandMoreIcon />
                 </IconButton>
