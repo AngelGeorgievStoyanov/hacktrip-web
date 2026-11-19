@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useReportActions } from '@/hooks/useReportActions';
@@ -7,7 +9,6 @@ import { Alert, Button, IconButton, Tooltip } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { socialErrorTextStyle } from '@/styles/presets/social';
-import { UI_COLORS } from '@/constants/ui/colors';
 import ReportIcon from '@mui/icons-material/Report';
 import ReportOffIcon from '@mui/icons-material/ReportOff';
 import type { ReportTargetTypeInput } from '@/types';
@@ -93,7 +94,7 @@ export function ReportButton({
                 aria-pressed={done}
                 color={done ? 'error' : 'primary'}
                 size={size}
-                sx={{ '&:hover': { color: UI_COLORS.action.danger } }}
+                sx={ICON_ACTION_STYLES.report}
               >
                 {done ? <ReportOffIcon /> : <ReportIcon />}
               </IconButton>
