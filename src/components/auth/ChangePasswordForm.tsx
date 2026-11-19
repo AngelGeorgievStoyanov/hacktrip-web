@@ -15,7 +15,7 @@ import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { ACCOUNT_FORM_FIELDS_SX } from '@/styles/presets/forms';
+import { ACCOUNT_FORM_FIELDS_SX, ACCOUNT_PASSWORD_SAVE_BUTTON_SX } from '@/styles/presets/forms';
 
 const changePasswordFormSchema = changePasswordSchema
   .extend({
@@ -131,7 +131,7 @@ export function ChangePasswordForm({ expanded }: ChangePasswordFormProps) {
             variant="contained"
             disabled={submitting || !isValid}
             startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
-            sx={{ alignSelf: 'flex-start', m: '2px', ...BUTTON_STYLES.primary }}
+            sx={[BUTTON_STYLES.primary, ACCOUNT_PASSWORD_SAVE_BUTTON_SX]}
           >
             Save password
           </Button>
