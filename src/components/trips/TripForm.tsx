@@ -21,6 +21,7 @@ import { buildTripUrl } from '@/lib/tripUrl';
 import { tripWriteFormSchema } from '@/validations/trips';
 import { TripSelectField } from './TripSelectField';
 import ImageUploadField from '@/components/images/ImageUploadField';
+import { TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX } from '@/styles/presets/image-upload';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { useNotification } from '@/components/common/NotificationProvider';
@@ -534,7 +535,7 @@ export function TripForm() {
           helperText={errors.destination?.message}
         />
 
-        <Box sx={{ mt: 1, mx: '4px', minWidth: 0 }}>
+        <Box sx={TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX}>
           <ImageUploadField files={selectedFiles} setFiles={setSelectedFiles} />
         </Box>
 
