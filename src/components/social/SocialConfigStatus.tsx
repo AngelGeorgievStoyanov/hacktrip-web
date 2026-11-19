@@ -2,6 +2,7 @@
 
 import { Alert, Box, CircularProgress } from '@mui/material';
 import { UI_SIZES } from '@/constants/ui/sizes';
+import { SOCIAL_CONFIG_STATUS_WRAPPER_SX } from '@/styles/presets/social';
 import { getGenericErrorMessage } from '@/lib/errors';
 
 interface SocialConfigStatusProps {
@@ -15,7 +16,7 @@ export function SocialConfigStatus({ isLoading, error }: SocialConfigStatusProps
       <Box
         role="status"
         aria-label="Loading social actions"
-        sx={{ display: 'inline-flex', p: 0.5 }}
+        sx={SOCIAL_CONFIG_STATUS_WRAPPER_SX}
       >
         <CircularProgress size={UI_SIZES.smallIndicator} />
       </Box>
