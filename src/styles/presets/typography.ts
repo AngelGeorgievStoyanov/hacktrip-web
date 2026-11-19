@@ -45,3 +45,12 @@ export const TRIP_LIST_EMPTY_TEXT_SX = {
 export const POINT_LIST_EMPTY_SX = {
   textAlign: 'center',
 } as const;
+
+/** Public trip-list introduction retains its editorial width constraint. */
+export const TRIPS_INTRO_SX = {
+  m: '0 20px 24px',
+  textAlign: 'center',
+  ...HEADING_TEXT_SX,
+  lineHeight: 1.6,
+  maxWidth: 900,
+} as const;
