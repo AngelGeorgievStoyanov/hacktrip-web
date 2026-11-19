@@ -759,7 +759,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `app/(public)/live-tracking/page.tsx` | Moderator-gated route renders the LiveTracker feature. | Main uses Box component=main with LIVE_TRACKING_PAGE_MAIN_SX; page gutter is centralized in tracking.ts. | MIGRATED — route shell and tracker surface use named contracts. |
 | `app/(public)/page.tsx` | Home data request and semantic content delegate to HomeHero/HomeTrips. | Main uses Box component=main with CENTERED_PAGE_MAIN_SX; HomeHero consumes HOME_HERO_INTRO_SX and HomeTrips consumes HOME_HEADING_SX. | MIGRATED — home route and intro presentation use shared contracts. |
 | `app/(public)/trips/page.tsx` | Uses shared TripFilters, TripList, TripPagination and WelcomeHeading. | Both success/error branches use CENTERED_PAGE_MAIN_SX; intro uses TRIPS_PAGE_INTRO_SX composed from HOME_INTRO_SX. No inline sx object or React style prop remains. | MIGRATED — route composition uses named layout/typography contracts. |
-| `app/(public)/trips/[id]/page.tsx` | Delegates trip presentation to TripDetailsView and uses CENTERED_PAGE_MAIN_STYLE. | React style prop on main; move route composition to approved styling API. Nested TripDetailsView is separately audited. | CHANGE REQUIRED. |
+| `app/(public)/trips/[id]/page.tsx` | Server route delegates presentation to TripDetailsView and wraps content in MUI Box using `CENTERED_PAGE_MAIN_SX`; no React `style` prop remains. | SEO metadata/JSON-LD remain separate under the SEO architecture; visual route wrapper is already preset-owned. | MIGRATED — route composition uses the approved styling API; SEO intentionally out of scope. |
 | `src/components/admin/AdminDashboard.tsx` | Semantic nav/list/link structure; no local visual declarations found. | Verify rendered navigation/link styling against shared navigation contract and parent Admin layout; no direct style migration confirmed in this file. | PARTIAL — structural only. |
 | `src/components/auth/RequireModeratorRedirect.tsx` | Auth guard returns children or null; no visual declarations. | No visual migration in this file; verify only through child component ownership. | NON-VISUAL — no styling target. |
 | `src/components/common/JsonLd.tsx` | Emits JSON-LD script only; no rendered visual UI. | No visual migration target. | NON-VISUAL — no styling target. |
@@ -6891,3 +6891,19 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 admin row after CreatePointPage: verify remaining AdminFailedLogs, AdminImages, AdminReports, AdminRouteNotFoundLogs and AdminUsers state/caller parity, then move to public-page wrappers and remaining CSS Modules.
+
+
+## 11.116 — Public trip route wrapper current-source reconciliation (2026-11-19)
+
+### Scope and findings
+- Continued with the next public route entry in Section 10.1.
+- Re-opened `app/(public)/trips/[id]/page.tsx`.
+- The old CHANGE REQUIRED note claiming a React `style` prop was stale. The current Server Component uses MUI Box with the named `CENTERED_PAGE_MAIN_SX` preset.
+- TripDetailsView owns the nested visual composition. Metadata, structured data and SEO content remain separate and are not modified by this CSS migration.
+
+### Result and status
+- Corrected the Section 10.1 route row to **MIGRATED** for visual composition.
+- No source change, SEO change, API, route or business logic change. No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next public/admin route heading entries: `app/(admin)/admin/page.tsx` and `app/(admin)/admin/reports/page.tsx`; verify the shared heading contract before replacing raw h1 elements.
