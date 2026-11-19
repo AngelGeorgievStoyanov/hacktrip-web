@@ -466,3 +466,18 @@ export const EDIT_POINT_IMAGE_PLACEHOLDER_SX = {
   aspectRatio: '1 / 1',
   mx: 'auto',
 } as const;
+
+
+/** Runtime wrapper state for the third-party CAPTCHA widget. */
+export const getCaptchaContainerSx = (disabled: boolean) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  minHeight: 78,
+  pointerEvents: disabled ? 'none' : 'auto',
+  opacity: disabled ? 0.6 : 1,
+} as const);
+
+/** Invalid password-requirement icon uses the shared disabled-text color. */
+export const PASSWORD_REQUIREMENT_INVALID_ICON_SX = {
+  color: 'text.disabled',
+} as const;
