@@ -739,7 +739,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/common/NotFound.tsx` | 404 hero structure remains in NotFound.module.css; Home CTA remains a native button rendered through MUI Box. | CTA presentation uses NOT_FOUND_HOME_BUTTON_SX and semantic colors; countdown/router behavior remains component-owned. | MIGRATED — 404 hero structure and Home action have separate owners. |
 | `src/components/common/NotificationProvider.tsx` | Snackbar/Alert inherit MUI severity and variant states; Alert width uses NOTIFICATION_ALERT_SX. | No custom surface skin; placement/duration/close behavior remains notification-constant/provider owned. | MIGRATED — notification presentation contract centralized. |
 | `src/components/common/PasswordField.tsx` | Shared TextField owner with local visibility state and reveal/hide IconButton; forwards react-hook-form registration, error/helperText, disabled, maxLength and autocomplete. | Direct consumers: RegisterForm, ResetPasswordForm, ChangePasswordForm, AdminUserForm. Reveal/hide IconButton has no semantic icon-action preset; field states depend on TextField defaults and theme. | PARTIAL — consumer graph closed; icon-action and field state contract open. |
-| `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_STYLE preset and MUI typography. | React style prop on h1 and local padding/heading sx violate styling API policy; migrate after inventory. | CHANGE REQUIRED. |
+| `src/components/common/WelcomeHeading.tsx` | Uses shared HOME_HEADING_SX typography preset and MUI typography; unique wrapper/heading-group geometry is owned by `WelcomeHeading.module.css`. | Inline layout sx was moved to the CSS Module while preserving flex alignment, 25px horizontal padding and 16px bottom margin. Touch handling, responsive heading split and scramble behavior remain unchanged. | MIGRATED — unique layout is CSS Module-owned; typography remains preset-owned. |
 | `src/components/comments/CommentsSection.tsx` | Uses shared comments panel/card and social action presets; MUI Card surface is theme-backed. | React style prop on list, local comment/card spacing and many IconButtons/TextFields remain; map all edit/delete/reply/report states. | CHANGE REQUIRED. |
 | `src/components/comments/CommentsToggle.tsx` | Uses MUI IconButton for comments disclosure. | React style prop on wrapper and local heading margin remain; disclosure state should use shared contract. | CHANGE REQUIRED. |
 | `src/components/comments/RepliesSection.tsx` | Uses shared social action preset and MUI TextField. | Multiple raw IconButtons and local border/spacing sx remain; map reply/edit/delete/cancel/submit roles. | CHANGE REQUIRED. |
@@ -841,7 +841,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/placeholders/index.ts` | Barrel exports `SocialObjectPlaceholder`. | No rendered UI or styling declarations; visual implementation is in the already-inventoried placeholder component. | STRUCTURAL — export surface only. |
 | `src/components/placeholders/socialObjectPlaceholderAssets.ts` | Central list of five public SVG placeholder asset paths (mountain, beach, city, garden and fields); component selects from this data. | Contains asset references only, not SVG markup, colors, sizing or component styling. Visual treatment remains in `SocialObjectPlaceholder.tsx` and the SVG files themselves are outside this TS/CSS candidate filter. | DATA — asset registry, not a style owner. |
 | `src/components/tracking/index.ts` | Barrel exports `LiveTracker`. | No rendered UI or style declarations; visual implementation and action controls are in the already-inventoried `LiveTracker.tsx`. | STRUCTURAL — export surface only. |
-| `src/lib/images/renderTripOgImage.tsx` | Supporting dependency outside the DOM candidate set; centralizes Open Graph/Twitter image output through Next ImageResponse (Satori). | Its JSX `style` objects are renderer input required by ImageResponse; CSS Modules, browser stylesheets and MUI sx do not participate in this server-side rasterization. SEO_BRAND and OG dimensions are already centralized. Proposed narrow exception: allow renderer-only style objects in this exact file; approval pending. | EXCEPTION CANDIDATE — no source change; requires explicit approval before the exception is recorded as approved. |
+| `src/lib/images/renderTripOgImage.tsx` | Supporting dependency outside the DOM candidate set; centralizes Open Graph/Twitter image output through Next ImageResponse (Satori). | Its JSX `style` objects are renderer input required by ImageResponse; CSS Modules, browser stylesheets and MUI sx do not participate in this server-side rasterization. SEO_BRAND and OG dimensions are already centralized. The user-approved exception is limited to renderer-only style objects in this exact file. | APPROVED EXCEPTION — Satori/ImageResponse renderer only; approval recorded in Section 11.58. |
 
 ## 11. Current status and exact next task
 
@@ -5678,3 +5678,24 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - Reconcile the historical Section 10.1 ledger and older NEXT TASK blocks against the completed Sections 11.28–11.60. Some legacy rows still show pre-migration statuses (for example TripPagination and image/social owners); these are stale historical records, not evidence that those migrations were not performed.
 - Then, with explicit user permission, run the agreed validation sequence (typecheck/build/lint/tests as applicable) and browser/visual checks. No such validation has been run in this migration pass.
 - No further Styling API exception is currently identified beyond the approved Satori SEO image renderer.
+
+
+## 11.61 — File-level inventory reconciliation and first residual cleanup (2026-11-19)
+
+### Section 10.1 file register
+- The 127 entries in Section 10.1 are the complete file-level inventory carried forward from the approved audit scope. Each entry records the file's responsibility, the centralized contracts already consumed, and the remaining concern or reason no direct styling migration is required.
+- The register is an inventory and migration ledger, not a claim that all 127 files have been re-opened and re-verified against the current branch in this pass. Historical status labels must be reconciled against the later source changes in Sections 11.28–11.60 before treating them as current.
+- Route wrappers, barrel exports, auth guards, data registries and SEO metadata endpoints are explicitly identified as structural/non-visual entries; their child UI owners are listed separately. They must not be counted as independent visual migrations.
+- The only approved React inline-style exception remains `src/lib/images/renderTripOgImage.tsx`, exclusively for Satori/ImageResponse output, as approved and documented in Section 11.58. Section 10.1 now reflects that approval.
+
+### Source changes — WelcomeHeading
+- Added `src/components/common/WelcomeHeading.module.css` and moved the wrapper and heading-group flex layout out of inline `sx` objects.
+- Preserved the exact existing layout: both wrappers remain flex columns with centered alignment; heading-group horizontal padding remains 25px and bottom margin remains 16px.
+- `HOME_HEADING_SX` remains the owner of heading typography. The responsive single-line/split heading decision, touch-triggered scramble, children placement and animation behavior were not changed.
+- This is a structural CSS Module migration, not a new shared visual preset: the geometry is unique to this component.
+
+### Result
+- Section 10.1 now records the current WelcomeHeading ownership and the already-approved SEO renderer exception accurately.
+- One confirmed inline-sx violation migrated without changing its geometry or behavior.
+- The remaining 126 inventory entries are not declared complete by this change. Continue reconciling and fixing concrete residual violations against the current source; do not infer completion from historical workstream labels.
+- No build, tests, lint, CI or browser validation was run.
