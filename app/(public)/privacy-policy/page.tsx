@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { Box } from '@mui/material';
+import { LEGAL_BACK_LINK_SX } from '@/styles/presets/buttons';
 import styles from './LegalPage.module.css';
 import { buildSeoMetadata } from '@/seo';
 
@@ -323,9 +325,9 @@ export default function PrivacyPolicyPage() {
           Questions or concerns? Contact us at{' '}
           <a href="mailto:www.hack.trip@gmail.com">www.hack.trip@gmail.com</a>.
         </p>
-        <a className={styles.legalPageBack} href="/">
+        <Box component="a" href="/" sx={LEGAL_BACK_LINK_SX}>
           Back to Hack Trip
-        </a>
+        </Box>
       </article>
     </main>
   );
