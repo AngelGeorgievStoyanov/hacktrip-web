@@ -24,6 +24,7 @@ import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_SELECTION_TOOLBAR_SX } from '@/styles/presets/admin';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -89,6 +90,7 @@ export function AdminFailedLogs() {
           <Typography>{selected.size} selected</Typography>
           <Button
             color="error"
+            sx={BUTTON_STYLES.dangerText}
             disabled={deleteMutation.isPending}
             onClick={() =>
               void confirm(
