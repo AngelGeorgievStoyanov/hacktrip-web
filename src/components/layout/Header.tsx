@@ -18,6 +18,7 @@ import { isModeratorUser } from '@/constants/roles';
 import { BREAKPOINTS, mediaDown, maxWidthQuery } from '@/constants/ui';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { HEADER_DRAWER_PAPER_SX } from '@/styles/presets/layouts';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -126,7 +127,7 @@ export function Header() {
           anchor="left"
           open={drawerOpen}
           onClose={closeDrawer}
-          slotProps={{ paper: { elevation: 12, sx: { height: 'auto' } } }}
+          slotProps={{ paper: { elevation: 12, sx: HEADER_DRAWER_PAPER_SX } }}
         >
           <Box
             component="nav"
