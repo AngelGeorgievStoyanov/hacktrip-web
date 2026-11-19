@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, IconButton, Tooltip } from '@mui/material';
@@ -79,6 +81,7 @@ export function LikeButton({
       <Tooltip title={liked ? 'Unlike' : 'Like'} arrow>
         <span>
           <IconButton
+            sx={ICON_ACTION_STYLES.base}
             onClick={() => {
               likeAnimation.requestPlay();
               mutation.mutate();
