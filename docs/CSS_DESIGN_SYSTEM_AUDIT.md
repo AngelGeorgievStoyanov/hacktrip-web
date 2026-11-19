@@ -5074,3 +5074,67 @@ No application source code was changed. No branch was created. No build, tests, 
 - This is one bounded package in the wider app migration, not completion of the global action/navigation family.
 - Next: continue with the audited shared icon-action family (edit/delete/remove/close/reorder controls) and trace its owner through image, profile, comments/social, points and admin consumers before changing individual controls.
 - No build, tests, lint, CI or browser validation was run.
+
+
+## 11.39 — Shared icon-action contracts across images, profile, social, comments, points and admin (2026-11-19)
+
+### Scope and preflight
+- Continued from the exact NEXT in Section 11.38 and the existing owner/consumer map in Sections 11.12, 11.17–11.19 and 11.26. No new audit document, branch or broad inventory was created.
+- Confirmed target branch: `feature/frontend-modernization`; starting source HEAD was `e4c38e9c0f199bf70d9cfff5588d7c52994c37df`.
+- Followed the existing `src/styles/presets/buttons.ts` owner through the audited image-upload, image-gallery/lightbox, profile-image, comment/reply, social, point-reorder, password-visibility and admin-image-preview controls.
+- Kept distinct native-button compositions (profile image delete/view triggers and admin avatar preview triggers) distinct from MUI IconButton controls; only their shared keyboard-focus treatment was reused where appropriate.
+
+### Source changes
+1. `src/styles/presets/buttons.ts`
+   - Added `ICON_ACTION_STYLES` as the shared owner for keyboard `:focus-visible` treatment and semantic primary, danger, report and inverse image-control variants.
+   - Reused existing palette/UI color tokens and the already-established 2px focus outline with 3px offset; no new color token or size was introduced.
+2. `src/styles/presets/image-upload.ts`
+   - Routed per-image remove, mobile remove-all and camera-upload icon controls through the shared danger/base/primary contracts.
+   - Kept the desktop Remove All text button and all upload field/preview geometry unchanged.
+3. `src/styles/presets/image-gallery.ts`
+   - Composed close/previous/next lightbox controls from the shared inverse image-control contract.
+   - Kept absolute positioning, z-index, edge offsets and vertical centering in the image-gallery owner.
+4. `src/styles/presets/profile-image.ts`
+   - Reused the shared inverse image-control contract for fullscreen close.
+   - Reused the shared focus contract for personal profile delete/view triggers and the interactive admin profile-image avatar.
+5. `src/styles/presets/cards.ts`
+   - Composed PointCard reorder-button presentation with the shared icon-action focus contract; visibility and padding remain point-card-specific.
+6. Updated direct MUI IconButton consumers:
+   - `src/components/comments/CommentsSection.tsx`
+   - `src/components/comments/RepliesSection.tsx`
+   - `src/components/comments/CommentsToggle.tsx`
+   - `src/components/social/EngagementBar.tsx`
+   - `src/components/social/FavoriteButton.tsx`
+   - `src/components/social/LikeButton.tsx`
+   - `src/components/social/ReportButton.tsx`
+   - `src/components/social/TripGroupSocialActions.tsx`
+   - `src/components/common/PasswordField.tsx`
+   - `src/components/admin/AdminImages.tsx`
+
+### Existing consumers verified and intentionally retained
+- `ImageLightbox.tsx` consumes the updated close/previous/next presets.
+- `ImageUploadField.tsx` and `ProfileImage.tsx` consume the shared remove presets; `CustomFileUploadButton.tsx` consumes the shared camera-upload preset.
+- `PointCard.tsx` consumes the updated reorder preset.
+- `AdminUserProfileImage.tsx` consumes the updated interactive avatar preset.
+- `AdminUsers.tsx` uses text Edit/Delete actions and a clickable Avatar rather than MUI IconButton; it was not converted into an icon-action control.
+- `ProfileImage` retains its custom circular image delete/view trigger geometry; it was not replaced with a generic IconButton.
+- `ImageGallery` itself has no icon-action controls; its fullscreen controls remain owned by the shared `ImageLightbox`.
+
+### Preserved behavior and boundaries
+- Preserved handlers, mutations, pending/disabled states, accessible labels, tooltips, `aria-pressed`, `aria-expanded`, badge counts, like animation, social permissions and comment/reply state.
+- Preserved MUI `size` values, existing dynamic `color` props, overlay-specific padding, image-control backgrounds, lightbox positioning, profile-image geometry and PointCard reorder visibility.
+- Destructive comment/reply and image-remove actions now select the shared danger role where that was already their existing semantic color. ReportButton retains its existing dynamic color and hover behavior through the named report role.
+- No component public API, route, API call, DTO, upload behavior, validation, authentication, backend or business logic changed.
+- This closes the audited icon-action group for the listed owners and consumers; it does not claim that every icon-only/native action in the repository has been exhaustively mapped. The broader action matrix and Stage 1 consumer maps remain open.
+
+### Result
+- **15 source files changed**: 5 shared preset owners and 10 direct component consumers.
+- The shared icon-action focus and tone contracts now flow through image upload/lightbox, profile, comments/replies, social actions, password visibility, point reordering and admin image preview.
+- Existing consumer components that already used these presets required no unnecessary source edits.
+- No build, tests, lint, CI or browser validation was run.
+
+### Status and next
+- Audited icon-action group (images/profile/comments/social/points/admin/password reveal): **SOURCE CHANGES APPLIED** for the scoped consumer set.
+- Global button/action work remains open for text actions, map controls, trip/point management, admin forms/tables, pagination/stepper and remaining native controls.
+- Next: **11.40 — complete the next shared semantic action group across map, point/trip management and admin consumers**, reusing the Section 11.12 dependency map and existing presets. Do not reopen the completed icon-action group or restart inventory.
+- Stage 1 remains IN PROGRESS; no build, tests, lint, CI or browser validation was run.
