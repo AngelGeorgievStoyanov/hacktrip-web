@@ -140,13 +140,3 @@ export const ADMIN_NAVIGATION_SX = {
   borderColor: 'divider',
 } as const;
 
-/** Admin section navigation layout. Active state remains owned by MUI variant/color props. */
-export const ADMIN_NAVIGATION_SX = {
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: 1,
-  mb: 3,
-  pb: 2,
-  borderBottom: 1,
-  borderColor: 'divider',
-} as const;
