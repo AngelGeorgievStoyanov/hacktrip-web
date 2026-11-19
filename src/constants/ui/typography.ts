@@ -30,3 +30,18 @@ export const TYPOGRAPHY = {
   caption: { fontSize: '0.75rem', fontWeight: 400, lineHeight: 1.66, letterSpacing: '0.03333em' },
   overline: { fontSize: '0.75rem', fontWeight: 400, lineHeight: 2.66, letterSpacing: '0.08333em' },
 } as const;
+
+/**
+ * About-page editorial typography. Kept separate from the application-wide MUI scale
+ * because this page intentionally uses its existing Space Mono visual identity.
+ * Values are exposed to CSS Modules through theme-generated custom properties.
+ */
+export const ABOUT_EDITORIAL_TYPOGRAPHY = {
+  fontFamily: "'Space Mono', monospace",
+  fontWeight: 600,
+  headingMargin: '8px 0',
+  h1: 'clamp(1.7rem, 4vw, 2.5rem)',
+  h2: 'clamp(1.2rem, 2.5vw, 1.7rem)',
+  h3: 'clamp(1rem, 2vw, 1.25rem)',
+  h3LineHeight: 1.6,
+} as const;
