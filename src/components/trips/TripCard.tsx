@@ -228,7 +228,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           component={Link}
           href={detailsHref}
           variant="contained"
-          sx={BUTTON_STYLES.primaryWide}
+          sx={BUTTON_STYLES.navigationAction}
         >
           DETAILS
         </Button>
