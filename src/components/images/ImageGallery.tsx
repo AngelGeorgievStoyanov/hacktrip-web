@@ -43,6 +43,13 @@ export function ImageGallery({
   const galleryClassName = [
     styles.gallery,
     variant === 'grid' ? styles.grid : '',
+    variant === 'grid'
+      ? images.length === 1
+        ? styles.gridColumns1
+        : images.length === 2
+          ? styles.gridColumns2
+          : styles.gridColumns3
+      : '',
     variant === 'stack' ? styles.stack : '',
   ]
     .filter(Boolean)
@@ -51,15 +58,7 @@ export function ImageGallery({
   return (
     <>
       <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
-      <Box
-        className={galleryClassName}
-        sx={{
-          gridTemplateColumns:
-            variant === 'grid'
-              ? `repeat(${Math.min(images.length, 3)}, minmax(0, 1fr))`
-              : undefined,
-        }}
-      >
+      <Box className={galleryClassName}>
         {images.map((image, position) => {
           const imageTarget: CommentTarget = { type: 'image', imageId: image.id };
           const isImageOpen =
@@ -78,9 +77,6 @@ export function ImageGallery({
                   onClick={() => setIndex(position)}
                   aria-label={`Open image ${position + 1} of ${images.length}: ${alt}`}
                   className={`${styles.imageButton} ${variant === 'grid' ? styles.gridImageButton : ''}`}
-                  sx={{
-                    '&:focus-visible': { outline: '2px solid', outlineColor: 'primary.main' },
-                  }}
                 >
                   <AppImage
                     image={image}
