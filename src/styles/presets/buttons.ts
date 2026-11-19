@@ -92,6 +92,7 @@ const dayNumberButton = {
 
 /** Shared keyboard-focus and semantic tone contracts for icon-only actions. */
 const iconActionBase = {
+  borderRadius: '50%',
   '&:focus-visible': {
     outline: '2px solid',
     outlineColor: 'primary.main',
