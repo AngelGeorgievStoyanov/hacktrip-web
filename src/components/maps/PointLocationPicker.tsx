@@ -20,7 +20,6 @@ import {
 } from '@/lib/maps';
 import { getPointNameFromMapAddress } from '@/lib/pointName';
 import {
-  MAP_ADDRESS_INPUT_SX,
   POINT_LOCATION_PICKER_STACK_SX,
   POINT_LOCATION_ACTIONS_SX,
   MAP_PICKER_SNACKBAR_SX,
@@ -141,23 +140,10 @@ export function PointLocationPicker({
           onChange={setAddress}
           onLocationSelect={handleAddressSelected}
           label="Search field"
-          inputSx={{ ...MAP_ADDRESS_INPUT_SX, width: '100%', minWidth: 0 }}
+          variant="pointPicker"
           size="small"
           buttonVariant="contained"
           direction={{ xs: 'column', sm: 'row' }}
-          buttonSx={{
-            width: { xs: '100%', sm: 'auto' },
-            minHeight: 40,
-            m: 0,
-            ...BUTTON_STYLES.primary,
-          }}
-          containerSx={{
-            width: { xs: '100%', sm: 'auto' },
-            flex: { xs: '0 1 auto', sm: '1 1 190px' },
-            minWidth: 0,
-            maxWidth: { xs: 420, sm: 420 },
-            alignSelf: { xs: 'center', sm: 'stretch' },
-          }}
         />
         <Button
           type="button"
