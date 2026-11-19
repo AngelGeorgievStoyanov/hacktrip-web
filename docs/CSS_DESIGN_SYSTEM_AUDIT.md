@@ -800,7 +800,7 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | `src/components/admin/AdminUserForm.tsx` | Save uses `BUTTON_STYLES.save`; Delete uses semantic `BUTTON_STYLES.deleteText`; Back uses shared `BackButton` with named `ADMIN_USER_FORM_BACK_SX`; panel and password field stack use named admin/layout presets. | Verify admin/manager field visibility, PasswordField/PasswordRequirements states, Switch/Select states, save/delete pending and confirmation behavior; no component-local button skin remains. | PARTIAL — action and panel roles centralized; field/state parity remains open. |
 | `src/components/auth/ForgotPasswordForm.tsx` | Send reset link uses semantic `BUTTON_STYLES.submit`; Back to login uses shared `BackButton` with `AUTH_FORM_BACK_BUTTON_SX`; form/title/back-row use named auth presets; CAPTCHA and TextField remain shared/theme components. | Verify CAPTCHA reset/disabled behavior, field error/helper/focus states and submit pending state; no local action or back-navigation geometry remains. | PARTIAL — Submit/Back/form layout centralized; field/CAPTCHA state parity remains open. |
-| `src/components/auth/LoginForm.tsx` | Login form uses `BUTTON_STYLES.primary` for Login and a local `SECONDARY_BUTTON_SX` alias of `BUTTON_STYLES.secondary` for three alternate/navigation actions (register and related auth actions). | One generic secondary skin is reused for multiple different secondary semantics; password reveal is a separate IconButton role. Audit fields, password visibility, disabled/loading and focus states. | CHANGE REQUIRED. |
+| `src/components/auth/LoginForm.tsx` | Login uses semantic `BUTTON_STYLES.submit`; Register/Forgot Password/Resend Verification links use `navigationSecondary`; password reveal uses `ICON_ACTION_STYLES.passwordVisibility`; form/title/action row use named auth presets. | Verify TextField error/helper/focus states, CAPTCHA lifecycle, password visibility and submit/disabled parity; no component-local secondary action alias remains. | PARTIAL — action/icon roles centralized; field/CAPTCHA/state parity remains open. |
 | `src/components/auth/ResendVerificationForm.tsx` | Resend verification submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Back caller adds local margin via sx; generic primary/secondary aliases do not encode the distinct submit/navigation roles. Audit captcha, fields, loading/disabled and feedback states. | CHANGE REQUIRED. |
 | `src/components/auth/ResetPasswordForm.tsx` | Reset password submit uses `BUTTON_STYLES.primary`; Back to login uses `BackButton` as a Next Link. | Generic primary and Back/secondary contracts remain; audit password fields, requirements, validation, loading/disabled and feedback states. | CHANGE REQUIRED. |
 | `src/components/trips/EditTripLayout.tsx` | Set/Change Day and Edit Your Trip use semantic `BUTTON_STYLES.edit`; day decrement/increment use shared stepper roles; image delete uses `ICON_ACTION_STYLES.danger` plus named overlay geometry; Back uses shared `BackButton`. | Parent grid, map frame, form panel, heading, day/price rows, action row, image section/grid/tile and placeholder frame use named EDIT_TRIP_* presets. Field/error state consistency and shared field adoption remain open. | PARTIAL — action roles and route-specific geometry centralized; field/state audit remains. |
@@ -6460,3 +6460,26 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/LoginForm.tsx`. Give Login and alternate navigation actions semantic roles; verify password reveal separately through PasswordField.
+
+
+## 11.96 — LoginForm semantic Submit/navigation/password-visibility roles (2026-11-19)
+
+### Source changes
+- Migrated Login to `BUTTON_STYLES.submit`.
+- Migrated Register, Forgot Password and Resend Verification to the shared `BUTTON_STYLES.navigationSecondary` role and removed the component-local secondary alias.
+- Added `ICON_ACTION_STYLES.passwordVisibility` as a semantic alias of the existing icon-action base and migrated Show/Hide password to it.
+- Reconciled the Section 10.1 LoginForm row.
+
+### Preserved
+- Login validation, CAPTCHA token/reset lifecycle, cross-tab email-verified notification, password visibility state, focus retention on mouse down, submit/loading/disabled state and redirect.
+- Existing action/icon appearance is unchanged.
+- No API, auth, validation, route, data or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger reconciliation.
+- Submit, secondary navigation and password-visibility roles: **SOURCE MIGRATED**.
+- TextField, CAPTCHA, password visibility keyboard/focus and all state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 auth form entry: `src/components/auth/ResendVerificationForm.tsx`. Migrate its submit role and verify Back/CAPTCHA states.
