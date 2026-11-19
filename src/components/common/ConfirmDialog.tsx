@@ -52,10 +52,10 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
           <DialogContentText>{message}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleClose(false)} variant="contained" sx={BUTTON_STYLES.secondary}>
+          <Button onClick={() => handleClose(false)} variant="contained" sx={BUTTON_STYLES.cancel}>
             No
           </Button>
-          <Button onClick={() => handleClose(true)} variant="contained" sx={BUTTON_STYLES.primary} autoFocus>
+          <Button onClick={() => handleClose(true)} variant="contained" sx={BUTTON_STYLES.confirm} autoFocus>
             Yes
           </Button>
         </DialogActions>
