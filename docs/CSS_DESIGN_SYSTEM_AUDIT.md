@@ -7545,8 +7545,29 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 - `src/styles/presets/typography.ts`
 
 ### Next execution
-1. Reconcile the 56 missing Section 10.1 rows and update stale historical candidate counts to the current 182-file inventory without rewriting the historical baseline.
+1. COMPLETED in Section 10.1: reconciled all 56 missing current-tree file rows. The ledger now covers all 182 in-scope candidate paths; one pre-existing supporting row remains outside that candidate filter. Historical baseline counts are retained as history.
 2. Resolve the two concrete source blockers (`ADMIN_NAVIGATION_SX` duplicate export and `SECONDARY_BUTTON_SX` unresolved reference) only after confirming the intended semantic contract; keep source changes separate from the audit record.
 3. Complete the global semantic-role matrix for buttons/icon actions, fields, cards/surfaces, typography, spacing, colors, breakpoints, image roles and CSS-variable consumers across every page and component.
 4. For each page, record its route → rendered component tree → style owner/preset/theme/CSS Module chain and verify responsive/interaction states. Mark a file VERIFIED only when its declarations, all consumers and behavior are reconciled.
 5. Stage 1 remains IN PROGRESS. No source changes were made in this audit pass. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.136 — Ledger reconciliation and blocker-contract confirmation (2026-11-19)
+
+### Ledger reconciliation — completed
+- Re-fetched the branch tree and the audit document immediately before updating. Branch: `feature/frontend-modernization`.
+- The current repository tree contains **293 tracked files** and **182 in-scope design/presentation candidate files**.
+- The Section 10.1 operational ledger previously had **126/182** in-scope paths. Added an individual row for each of the **56 missing paths**, grouped under the same operational table.
+- Re-fetched the updated document and counted **56/56 supplemental rows**. Combined with the existing 126 in-scope rows, the ledger now accounts for **182/182 current candidate paths**. The existing supporting `src/lib/images/renderTripOgImage.tsx` row is outside this 182-file candidate filter and is retained as a documented exception.
+- Each added row records the file's actual responsibility, current shared owner, remaining audit work and an honest status. A CENTRALIZED or STRUCTURAL status is limited to the responsibility described in that row; it does not imply full route/browser verification.
+
+### Concrete blocker re-check — source unchanged
+1. `src/styles/presets/admin.ts`: `ADMIN_NAVIGATION_SX` is still exported twice (lines 133 and 144 in the fetched file); both object bodies are identical. This is confirmed source evidence for the duplicate declaration.
+2. `src/components/auth/RegisterForm.tsx`: `SECONDARY_BUTTON_SX` is still referenced by the Resend Verification link button (line 238 in the fetched file) and is not imported or declared in the module. The adjacent Login link button uses `BUTTON_STYLES.navigationSecondary`, and the shared preset maps that role to the existing secondary treatment. This makes `BUTTON_STYLES.navigationSecondary` the evidence-backed intended replacement candidate; no source edit was made pending explicit approval.
+
+### Current state and next execution
+- **Ledger coverage: COMPLETE — 182/182 candidate paths.**
+- **Global design-system audit: IN PROGRESS.** File inventory reconciliation does not mean every page, rendered component tree, responsive state or interaction state has been verified.
+- Next: build the route-to-component ownership matrix for every App Router page and its rendered component tree; then verify the corresponding style owner chain (theme, token, preset, CSS Module or justified local composition) and identify duplicate/competing owners.
+- After the route matrix, continue the semantic role matrices for buttons/icon actions and field families, then colors/spacing/breakpoints/image frames/CSS-variable consumers.
+- No application source files were changed. No branch was created. No build, tests, lint, CI or browser validation was run.
