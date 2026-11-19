@@ -173,6 +173,8 @@ export const BUTTON_STYLES = {
   removeMarker: secondary,
   secondary,
   navigationSecondary: secondary,
+  cancel: secondary,
+  confirm: primary,
   disclosure: secondary,
   back: secondary,
   secondaryLightText,
