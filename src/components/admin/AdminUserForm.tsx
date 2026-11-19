@@ -303,7 +303,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
 
       <Box>
         <Button
-          sx={BUTTON_STYLES.dangerText}
+          sx={BUTTON_STYLES.deleteText}
           disabled={deleteMutation.isPending}
           onClick={() =>
             void confirm('Are you sure you want to delete this user?', 'Delete Confirmation').then(
