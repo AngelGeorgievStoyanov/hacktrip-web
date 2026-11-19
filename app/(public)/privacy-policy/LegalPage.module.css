@@ -72,17 +72,3 @@
 .legalPageContact {
   margin-top: 36px;
 }
-.legalPageBack {
-  display: inline-block;
-  margin-top: 18px;
-  padding: 10px 24px;
-  border-radius: var(--ht-shape-border-radius);
-  background: var(--ht-color-legal-back-background);
-  color: var(--ht-color-text-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.legalPageBack:hover {
-  color: var(--ht-color-text-inverse);
-}
