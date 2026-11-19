@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Box } from '@mui/material';
 import { NOINDEX } from '@/constants/seo';
 import { ProfileForm } from '@/components/auth/ProfileForm';
-import { PANEL_SX } from '@/styles/presets/panels';
+import { ACCOUNT_PROFILE_PAGE_SX, ACCOUNT_PROFILE_PANEL_SX } from '@/styles/presets/layouts';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -12,15 +12,7 @@ export const metadata: Metadata = {
 export default function ProfilePage() {
   return (
     <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        minHeight: 'calc(100vh - 64px)',
-        py: { xs: 2, sm: 3 },
-      }}
+      sx={ACCOUNT_PROFILE_PAGE_SX}
     >
       <Box
         sx={(theme) => ({
