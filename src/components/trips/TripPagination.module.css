@@ -10,4 +10,35 @@
   gap: var(--ht-spacing-sm);
   list-style: none;
   padding: 0;
+  margin: 0;
+}
+
+.link,
+.current {
+  display: inline-flex;
+  min-width: 2rem;
+  min-height: 2rem;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: 0.375rem 0.625rem;
+  border-radius: var(--ht-shape-border-radius);
+  color: var(--ht-color-primary);
+  text-decoration: none;
+}
+
+.link:hover {
+  background-color: var(--ht-color-action-hover);
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--ht-color-primary);
+  outline-offset: 2px;
+}
+
+.current {
+  background-color: var(--ht-color-primary);
+  color: var(--ht-color-text-inverse);
+  font-weight: 600;
 }
