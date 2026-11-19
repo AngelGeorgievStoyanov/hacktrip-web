@@ -31,6 +31,7 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { adminApi } from '@/api/admin';
 import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 
@@ -71,11 +72,11 @@ function CloudImages() {
         <Box>
           <List dense>{stringList(data.items, 'No cloud images.')}</List>
           <Box sx={IMAGE_PAGINATION_ROW_SX}>
-            <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
               Previous
             </Button>
             <Typography>Page {page}</Typography>
-            <Button disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
+            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
               Next
             </Button>
           </Box>
@@ -109,6 +110,7 @@ function DatabaseImages() {
                 Page {page} of {pagination.totalPages}
               </Typography>
               <Button
+                sx={ADMIN_PAGINATION_BUTTON_SX}
                 disabled={page >= (pagination.totalPages ?? 1)}
                 onClick={() => setPage((p) => p + 1)}
               >
@@ -352,6 +354,7 @@ function MissingThumbnails() {
           </TableContainer>
           <Box sx={{ ...ADMIN_PAGINATION_SX, mt: 2 }}>
             <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
               disabled={page <= 1 || isFetching}
               onClick={() => setPage((value) => value - 1)}
             >
@@ -359,6 +362,7 @@ function MissingThumbnails() {
             </Button>
             <Typography>Page {page}</Typography>
             <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
               disabled={!data.pagination.hasNext || isFetching}
               onClick={() => setPage((value) => value + 1)}
             >
