@@ -809,8 +809,8 @@ This ledger is the operational source for answering "what is actually fixed in e
 
 | `src/components/admin/AdminNavigation.tsx` | Admin nav links are Next links rendered as MUI Buttons. | Container uses ADMIN_NAVIGATION_SX; active/inactive appearance remains explicit MUI contained/text and primary/inherit states. | MIGRATED — navigation layout and states have explicit owners. |
 | `src/components/admin/AdminUsers.tsx` | Card/CardContent surface inherits `MuiCard`; card content, identity and action row use named `ADMIN_USER_CARD_*` presets; Avatar uses shared profile-image presets; Edit uses `BUTTON_STYLES.edit`, Delete uses `dangerText`, and Previous/Next use `ADMIN_PAGINATION_BUTTON_SX`; preview delegates to ImageLightbox. | Verify all role-visibility, delete-confirmation, mutation and responsive states; no local card/avatar/pagination style object remains. | PARTIAL — presentation roles centralized; caller/state parity remains open. |
-| `src/components/auth/Captcha.tsx` | Uses MUI Box for the external CAPTCHA container; no custom panel or field preset. | Container min-height, disabled opacity and pointer-events are local runtime presentation; third-party widget owns its internal appearance. | PARTIAL — external widget boundary; wrapper state styling remains local. |
-| `src/components/common/PasswordRequirements.tsx` | Shared password rule feedback derives from getPasswordRequirements; success/secondary/disabled colors use palette semantics. | Direct consumers: RegisterForm, ResetPasswordForm, ChangePasswordForm, AdminUserForm. Local list/grid spacing and responsive two-column layout remain in sx; success/invalid icon treatment has no named feedback preset. | PARTIAL — behavior shared; layout/feedback visual contract remains local. |
+| `src/components/auth/Captcha.tsx` | Third-party widget owns its internal appearance; wrapper disabled/loading state consumes `getCaptchaContainerSx(disabled)` from the shared form preset owner. | Verify provider load/unavailable/error states and responsive widget sizing; no component-local sx object remains. | PARTIAL — wrapper state preset-owned; third-party/provider state parity remains open. |
+| `src/components/common/PasswordRequirements.tsx` | Requirement list and item layout use `PASSWORD_REQUIREMENTS_LIST_SX` / `PASSWORD_REQUIREMENT_ITEM_SX`; invalid icon uses `PASSWORD_REQUIREMENT_INVALID_ICON_SX`; success/secondary colors use MUI palette semantics. | Verify responsive two-column layout and all direct consumers; no local visual sx object remains. | PARTIAL — layout and feedback tokens centralized; consumer/state parity remains open. |
 | `src/components/common/NotFound.module.css` | Text colors and spacing partially consume --ht-* CSS variables. | Home CTA still defines local background, padding, margin and border; page background image/position/cover and layout are unique composition but need documented ownership. | CHANGE REQUIRED — shared action visual values are partly local. |
 | `src/components/home/HomeHero.tsx` | WelcomeHeading owns shared home heading composition. | Intro typography and 850px content width use HOME_HERO_INTRO_SX, composed from HOME_INTRO_SX. | MIGRATED — no React style prop or local visual object remains. |
 | `src/components/home/HomeTrips.tsx` | Heading consumes HOME_HEADING_SX; trip listing delegates to shared TripList. | Heading remains a semantic h3 and uses the shared heading preset; no local visual declaration remains. | MIGRATED — heading/list composition uses shared owners. |
@@ -6547,3 +6547,25 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 auth form entry: `src/components/auth/ChangePasswordForm.tsx` has its Save role migrated; verify the remaining auth forms and global field contract before declaring the auth workstream complete.
+
+
+## 11.100 — CAPTCHA and password-requirement feedback presets (2026-11-19)
+
+### Source changes
+- Added `getCaptchaContainerSx(disabled)` to the shared form preset owner and migrated Captcha's local wrapper sx object to it.
+- Added `PASSWORD_REQUIREMENT_INVALID_ICON_SX` and migrated the unchecked password-requirement icon away from its local sx object.
+- Existing password requirement list/item layout was already preset-owned; reconciled both Section 10.1 rows.
+
+### Preserved
+- CAPTCHA script loading, site-key fallback, widget render/reset lifecycle, token/expiry/error callbacks, disabled pointer-events and opacity values.
+- Password requirement calculation, responsive grid, success/invalid palette colors and all consumer behavior.
+- No auth, API, validation or business logic changed.
+
+### Result and status
+- **3 source files changed** plus the Section 10.1 ledger reconciliation.
+- CAPTCHA wrapper and password feedback presentation: **SOURCE MIGRATED**.
+- Third-party widget behavior and all consumer/field state parity remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue the auth field-system audit: verify whether MUI's built-in outlined TextField/Checkbox states already satisfy the shared base contract before adding any custom theme overrides; do not duplicate MUI defaults or change their appearance.
