@@ -27,6 +27,7 @@ import { Captcha } from '@/components/auth/Captcha';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { useNotification } from '@/components/common/NotificationProvider';
+import styles from './RegisterForm.module.css';
 import {
   AUTH_SUCCESS_REDIRECT_DELAY_MS,
   REGISTRATION_SUCCESS_MESSAGE,
