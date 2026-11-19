@@ -730,11 +730,11 @@ This ledger is the operational source for answering "what is actually fixed in e
 | `src/components/maps/PointLocationPicker.tsx` | Point map owner used by CreatePointPage/EditPointPage; composes GoogleMapView, AddressAutocomplete, GPS locate, remove marker, click/drag selection and find-in-map trigger. | AddressAutocomplete now consumes the named point-picker variant; GPS and clear-marker actions retain their existing roles; Snackbar/Alert state and externally forwarded findInMapTrigger are unchanged. | PARTIAL — map action semantics and feedback states remain open. |
 | `src/components/maps/TripLocationPicker.tsx` | Trip map owner used by TripForm/EditTripLayout; composes GoogleMapView and AddressAutocomplete with map-click/drag, search and marker clearing. | Separate implementation from PointLocationPicker; frame/hint and responsive composition remain feature-specific, while autocomplete and marker-clear visuals now consume named presets. No GPS action/find trigger. | PARTIAL — remaining map action and state contracts stay open; do not merge behavior blindly. |
 | `src/components/trips/TripSelectField.tsx` | Reuses MUI TextField/Autocomplete for trip selection. | No explicit shared field preset at call sites; must inherit the centralized base field contract without feature-local skin. | PARTIAL. |
-| `src/components/CustomFileUploadButton.tsx` | Shared upload trigger used by generic image upload and profile-image selection; supports camera IconButton and text Button modes, max-count/disabled gating, accept/multiple and file-change forwarding. | Two distinct raw action renderings (IconButton vs contained Button) and local 30ch wrapper; no semantic Upload role or centralized icon-action state. Direct consumers: ImageUploadField, ProfileImage/ProfileImageUpload. | CHANGE REQUIRED — shared Upload action contract. |
+| `src/components/CustomFileUploadButton.tsx` | Shared upload trigger with text Button and camera IconButton modes; both consume the semantic `upload` role through `image-upload.ts`. | Container width and text/icon mode geometry remain in named presets; verify direct consumers, disabled/max-count states and accessible file-input behavior. | PARTIAL — Upload role centralized; consumer/state parity remains open. |
 | `src/components/images/AppImage.tsx` | Shared image renderer resolves named preset dimensions/fill/sizes/priority, thumbnail URL and one full-image retry before missing-image fallback; object-fit and profile-lightbox behavior use CSS Module classes. Direct consumers remain mapped in this row. | No React `style` prop or style transport remains; preset-to-caller frame ratios, dimensions and responsive `sizes` parity still require review. | PARTIAL — style transport migrated; image preset/frame parity remains open. |
 | `src/components/images/ImageGallery.tsx` | Direct consumers are PointSection and DayImagesGallery; gallery state and empty path are component-owned; images use AppImage and engagement overlays use EngagementBar. | CSS Module owns row/stack/grid structure and dynamic column classes; focus-visible outline consumes shared focus CSS variables; ImageLightbox is shared. Image frame ratios, overlay stacking and responsive caller parity remain open. | PARTIAL — structure and focus token ownership centralized; frame/overlay/caller verification remains. |
 | `src/components/images/ImageLightbox.tsx` | Direct consumers: ImageGallery, AdminUserProfileImage and AdminUsers. Fullscreen Dialog Paper uses the shared Dialog surface plus the documented image-stage background variant; Close/Previous/Next controls compose `ICON_ACTION_STYLES.imageControl` with named position presets; counter, root, stage and image frame use named presets. | Verify caller-specific image ratios/sizes and keyboard/touch state parity; no local control skin or geometry object remains in the component. | MIGRATED — lightbox surface, controls and stage presentation are preset-owned. |
-| `src/components/images/ImageUploadField.tsx` | Shared upload field and AppImage usage. | Local thumbnail dimensions/objectFit/radii, layout sx, raw remove/delete-all IconButtons and upload Button remain. | CHANGE REQUIRED. |
+| `src/components/images/ImageUploadField.tsx` | Uses named image-upload presets for field layout, preview list/rows/thumbnails, remove actions and count/limit feedback; upload trigger delegates to `CustomFileUploadButton`. | Upload and draft Remove All now use semantic `upload` / `removeSelection` roles; individual preview removal uses the shared danger icon role. Caller-specific preview/frame sizing and responsive/disabled state parity remain open. | PARTIAL — action roles and field presentation are preset-owned; caller/state parity remains. |
 | `src/components/common/ExpandableText.tsx` | Shared disclosure component; Show more/less uses MUI text-button defaults. | Collapsed three-line clamp uses EXPANDABLE_TEXT_COLLAPSED_SX; expanded state removes the clamp without local visual objects. | MIGRATED — disclosure presentation centralized; MUI owns the text-button default role. |
 | `src/components/common/NotFound.tsx` | 404 hero structure remains in NotFound.module.css; Home CTA remains a native button rendered through MUI Box. | CTA presentation uses NOT_FOUND_HOME_BUTTON_SX and semantic colors; countdown/router behavior remains component-owned. | MIGRATED — 404 hero structure and Home action have separate owners. |
 | `src/components/common/NotificationProvider.tsx` | Snackbar/Alert inherit MUI severity and variant states; Alert width uses NOTIFICATION_ALERT_SX. | No custom surface skin; placement/duration/close behavior remains notification-constant/provider owned. | MIGRATED — notification presentation contract centralized. |
@@ -6129,3 +6129,30 @@ The remaining work is organized into **12 owner-first workstreams**. A workstrea
 
 ### Next
 - Continue with the next Section 10.1 image entry: `src/components/images/ImageUploadField.tsx`. Inspect upload/remove/delete-all action semantics, thumbnail frames and its direct callers before changing the component.
+
+
+## 11.81 — Semantic Upload and draft Remove actions (2026-11-19)
+
+### Scope and preflight
+- Continued with the next Section 10.1 image-upload entry.
+- Inspected `ImageUploadField.tsx`, `image-upload.ts` and `CustomFileUploadButton.tsx`.
+- Confirmed upload and preview/remove visual geometry was already owned by named image-upload presets; the missing piece was explicit semantic action naming rather than new local styles.
+
+### Source changes
+- Added `BUTTON_STYLES.upload` and `ICON_ACTION_STYLES.upload` aliases of the existing primary upload appearance.
+- Added `BUTTON_STYLES.removeSelection` and `ICON_ACTION_STYLES.removeSelection` for removing unsubmitted draft files; these preserve the existing primary/base appearance and remain distinct from permanent Delete/danger actions.
+- Updated the shared image-upload preset owner so desktop/mobile upload triggers consume `upload`, and Remove All draft controls consume `removeSelection`.
+- Individual preview removal remains on the existing danger icon role.
+
+### Preserved
+- File picker modes, accepted MIME types, multiple selection, max-count gating, 25 MB input limit, client compression, preview object URLs/cleanup, remove-one/remove-all behavior, processing state and error messages.
+- No upload API, server validation, image storage, data or business logic changed.
+
+### Result and status
+- **2 source files changed** plus the Section 10.1 ledger rows for ImageUploadField and CustomFileUploadButton.
+- Upload and draft Remove action semantics: **SOURCE MIGRATED**.
+- Preview frame sizing, direct consumer parity, responsive and disabled/loading state verification remain **PARTIAL**.
+- No build, tests, lint, CI or browser validation was run.
+
+### Next
+- Continue with the next Section 10.1 image consumer: `src/components/images/DayImagesGallery.tsx`. Verify image frame sizing and AppImage preset use against its parent trip layout.
