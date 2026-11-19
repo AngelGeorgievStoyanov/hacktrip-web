@@ -7958,3 +7958,61 @@ Current gaps:
 - **No color, hover, palette, CSS variable or field value was changed.** Existing visual behavior is preserved pending design intent.
 - Next source-level work, after the token contract is approved: resolve the duplicate `ADMIN_NAVIGATION_SX` declaration and the undefined `SECONDARY_BUTTON_SX` reference, then implement the shared button/field contract in small, separately documented changes.
 - The global audit remains IN PROGRESS. No build, tests, lint, CI or browser validation was run.
+
+
+## 11.144 — Semantic color token consumer and CSS-variable bridge audit (2026-11-19)
+
+### Scope and method
+- Re-checked the live `feature/frontend-modernization` branch at HEAD `710c4c8e3381a17f040515e3b25643d6e69589ef`.
+- Read the current color-token source, MUI palette/theme bridge, shared style presets, global stylesheet, and the public About/Legal/Footer/Pagination/ImageGallery CSS surfaces.
+- Traced the token references in these files and inspected representative feature consumers for trip actions, social actions, map address controls, trip filters, image controls, and tracking.
+- This is a **focused consumer pass**, not yet a claim that every TSX file in the repository has been exhaustively searched. GitHub code-search results were not used as branch evidence because code search resolves against the default branch, not necessarily this feature branch.
+
+### Confirmed token ownership and consumers
+
+| Token group | Confirmed source-level consumers | Ownership assessment |
+|---|---|---|
+| Brand primary / primary hover | `src/theme/palette.ts`, `src/styles/presets/buttons.ts`, `src/styles/presets/tracking.ts`; CSS bridge used by global button skin, Footer and TripPagination | Primary is the shared MUI/action brand. Hover currently remains green while primary is blue; this is a real cross-surface mismatch, not a migration artifact to silently correct. |
+| Brand secondary | `src/theme/palette.ts` | This is MUI's purple secondary palette role. It is not the same semantic contract as the gray/lavender secondary button surface in `BUTTON_STYLES`. Keep the names conceptually distinct. |
+| Feedback | `src/theme/palette.ts`; feature consumers also use MUI semantic values such as `color="error"` and `'error.main'` | Feedback palette is centrally wired to MUI. Several destructive-action consumers intentionally or historically use the error palette, so action-danger and feedback-error must be reconciled before any consolidation. |
+| Surface / social overlays | `src/styles/presets/social.ts`, `src/styles/presets/social-object-placeholder.ts`, `src/styles/presets/image-gallery.ts` | Feature-specific overlays, placeholders and lightbox surfaces are correctly owned by semantic surface roles rather than global MUI palette colors. |
+| Borders / text | `src/theme/palette.ts`, `src/styles/presets/forms.ts`, `src/styles/presets/buttons.ts`, `src/styles/presets/typography.ts`, `src/styles/presets/pagination.ts`, `src/styles/presets/map-controls.ts` | Shared palette roles are reused, while map and image-control text/border values remain feature-scoped. |
+| Action states | `src/styles/presets/buttons.ts`, `src/styles/presets/forms.ts`, `src/styles/presets/social.ts`, `src/styles/presets/pagination.ts` | The action namespace currently contains several unrelated roles (danger, secondary surface, image controls, create-trip inversion, navigation hover/selected). Do not flatten these into one generic action color. |
+| Legal / editorial / decorative | `src/styles/presets/buttons.ts`, `src/styles/presets/typography.ts`, About and Legal CSS Modules | These are cross-surface editorial/legal contracts; keep them distinct from generic brand and feedback roles. |
+| Map | `src/styles/presets/map-controls.ts` | Address input and picker hint colors are explicitly feature-owned. Do not override them via a global field theme without a separate map-field review. |
+| Tracking | `src/styles/presets/tracking.ts` | The map polyline consumes the brand primary token; this is an intentional brand-color consumer. |
+
+### CSS custom-property usage
+
+The following CSS consumers were confirmed:
+
+| CSS variable family | Consumers |
+|---|---|
+| `--ht-color-primary` | `app/globals.css`, `src/components/layout/Footer.module.css`, `src/components/trips/TripPagination.module.css` |
+| `--ht-color-primary-hover` | `app/globals.css`, `src/components/trips/TripPagination.module.css` |
+| `--ht-color-text-inverse` | `app/globals.css`, `src/components/layout/Footer.module.css`, `app/(public)/about/AboutPage.module.css`, TripPagination |
+| `--ht-color-surface-page`, `--ht-color-text-primary`, `--ht-color-border-legal`, `--ht-color-legal-link` | `app/(public)/privacy-policy/LegalPage.module.css` |
+| `--ht-color-decorative-heading-shadow` | `app/(public)/about/AboutPage.module.css` |
+| `--ht-color-action-danger-hover` | `app/globals.css` legacy danger-button hover rule |
+| `--ht-color-action-contrast-background` | Defined in `src/theme/index.ts`; no CSS/CSS Module consumer was found in this focused pass. Confirm whether it is still needed before retaining it as a CSS bridge variable. |
+
+Other `--ht-*` variables (spacing, shape, typography, sizing) have distinct CSS consumers and are outside the color-only mapping above. Do not remove them as part of color cleanup.
+
+### Findings requiring a decision or follow-up
+
+1. **Blue/green primary hover mismatch is propagated through three layers.** `UI_COLORS.brand.primary` is `#1976d2`; `primaryHover` is `#4daf30`. The mismatch is consumed by the button preset and the CSS bridge. Preserve both values until the intended design is confirmed.
+2. **Danger and feedback error remain separate semantic roles in the source.** `action.danger` is `red`, `action.dangerHover` is `#ef0a0a`, and `feedback.error` is `#d32f2f`. `FavoriteButton`, `ReportButton`, and trip-group social actions use MUI error/primary props directly in different states. This is a consumer-level inconsistency to resolve as a dedicated social-action decision, not by global replacement.
+3. **Secondary has two different meanings.** MUI `palette.secondary` is purple; the shared secondary button surface is gray/lavender. Future naming should distinguish palette-secondary from secondary-action surface.
+4. **CSS bridge contains at least one candidate for removal or re-homing.** `--ht-color-action-contrast-background` has a definition but no consumer in the focused CSS scan. Verify full repository usage before removing it.
+5. **Legacy `.ht-button` remains in `app/globals.css`.** It consumes the CSS bridge for primary, typography and danger hover. No runtime deletion is authorized by this audit; first establish whether any Server Component emits `ht-button` / `ht-button--danger` in the current branch.
+6. **Literal values remain in feature presets.** `src/styles/presets/trip-filters.ts` contains translucent white background/hover values outside `UI_COLORS`; these may be intentional filter-surface states. `src/styles/presets/image-upload.ts` still uses the semantic MUI string `error.main` for a limit message. These are candidates for semantic classification, not automatically defects.
+7. **Do not expose every TypeScript token as a CSS variable.** The bridge should remain demand-driven by plain CSS/CSS Module consumers; MUI and TS presets can continue importing `UI_COLORS` directly.
+
+### Changes and verification
+- No application source, color value, MUI theme, CSS Module, or global stylesheet was changed.
+- No visual behavior was intentionally altered.
+- Branch and HEAD were re-checked before this entry; branch remains `feature/frontend-modernization`.
+- No build, tests, lint, CI, or browser validation was run.
+
+### Next audit item
+Complete the repository-wide direct-consumer sweep for `UI_COLORS`, `ht-button` / `ht-button--danger`, and every `--ht-color-*` variable against the current feature-branch tree. Then reconcile the remaining inventory ledger rows. Only after those checks should the audit be marked complete or source cleanup be proposed.
