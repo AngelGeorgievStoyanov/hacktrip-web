@@ -31,7 +31,7 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { CommentDto, SocialConfigTargetKey } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
+import { REPLY_ITEM_SX, REPLY_EDIT_FORM_SX, REPLY_BODY_SX, REPLY_SOCIAL_ACTIONS_SX, REPLIES_SECTION_SX, REPLY_CREATE_FORM_SX } from '@/styles/presets/comments';
 
 interface RepliesSectionProps {
   commentId: number;
@@ -146,7 +146,7 @@ export function RepliesSection({
     return (
       <Box
         key={item.id}
-        sx={{ borderLeft: '2px solid', borderColor: 'divider', pl: 2, py: 1, mt: 1 }}
+        sx={REPLY_ITEM_SX}
       >
         <Typography variant="subtitle2">{item.author.name}</Typography>
         {authenticated && editingId === item.id && canEdit ? (
@@ -158,7 +158,7 @@ export function RepliesSection({
                 updateMutation.mutate({ id: item.id, comment: editingReply });
               }
             }}
-            sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}
+            sx={REPLY_EDIT_FORM_SX}
           >
             <TextField
               size="small"
@@ -193,12 +193,12 @@ export function RepliesSection({
             </Tooltip>
           </Box>
         ) : (
-          <Typography sx={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
+          <Typography sx={REPLY_BODY_SX}>
             {item.comment}
           </Typography>
         )}
         {authenticated && hasReplyActions ? (
-          <Box sx={{ ...SOCIAL_ACTIONS_SX, mt: 1 }}>
+          <Box sx={REPLY_SOCIAL_ACTIONS_SX}>
             {canLike ? (
               <LikeButton
                 targetType="comment"
@@ -265,7 +265,7 @@ export function RepliesSection({
     <Box
       component="section"
       aria-label={`Replies, ${data?.total ?? initialRepliesCount} total`}
-      sx={{ mt: 1, pl: 2 }}
+      sx={REPLIES_SECTION_SX}
     >
       <Typography variant="subtitle2">Replies</Typography>
       <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
@@ -279,7 +279,7 @@ export function RepliesSection({
             event.preventDefault();
             if (reply.trim()) createMutation.mutate(reply);
           }}
-          sx={{ display: 'flex', gap: 1, alignItems: 'flex-start', mt: 1 }}
+          sx={REPLY_CREATE_FORM_SX}
         >
           <TextField
             size="small"
