@@ -307,13 +307,11 @@ export function PointForm({
       />
 
       {!isEdit ? (
-        <Box sx={{ width: '100%' }}>
-          <ImageUploadField
-            files={files}
-            setFiles={setFiles}
-            existingCount={existingImages.length + uploadedImageCount}
-          />
-        </Box>
+        <ImageUploadField
+          files={files}
+          setFiles={setFiles}
+          existingCount={existingImages.length + uploadedImageCount}
+        />
       ) : null}
 
       <Box
