@@ -12,12 +12,11 @@ import {
 } from '@/constants/maps';
 import { formatCoordinate, type MapPosition } from '@/lib/maps';
 import {
-  MAP_ADDRESS_INPUT_SX,
   TRIP_LOCATION_MAP_FRAME_SX,
   TRIP_LOCATION_HINT_SX,
+  TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX,
 } from '@/styles/presets/map-controls';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import { UI_COLORS } from '@/constants/ui/colors';
 
 interface TripLocationPickerProps {
   latitude: string;
@@ -107,30 +106,14 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
         label="Search field"
         size="medium"
         buttonVariant="contained"
-        inputSx={{ ...MAP_ADDRESS_INPUT_SX, m: 0 }}
-        buttonSx={{
-          m: 0,
-          minHeight: 56,
-          backgroundColor: 'primary.main',
-          '&.Mui-disabled': {
-            backgroundColor: 'primary.main',
-            color: UI_COLORS.text.inverse,
-            opacity: 1,
-          },
-          ...BUTTON_STYLES.primary,
-        }}
-        containerSx={{ width: '100%' }}
+        variant="tripPicker"
         direction={{ xs: 'column', sm: 'row' }}
         extraAction={
           <Button
             type="button"
             variant="contained"
             onClick={handleClearMarker}
-            sx={{
-              ...BUTTON_STYLES.secondary,
-              minHeight: 56,
-              whiteSpace: 'nowrap',
-            }}
+            sx={TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX}
           >
             Remove Marker
           </Button>
