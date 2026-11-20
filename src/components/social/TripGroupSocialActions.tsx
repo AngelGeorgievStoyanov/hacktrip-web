@@ -1,6 +1,6 @@
 'use client';
 
-import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 import { useState } from 'react';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
