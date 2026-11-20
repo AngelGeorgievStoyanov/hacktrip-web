@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+
 import { useState } from 'react';
 import {
   Typography,
@@ -83,7 +85,7 @@ export function TripDetails({
 
   return (
     <Card
-      sx={TRIP_DETAILS_CARD_SX}
+      sx={[FEATURE_SURFACE_SX, TRIP_DETAILS_CARD_SX]}
     >
       <Box
         sx={TRIP_DETAILS_HEADER_SX}
