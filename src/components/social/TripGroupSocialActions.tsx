@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { SOCIAL_ERROR_TEXT_SX, STICKY_SOCIAL_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
+import { SOCIAL_BADGE_COUNT_SX, SOCIAL_ERROR_TEXT_SX, STICKY_SOCIAL_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
 import { isSocialActionEnabled, isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
@@ -128,7 +128,7 @@ export function TripGroupSocialActions({
               aria-pressed={liked}
               color={liked ? 'primary' : 'default'}
             >
-              <Badge badgeContent={likes} invisible={likes === 0} max={BADGE_MAX} color="primary">
+              <Badge badgeContent={likes} invisible={likes === 0} max={BADGE_MAX} color="primary" sx={SOCIAL_BADGE_COUNT_SX}>
                 {liked ? (
                   <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
                 ) : (
@@ -160,6 +160,7 @@ export function TripGroupSocialActions({
                 invisible={(social.favorites ?? 0) === 0}
                 max={BADGE_MAX}
                 color="primary"
+                sx={SOCIAL_BADGE_COUNT_SX}
               >
                 {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
               </Badge>
