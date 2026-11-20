@@ -1,6 +1,5 @@
 'use client';
 
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -318,7 +317,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
       </Box>
 
       <BackButton
-        startIcon={<ArrowBackRoundedIcon />}
+        startIcon={<BackArrowIcon />}
         onClick={() => router.push('/admin/users')}
         sx={ADMIN_USER_FORM_BACK_SX}
       >
