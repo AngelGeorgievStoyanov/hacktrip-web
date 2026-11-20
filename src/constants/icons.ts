@@ -41,6 +41,7 @@ export {
   FileUpload as UploadIcon,
   DeleteForever as DeleteAllImagesIcon,
   DeleteOutline as RemoveImageIcon,
+  DeleteOutline as DeleteActionIcon,
   ArrowCircleDown as ArrowCircleDownIcon,
   ArrowCircleUp as ArrowCircleUpIcon,
   Add as AddIcon,
