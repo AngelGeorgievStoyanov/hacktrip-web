@@ -13,7 +13,7 @@ import { FavoriteButton } from './FavoriteButton';
 import { ReportButton } from './ReportButton';
 import { SocialConfigStatus } from './SocialConfigStatus';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
-import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
+import { isSocialActionEnabled, isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
@@ -74,6 +74,11 @@ export function EngagementBar({
     targetKey,
     social.reportedByMe ? 'delete' : 'create',
   );
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', targetKey);
+  const canCreateComment = isSocialOperationAllowed(socialConfig.data, 'comment', targetKey, 'create');
+  const showCommentToggle =
+    showComments && commentsEnabled &&
+    (social.comments.count > 0 || (status === 'authenticated' && canCreateComment));
   const externallyControlledComments = onToggleComments !== undefined;
   const isCommentsOpen = externallyControlledComments
     ? (commentsOpen ?? false)
@@ -138,7 +143,7 @@ export function EngagementBar({
             ) : null}
           </>
         ) : null}
-        {showComments ? (
+        {showCommentToggle ? (
           <Tooltip
             title={
               isCommentsOpen
@@ -173,15 +178,15 @@ export function EngagementBar({
                 >
                   <CommentIcon />
                 </Badge>
-              ) : (
+              ) : status === 'authenticated' && canCreateComment ? (
                 <AddCommentIcon />
-              )}
+              ) : null}
             </IconButton>
           </Tooltip>
         ) : null}
       </Box>
-      {!externallyControlledComments && showComments && isCommentsOpen ? (
-        <CommentsSection target={commentTarget} defaultFormOpen={social.comments.count === 0} />
+      {!externallyControlledComments && showCommentToggle && isCommentsOpen ? (
+        <CommentsSection target={commentTarget} defaultFormOpen={status === 'authenticated' && canCreateComment && social.comments.count === 0} />
       ) : null}
     </Box>
   );
