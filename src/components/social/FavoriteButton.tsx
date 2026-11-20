@@ -1,12 +1,11 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { FavoriteAddIcon, FavoriteRemoveIcon } from '@/constants/icons';
 
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, IconButton, Tooltip } from '@mui/material';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import { socialApi } from '@/api/social';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
@@ -82,7 +81,7 @@ export function FavoriteButton({
                 getSocialBadgeSx(size)
               }
             >
-              {favorited ? <BookmarkRemoveIcon /> : <BookmarkAddIcon />}
+              {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
             </Badge>
           </IconButton>
         </span>
