@@ -11,9 +11,8 @@ import {
   Tooltip,
   Box,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoIcon from '@mui/icons-material/Info';
 import { TripActions } from './TripActions';
+import { ExpandMoreIcon, InfoIcon } from '@/constants/icons';
 import { EngagementBar } from '@/components/social/EngagementBar';
 import { FavoriteButton } from '@/components/social/FavoriteButton';
 import { BackButton } from '@/components/common/BackButton';
