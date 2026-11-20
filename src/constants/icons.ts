@@ -26,6 +26,7 @@ import Menu from '@mui/icons-material/Menu';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutline';
 import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
 import Share from '@mui/icons-material/Share';
+import Send from '@mui/icons-material/Send';
 import Favorite from '@mui/icons-material/Favorite';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
@@ -67,6 +68,7 @@ export {
   CheckCircleOutline as PasswordRequirementMetIcon,
   RadioButtonUnchecked as PasswordRequirementUnmetIcon,
   Share as ShareIcon,
+  Send as SendIcon,
   Favorite as FavoriteIcon,
   KeyboardArrowLeft as TripPreviousIcon,
   KeyboardArrowRight as TripNextIcon,
