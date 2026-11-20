@@ -9,15 +9,13 @@ import { CENTERED_PAGE_MAIN_SX } from '@/styles/presets/layouts';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = buildSeoMetadata({
-  title: 'Travel Inspiration, Places & Trip Ideas',
-  description:
-    'Find travel inspiration, discover interesting places and explore real experiences shared by travelers. Browse trip ideas, photos and destinations, then create and share your own trips with HackTrip.',
-  canonicalPath: '/',
-});
-
 export const metadata: Metadata = {
-  ...metadata,
+  ...buildSeoMetadata({
+    title: 'Travel Inspiration, Places & Trip Ideas',
+    description:
+      'Find travel inspiration, discover interesting places and explore real experiences shared by travelers. Browse trip ideas, photos and destinations, then create and share your own trips with HackTrip.',
+    canonicalPath: '/',
+  }),
   keywords: [
     'HackTrip',
     'Hack Trip',
