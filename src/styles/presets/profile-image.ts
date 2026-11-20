@@ -1,7 +1,7 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
-import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
+import { ACTION_IMAGE_OVERLAY_SX, ICON_ACTION_STYLES } from '@/styles/presets/actions';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 /** Shared profile-image display, action and fullscreen-view contracts. */
@@ -65,7 +65,7 @@ export const PROFILE_IMAGE_FULLSCREEN_STAGE_SX = {
 } as const;
 
 export const PROFILE_IMAGE_FULLSCREEN_CLOSE_SX = {
-  ...ICON_ACTION_STYLES.imageControl,
+  ...ACTION_IMAGE_OVERLAY_SX,
   position: 'absolute',
   top: 8,
   right: 8,
