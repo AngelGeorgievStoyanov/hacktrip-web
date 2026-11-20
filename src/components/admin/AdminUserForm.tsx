@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material';
 import { adminApi, type AdminUserUpdateInput } from '@/api/admin';
+import { BackArrowIcon } from '@/constants/icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { zodResolver } from '@/lib/zodResolver';
