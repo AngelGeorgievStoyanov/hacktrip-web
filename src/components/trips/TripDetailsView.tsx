@@ -14,7 +14,6 @@ import { buildTripUrl } from '@/lib/tripUrl';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
-import { STICKY_SOCIAL_SX } from '@/styles/presets/social';
 import { getTripDetailsStickyHeaderSx } from '@/styles/presets/trip-details';
 import type { TripGroupResponse } from '@/types';
 
@@ -116,10 +115,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           selectedDay={day.dayNumber}
           onSelect={handleSelectDay}
         />
-        <Box
-          sx={STICKY_SOCIAL_SX}
-        >
-          <TripGroupSocialActions
+        <TripGroupSocialActions
             tripGroupId={group.id}
             social={group.social}
             shareTitle={day.title ?? day.destination ?? 'Trip'}
@@ -128,7 +124,6 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
             open={tripGroupCommentsOpen}
             onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
           />
-        </Box>
       </Box>
 
       <Box className={styles.tripDetailsPageLayout}>
