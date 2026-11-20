@@ -15,7 +15,7 @@ import { isSocialActionEnabled, isSocialOperationAllowed, socialConfigTargetKey 
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
-import { SOCIAL_ENGAGEMENT_INLINE_SX, getSocialEngagementActionsSx, getSocialOverlaySx } from '@/styles/presets/social';
+import { SOCIAL_BADGE_COUNT_SX, SOCIAL_ENGAGEMENT_INLINE_SX, getSocialEngagementActionsSx, getSocialOverlaySx } from '@/styles/presets/social';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
@@ -180,6 +180,7 @@ export function EngagementBar({
                   badgeContent={social.comments.count}
                   max={Number.MAX_SAFE_INTEGER}
                   color="primary"
+                  sx={SOCIAL_BADGE_COUNT_SX}
                 >
                   <CommentIcon />
                 </Badge>
