@@ -242,6 +242,15 @@ export function CommentsSection({
             commentItem.permissions.canDelete &&
             isSocialOperationAllowed(socialConfig.data, 'comment', 'comment', 'delete');
           const hasCommentActions = canLike || canFavorite || canReport || canEdit || canDelete;
+          const canCreateReply = isSocialOperationAllowed(
+            socialConfig.data,
+            'replyComment',
+            'comment',
+            'create',
+            targetKey,
+          );
+          const canShowReplies =
+            commentItem.social.comments.count > 0 || (isAuthenticated && canCreateReply);
 
           return (
             <Card component="li" key={commentItem.id} sx={COMMENT_CARD_SX}>
@@ -389,49 +398,53 @@ export function CommentsSection({
                   ) : null}
                 </>
               )}
-              <Tooltip
-                title={
-                  openRepliesId === commentItem.id
-                    ? 'Hide replies'
-                    : `Show ${commentItem.social.comments.count} replies`
-                }
-                arrow
-              >
-                <IconButton
-            sx={ICON_ACTION_STYLES.disclosure}
-                  size="small"
-                  aria-label={
+              {canShowReplies ? (
+                <>
+                <Tooltip
+                  title={
                     openRepliesId === commentItem.id
                       ? 'Hide replies'
                       : `Show ${commentItem.social.comments.count} replies`
                   }
-                  aria-expanded={openRepliesId === commentItem.id}
-                  onClick={() =>
-                    setOpenRepliesId((current) =>
-                      current === commentItem.id ? null : commentItem.id,
-                    )
-                  }
+                  arrow
                 >
-                  {openRepliesId === commentItem.id ? (
-                    <CloseIcon />
-                  ) : (
-                    <Badge
-                      badgeContent={commentItem.social.comments.count}
-                      invisible={commentItem.social.comments.count === 0}
-                      max={Number.MAX_SAFE_INTEGER}
-                      color="primary"
-                    >
-                      <ReplyIcon />
-                    </Badge>
-                  )}
-                </IconButton>
-              </Tooltip>
-              {openRepliesId === commentItem.id ? (
-                <RepliesSection
-                  commentId={commentItem.id}
-                  initialRepliesCount={commentItem.social.comments.count}
-                  parentTargetType={targetKey}
-                />
+                  <IconButton
+              sx={ICON_ACTION_STYLES.disclosure}
+                    size="small"
+                    aria-label={
+                      openRepliesId === commentItem.id
+                        ? 'Hide replies'
+                        : `Show ${commentItem.social.comments.count} replies`
+                    }
+                    aria-expanded={openRepliesId === commentItem.id}
+                    onClick={() =>
+                      setOpenRepliesId((current) =>
+                        current === commentItem.id ? null : commentItem.id,
+                      )
+                    }
+                  >
+                    {openRepliesId === commentItem.id ? (
+                      <CloseIcon />
+                    ) : (
+                      <Badge
+                        badgeContent={commentItem.social.comments.count}
+                        invisible={commentItem.social.comments.count === 0}
+                        max={Number.MAX_SAFE_INTEGER}
+                        color="primary"
+                      >
+                        <ReplyIcon />
+                      </Badge>
+                    )}
+                  </IconButton>
+                </Tooltip>
+                {openRepliesId === commentItem.id ? (
+                  <RepliesSection
+                    commentId={commentItem.id}
+                    initialRepliesCount={commentItem.social.comments.count}
+                    parentTargetType={targetKey}
+                  />
+                ) : null}
+                </>
               ) : null}
             </Card>
           );
