@@ -790,6 +790,25 @@ Rules:
 * Use MUI theme breakpoints for MUI responsive styles. Use CSS media/container queries when they are the correct tool, while keeping breakpoint values consistent with the responsive system.
 * Preserve existing visual behavior while centralizing styles; theme work must not become an unrequested redesign.
 
+### Non-negotiable design-token and styling rule
+
+**Never introduce or change a shared visual value locally in a component.** This is a project-wide engineering rule, not a preference.
+
+Before changing typography, colors, spacing, dimensions, radius, shadows, breakpoints or recurring component appearance:
+
+1. Inspect the existing token, theme and preset owners under `src/constants/ui/`, `src/theme/` and `src/styles/presets/`.
+2. Search for the existing semantic token/preset and inspect its consumers. Reuse the existing owner whenever one exists.
+3. If the required value is missing, add it to the correct centralized owner first, then make every affected component consume that exported token or named preset.
+4. If an existing centralized value is wrong, correct it at its owner and verify the affected consumers. Do not add a second local value to work around it.
+5. Do not put repeated visual literals in component files, local style constants, React `style` props or ad hoc `sx` objects. Component files select and consume centralized styles; they do not own shared visual decisions.
+6. Do not create a new token or preset until you have searched for an equivalent existing one. Do not duplicate a token under a different name.
+7. Compare the relevant legacy implementation and preserve its visual behavior unless the user explicitly requests a redesign.
+8. After editing, search the repository for remaining duplicates and inspect all affected consumers before reporting completion.
+
+**Forbidden:** fixing one component by hardcoding a value that already exists in the design system, copying a token's value into a component, or changing only one consumer when the shared owner is the source of truth.
+
+If the correct owner or intended visual value is unclear, stop and inspect the architecture/current consumers before editing. Never guess and never silently create a parallel styling path.
+
 ### Reusable component rules
 
 Extract shared components or patterns when multiple call sites have the same semantics and behavior.
