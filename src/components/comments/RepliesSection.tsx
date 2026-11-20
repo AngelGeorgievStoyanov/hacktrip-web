@@ -1,6 +1,7 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { CloseIcon, ConfirmIcon, EditIcon, RemoveImageIcon, ReplyIcon } from '@/constants/icons';
 
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -13,11 +14,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import CheckIcon from '@mui/icons-material/Check';
-import ReplyIcon from '@mui/icons-material/Reply';
 import { commentApi } from '@/api/comments';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
@@ -174,7 +170,7 @@ export function RepliesSection({
                   aria-label="Save reply"
                   disabled={updateMutation.isPending}
                 >
-                  <CheckIcon />
+                  <ConfirmIcon />
                 </IconButton>
               </span>
             </Tooltip>
@@ -235,7 +231,7 @@ export function RepliesSection({
                     setEditingReply(item.comment);
                   }}
                 >
-                  <EditOutlinedIcon />
+                  <EditIcon />
                 </IconButton>
               </Tooltip>
             ) : null}
@@ -251,7 +247,7 @@ export function RepliesSection({
                     })
                   }
                 >
-                  <DeleteOutlineIcon />
+                  <RemoveImageIcon />
                 </IconButton>
               </Tooltip>
             ) : null}
