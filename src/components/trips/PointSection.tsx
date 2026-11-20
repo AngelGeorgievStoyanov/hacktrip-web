@@ -5,6 +5,9 @@ import { ImageGallery } from '@/components/images/ImageGallery';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
 import { PointActions } from '@/components/points/PointActions';
 import { CommentsToggle } from '@/components/comments/CommentsToggle';
+import { useAuth } from '@/hooks/useAuth';
+import { useSocialConfig } from '@/hooks/useSocialConfig';
+import { isSocialActionEnabled, isSocialOperationAllowed } from '@/lib/socialConfig';
 import { ExpandableText } from '@/components/common/ExpandableText';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
@@ -27,9 +30,17 @@ export function PointSection({
   pointCommentTarget,
   togglePointComments,
 }: PointSectionProps) {
+  const { status } = useAuth();
+  const socialConfig = useSocialConfig();
   if (!point) {
     return null;
   }
+
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', 'point');
+  const canCreateComment = isSocialOperationAllowed(socialConfig.data, 'comment', 'point', 'create');
+  const canShowComments = commentsEnabled && (
+    point.social.comments.count > 0 || (status === 'authenticated' && canCreateComment)
+  );
 
   const pointTarget: CommentTarget = { type: 'point', pointId: point.id };
   const isPointOpen =
@@ -74,11 +85,14 @@ export function PointSection({
 
           <Box sx={POINT_SECTION_ACTION_ROW_SX}>
             <PointActions point={point} />
-            <CommentsToggle
-              count={point.social.comments.count}
-              open={isPointOpen}
-              onToggle={() => togglePointComments(pointTarget)}
-            />
+            {canShowComments ? (
+              <CommentsToggle
+                count={point.social.comments.count}
+                open={isPointOpen}
+                onToggle={() => togglePointComments(pointTarget)}
+                canCreate={status === 'authenticated' && canCreateComment}
+              />
+            ) : null}
           </Box>
         </CardContent>
       </Card>
