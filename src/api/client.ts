@@ -44,7 +44,7 @@ export const authToken = {
 };
 
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: config.apiBaseUrl,
+  baseURL: typeof window === 'undefined' ? config.siteUrl : config.apiBaseUrl,
   withCredentials: true,
 });
 
