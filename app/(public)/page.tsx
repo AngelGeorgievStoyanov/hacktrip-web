@@ -16,6 +16,26 @@ export const metadata: Metadata = buildSeoMetadata({
   canonicalPath: '/',
 });
 
+export const metadata: Metadata = {
+  ...metadata,
+  keywords: [
+    'HackTrip',
+    'Hack Trip',
+    'Hack-Trip',
+    'travel inspiration',
+    'travel ideas',
+    'trip ideas',
+    'travel experiences',
+    'discover places',
+    'interesting places to visit',
+    'travel destinations',
+    'share trips',
+    'travel community',
+    'trip planning',
+    'travel photos',
+  ],
+};
+
 export default async function HomePage() {
   let topTrips: TripGroupResponse[] = [];
   try {
