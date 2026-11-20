@@ -1,12 +1,10 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { AddCommentIcon, CloseIcon, CommentIcon } from '@/constants/icons';
 
 import { Badge, Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { COMMENTS_TOGGLE_ROW_SX, COMMENTS_TOGGLE_EMPTY_LABEL_SX } from '@/styles/presets/comments';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import CommentIcon from '@mui/icons-material/Comment';
-import CloseIcon from '@mui/icons-material/Close';
 
 interface CommentsToggleProps {
   /** Number of comments for the target, taken from the API response. */
