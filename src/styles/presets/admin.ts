@@ -1,6 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 import { UI_SHAPE } from '@/constants/ui/shape';
-import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
+import { ACTION_IMAGE_OVERLAY_SX, ICON_ACTION_STYLES } from '@/styles/presets/actions';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 import { PANEL_SX } from '@/styles/presets/panels';
@@ -100,7 +100,7 @@ export const ADMIN_IMAGE_URL_CELL_SX = {
   overflowWrap: 'anywhere',
 } as const;
 export const ADMIN_IMAGE_PREVIEW_CLOSE_SX = {
-  ...ICON_ACTION_STYLES.base,
+  ...ACTION_IMAGE_OVERLAY_SX,
   position: 'absolute',
   right: 8,
   top: 8,
