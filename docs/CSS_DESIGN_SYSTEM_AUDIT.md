@@ -8188,3 +8188,25 @@ The following source files were re-fetched from `feature/frontend-modernization`
 - Source changed: `src/constants/ui/typography.ts`.
 - Source commit: `8447c2e2a418b8b9c5ee5b91a2010fd20032ec84`.
 - No build, TypeScript check, lint, tests, CI or browser visual QA was run; explicit authorization is still required by this audit's execution policy.
+
+## 11.150 — Shared border-radius ownership centralized (2026-11-20)
+
+- Branch: `feature/frontend-modernization`.
+- Scope: shared MUI surfaces, Trip Cards/Trip Details, social overlays, map controls, image upload/profile image, live tracking, admin image/diagnostic surfaces, OG brand mark and CSS consumers.
+- Central owner: `src/constants/ui/shape.ts` (`UI_SHAPE`). It now owns the MUI theme radius, MUI sx radius multipliers, explicit CSS-pixel radii, and circular treatment.
+- Consumers migrated:
+  - `src/theme/index.ts` continues to expose the shared theme radius to plain CSS through `--ht-shape-border-radius`; Cards, Paper surfaces, Trip Cards, Trip Details and admin panels inherit the same theme-owned surface radius.
+  - `src/styles/presets/social.ts`: sticky Trip Details social surface and social image overlay.
+  - `src/styles/presets/tracking.ts`: live map frame and telemetry stat surfaces.
+  - `src/styles/presets/image-upload.ts`: upload preview list/rows and profile preview thumbnail.
+  - `src/styles/presets/profile-image.ts`: circular profile image and delete icon.
+  - `src/styles/presets/admin.ts`: diagnostic blocks and admin image thumbnails.
+  - `src/styles/presets/trip-filters.ts`: trip search surface.
+  - `src/lib/images/renderTripOgImage.tsx`: Satori/OG brand mark.
+  - Existing CSS consumers in `ImageGallery.module.css`, `TripPagination.module.css`, `LegalPage.module.css` and `app/globals.css` already consume the central CSS variables and were retained.
+  - Map address autocomplete already consumes `UI_SHAPE.mapAddressInputRadius` through the shared map-controls preset.
+- Existing visual values were preserved; this change centralizes ownership only. No radius was intentionally unified or redesigned.
+- Trip Card, Trip Details, Trip Map and Point Section MUI Cards use the shared theme surface contract rather than component-local radii. Admin user panels likewise inherit the theme surface contract.
+- Source files changed: `src/constants/ui/shape.ts`, `src/theme/index.ts`, `src/styles/presets/social.ts`, `src/styles/presets/tracking.ts`, `src/styles/presets/image-upload.ts`, `src/styles/presets/profile-image.ts`, `src/styles/presets/admin.ts`, `src/styles/presets/trip-filters.ts`, `src/lib/images/renderTripOgImage.tsx`.
+- Verification: source updates committed to the existing feature branch. No build, TypeScript check, lint, tests, CI or browser visual QA was run.
+- Status: known explicit radius declarations in the inspected active-branch consumers now resolve through the shared shape owner or existing theme/CSS variables. The MUI semantic `shape="rounded"` pagination prop remains a component API choice, not a duplicated numeric radius declaration; its rendered appearance is preserved.
