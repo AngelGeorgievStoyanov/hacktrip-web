@@ -1,7 +1,8 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 /** Shared image upload field composition and feedback states. */
 export const IMAGE_UPLOAD_FIELD_ROOT_SX = { display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0, width: '100%' } as const;
