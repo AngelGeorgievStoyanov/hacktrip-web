@@ -1,6 +1,7 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
+import { UI_SHAPE } from '@/constants/ui/shape';
 
 /** Shared alignment for like, favorite, report and moderation action groups. */
 export const SOCIAL_ACTIONS_SX = {
@@ -50,7 +51,7 @@ export const SOCIAL_OVERLAY_SX = {
   zIndex: 2,
   p: 0.35,
   border: `1px solid ${UI_COLORS.surface.socialOverlayBorder}`,
-  borderRadius: 3,
+  borderRadius: UI_SHAPE.sxRadius3,
   backgroundColor: UI_COLORS.surface.socialOverlay,
   boxShadow: UI_SHADOWS.socialOverlay,
   backdropFilter: 'blur(8px)',
@@ -69,7 +70,7 @@ export const STICKY_SOCIAL_SX = {
   py: 0.5,
   border: 1,
   borderColor: 'divider',
-  borderRadius: 2.5,
+  borderRadius: UI_SHAPE.sxRadius2_5,
   backgroundColor: UI_COLORS.surface.stickySocial,
   boxShadow: 1,
   backdropFilter: 'blur(10px)',
