@@ -1,7 +1,7 @@
 import type { Theme } from '@mui/material/styles';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
-import { PANEL_SX } from './panels';
+import { FEATURE_SURFACE_SX } from './surfaces';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
@@ -42,7 +42,7 @@ export const AUTH_FORM_TITLE_SX = {
 
 /** Shared layout and surface treatment for standalone authentication forms. */
 export const AUTH_FORM_SX = (theme: Theme) => ({
-  ...PANEL_SX(theme),
+  ...FEATURE_SURFACE_SX(theme),
   ...COLUMN_STACK_SX,
   padding: '30px',
   maxWidth: '700px',
