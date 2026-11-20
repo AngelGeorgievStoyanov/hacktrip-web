@@ -1,5 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
-import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
+import { ACTION_IMAGE_OVERLAY_SX } from '@/styles/presets/actions';
 
 /** Shared gallery and fullscreen image-viewer presentation contracts. */
 export const POINT_SECTION_IMAGE_FRAME_SX = {
@@ -25,7 +25,7 @@ export const IMAGE_LIGHTBOX_ROOT_SX = {
 } as const;
 
 const IMAGE_LIGHTBOX_CONTROL_BASE_SX = {
-  ...ICON_ACTION_STYLES.imageControl,
+  ...ACTION_IMAGE_OVERLAY_SX,
   position: 'absolute',
   zIndex: 2,
 } as const;
