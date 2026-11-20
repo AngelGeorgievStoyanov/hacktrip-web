@@ -4,7 +4,7 @@ import { UI_SHAPE } from '@/constants/ui/shape';
 
 /** Comments section and responsive list/card composition. */
 export const COMMENTS_PANEL_SX = {
-  borderRadius: UI_SHAPE.socialCardRadiusPx,
+  borderRadius: `${UI_SHAPE.socialCardRadiusPx}px`,
   display: 'flex',
   flexDirection: 'column',
   margin: '20px 0',
@@ -21,7 +21,7 @@ export const COMMENT_LIST_SX = {
   margin: 0,
 } as const;
 export const COMMENT_CARD_SX = {
-  borderRadius: UI_SHAPE.socialCardRadiusPx,
+  borderRadius: `${UI_SHAPE.socialCardRadiusPx}px`,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
