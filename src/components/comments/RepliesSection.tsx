@@ -1,7 +1,7 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
-import { CloseIcon, ConfirmIcon, EditIcon, RemoveImageIcon, ReplyIcon } from '@/constants/icons';
+import { CloseIcon, ConfirmIcon, EditIcon, DeleteActionIcon, ReplyIcon } from '@/constants/icons';
 
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -247,7 +247,7 @@ export function RepliesSection({
                     })
                   }
                 >
-                  <RemoveImageIcon />
+                  <DeleteActionIcon />
                 </IconButton>
               </Tooltip>
             ) : null}
