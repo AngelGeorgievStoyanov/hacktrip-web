@@ -19,8 +19,7 @@ import {
 } from '@/constants/maps';
 import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
 import type { TripPoint } from '@/types';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { TripNextIcon, TripPreviousIcon } from '@/constants/icons';
 import { TRIP_MAP_SECTION_CARD_SX, TRIP_MAP_SECTION_STEPPER_SX } from '@/styles/presets/map-controls';
 
 interface TripMapSectionProps {
@@ -129,9 +128,9 @@ export function TripMapSection({
             >
               Next
               {theme.direction === 'rtl' ? (
-                <KeyboardArrowLeftIcon fontSize="inherit" />
+                <TripPreviousIcon fontSize="inherit" />
               ) : (
-                <KeyboardArrowRightIcon fontSize="inherit" />
+                <TripNextIcon fontSize="inherit" />
               )}
             </Button>
           }
@@ -148,9 +147,9 @@ export function TripMapSection({
               disabled={!hasPrev}
             >
               {theme.direction === 'rtl' ? (
-                <KeyboardArrowRightIcon fontSize="inherit" />
+                <TripNextIcon fontSize="inherit" />
               ) : (
-                <KeyboardArrowLeftIcon fontSize="inherit" />
+                <TripPreviousIcon fontSize="inherit" />
               )}
               Back
             </Button>
