@@ -26,8 +26,8 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { adminApi } from '@/api/admin';
+import { DialogCloseIcon } from '@/constants/icons';
 import { ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { getGenericErrorMessage } from '@/lib/errors';
@@ -359,7 +359,7 @@ function MissingThumbnails() {
             onClick={() => setPreviewUrl(null)}
             sx={ADMIN_IMAGE_PREVIEW_CLOSE_SX}
           >
-            <CloseRoundedIcon />
+            <DialogCloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent sx={ADMIN_IMAGE_PREVIEW_CONTENT_SX}>
