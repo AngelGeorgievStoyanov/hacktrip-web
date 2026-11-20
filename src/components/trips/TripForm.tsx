@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -352,7 +354,7 @@ export function TripForm() {
       <Card
         component="form"
         onSubmit={handleSubmit((values) => onSubmit(values, 'add-trip'))}
-        sx={TRIP_FORM_SX}
+        sx={[FEATURE_SURFACE_SX, TRIP_FORM_SX]}
       >
         <Typography
           variant="h5"
