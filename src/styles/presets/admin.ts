@@ -1,4 +1,5 @@
 import type { Theme } from '@mui/material/styles';
+import { UI_SHAPE } from '@/constants/ui/shape';
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
@@ -46,7 +47,7 @@ export const ADMIN_DIAGNOSTIC_PRE_SX = {
   overflow: 'auto',
   whiteSpace: 'pre-wrap',
   overflowWrap: 'anywhere',
-  borderRadius: 1,
+  borderRadius: UI_SHAPE.sxRadius1,
   bgcolor: 'action.hover',
   fontFamily: 'monospace',
   fontSize: '0.8rem',
@@ -90,7 +91,7 @@ export const ADMIN_IMAGE_THUMBNAIL_SX = {
   width: 88,
   height: 66,
   objectFit: 'cover',
-  borderRadius: 1,
+  borderRadius: UI_SHAPE.sxRadius1,
   border: 1,
   borderColor: 'divider',
 } as const;
@@ -139,4 +140,3 @@ export const ADMIN_NAVIGATION_SX = {
   borderBottom: 1,
   borderColor: 'divider',
 } as const;
-
