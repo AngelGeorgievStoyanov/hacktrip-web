@@ -32,7 +32,7 @@ import { FavoriteButton } from '@/components/social/FavoriteButton';
 import { RepliesSection } from '@/components/comments/RepliesSection';
 import { SocialConfigStatus } from '@/components/social/SocialConfigStatus';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
+import { isSocialActionEnabled, isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import {
@@ -138,6 +138,7 @@ export function CommentsSection({
   // "not reported by me".
   const sessionResolved = status === 'anonymous' || status === 'authenticated';
   const targetKey = socialConfigTargetKey(target.type);
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', targetKey);
   const canCreateComment = isSocialOperationAllowed(
     socialConfig.data,
     'comment',
@@ -151,7 +152,7 @@ export function CommentsSection({
   const { data, isLoading, isError, error } = useQuery({
     queryKey,
     queryFn: () => commentApi.list(target),
-    enabled: open && sessionResolved,
+    enabled: open && commentsEnabled && sessionResolved,
   });
 
   const createMutation = useMutation({
@@ -188,7 +189,7 @@ export function CommentsSection({
 
   const total = data?.total ?? initialCommentsCount;
 
-  if (!open) {
+  if (!open || !commentsEnabled) {
     return null;
   }
 
