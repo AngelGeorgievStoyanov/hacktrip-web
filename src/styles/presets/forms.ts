@@ -3,7 +3,8 @@ import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { PANEL_SX } from './panels';
 import { UI_COLORS } from '@/constants/ui/colors';
-import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 /** Compact day-number field: dimensions and non-editable numeric display. */
 export const DAY_NUMBER_FIELD_SX = {
