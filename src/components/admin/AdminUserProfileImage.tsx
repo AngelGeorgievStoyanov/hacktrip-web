@@ -1,16 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Avatar, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { adminApi } from '@/api/admin';
+import { DeleteUserImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import ImageUploadField from '@/components/images/ImageUploadField';
 import { AppImage } from '@/components/images/AppImage';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
+import { UI_SIZES } from '@/constants/ui/sizes';
+import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import {
+  ADMIN_PROFILE_AVATAR_INTERACTIVE_SX,
+  ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX,
+} from '@/styles/presets/profile-image';
 
 export function AdminUserProfileImage({ userId }: { userId: string }) {
   const queryClient = useQueryClient();
@@ -49,7 +56,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
   const image = imageQuery.data;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={COLUMN_STACK_SX}>
       <Typography variant="h6">Profile image</Typography>
       {error ? (
         <Alert severity="error" onClose={() => setError(null)}>
@@ -67,22 +74,22 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
             type="button"
             aria-label="Open profile image"
             onClick={() => setLightboxOpen(true)}
-            sx={{ width: 88, height: 88, cursor: 'zoom-in', p: 0, border: 0 }}
+            sx={ADMIN_PROFILE_AVATAR_INTERACTIVE_SX}
           >
             <AppImage
               image={image}
               alt="User profile image"
+              preset="profile"
               useThumbnail
-              width={88}
-              height={88}
+              fill
               sizes="88px"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </Avatar>
           <Button
             color="error"
             variant="outlined"
-            startIcon={<DeleteOutlineRoundedIcon />}
+            sx={BUTTON_STYLES.deleteText}
+            startIcon={<DeleteUserImageIcon />}
             disabled={deleteMutation.isPending || uploadMutation.isPending}
             onClick={() => {
               void confirm('Delete this user profile image?', 'Delete profile image').then((ok) => {
@@ -90,7 +97,11 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
               });
             }}
           >
-            {deleteMutation.isPending ? <CircularProgress size={18} /> : 'Delete image'}
+            {deleteMutation.isPending ? (
+              <CircularProgress size={UI_SIZES.smallIndicator} />
+            ) : (
+              'Delete image'
+            )}
           </Button>
         </Stack>
       ) : !imageQuery.isLoading && !imageQuery.error ? (
@@ -103,10 +114,10 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
         variant="contained"
         disabled={files.length !== 1 || uploadMutation.isPending || deleteMutation.isPending}
         onClick={() => uploadMutation.mutate(files[0])}
-        sx={{ alignSelf: 'flex-start' }}
+        sx={ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX}
       >
         {uploadMutation.isPending ? (
-          <CircularProgress size={18} />
+          <CircularProgress size={UI_SIZES.smallIndicator} />
         ) : image ? (
           'Replace image'
         ) : (

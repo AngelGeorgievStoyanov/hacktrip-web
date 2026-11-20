@@ -1,0 +1,91 @@
+/* About page — preserves the legacy centered, white-on-background presentation. */
+.aboutPage {
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--ht-page-content-padding);
+}
+
+.aboutPageContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  color: var(--ht-color-text-inverse);
+  text-align: center;
+  text-shadow: 3px 3px 3px var(--ht-color-decorative-heading-shadow);
+}
+
+.aboutPageContent h1,
+.aboutPageContent h2,
+.aboutPageContent h3 {
+  margin: var(--ht-about-heading-margin);
+  font-family: var(--ht-about-font-family);
+  font-weight: var(--ht-about-font-weight);
+}
+
+.aboutPageContent h1 {
+  font-size: var(--ht-about-h1-size);
+}
+.aboutPageContent h2 {
+  font-size: var(--ht-about-h2-size);
+}
+.aboutPageContent h3 {
+  font-size: var(--ht-about-h3-size);
+  line-height: var(--ht-about-h3-line-height);
+}
+
+.aboutPageContent a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.aboutPageImageRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ht-spacing-lg);
+  width: 100%;
+}
+
+.aboutPageImageRow > img {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 820px) {
+  .aboutPage {
+    padding: var(--ht-page-mobile-content-padding);
+  }
+  .aboutPageImageRow {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--ht-spacing-xs);
+  }
+  .aboutPageImageRow > img {
+    width: 100%;
+    max-width: 640px;
+  }
+}
+
+.aboutPageImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 640px;
+  margin: var(--ht-spacing-md-plus) auto;
+  padding: var(--ht-spacing-sm);
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
+.aboutPageImageWide {
+  max-width: 760px;
+}
+
+.aboutPageImageMarkers {
+  max-width: 520px;
+}

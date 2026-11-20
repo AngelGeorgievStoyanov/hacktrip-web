@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Box, Button, ButtonGroup, CircularProgress, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Card,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { AddIcon, RemoveIcon } from '@/constants/icons';
 import { tripApi, type TripWriteInput } from '@/api/trips';
 import type { TripGroupResponse } from '@/types';
@@ -21,10 +29,25 @@ import { buildTripUrl } from '@/lib/tripUrl';
 import { tripWriteFormSchema } from '@/validations/trips';
 import { TripSelectField } from './TripSelectField';
 import ImageUploadField from '@/components/images/ImageUploadField';
+import { TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX } from '@/styles/presets/image-upload';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES, CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { BUTTON_STYLES, TRIP_FORM_DAY_NUMBER_BUTTON_GROUP_SX } from '@/styles/presets/buttons';
+import { BackButton } from '@/components/common/BackButton';
+import {
+  DAY_NUMBER_FIELD_SX,
+  TRIP_FORM_LOCATION_WRAPPER_SX,
+  TRIP_FORM_SX,
+  TRIP_FORM_TITLE_SX,
+  TRIP_FORM_ERROR_SX,
+  TRIP_FORM_DAY_NUMBER_ROW_SX,
+  TRIP_FORM_PRICE_CURRENCY_ROW_SX,
+  TRIP_FORM_PRICE_FIELD_SX,
+  TRIP_FORM_CURRENCY_WRAPPER_SX,
+  TRIP_FORM_ACTIONS_SX,
+} from '@/styles/presets/forms';
 
 function preferredSelectValue(choices: SelectChoice[], preferred: string): string {
   const normalize = (value: string) => value.toLowerCase().replace(/[\\s_-]/g, '');
@@ -324,7 +347,7 @@ export function TripForm() {
 
   return (
     <>
-      <Box sx={{ width: 'min(100%, 600px)', mx: 'auto', px: { xs: 2, sm: 0 }, mb: 1 }}>
+      <Box sx={TRIP_FORM_LOCATION_WRAPPER_SX}>
         <TripLocationPicker
           latitude={latitude}
           longitude={longitude}
@@ -334,52 +357,21 @@ export function TripForm() {
           }}
         />
       </Box>
-      <Box
+      <Card
         component="form"
         onSubmit={handleSubmit((values) => onSubmit(values, 'add-trip'))}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          boxSizing: 'border-box',
-          width: 'min(100%, 620px)',
-          mx: 'auto',
-          height: 'fit-content',
-          minWidth: 0,
-          p: { xs: 2, sm: '30px' },
-          mb: '5px',
-          backgroundColor: COLORS.cardBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          borderRadius: UI_SHAPE.squareRadius,
-          gap: 1,
-          '& .MuiFormControl-root': {
-            m: '4px',
-            width: '100%',
-            minWidth: 0,
-          },
-          '& .MuiButton-root': {
-            m: 1,
-          },
-          '@media (max-width: 600px)': {
-            p: 2,
-          },
-        }}
+        sx={TRIP_FORM_SX}
       >
-        <Typography
-          variant="h5"
-          component="h1"
-          sx={{ m: '10px auto', textTransform: 'uppercase', textAlign: 'center' }}
-        >
+        <Typography variant="h5" component="h1" sx={TRIP_FORM_TITLE_SX}>
           Create trip
         </Typography>
         {serverError ? (
-          <Typography role="alert" color="error" variant="body2" sx={{ mx: 1 }}>
+          <Typography role="alert" color="error" variant="body2" sx={TRIP_FORM_ERROR_SX}>
             {serverError}
           </Typography>
         ) : null}
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', m: '4px' }}>
+        <Box sx={TRIP_FORM_DAY_NUMBER_ROW_SX}>
           <TextField
             label="Day"
             type="number"
@@ -396,28 +388,13 @@ export function TripForm() {
             }}
             error={!!errors.dayNumber}
             helperText={errors.dayNumber?.message}
-            slotProps={{
-              htmlInput: { min: 1, max: DAY_NUMBER_MAX, step: 1, style: { textAlign: 'center' } },
-            }}
-            sx={{ width: '76px !important', '& .MuiInputBase-root': { pointerEvents: 'none' } }}
+            slotProps={{ htmlInput: { min: 1, max: DAY_NUMBER_MAX, step: 1 } }}
+            sx={DAY_NUMBER_FIELD_SX}
           />
           <ButtonGroup
             size="small"
             aria-label="Change day number"
-            sx={{
-              ml: 0.5,
-              mr: 0,
-              my: 0,
-              alignSelf: 'center',
-              '& .MuiButton-root': {
-                minWidth: 40,
-                width: 40,
-                height: 36,
-                p: 0,
-                m: 0,
-                '&:hover': { backgroundColor: 'primary.dark' },
-              },
-            }}
+            sx={TRIP_FORM_DAY_NUMBER_BUTTON_GROUP_SX}
           >
             <Button
               type="button"
@@ -446,17 +423,7 @@ export function TripForm() {
           helperText={errors.title?.message}
         />
 
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 1,
-            width: '100%',
-            minWidth: 0,
-            '& > *': { minWidth: 0, flex: '1 1 0' },
-            '@media (max-width: 480px)': { flexDirection: 'column' },
-          }}
-        >
+        <Box sx={TRIP_FORM_PRICE_CURRENCY_ROW_SX}>
           <TextField
             label="Price"
             type="number"
@@ -464,21 +431,14 @@ export function TripForm() {
             error={!!errors.price}
             helperText={errors.price?.message}
             slotProps={{ htmlInput: { min: 0, max: 1000000, step: 'any' } }}
-            sx={{ flex: 1 }}
+            sx={TRIP_FORM_PRICE_FIELD_SX}
           />
 
           <Controller
             control={control}
             name="currency"
             render={({ field }) => (
-              <Box
-                sx={{
-                  flex: '0 0 150px',
-                  width: '150px',
-                  minWidth: 0,
-                  '@media (max-width: 480px)': { flex: '1 1 auto', width: '100%' },
-                }}
-              >
+              <Box sx={TRIP_FORM_CURRENCY_WRAPPER_SX}>
                 <TripSelectField
                   name={field.name}
                   label="Currency"
@@ -549,7 +509,7 @@ export function TripForm() {
           helperText={errors.destination?.message}
         />
 
-        <Box sx={{ mt: 1, mx: '4px', minWidth: 0 }}>
+        <Box sx={TRIP_FORM_IMAGE_UPLOAD_WRAPPER_SX}>
           <ImageUploadField files={selectedFiles} setFiles={setSelectedFiles} />
         </Box>
 
@@ -563,35 +523,13 @@ export function TripForm() {
           helperText={errors.description?.message}
         />
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            mt: 1,
-            '& .MuiButton-root': {
-              m: 1,
-              minWidth: { xs: 'calc(50% - 16px)', sm: '150px' },
-              maxWidth: '220px',
-              minHeight: 36,
-              px: 1.5,
-              py: 0.75,
-              fontSize: { xs: '0.7rem', sm: '0.75rem' },
-              lineHeight: 1.2,
-              whiteSpace: 'normal',
-              overflowWrap: 'anywhere',
-              textTransform: 'uppercase',
-            },
-          }}
-        >
+        <Box sx={TRIP_FORM_ACTIONS_SX}>
           <Button
             type="submit"
             variant="contained"
             disabled={submitting || isLoadingExistingTrip || !isValid || isDayNumberOccupied}
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={BUTTON_STYLES.containedHover}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+            sx={BUTTON_STYLES.create}
           >
             Add trip
           </Button>
@@ -602,7 +540,7 @@ export function TripForm() {
             onClick={() => {
               void handleSubmit((values) => onSubmit(values, 'add-next-day'))();
             }}
-            sx={BUTTON_STYLES.containedHover}
+            sx={BUTTON_STYLES.add}
           >
             Add next day trip
           </Button>
@@ -613,20 +551,15 @@ export function TripForm() {
             onClick={() => {
               void handleSubmit((values) => onSubmit(values, 'add-point'))();
             }}
-            sx={BUTTON_STYLES.secondaryLightText}
+            sx={BUTTON_STYLES.addPoints}
           >
             Add point's for the trip
           </Button>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={() => router.back()}
-            sx={BUTTON_STYLES.containedHover}
-          >
+          <BackButton type="button" onClick={() => router.back()}>
             Back
-          </Button>
+          </BackButton>
         </Box>
-      </Box>
+      </Card>
     </>
   );
 }

@@ -1,16 +1,18 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { LikeActiveIcon, LikeInactiveIcon } from '@/constants/icons';
+
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, IconButton, Tooltip } from '@mui/material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { socialApi } from '@/api/social';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { useLikeAnimation } from '@/components/social/LikeAnimation';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { SocialTargetTypeInput } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { getSocialBadgeSx, getSocialLikeAnimationSx } from '@/styles/presets/social';
 
 interface LikeButtonProps {
   targetType: SocialTargetTypeInput;
@@ -78,6 +80,7 @@ export function LikeButton({
       <Tooltip title={liked ? 'Unlike' : 'Like'} arrow>
         <span>
           <IconButton
+            sx={ICON_ACTION_STYLES.like}
             onClick={() => {
               likeAnimation.requestPlay();
               mutation.mutate();
@@ -93,24 +96,12 @@ export function LikeButton({
               invisible={likes === 0}
               max={Number.MAX_SAFE_INTEGER}
               color="primary"
-              sx={
-                size === 'small'
-                  ? {
-                      '& .MuiBadge-badge': {
-                        fontSize: '0.65rem',
-                        height: 14,
-                        minWidth: 14,
-                        padding: '0 3px',
-                        lineHeight: 1,
-                      },
-                    }
-                  : undefined
-              }
+              sx={getSocialBadgeSx(size)}
             >
               {liked ? (
-                <ThumbUpIcon sx={{ animation: likeAnimation.animation }} />
+                <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               ) : (
-                <ThumbUpOffAltIcon sx={{ animation: likeAnimation.animation }} />
+                <LikeInactiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               )}
             </Badge>
           </IconButton>

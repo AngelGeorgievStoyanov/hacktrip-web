@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
@@ -17,14 +16,30 @@ import {
   Typography,
 } from '@mui/material';
 import { adminApi } from '@/api/admin';
+import { UserOutlineIcon } from '@/constants/icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
+import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
+import {
+  ADMIN_USERS_TITLE_SX,
+  ADMIN_USERS_GRID_SX,
+  ADMIN_USER_CARD_SX,
+  ADMIN_USER_CARD_CONTENT_SX,
+  ADMIN_USER_CARD_IDENTITY_SX,
+  ADMIN_USER_CARD_ACTIONS_SX,
+  ADMIN_USERS_PAGINATION_SX,
+} from '@/styles/presets/admin';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
 import { AppImage } from '@/components/images/AppImage';
 import type { ImageDto } from '@/types';
+import {
+  ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX,
+  ADMIN_PROFILE_AVATAR_READONLY_SX,
+} from '@/styles/presets/profile-image';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -63,7 +78,7 @@ export function AdminUsers() {
 
   return (
     <Box>
-      <Typography variant="h4" sx={{ mb: 2 }}>
+      <Typography variant="h4" sx={ADMIN_USERS_TITLE_SX}>
         Users
       </Typography>
       {error ? (
@@ -75,33 +90,12 @@ export function AdminUsers() {
       {queryError ? <Alert severity="error">{getGenericErrorMessage(queryError)}</Alert> : null}
       {data ? (
         <>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))',
-              gap: 2,
-            }}
-          >
+          <Box sx={ADMIN_USERS_GRID_SX}>
             {visibleUsers.map((u) => {
               const canManage = isAdmin || (isManager && u.role === 'user');
               return (
-                <Card
-                  key={u.id}
-                  variant="outlined"
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minWidth: 0,
-                    p: 1,
-                    borderRadius: 0,
-                    bgcolor: 'action.hover',
-                    boxShadow: 2,
-                    '& .MuiTypography-root': { overflowWrap: 'anywhere' },
-                  }}
-                >
-                  <CardContent
-                    sx={{ display: 'flex', flexDirection: 'column', gap: 1.25, flexGrow: 1 }}
-                  >
+                <Card key={u.id} sx={ADMIN_USER_CARD_SX}>
+                  <CardContent sx={ADMIN_USER_CARD_CONTENT_SX}>
                     <Stack direction="row" spacing={1.5} alignItems="center">
                       <Avatar
                         alt={`${u.firstName} ${u.lastName}`.trim() || 'User profile'}
@@ -113,29 +107,26 @@ export function AdminUsers() {
                             });
                           }
                         }}
-                        sx={{
-                          width: 88,
-                          height: 88,
-                          bgcolor: 'action.selected',
-                          flexShrink: 0,
-                          cursor: u.profileImage ? 'zoom-in' : 'default',
-                        }}
+                        sx={
+                          u.profileImage
+                            ? ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX
+                            : ADMIN_PROFILE_AVATAR_READONLY_SX
+                        }
                       >
                         {u.profileImage ? (
                           <AppImage
                             image={u.profileImage}
                             alt={`${u.firstName} ${u.lastName}`.trim() || 'User profile'}
+                            preset="profile"
                             useThumbnail
-                            width={88}
-                            height={88}
+                            fill
                             sizes="88px"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                           />
                         ) : (
-                          <PersonOutlineRoundedIcon fontSize="large" />
+                          <UserOutlineIcon fontSize="large" />
                         )}
                       </Avatar>
-                      <Box sx={{ minWidth: 0 }}>
+                      <Box sx={ADMIN_USER_CARD_IDENTITY_SX}>
                         <Typography variant="h6">
                           {u.firstName} {u.lastName}
                         </Typography>
@@ -168,15 +159,26 @@ export function AdminUsers() {
                     </Typography>
                   </CardContent>
                   <Divider />
-                  <Stack direction="row" spacing={1} justifyContent="center" sx={{ p: 1 }}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="center"
+                    sx={ADMIN_USER_CARD_ACTIONS_SX}
+                  >
                     {canManage ? (
-                      <Button component={Link} href={`/admin/users/${u.id}`} variant="contained">
+                      <Button
+                        component={Link}
+                        href={`/admin/users/${u.id}`}
+                        variant="contained"
+                        sx={BUTTON_STYLES.edit}
+                      >
                         Edit user
                       </Button>
                     ) : null}
                     {canManage ? (
                       <Button
                         color="error"
+                        sx={BUTTON_STYLES.deleteText}
                         onClick={() =>
                           void confirm(
                             'Are you sure you want to delete this user?',
@@ -205,14 +207,19 @@ export function AdminUsers() {
         onClose={() => setPreview(null)}
       />
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 2 }}>
-          <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+        <Box sx={ADMIN_USERS_PAGINATION_SX}>
+          <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Previous
           </Button>
           <Typography>
             Page {page} of {pagination.totalPages}
           </Typography>
           <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
             disabled={page >= (pagination.totalPages ?? 1)}
             onClick={() => setPage((p) => p + 1)}
           >

@@ -12,3 +12,8 @@ export const TRIP_TRANSPORT_MAX_LENGTH = 45;
 export const TRIP_SEARCH_MAX_LENGTH = 200;
 
 export const DAY_NUMBER_MAX = 500;
+
+/** Public trip-list pagination defaults and limits. */
+export const TRIP_PAGE_DEFAULT = 1;
+export const TRIP_LIMIT_DEFAULT = 20;
+export const TRIP_LIMIT_MAX = 100;

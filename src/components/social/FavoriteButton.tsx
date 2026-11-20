@@ -1,15 +1,17 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { FavoriteAddIcon, FavoriteRemoveIcon } from '@/constants/icons';
+
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, IconButton, Tooltip } from '@mui/material';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import { socialApi } from '@/api/social';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { SocialTargetTypeInput } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { getSocialBadgeSx } from '@/styles/presets/social';
 
 interface FavoriteButtonProps {
   targetType: SocialTargetTypeInput;
@@ -60,6 +62,7 @@ export function FavoriteButton({
       <Tooltip title={favorited ? 'Remove from favorites' : 'Add to favorites'} arrow>
         <span>
           <IconButton
+            sx={ICON_ACTION_STYLES.favorite}
             onClick={() => mutation.mutate()}
             disabled={mutation.isPending}
             aria-label={
@@ -74,21 +77,9 @@ export function FavoriteButton({
               invisible={count === 0}
               max={Number.MAX_SAFE_INTEGER}
               color="error"
-              sx={
-                size === 'small'
-                  ? {
-                      '& .MuiBadge-badge': {
-                        fontSize: '0.65rem',
-                        height: 14,
-                        minWidth: 14,
-                        padding: '0 3px',
-                        lineHeight: 1,
-                      },
-                    }
-                  : undefined
-              }
+              sx={getSocialBadgeSx(size)}
             >
-              {favorited ? <BookmarkRemoveIcon /> : <BookmarkAddIcon />}
+              {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
             </Badge>
           </IconButton>
         </span>

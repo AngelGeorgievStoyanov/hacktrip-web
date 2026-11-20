@@ -3,6 +3,8 @@
 import { createContext, useEffect, useRef, useState, useCallback, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import { tripApi } from '@/api/trips';
+import NextImage from 'next/image';
+import styles from './useBackground.module.css';
 
 interface BackgroundImage {
   url: string;
@@ -35,7 +37,7 @@ function isBackgroundRoute(pathname: string): boolean {
  */
 function preloadImage(url: string): Promise<BackgroundImage> {
   return new Promise((resolve, reject) => {
-    const img = new Image();
+    const img = new window.Image();
     let settled = false;
     let decoding = false;
 
@@ -282,19 +284,16 @@ export function BackgroundProvider({ children }: { children: ReactNode }) {
       }}
     >
       {state.current ? (
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: -1,
-            backgroundImage: `url("${state.current.url}")`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            pointerEvents: 'none',
-          }}
-        />
+        <div aria-hidden="true" className={styles.backgroundLayer}>
+          <NextImage
+            src={state.current.url}
+            alt=""
+            fill
+            unoptimized
+            sizes="100vw"
+            className={styles.backgroundImage}
+          />
+        </div>
       ) : null}
 
       {children}

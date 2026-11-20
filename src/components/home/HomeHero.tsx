@@ -1,8 +1,9 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import { Typography } from '@mui/material';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
-import { headingTextStyle } from '@/constants/ui';
+import { HOME_HERO_INTRO_SX } from '@/styles/presets/typography';
 
 interface HomeHeroProps {
   /** Server-rendered trips list and share controls. */
@@ -13,18 +14,10 @@ interface HomeHeroProps {
 export function HomeHero({ children }: HomeHeroProps) {
   return (
     <WelcomeHeading>
-      <p
-        style={{
-          ...headingTextStyle,
-          maxWidth: 850,
-          margin: '0 20px 24px',
-          textAlign: 'center',
-          lineHeight: 1.6,
-        }}
-      >
+      <Typography component="p" variant="inherit" sx={HOME_HERO_INTRO_SX}>
         Discover places worth visiting, explore photos and experiences shared by others, and share
         your own discoveries with the HackTrip community.
-      </p>
+      </Typography>
       {children}
     </WelcomeHeading>
   );

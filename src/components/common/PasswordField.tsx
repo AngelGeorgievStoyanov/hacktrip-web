@@ -1,5 +1,7 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+
 import { useState, type ReactNode } from 'react';
 import { IconButton, InputAdornment, TextField } from '@mui/material';
 import type { UseFormRegisterReturn } from 'react-hook-form';
@@ -41,6 +43,7 @@ export function PasswordField({
           endAdornment: (
             <InputAdornment position="end">
               <IconButton
+                sx={ICON_ACTION_STYLES.passwordVisibility}
                 disabled={disabled}
                 aria-label={visible ? 'Hide password' : 'Show password'}
                 onClick={() => setVisible((current) => !current)}

@@ -2,7 +2,6 @@
 
 import { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
 import {
   Button,
   Dialog,
@@ -11,6 +10,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface ConfirmDialogContextValue {
   confirm: (message: string, title?: string) => Promise<boolean>;
@@ -46,27 +46,21 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
   return (
     <ConfirmDialogContext.Provider value={value}>
       {children}
-      <Dialog
-        open={open}
-        onClose={() => handleClose(false)}
-        PaperProps={{
-          sx: {
-            backgroundColor: COLORS.dialogBackground,
-            boxShadow: CARD_SHADOW,
-            border: CARD_BORDER,
-            borderRadius: UI_SHAPE.squareRadius,
-          },
-        }}
-      >
+      <Dialog open={open} onClose={() => handleClose(false)}>
         <DialogTitle>{title || 'Confirm'}</DialogTitle>
         <DialogContent>
           <DialogContentText>{message}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleClose(false)} color="primary" variant="contained">
+          <Button onClick={() => handleClose(false)} variant="contained" sx={BUTTON_STYLES.cancel}>
             No
           </Button>
-          <Button onClick={() => handleClose(true)} color="primary" variant="contained" autoFocus>
+          <Button
+            onClick={() => handleClose(true)}
+            variant="contained"
+            sx={BUTTON_STYLES.confirm}
+            autoFocus
+          >
             Yes
           </Button>
         </DialogActions>

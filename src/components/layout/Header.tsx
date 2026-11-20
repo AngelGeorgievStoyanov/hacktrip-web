@@ -15,19 +15,23 @@ import {
 } from '@mui/material';
 import { useAuth } from '@/hooks/useAuth';
 import { isModeratorUser } from '@/constants/roles';
-import { BREAKPOINTS, mediaDown, maxWidthQuery } from '@/constants/ui';
-import CloseIcon from '@mui/icons-material/Close';
-import MenuIcon from '@mui/icons-material/Menu';
+import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
+import {
+  HEADER_ROOT_SX,
+  HEADER_WELCOME_SX,
+  HEADER_MENU_ICON_SX,
+  HEADER_DRAWER_PAPER_SX,
+  HEADER_DRAWER_NAV_SX,
+  HEADER_DRAWER_NAV_BUTTON_SX,
+  HEADER_TOOLBAR_SX,
+} from '@/styles/presets/header';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { CloseIcon, MenuIcon } from '@/constants/icons';
 
 interface NavLink {
   href: string;
   label: string;
 }
-
-/** Legacy per-item spacing for the navigation buttons. */
-const NAV_BUTTON_SX = { margin: '2px', padding: '2px', boxSizing: 'content-box' } as const;
-
-const MENU_ICON_SX = { fontSize: 32 } as const;
 
 /**
  * Client Component because it reads the auth session to show login/account controls;
@@ -78,12 +82,8 @@ export function Header() {
 
   function renderWelcome() {
     return (
-      <Typography
-        variant="h6"
-        component="div"
-        sx={{ display: 'flex', justifyContent: 'space-between' }}
-      >
-        <Button component={Link} href="/profile" color="inherit">
+      <Typography variant="h6" component="div" sx={HEADER_WELCOME_SX}>
+        <Button component={Link} href="/profile" color="inherit" sx={BUTTON_STYLES.navigation}>
           Welcome{'   '}
           {user?.email}
         </Button>
@@ -100,12 +100,12 @@ export function Header() {
             component={Link}
             href={link.href}
             color="inherit"
-            sx={NAV_BUTTON_SX}
+            sx={BUTTON_STYLES.navigation}
           >
             {link.label}
           </Button>
         ))}
-        <Button onClick={() => void handleLogout()} color="inherit" sx={NAV_BUTTON_SX}>
+        <Button onClick={() => void handleLogout()} color="inherit" sx={BUTTON_STYLES.navigation}>
           LOGOUT
         </Button>
       </>
@@ -119,7 +119,7 @@ export function Header() {
           color="inherit"
           aria-label={drawerOpen ? 'Close navigation menu' : 'Open navigation menu'}
           onClick={() => setDrawerOpen((open) => !open)}
-          sx={MENU_ICON_SX}
+          sx={HEADER_MENU_ICON_SX}
         >
           {drawerOpen ? <CloseIcon fontSize="inherit" /> : <MenuIcon fontSize="inherit" />}
         </IconButton>
@@ -127,24 +127,33 @@ export function Header() {
           anchor="left"
           open={drawerOpen}
           onClose={closeDrawer}
-          slotProps={{ paper: { elevation: 12, sx: { height: 'auto' } } }}
+          slotProps={{ paper: { elevation: 12, sx: HEADER_DRAWER_PAPER_SX } }}
         >
           <Box
             component="nav"
             aria-label="Navigation menu"
             onClick={closeDrawer}
             onKeyDown={handleDrawerKeyDown}
-            sx={{ display: 'flex', flexDirection: 'column', width: 220 }}
+            sx={HEADER_DRAWER_NAV_SX}
           >
             {links.map((link) => (
               <Fragment key={`${link.href}-${link.label}`}>
-                <Button component={Link} href={link.href} color="inherit">
+                <Button
+                  component={Link}
+                  href={link.href}
+                  color="inherit"
+                  sx={HEADER_DRAWER_NAV_BUTTON_SX}
+                >
                   {link.label}
                 </Button>
                 <Divider />
               </Fragment>
             ))}
-            <Button onClick={() => void handleLogout()} color="inherit">
+            <Button
+              onClick={() => void handleLogout()}
+              color="inherit"
+              sx={HEADER_DRAWER_NAV_BUTTON_SX}
+            >
               LOGOUT
             </Button>
           </Box>
@@ -156,20 +165,9 @@ export function Header() {
   return (
     // The legacy `flexGrow: 1` (inert in the old block layout) would absorb the free
     // space that pushes the footer to the bottom of `.app-shell` on short pages.
-    <Box sx={{ flexShrink: 0 }}>
+    <Box sx={HEADER_ROOT_SX}>
       <AppBar position="static">
-        <Toolbar
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            paddingBottom: '20px',
-            [mediaDown(760)]: {
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            },
-          }}
-        >
+        <Toolbar sx={HEADER_TOOLBAR_SX}>
           {isAuthenticated ? (
             <>
               {renderWelcome()}
@@ -182,7 +180,7 @@ export function Header() {
                 component={Link}
                 href={link.href}
                 color="inherit"
-                sx={NAV_BUTTON_SX}
+                sx={BUTTON_STYLES.navigation}
               >
                 {link.label}
               </Button>

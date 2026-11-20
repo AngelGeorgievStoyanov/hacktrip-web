@@ -1,7 +1,17 @@
 'use client';
 
 import { Box, Button, Card, IconButton, Typography } from '@mui/material';
-import { BUTTON_STYLES, CARD_BORDER, CARD_SHADOW, COLORS, UI_SHAPE } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import {
+  POINT_CARD_ACTION_BUTTON_SX,
+  POINT_CARD_TEXT_INSET_SX,
+  POINT_CARD_TEXT_WRAP_SX,
+  POINT_CARD_WRAPPER_SX,
+  POINT_CARD_CONTAINER_SX,
+  getPointCardMoveButtonSx,
+  POINT_CARD_ACTION_ROW_SX,
+  POINT_CARD_MAP_HEIGHT,
+} from '@/styles/presets/cards';
 import { GoogleMapView } from '@/components/maps/GoogleMapView';
 import { ArrowCircleDownIcon, ArrowCircleUpIcon } from '@/constants/icons';
 import type { TripPoint } from '@/types';
@@ -27,39 +37,32 @@ export function PointCard({
   const position = hasCoordinates ? { lat: point.lat as number, lng: point.lng as number } : null;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box sx={POINT_CARD_WRAPPER_SX}>
       <IconButton
         aria-label={`Move point ${point.pointNumber} up`}
         onClick={() => onMove(point, 'up')}
         disabled={disabled || !point.permissions.canEdit || point.pointNumber <= 1}
-        sx={{ visibility: point.pointNumber > 1 ? 'visible' : 'hidden', p: 0.25 }}
+        sx={getPointCardMoveButtonSx(point.pointNumber > 1)}
       >
         <ArrowCircleUpIcon />
       </IconButton>
 
-      <Card
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: 'min(300px, calc(100vw - 32px))',
-          minWidth: { xs: 0, sm: 290 },
-          maxWidth: 300,
-          my: '10px',
-          p: '15px 0',
-          backgroundColor: COLORS.formPanelBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          borderRadius: UI_SHAPE.squareRadius,
-        }}
-      >
-        <Typography gutterBottom component="h6" sx={{ px: '10px' }}>
+      <Card sx={POINT_CARD_CONTAINER_SX}>
+        <Typography gutterBottom component="h6" sx={POINT_CARD_TEXT_INSET_SX}>
           Point N {point.pointNumber}
         </Typography>
-        <Typography gutterBottom component="h1" sx={{ px: '10px', overflowWrap: 'anywhere' }}>
+        <Typography
+          gutterBottom
+          component="h1"
+          sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}
+        >
           NAME: {point.name}
         </Typography>
-        <Typography gutterBottom component="p" sx={{ px: '10px', overflowWrap: 'anywhere' }}>
+        <Typography
+          gutterBottom
+          component="p"
+          sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}
+        >
           DESCRIPTION : {point.description ?? ''}
         </Typography>
 
@@ -67,7 +70,7 @@ export function PointCard({
           <GoogleMapView
             center={position}
             zoom={14}
-            height={150}
+            height={POINT_CARD_MAP_HEIGHT}
             markers={[
               {
                 id: point.id,
@@ -83,12 +86,12 @@ export function PointCard({
           </Typography>
         )}
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <Box sx={POINT_CARD_ACTION_ROW_SX}>
           <Button
             variant="contained"
             onClick={() => onEdit(point)}
             disabled={disabled || !point.permissions.canEdit}
-            sx={{ ...BUTTON_STYLES.containedHover, m: '5px' }}
+            sx={[BUTTON_STYLES.edit, POINT_CARD_ACTION_BUTTON_SX]}
           >
             EDIT POINT
           </Button>
@@ -96,7 +99,7 @@ export function PointCard({
             variant="contained"
             onClick={() => onDelete(point)}
             disabled={disabled || !point.permissions.canDelete}
-            sx={{ ...BUTTON_STYLES.dangerHover, m: '5px' }}
+            sx={[BUTTON_STYLES.delete, POINT_CARD_ACTION_BUTTON_SX]}
           >
             DELETE POINT
           </Button>
@@ -107,7 +110,7 @@ export function PointCard({
         aria-label={`Move point ${point.pointNumber} down`}
         onClick={() => onMove(point, 'down')}
         disabled={disabled || !point.permissions.canEdit || point.pointNumber >= length}
-        sx={{ visibility: point.pointNumber < length ? 'visible' : 'hidden', p: 0.25 }}
+        sx={getPointCardMoveButtonSx(point.pointNumber < length)}
       >
         <ArrowCircleDownIcon />
       </IconButton>

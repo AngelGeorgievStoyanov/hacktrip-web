@@ -4,6 +4,12 @@ import { useRouter } from 'next/navigation';
 import { AppBar, Box, Pagination, PaginationItem } from '@mui/material';
 import type { PaginationRenderItemParams } from '@mui/material/Pagination';
 import { buildTripUrl } from '@/lib/tripUrl';
+import {
+  TRIP_DAY_PAGE_ITEM_SX,
+  TRIP_DAYS_NAV_APP_BAR_SX,
+  TRIP_DAYS_NAV_CONTENT_SX,
+  TRIP_DAYS_NAV_PAGINATION_SX,
+} from '@/styles/presets/pagination';
 
 interface TripDaysNavProps {
   tripGroupId: number;
@@ -17,18 +23,6 @@ interface TripDaysNavProps {
    */
   onSelect?: (dayNumber: number) => void;
 }
-
-const PAGE_ITEM_SX = {
-  margin: '3px',
-  color: 'white',
-  '&.Mui-selected': {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    color: 'white',
-  },
-  '&:hover': {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  },
-} as const;
 
 /**
  * The parent sticky social/navigation stack owns the shell bleed; this strip fills it.
@@ -48,16 +42,8 @@ export function TripDaysNav({ tripGroupId, days, selectedDay, onSelect }: TripDa
   const selectedPage = days.indexOf(selectedDay) + 1;
 
   return (
-    <AppBar
-      position="static"
-      data-trip-days-nav="true"
-      sx={{
-        width: '100%',
-        margin: 0,
-        marginBottom: 0,
-      }}
-    >
-      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <AppBar position="static" data-trip-days-nav="true" sx={TRIP_DAYS_NAV_APP_BAR_SX}>
+      <Box sx={TRIP_DAYS_NAV_CONTENT_SX}>
         <Pagination
           count={days.length}
           variant="outlined"
@@ -75,12 +61,16 @@ export function TripDaysNav({ tripGroupId, days, selectedDay, onSelect }: TripDa
           }}
           renderItem={(item: PaginationRenderItemParams) =>
             item.type === 'page' ? (
-              <PaginationItem {...item} page={days[(item.page ?? 1) - 1]} sx={PAGE_ITEM_SX} />
+              <PaginationItem
+                {...item}
+                page={days[(item.page ?? 1) - 1]}
+                sx={TRIP_DAY_PAGE_ITEM_SX}
+              />
             ) : (
-              <PaginationItem {...item} sx={PAGE_ITEM_SX} />
+              <PaginationItem {...item} sx={TRIP_DAY_PAGE_ITEM_SX} />
             )
           }
-          sx={{ marginTop: '10px' }}
+          sx={TRIP_DAYS_NAV_PAGINATION_SX}
         />
       </Box>
     </AppBar>

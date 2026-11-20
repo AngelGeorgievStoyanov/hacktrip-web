@@ -3,8 +3,8 @@ import {
   ADMIN_PAGE_DEFAULT,
   ADMIN_PAGE_SIZE_DEFAULT,
   ADMIN_PAGE_SIZE_MAX,
-  PAGE_MAX,
-} from '@/constants/ui';
+} from '@/constants/admin';
+import { PAGE_MAX } from '@/constants/pagination';
 import { emailString, idList, optionalInt, passwordString, trimmedString } from '../shared';
 
 export const adminUserUpdateSchema = z

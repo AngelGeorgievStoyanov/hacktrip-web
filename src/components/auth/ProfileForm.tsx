@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { ProfileImage, ProfileImageUpload } from '@/components/auth/ProfileImage';
+import { BackButton } from '@/components/common/BackButton';
 import { useAuth } from '@/hooks/useAuth';
 import { authApi } from '@/api/auth';
 import type { UpdateProfileInput } from '@/api/auth';
@@ -13,7 +14,14 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { updateProfileSchema } from '@/validations/auth';
 import { ChangePasswordForm } from '@/components/auth/ChangePasswordForm';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import {
+  PROFILE_FORM_SX,
+  ACCOUNT_FORM_TITLE_SX,
+  ACCOUNT_FORM_ACTIONS_SX,
+  ACCOUNT_FORM_READONLY_FIELD_SX,
+} from '@/styles/presets/forms';
+import { UI_SIZES } from '@/constants/ui/sizes';
 
 export function ProfileForm() {
   const { user, updateUser } = useAuth();
@@ -64,16 +72,9 @@ export function ProfileForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          gap: 1.5,
-          width: '100%',
-          '& .MuiTextField-root': { width: 'calc(100% - 10px)', mx: '5px' },
-        }}
+        sx={PROFILE_FORM_SX}
       >
-        <Typography variant="h5" component="h2" sx={{ textAlign: 'center', my: 1 }}>
+        <Typography variant="h5" component="h2" sx={ACCOUNT_FORM_TITLE_SX}>
           {user?.firstName ? `${user.firstName}'s  PROFILE` : 'PROFILE'}
         </Typography>
         <TextField
@@ -82,13 +83,7 @@ export function ProfileForm() {
           autoComplete="email"
           value={user?.email ?? ''}
           disabled
-          sx={{
-            '& .MuiInputBase-input.Mui-disabled': {
-              WebkitTextFillColor: 'rgba(0, 0, 0, 0.87)',
-              cursor: 'default',
-            },
-            '& .MuiInputLabel-root.Mui-disabled': { color: 'text.secondary' },
-          }}
+          sx={ACCOUNT_FORM_READONLY_FIELD_SX}
         />
         <TextField
           label="First Name"
@@ -105,35 +100,22 @@ export function ProfileForm() {
           helperText={errors.lastName?.message}
         />
         <ProfileImageUpload selectedFile={selectedImage} onSelectedFileChange={setSelectedImage} />
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 1,
-            mt: 1,
-            '& .MuiButton-root': { m: '2px' },
-          }}
-        >
+        <Box sx={ACCOUNT_FORM_ACTIONS_SX}>
           <Button
             type="submit"
             variant="contained"
             disabled={submitting || ((!isDirty || !isValid) && !selectedImage)}
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={BUTTON_STYLES.containedHover}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+            sx={BUTTON_STYLES.edit}
           >
             EDIT PROFILE
           </Button>
-          <Button variant="contained" onClick={() => router.back()} sx={BUTTON_STYLES.secondary}>
-            BACK
-          </Button>
+          <BackButton onClick={() => router.back()}>BACK</BackButton>
           <Button
             variant="contained"
             onClick={() => setPasswordExpanded((current) => !current)}
             disabled={submitting}
-            sx={BUTTON_STYLES.secondary}
+            sx={BUTTON_STYLES.disclosure}
           >
             {passwordExpanded ? 'HIDE CHANGE PASSWORD' : 'CHANGE PASSWORD'}
           </Button>

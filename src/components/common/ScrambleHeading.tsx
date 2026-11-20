@@ -1,15 +1,8 @@
 'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type CSSProperties,
-  type Ref,
-} from 'react';
-import { headingTextStyle } from '@/constants/ui';
+import { useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
+import { Box } from '@mui/material';
+import { SCRAMBLE_HEADING_SX } from '@/styles/presets/typography';
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const SCRAMBLE_INTERVAL_MS = 30;
@@ -24,14 +17,13 @@ interface ScrambleHeadingProps {
   text: string;
   /** Exposed so a parent can re-trigger the effect from a wider touch area. */
   ref?: Ref<ScrambleHeadingHandle>;
-  style?: CSSProperties;
 }
 
 /**
  * Reproduces the legacy scramble effect: every 30 ms one more leading character is
  * revealed, with the remaining characters reset to random A–Z letters.
  */
-export function ScrambleHeading({ text, ref, style }: ScrambleHeadingProps) {
+export function ScrambleHeading({ text, ref }: ScrambleHeadingProps) {
   const [display, setDisplay] = useState(text);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -78,12 +70,8 @@ export function ScrambleHeading({ text, ref, style }: ScrambleHeadingProps) {
   useImperativeHandle(ref, () => ({ scramble }), [scramble]);
 
   return (
-    <h1
-      aria-label={text}
-      onMouseOver={scramble}
-      style={{ margin: '2px', ...headingTextStyle, ...style }}
-    >
+    <Box component="h1" aria-label={text} onMouseOver={scramble} sx={SCRAMBLE_HEADING_SX}>
       <span aria-hidden="true">{display}</span>
-    </h1>
+    </Box>
   );
 }

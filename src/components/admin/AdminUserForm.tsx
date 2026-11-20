@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 import { z } from 'zod';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -18,16 +17,26 @@ import {
   Typography,
 } from '@mui/material';
 import { adminApi, type AdminUserUpdateInput } from '@/api/admin';
+import { BackArrowIcon } from '@/constants/icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { zodResolver } from '@/lib/zodResolver';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_MAX } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_MAX } from '@/constants/admin';
 import { adminUserUpdateSchema } from '@/validations/admin';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { AdminUserProfileImage } from '@/components/admin/AdminUserProfileImage';
+import { BackButton } from '@/components/common/BackButton';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
+import { UI_SIZES } from '@/constants/ui/sizes';
+import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
+import {
+  ADMIN_USER_FORM_PANEL_SX,
+  ADMIN_USER_FORM_BACK_SX,
+  ADMIN_USER_PASSWORD_FIELDS_SX,
+} from '@/styles/presets/admin';
 import type { AuthUserDto, Role, UserStatus } from '@/types';
 
 const ROLE_OPTIONS: Role[] = ['user', 'admin', 'manager'];
@@ -136,22 +145,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
   }
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        width: '100%',
-        maxWidth: 760,
-        mx: 'auto',
-        p: { xs: 2, sm: 3 },
-        border: 1,
-        borderColor: 'divider',
-        borderRadius: 2,
-        bgcolor: 'background.paper',
-        boxShadow: 2,
-      }}
-    >
+    <Box sx={ADMIN_USER_FORM_PANEL_SX}>
       <Typography variant="h4">Edit user</Typography>
       <Typography>Email: {target.email}</Typography>
       <Typography>
@@ -183,7 +177,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
           };
           updateMutation.mutate(managerInput);
         })}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+        sx={COLUMN_STACK_SX}
       >
         <TextField
           label="First name"
@@ -245,7 +239,7 @@ export function AdminUserForm({ userId }: { userId: string }) {
           />
         ) : null}
         {isAdmin ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+          <Box sx={ADMIN_USER_PASSWORD_FIELDS_SX}>
             <Button
               type="button"
               variant="outlined"
@@ -304,14 +298,19 @@ export function AdminUserForm({ userId }: { userId: string }) {
             </TextField>
           )}
         />
-        <Button type="submit" variant="contained" disabled={!isDirty || updateMutation.isPending}>
-          {updateMutation.isPending ? <CircularProgress size={18} /> : 'Save'}
+        <Button
+          type="submit"
+          variant="contained"
+          sx={BUTTON_STYLES.save}
+          disabled={!isDirty || updateMutation.isPending}
+        >
+          {updateMutation.isPending ? <CircularProgress size={UI_SIZES.smallIndicator} /> : 'Save'}
         </Button>
       </Box>
 
       <Box>
         <Button
-          color="error"
+          sx={BUTTON_STYLES.deleteText}
           disabled={deleteMutation.isPending}
           onClick={() =>
             void confirm('Are you sure you want to delete this user?', 'Delete Confirmation').then(
@@ -325,14 +324,13 @@ export function AdminUserForm({ userId }: { userId: string }) {
         </Button>
       </Box>
 
-      <Button
-        variant="outlined"
-        startIcon={<ArrowBackRoundedIcon />}
+      <BackButton
+        startIcon={<BackArrowIcon />}
         onClick={() => router.push('/admin/users')}
-        sx={{ alignSelf: 'flex-start', mt: 1 }}
+        sx={ADMIN_USER_FORM_BACK_SX}
       >
         Back
-      </Button>
+      </BackButton>
     </Box>
   );
 }

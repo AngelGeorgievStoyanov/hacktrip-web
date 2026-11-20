@@ -13,7 +13,9 @@ import { changePasswordSchema } from '@/validations/auth';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
+import { CHANGE_PASSWORD_FORM_SX, ACCOUNT_PASSWORD_SAVE_BUTTON_SX } from '@/styles/presets/forms';
 
 const changePasswordFormSchema = changePasswordSchema
   .extend({
@@ -93,14 +95,7 @@ export function ChangePasswordForm({ expanded }: ChangePasswordFormProps) {
       noValidate
       aria-busy={submitting}
       onSubmit={handleSubmit(onSubmit)}
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 1.5,
-        width: '100%',
-        mt: 2,
-        '& .MuiTextField-root': { width: 'calc(100% - 10px)', mx: '5px' },
-      }}
+      sx={CHANGE_PASSWORD_FORM_SX}
     >
       {expanded ? (
         <>
@@ -135,8 +130,8 @@ export function ChangePasswordForm({ expanded }: ChangePasswordFormProps) {
             type="submit"
             variant="contained"
             disabled={submitting || !isValid}
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={{ alignSelf: 'flex-start', m: '2px', ...BUTTON_STYLES.containedHover }}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+            sx={[BUTTON_STYLES.save, ACCOUNT_PASSWORD_SAVE_BUTTON_SX]}
           >
             Save password
           </Button>

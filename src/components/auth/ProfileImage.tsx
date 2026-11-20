@@ -5,14 +5,30 @@ import CustomFileUploadButton from '@/components/CustomFileUploadButton';
 import { ACCEPTED_IMAGE_MIME_TYPES, PROFILE_IMAGE_MAX_FILES } from '@/constants/images';
 import { validateImageFile } from '@/lib/images/validate';
 import { Box, CircularProgress, Dialog, IconButton, Tooltip } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { AppImage } from '@/components/images/AppImage';
+import { CloseIcon } from '@/constants/icons';
 import { authApi } from '@/api/auth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { getGenericErrorMessage } from '@/lib/errors';
 import type { ImageDto } from '@/types';
 import { RemoveProfileImageIcon } from '@/constants/icons';
+import {
+  PROFILE_IMAGE_CONTAINER_SX,
+  PROFILE_IMAGE_DELETE_ICON_SX,
+  PROFILE_IMAGE_DELETE_TRIGGER_SX,
+  PROFILE_IMAGE_FULLSCREEN_CLOSE_SX,
+  PROFILE_IMAGE_FULLSCREEN_STAGE_SX,
+  PROFILE_IMAGE_LOADING_SX,
+  PROFILE_IMAGE_VIEW_TRIGGER_SX,
+} from '@/styles/presets/profile-image';
+import {
+  PROFILE_IMAGE_UPLOAD_FIELD_SX,
+  PROFILE_IMAGE_UPLOAD_PREVIEW_ROW_SX,
+  PROFILE_IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX,
+  PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX,
+  IMAGE_UPLOAD_REMOVE_BUTTON_SX,
+} from '@/styles/presets/image-upload';
 
 const ACCEPT_TYPES = (ACCEPTED_IMAGE_MIME_TYPES as readonly string[]).join(',');
 
@@ -62,7 +78,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', py: 2 }}>
+      <Box sx={PROFILE_IMAGE_LOADING_SX}>
         <CircularProgress size={24} />
       </Box>
     );
@@ -72,15 +88,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
 
   return (
     <>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          width: 'min(300px, 75vw)',
-          mb: 1,
-        }}
-      >
+      <Box sx={PROFILE_IMAGE_CONTAINER_SX}>
         <Tooltip title="Delete profile image" arrow>
           <Box
             component="button"
@@ -88,19 +96,9 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
             aria-label="Delete profile image"
             onClick={() => void handleDelete()}
             disabled={deleting}
-            sx={{
-              display: 'flex',
-              p: 0,
-              border: 0,
-              background: 'transparent',
-              cursor: 'pointer',
-              marginTop: '20px',
-              position: 'relative',
-              translate: '0 28px',
-              zIndex: 1,
-            }}
+            sx={PROFILE_IMAGE_DELETE_TRIGGER_SX}
           >
-            <RemoveProfileImageIcon sx={{ backgroundColor: 'white', borderRadius: '50%' }} />
+            <RemoveProfileImageIcon sx={PROFILE_IMAGE_DELETE_ICON_SX} />
           </Box>
         </Tooltip>
         <Tooltip title="View profile image" arrow>
@@ -109,54 +107,18 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
             type="button"
             aria-label="View profile image full screen"
             onClick={() => setFullscreen(true)}
-            sx={{
-              display: 'block',
-              width: '100%',
-              height: 'min(300px, 75vw)',
-              p: 0,
-              border: '1px solid',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              boxShadow: '3px 2px 5px black',
-              cursor: 'pointer',
-              background: 'transparent',
-            }}
+            sx={PROFILE_IMAGE_VIEW_TRIGGER_SX}
           >
-            <AppImage
-              image={image}
-              alt="Profile image"
-              preset="profile"
-              width={300}
-              height={300}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            <AppImage image={image} alt="Profile image" preset="profile" fill />
           </Box>
         </Tooltip>
       </Box>
       <Dialog open={fullscreen} onClose={() => setFullscreen(false)} maxWidth="xl" fullWidth>
-        <Box
-          sx={{
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '50vh',
-            maxHeight: '90vh',
-            p: 2,
-            backgroundColor: 'black',
-          }}
-        >
+        <Box sx={PROFILE_IMAGE_FULLSCREEN_STAGE_SX}>
           <IconButton
             aria-label="Close full screen image"
             onClick={() => setFullscreen(false)}
-            sx={{
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              zIndex: 2,
-              color: 'white',
-              backgroundColor: 'rgba(0,0,0,0.45)',
-            }}
+            sx={PROFILE_IMAGE_FULLSCREEN_CLOSE_SX}
           >
             <CloseIcon />
           </IconButton>
@@ -164,9 +126,7 @@ export function ProfileImage({ refreshToken = 0 }: { refreshToken?: number }) {
             image={image}
             alt="Profile image full screen"
             useThumbnail={false}
-            width={1600}
-            height={1200}
-            style={{ width: '100%', height: 'auto', maxHeight: '85vh', objectFit: 'contain' }}
+            preset="profileLightbox"
           />
         </Box>
       </Dialog>
@@ -209,9 +169,7 @@ export function ProfileImageUpload({
   }
 
   return (
-    <Box
-      sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', alignItems: 'center' }}
-    >
+    <Box sx={PROFILE_IMAGE_UPLOAD_FIELD_SX}>
       <CustomFileUploadButton
         handleFilesChange={handleFilesChange}
         images={[]}
@@ -222,40 +180,20 @@ export function ProfileImageUpload({
         multiple={false}
       />
       {selectedFile && previewUrl ? (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            width: '100%',
-            maxWidth: 360,
-            p: 1,
-            border: '1px solid',
-            borderColor: 'divider',
-            borderRadius: 1,
-          }}
-        >
+        <Box sx={PROFILE_IMAGE_UPLOAD_PREVIEW_ROW_SX}>
           <Box
             component="img"
             src={previewUrl}
             alt="Selected profile image preview"
-            sx={{ width: 55, height: 45, objectFit: 'cover', borderRadius: 1 }}
+            sx={PROFILE_IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX}
           />
-          <Box
-            component="span"
-            sx={{
-              flex: 1,
-              minWidth: 0,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
+          <Box component="span" sx={PROFILE_IMAGE_UPLOAD_PREVIEW_FILENAME_SX}>
             {selectedFile.name}
           </Box>
           <Tooltip title="Remove selected image" arrow>
             <IconButton
               aria-label="Remove selected image"
+              sx={IMAGE_UPLOAD_REMOVE_BUTTON_SX}
               onClick={() => onSelectedFileChange(null)}
               size="small"
             >

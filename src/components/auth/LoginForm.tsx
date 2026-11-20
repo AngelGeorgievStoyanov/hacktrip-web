@@ -19,7 +19,9 @@ import { zodResolver } from '@/lib/zodResolver';
 import { getAuthErrorMessage } from '@/lib/errors';
 import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
-import { BUTTON_STYLES, FORM_PANEL_SX } from '@/constants/ui';
+import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
+import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
@@ -73,27 +75,10 @@ export function LoginForm() {
     }
   }
 
-  const SECONDARY_BUTTON_SX = BUTTON_STYLES.secondary;
-
   return (
     <WelcomeHeading>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          ...FORM_PANEL_SX,
-          padding: '30px',
-          maxWidth: '700px',
-          width: '100%',
-          boxSizing: 'border-box',
-          marginX: 'auto',
-        }}
-      >
-        <Typography variant="h5" component="div" sx={{ margin: '10px auto', textAlign: 'center' }}>
+      <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={AUTH_FORM_SX}>
+        <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           LOGIN
         </Typography>
         <TextField
@@ -116,6 +101,7 @@ export function LoginForm() {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    sx={ICON_ACTION_STYLES.passwordVisibility}
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowPassword((visible) => !visible)}
                     onMouseDown={(event) => event.preventDefault()}
@@ -141,20 +127,25 @@ export function LoginForm() {
           type="submit"
           variant="contained"
           disabled={submitting || !captchaToken}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={BUTTON_STYLES.containedHover}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+          sx={BUTTON_STYLES.submit}
         >
           Login
         </Button>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mt: 1 }}>
-          <Button component={Link} href="/register" variant="contained" sx={SECONDARY_BUTTON_SX}>
+        <Box sx={AUTH_FORM_ACTIONS_SX}>
+          <Button
+            component={Link}
+            href="/register"
+            variant="contained"
+            sx={BUTTON_STYLES.navigationSecondary}
+          >
             Register
           </Button>
           <Button
             component={Link}
             href="/forgot-password"
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.navigationSecondary}
           >
             Forgot password?
           </Button>
@@ -162,7 +153,7 @@ export function LoginForm() {
             component={Link}
             href="/resend-verification"
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.navigationSecondary}
           >
             Resend verification email
           </Button>

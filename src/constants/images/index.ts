@@ -1,5 +1,8 @@
 export const MAX_IMAGES_PER_ENTITY = 9;
 
+/** Minimum horizontal swipe distance used by image and trip galleries. */
+export const LIGHTBOX_SWIPE_THRESHOLD_PX = 45;
+
 export const PROFILE_IMAGE_MAX_FILES = 1;
 
 export const MAX_CONCURRENT_IMAGE_UPLOADS = 9;

@@ -1,0 +1,73 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--ht-spacing-xs);
+  height: auto;
+}
+
+.grid {
+  display: grid;
+  gap: var(--ht-spacing-xxs);
+  width: 100%;
+  max-width: 520px;
+}
+
+.gridColumns1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gridColumns2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.gridColumns3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stack {
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ht-spacing-xxs);
+  min-width: 0;
+  position: relative;
+}
+
+.gridItem {
+  width: 100%;
+}
+
+.imageContainer {
+  position: relative;
+}
+
+.gridImageContainer {
+  width: 100%;
+}
+
+.imageButton {
+  display: block;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  border-radius: var(--ht-shape-border-radius);
+  overflow: hidden;
+}
+
+.imageButton:focus-visible {
+  outline: var(--ht-focus-outline-width) solid var(--ht-color-primary);
+  outline-offset: var(--ht-focus-outline-offset);
+}
+
+.gridImageButton {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}

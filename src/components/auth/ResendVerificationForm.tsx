@@ -12,15 +12,16 @@ import { resendVerificationSchema } from '@/validations/auth';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
 import { RESEND_VERIFICATION_SUCCESS_MESSAGE } from '@/constants/notifications';
-import { COLORS, CARD_SHADOW, CARD_BORDER } from '@/constants/ui';
+import {
+  AUTH_FORM_BACK_ACTION_SX,
+  AUTH_FORM_BACK_BUTTON_SX,
+  AUTH_FORM_SX,
+  AUTH_FORM_TITLE_SX,
+} from '@/styles/presets/forms';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
-
-const SECONDARY_BUTTON_SX = {
-  ':hover': { color: 'rgb(248 245 245)' },
-  margin: '5px',
-  backgroundColor: 'rgb(194 194 224)',
-  color: 'black',
-} as const;
+import { BackButton } from '@/components/common/BackButton';
 
 export function ResendVerificationForm() {
   const notification = useNotification();
@@ -60,22 +61,9 @@ export function ResendVerificationForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          backgroundColor: COLORS.formPanelBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          borderRadius: '0px',
-          padding: '30px',
-          maxWidth: '700px',
-          width: '100%',
-          boxSizing: 'border-box',
-          marginX: 'auto',
-        }}
+        sx={AUTH_FORM_SX}
       >
-        <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
           RESEND VERIFICATION EMAIL
         </Typography>
         <TextField
@@ -99,21 +87,20 @@ export function ResendVerificationForm() {
           type="submit"
           variant="contained"
           disabled={submitting || !captchaToken}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={{ ':hover': { backgroundColor: '#4daf30' } }}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+          sx={BUTTON_STYLES.submit}
         >
           Resend verification email
         </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Button
+        <Box sx={AUTH_FORM_BACK_ACTION_SX}>
+          <BackButton
             component={Link}
             href="/login"
             disabled={submitting}
-            variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={AUTH_FORM_BACK_BUTTON_SX}
           >
             Back to login
-          </Button>
+          </BackButton>
         </Box>
       </Box>
     </WelcomeHeading>

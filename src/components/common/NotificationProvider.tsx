@@ -8,6 +8,7 @@ import type { AlertColor } from '@mui/material/Alert';
 import type { SnackbarCloseReason } from '@mui/material/Snackbar';
 import { NOTIFICATION_DEFAULTS } from '@/constants/notifications';
 import type { NotificationOptions, NotificationPosition } from '@/constants/notifications';
+import { NOTIFICATION_ALERT_SX } from '@/styles/presets/feedback';
 
 interface NotificationApi {
   success: (message: string, options?: NotificationOptions) => void;
@@ -110,7 +111,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
             severity={notification.severity}
             variant={NOTIFICATION_DEFAULTS.variant}
             onClose={dismiss}
-            sx={{ width: '100%' }}
+            sx={NOTIFICATION_ALERT_SX}
           >
             {notification.message}
           </Alert>

@@ -5,6 +5,7 @@ import Script from 'next/script';
 import { Box } from '@mui/material';
 import { config } from '@/config';
 import { CAPTCHA_SCRIPT_URL, CAPTCHA_UNAVAILABLE_MESSAGE } from '@/constants/notifications';
+import { getCaptchaContainerSx } from '@/styles/presets/forms';
 
 declare global {
   interface Window {
@@ -75,15 +76,7 @@ export function Captcha({ onTokenChange, disabled = false, resetKey = 0 }: Captc
         strategy="afterInteractive"
         onReady={() => setLoaded(true)}
       />
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          minHeight: 78,
-          pointerEvents: disabled ? 'none' : 'auto',
-          opacity: disabled ? 0.6 : 1,
-        }}
-      >
+      <Box sx={getCaptchaContainerSx(disabled)}>
         <Box ref={containerRef} />
       </Box>
     </>

@@ -1,28 +1,41 @@
 'use client';
 
-import { useState, type CSSProperties } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 import {
   Typography,
+  Card,
   CardContent,
   CardActions,
   Collapse,
   IconButton,
   Tooltip,
   Box,
-  Button,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import InfoIcon from '@mui/icons-material/Info';
 import { TripActions } from './TripActions';
+import { ExpandMoreIcon, InfoIcon } from '@/constants/icons';
 import { EngagementBar } from '@/components/social/EngagementBar';
 import { FavoriteButton } from '@/components/social/FavoriteButton';
+import { BackButton } from '@/components/common/BackButton';
+import Link from 'next/link';
 import type { CommentTarget } from '@/api/comments';
-import { BUTTON_STYLES, infoPanelStyle } from '@/constants/ui';
 import { useAuth } from '@/hooks/useAuth';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
+import {
+  TRIP_DETAILS_CARD_SX,
+  TRIP_DETAILS_HEADER_SX,
+  TRIP_DETAILS_TITLE_SX,
+  TRIP_DETAILS_PRICE_ROW_SX,
+  TRIP_DETAILS_PRICE_LABEL_SX,
+  TRIP_DETAILS_PRICE_VALUE_SX,
+  TRIP_DETAILS_METADATA_SX,
+  TRIP_DETAILS_DESCRIPTION_SX,
+  getTripDetailsDescriptionToggleSx,
+  TRIP_DETAILS_ACTIONS_COLUMN_SX,
+  TRIP_DETAILS_SOCIAL_ROW_SX,
+} from '@/styles/presets/trip-details';
+import { TRIP_ACTION_BUTTON_LAYOUT_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
 interface TripDetailsProps {
   tripGroup: TripGroupResponse;
@@ -34,9 +47,6 @@ interface TripDetailsProps {
   toggleTripComments: (target: CommentTarget) => void;
   onDayDeleted: (updatedTripGroup: TripGroupResponse) => void;
 }
-
-const NAME_STYLE: CSSProperties = { margin: '0 0 0.35em', fontSize: '1.5rem', fontWeight: 500 };
-const LINE_STYLE: CSSProperties = { margin: '0 0 0.35em', fontSize: '1rem', fontWeight: 400 };
 
 /**
  * Trip Information Panel — standalone visual section matching legacy UI.
@@ -78,17 +88,9 @@ export function TripDetails({
   const handleExpandClick = () => setExpanded(!expanded);
 
   return (
-    <div style={infoPanelStyle}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-          mb: 1,
-        }}
-      >
-        <Typography variant="h5" component="div" style={NAME_STYLE}>
+    <Card sx={TRIP_DETAILS_CARD_SX}>
+      <Box sx={TRIP_DETAILS_HEADER_SX}>
+        <Typography variant="h5" component="div" sx={TRIP_DETAILS_TITLE_SX}>
           TRIP NAME : {day.title ?? tripGroup.days[0]?.title ?? 'Trip'}
         </Typography>
         {isAuthenticated && canFavorite ? (
@@ -102,17 +104,17 @@ export function TripDetails({
       </Box>
 
       {day.price != null ? (
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-          <Typography variant="subtitle1" component="h5" style={LINE_STYLE}>
+        <Box sx={TRIP_DETAILS_PRICE_ROW_SX}>
+          <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_PRICE_LABEL_SX}>
             PRICE OF THE TRIP:
           </Typography>
-          <Typography variant="subtitle1" component="h5" style={{ ...LINE_STYLE, margin: 0 }}>
+          <Typography variant="subtitle1" component="h5" sx={TRIP_DETAILS_PRICE_VALUE_SX}>
             {day.price}
             {day.currency?.code ? ` ${day.currency.code}` : ''}
           </Typography>
           {day.currency?.name ? (
             <Tooltip title={day.currency.name} arrow>
-              <IconButton size="small" aria-label="Currency info">
+              <IconButton size="small" aria-label="Currency info" sx={ICON_ACTION_STYLES.base}>
                 <InfoIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>
@@ -121,20 +123,20 @@ export function TripDetails({
       ) : null}
 
       {transportName ? (
-        <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+        <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
           TRANSPORT WITH: {transportName}
         </Typography>
       ) : null}
-      <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+      <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
         COUNT OF PEOPLE: {day.countPeoples}
       </Typography>
       {groupName ? (
-        <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+        <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
           TYPE OF THE GROUP: {groupName}
         </Typography>
       ) : null}
       {destination ? (
-        <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+        <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
           DESTINATION: {destination}
         </Typography>
       ) : null}
@@ -142,20 +144,12 @@ export function TripDetails({
       {day.description ? (
         <>
           {day.description.length < 150 ? (
-            <Typography
-              variant="subtitle1"
-              component="div"
-              style={{ ...LINE_STYLE, padding: '0px 15px', marginTop: '10px' }}
-            >
+            <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_DESCRIPTION_SX}>
               Description: {day.description}
             </Typography>
           ) : (
             <>
-              <Typography
-                variant="subtitle1"
-                component="div"
-                style={{ ...LINE_STYLE, padding: '0px 15px', marginTop: '10px' }}
-              >
+              <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_DESCRIPTION_SX}>
                 Description: {day.description.slice(0, 150)}...
               </Typography>
               <CardActions disableSpacing>
@@ -163,11 +157,7 @@ export function TripDetails({
                   onClick={handleExpandClick}
                   aria-expanded={expanded}
                   aria-label={expanded ? 'Show less' : 'Show more'}
-                  sx={{
-                    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                    transition: 'transform 150ms',
-                    marginLeft: 'auto',
-                  }}
+                  sx={[ICON_ACTION_STYLES.base, getTripDetailsDescriptionToggleSx(expanded)]}
                 >
                   <ExpandMoreIcon />
                 </IconButton>
@@ -182,22 +172,13 @@ export function TripDetails({
         </>
       ) : null}
 
-      <Typography variant="subtitle1" component="div" style={LINE_STYLE}>
+      <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_METADATA_SX}>
         {totalPoints > 0
           ? `FOR THIS TRIP HAVE ${totalPoints} POINTS`
           : 'FOR THIS TRIP DONT HAVE POINTS'}
       </Typography>
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          gap: 1,
-          mt: 1,
-          width: '100%',
-        }}
-      >
+      <Box sx={TRIP_DETAILS_ACTIONS_COLUMN_SX}>
         <TripActions tripGroup={tripGroup} tripId={day.id} section="navigation" />
         <TripActions
           tripGroup={tripGroup}
@@ -205,25 +186,12 @@ export function TripDetails({
           section="management"
           onDayDeleted={onDayDeleted}
         />
-        <Link
-          href="/trips"
-          style={{ textDecoration: 'none', color: 'inherit', display: 'flex', width: '100%' }}
-        >
-          <Button
-            variant="contained"
-            sx={{
-              ...BUTTON_STYLES.containedHover,
-              padding: '10px',
-              width: '100%',
-              minHeight: '48px',
-            }}
-          >
-            BACK
-          </Button>
-        </Link>
+        <BackButton component={Link} href="/trips" sx={TRIP_ACTION_BUTTON_LAYOUT_SX}>
+          BACK
+        </BackButton>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-around', width: '100%', mt: 1 }}>
+      <Box sx={TRIP_DETAILS_SOCIAL_ROW_SX}>
         <EngagementBar
           targetType="trip"
           targetId={day.id}
@@ -236,6 +204,6 @@ export function TripDetails({
           actionsJustify="space-around"
         />
       </Box>
-    </div>
+    </Card>
   );
 }

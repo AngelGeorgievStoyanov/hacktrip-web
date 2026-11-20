@@ -6,6 +6,12 @@ import { Box, CircularProgress } from '@mui/material';
 import { useGoogleMapsLoader } from '@/hooks/useGoogleMapsLoader';
 import { MAP_DEFAULT_CENTER, MAP_DEFAULT_ZOOM, MAP_TRIP_OPTIONS } from '@/constants/maps';
 import type { MapPosition } from '@/lib/maps';
+import {
+  getGoogleMapFrameSx,
+  getGoogleMapLoadingSx,
+  getGoogleMapContainerStyle,
+  GOOGLE_MAP_LOADING_INDICATOR_SIZE,
+} from '@/styles/presets/map-controls';
 
 export interface GoogleMapMarker {
   id: string | number;
@@ -94,8 +100,8 @@ export function GoogleMapView({
 
   if (!isLoaded) {
     return showLoading ? (
-      <Box sx={{ display: 'grid', placeItems: 'center', width: '100%', maxWidth, height }}>
-        <CircularProgress size={28} />
+      <Box sx={getGoogleMapLoadingSx(maxWidth, height)}>
+        <CircularProgress size={GOOGLE_MAP_LOADING_INDICATOR_SIZE} />
       </Box>
     ) : null;
   }
@@ -104,12 +110,9 @@ export function GoogleMapView({
     selectedMarkerId == null ? undefined : markers.find((marker) => marker.id === selectedMarkerId);
 
   return (
-    <Box sx={{ display: 'flex', width: '100%', maxWidth, minWidth: 0, height }}>
+    <Box sx={getGoogleMapFrameSx(maxWidth, height)}>
       <GoogleMap
-        mapContainerStyle={{
-          width: '100%',
-          height: typeof height === 'number' ? `${height}px` : height,
-        }}
+        mapContainerStyle={getGoogleMapContainerStyle(height)}
         center={center}
         zoom={zoom}
         options={options}

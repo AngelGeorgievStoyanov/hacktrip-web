@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { buildTripsUrl } from '@/lib/tripUrl';
 import type { TripSort } from '@/constants/trips';
+import styles from './TripPagination.module.css';
 
 interface TripPaginationProps {
   page: number;
@@ -25,14 +26,14 @@ export function TripPagination({
   if (pages.length <= 1) return null;
 
   return (
-    <nav
-      aria-label="Trip list pages"
-      style={{ display: 'flex', justifyContent: 'center', margin: 20 }}
-    >
-      <ul style={{ display: 'flex', alignItems: 'center', gap: 12, listStyle: 'none', padding: 0 }}>
+    <nav aria-label="Trip list pages" className={styles.pagination}>
+      <ul className={styles.list}>
         {page > 1 ? (
           <li>
-            <Link href={buildTripsUrl({ search, group, transport, sort, page: page - 1 })}>
+            <Link
+              className={styles.link}
+              href={buildTripsUrl({ search, group, transport, sort, page: page - 1 })}
+            >
               Previous
             </Link>
           </li>
@@ -40,11 +41,16 @@ export function TripPagination({
         {pages.map((pageNumber) => (
           <li key={pageNumber}>
             {pageNumber === page ? (
-              <span aria-current="page" aria-label={'Page ' + pageNumber}>
+              <span
+                className={styles.current}
+                aria-current="page"
+                aria-label={'Page ' + pageNumber}
+              >
                 {pageNumber}
               </span>
             ) : (
               <Link
+                className={styles.link}
                 href={buildTripsUrl({
                   search,
                   group,
@@ -61,7 +67,10 @@ export function TripPagination({
         ))}
         {hasNextPage ? (
           <li>
-            <Link href={buildTripsUrl({ search, group, transport, sort, page: page + 1 })}>
+            <Link
+              className={styles.link}
+              href={buildTripsUrl({ search, group, transport, sort, page: page + 1 })}
+            >
               Next
             </Link>
           </li>

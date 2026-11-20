@@ -6,11 +6,14 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { BackButton } from '@/components/common/BackButton';
 import { authApi } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { resetPasswordSchema } from '@/validations/auth';
-import { COLORS, CARD_SHADOW, CARD_BORDER } from '@/constants/ui';
+import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
@@ -23,21 +26,6 @@ interface ResetPasswordFormProps {
 interface ResetFormValues {
   password: string;
 }
-
-const FORM_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 2,
-  backgroundColor: COLORS.formPanelBackground,
-  boxShadow: CARD_SHADOW,
-  border: CARD_BORDER,
-  borderRadius: '0px',
-  padding: '30px',
-  maxWidth: '700px',
-  width: '100%',
-  boxSizing: 'border-box',
-  marginX: 'auto',
-} as const;
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const router = useRouter();
@@ -92,14 +80,18 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   if (success) {
     return (
       <WelcomeHeading>
-        <Box component="section" sx={FORM_SX}>
-          <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Box component="section" sx={AUTH_FORM_SX}>
+          <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
             RESET PASSWORD
           </Typography>
           <Typography variant="body1" textAlign="center">
             Your password has been reset. You can now log in.
           </Typography>
-          <Button onClick={() => router.replace('/login')} variant="contained">
+          <Button
+            onClick={() => router.replace('/login')}
+            variant="contained"
+            sx={BUTTON_STYLES.navigationLink}
+          >
             Go to login
           </Button>
         </Box>
@@ -114,9 +106,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={FORM_SX}
+        sx={AUTH_FORM_SX}
       >
-        <Typography variant="h5" component="h1" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
           RESET PASSWORD
         </Typography>
         <PasswordField
@@ -136,15 +128,15 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           type="submit"
           variant="contained"
           disabled={submitting || !isValid}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={{ ':hover': { backgroundColor: '#4daf30' } }}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+          sx={BUTTON_STYLES.submit}
         >
           Reset password
         </Button>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1 }}>
-          <Button component={Link} href="/login" disabled={submitting} variant="contained">
+        <Box sx={AUTH_FORM_BACK_ACTION_SX}>
+          <BackButton component={Link} href="/login" disabled={submitting}>
             Back to login
-          </Button>
+          </BackButton>
         </Box>
       </Box>
     </WelcomeHeading>

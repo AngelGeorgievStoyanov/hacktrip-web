@@ -19,7 +19,10 @@ import {
 import { adminApi } from '@/api/admin';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
+import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -63,7 +66,7 @@ export function AdminReports() {
       {queryError ? <Alert severity="error">{getGenericErrorMessage(queryError)}</Alert> : null}
       {isLoading ? <CircularProgress /> : null}
       {data ? (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} variant="outlined" sx={ADMIN_TABLE_CONTAINER_SX}>
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -87,6 +90,7 @@ export function AdminReports() {
                     <Button
                       size="small"
                       color="error"
+                      sx={BUTTON_STYLES.deleteText}
                       disabled={deleteMutation.isPending}
                       onClick={() =>
                         void confirm('Delete this report?', 'Delete Confirmation').then(
@@ -108,14 +112,19 @@ export function AdminReports() {
         </TableContainer>
       ) : null}
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 1 }}>
-          <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+        <Box sx={ADMIN_PAGINATION_SX}>
+          <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Previous
           </Button>
           <Typography>
             Page {page} of {pagination.totalPages}
           </Typography>
           <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
             disabled={page >= (pagination.totalPages ?? 1)}
             onClick={() => setPage((p) => p + 1)}
           >

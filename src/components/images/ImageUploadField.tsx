@@ -21,6 +21,21 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { DeleteAllImagesIcon, RemoveImageIcon } from '@/constants/icons';
 import { MAX_IMAGES_PER_ENTITY, MAX_UPLOAD_BYTES } from '@/constants/images';
 import CustomFileUploadButton from '@/components/CustomFileUploadButton';
+import {
+  IMAGE_UPLOAD_FIELD_ROOT_SX,
+  IMAGE_UPLOAD_FIELD_HEADER_SX,
+  IMAGE_UPLOAD_FIELD_STATUS_ROW_SX,
+  IMAGE_UPLOAD_FIELD_COUNT_SX,
+  IMAGE_UPLOAD_FIELD_LIMIT_MESSAGE_SX,
+  IMAGE_UPLOAD_PROCESSING_INDICATOR_SIZE,
+  IMAGE_UPLOAD_PREVIEW_LIST_SX,
+  IMAGE_UPLOAD_PREVIEW_ROW_SX,
+  IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX,
+  IMAGE_UPLOAD_PREVIEW_FILENAME_SX,
+  IMAGE_UPLOAD_REMOVE_BUTTON_SX,
+  IMAGE_UPLOAD_REMOVE_ALL_ICON_SX,
+  IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX,
+} from '@/styles/presets/image-upload';
 
 const MAX_COMPRESSED_FILE_SIZE = 2 * 1024 * 1024;
 const JPEG_QUALITY = 0.88;
@@ -193,16 +208,8 @@ export default function ImageUploadField({
   const isAtImageLimit = existingCount + files.length >= maxImages;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, minWidth: 0, width: '100%' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 1,
-        }}
-      >
+    <Box sx={IMAGE_UPLOAD_FIELD_ROOT_SX}>
+      <Box sx={IMAGE_UPLOAD_FIELD_HEADER_SX}>
         <CustomFileUploadButton
           handleFilesChange={handleFilesChange}
           images={[]}
@@ -211,16 +218,21 @@ export default function ImageUploadField({
           maxImages={Math.max(0, maxImages - existingCount)}
           disabled={processing}
         />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {processing ? <CircularProgress size={18} aria-label="Processing images" /> : null}
-          <Typography variant="body2" sx={{ mr: 1 }}>
+        <Box sx={IMAGE_UPLOAD_FIELD_STATUS_ROW_SX}>
+          {processing ? (
+            <CircularProgress
+              size={IMAGE_UPLOAD_PROCESSING_INDICATOR_SIZE}
+              aria-label="Processing images"
+            />
+          ) : null}
+          <Typography variant="body2" sx={IMAGE_UPLOAD_FIELD_COUNT_SX}>
             {existingCount + files.length}/{maxImages} uploaded images
           </Typography>
         </Box>
       </Box>
 
       {isAtImageLimit ? (
-        <Typography variant="body2" color="error">
+        <Typography variant="body2" sx={IMAGE_UPLOAD_FIELD_LIMIT_MESSAGE_SX}>
           {maxImages} images are the maximum number to upload.
         </Typography>
       ) : null}
@@ -231,50 +243,25 @@ export default function ImageUploadField({
       ) : null}
 
       {previews.length > 0 ? (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 1,
-            maxHeight: 200,
-            overflowY: 'auto',
-            border: '1px solid black',
-            borderRadius: '5px',
-            p: '6px',
-            m: '6px',
-          }}
-        >
+        <Box sx={IMAGE_UPLOAD_PREVIEW_LIST_SX}>
           {previews.map(({ file, url }, index) => (
             <Box
               key={`${file.name}-${file.lastModified}-${index}`}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                minWidth: 0,
-                p: 1,
-                border: '1px solid',
-                borderColor: 'divider',
-                borderRadius: 1,
-              }}
+              sx={IMAGE_UPLOAD_PREVIEW_ROW_SX}
             >
               <Box
                 component="img"
                 src={url}
                 alt={file.name}
-                sx={{ width: 55, height: 45, objectFit: 'cover', flexShrink: 0 }}
+                sx={IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX}
               />
-              <Typography
-                variant="body2"
-                title={file.name}
-                sx={{ flex: 1, minWidth: 0, overflowWrap: 'anywhere' }}
-              >
+              <Typography variant="body2" title={file.name} sx={IMAGE_UPLOAD_PREVIEW_FILENAME_SX}>
                 {file.name}
               </Typography>
               <Tooltip title="Remove image" arrow>
                 <IconButton
                   aria-label={`Remove ${file.name}`}
-                  color="error"
+                  sx={IMAGE_UPLOAD_REMOVE_BUTTON_SX}
                   onClick={() => removeFile(index)}
                   disabled={processing}
                   size="small"
@@ -296,7 +283,7 @@ export default function ImageUploadField({
               onClick={removeAllFiles}
               disabled={processing}
               size="large"
-              sx={{ alignSelf: 'flex-start' }}
+              sx={IMAGE_UPLOAD_REMOVE_ALL_ICON_SX}
             >
               <DeleteAllImagesIcon fontSize="large" />
             </IconButton>
@@ -306,7 +293,7 @@ export default function ImageUploadField({
             variant="contained"
             onClick={removeAllFiles}
             disabled={processing}
-            sx={{ alignSelf: 'flex-start' }}
+            sx={IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX}
           >
             Remove all images
           </Button>

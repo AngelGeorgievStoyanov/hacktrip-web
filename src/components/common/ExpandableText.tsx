@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
+import { EXPANDABLE_TEXT_COLLAPSED_SX } from '@/styles/presets/typography';
 
 interface ExpandableTextProps {
   text: string;
   variant?: 'body1' | 'body2';
 }
-
-const COLLAPSED_LINES = 3;
 
 /** Clamps long descriptions; the full text stays in the DOM so public pages keep their SEO content. */
 export function ExpandableText({ text, variant = 'body1' }: ExpandableTextProps) {
@@ -37,16 +36,7 @@ export function ExpandableText({ text, variant = 'body1' }: ExpandableTextProps)
         ref={textRef}
         component="div"
         variant={variant}
-        sx={
-          expanded
-            ? undefined
-            : {
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: COLLAPSED_LINES,
-                overflow: 'hidden',
-              }
-        }
+        sx={expanded ? undefined : EXPANDABLE_TEXT_COLLAPSED_SX}
       >
         {text}
       </Typography>

@@ -1,8 +1,13 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-import { CheckCircleOutline, RadioButtonUnchecked } from '@mui/icons-material';
+import { PasswordRequirementMetIcon, PasswordRequirementUnmetIcon } from '@/constants/icons';
 import { getPasswordRequirements } from '@/validations/shared';
+import {
+  PASSWORD_REQUIREMENTS_LIST_SX,
+  PASSWORD_REQUIREMENT_ITEM_SX,
+  PASSWORD_REQUIREMENT_INVALID_ICON_SX,
+} from '@/styles/presets/forms';
 
 interface PasswordRequirementsProps {
   password: string;
@@ -18,28 +23,16 @@ export function PasswordRequirements({
   const requirements = getPasswordRequirements(password, minLength, maxLength);
 
   return (
-    <Box
-      component="ul"
-      aria-label="Password requirements"
-      sx={{
-        listStyle: 'none',
-        p: 0,
-        m: '-8px 0 0 4px',
-        display: 'grid',
-        gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-        gap: 0.75,
-      }}
-    >
+    <Box component="ul" aria-label="Password requirements" sx={PASSWORD_REQUIREMENTS_LIST_SX}>
       {requirements.map((requirement) => (
-        <Box
-          component="li"
-          key={requirement.key}
-          sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}
-        >
+        <Box component="li" key={requirement.key} sx={PASSWORD_REQUIREMENT_ITEM_SX}>
           {requirement.valid ? (
-            <CheckCircleOutline fontSize="small" color="success" />
+            <PasswordRequirementMetIcon fontSize="small" color="success" />
           ) : (
-            <RadioButtonUnchecked fontSize="small" sx={{ color: 'text.disabled' }} />
+            <PasswordRequirementUnmetIcon
+              fontSize="small"
+              sx={PASSWORD_REQUIREMENT_INVALID_ICON_SX}
+            />
           )}
           <Typography
             variant="caption"

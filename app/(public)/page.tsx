@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
+import { Box } from '@mui/material';
 import { HomeHero } from '@/components/home';
 import { HomeTrips } from '@/components/home/HomeTrips';
 import { tripApi } from '@/api/trips';
 import type { TripGroupResponse } from '@/types';
 import { buildSeoMetadata } from '@/seo';
-import { pageBackgroundStyle } from '@/constants/ui';
+import { CENTERED_PAGE_MAIN_SX } from '@/styles/presets/layouts';
 
 export const revalidate = 300;
 
@@ -16,13 +16,6 @@ export const metadata: Metadata = buildSeoMetadata({
   canonicalPath: '/',
 });
 
-const MAIN_STYLE: CSSProperties = {
-  ...pageBackgroundStyle,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
-
 export default async function HomePage() {
   let topTrips: TripGroupResponse[] = [];
   try {
@@ -32,10 +25,10 @@ export default async function HomePage() {
   }
 
   return (
-    <main style={MAIN_STYLE}>
+    <Box component="main" sx={CENTERED_PAGE_MAIN_SX}>
       <HomeHero>
         <HomeTrips trips={topTrips} />
       </HomeHero>
-    </main>
+    </Box>
   );
 }

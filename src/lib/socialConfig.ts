@@ -29,6 +29,17 @@ export function socialConfigTargetKey(
   }
 }
 
+export function isSocialActionEnabled(
+  config: SocialConfigResponse | undefined,
+  action: SocialAction,
+  targetKey: SocialConfigTargetKey,
+): boolean {
+  const actionConfig = config?.social.find((item) => item.key === action);
+  return Boolean(
+    actionConfig?.isActive && actionConfig.targets.some((item) => item.key === targetKey),
+  );
+}
+
 export function isSocialOperationAllowed(
   config: SocialConfigResponse | undefined,
   action: SocialAction,

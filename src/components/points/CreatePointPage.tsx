@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Alert, Box, CircularProgress, Paper } from '@mui/material';
+import { Alert, Box, Card, CircularProgress } from '@mui/material';
 import { tripApi } from '@/api/trips';
 import { pointApi } from '@/api/points';
 import { PointForm } from '@/components/points/PointForm';
@@ -12,6 +12,15 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse, TripPoint } from '@/types';
+import { POINT_FORM_PANEL_WITH_TOP_MARGIN_SX } from '@/styles/presets/forms';
+import {
+  CREATE_POINT_PAGE_SX,
+  CREATE_POINT_GRID_SX,
+  CREATE_POINT_LIST_COLUMN_SX,
+  CREATE_POINT_EDITOR_COLUMN_SX,
+  CREATE_POINT_LOADING_SX,
+  CREATE_POINT_ERROR_ALERT_SX,
+} from '@/styles/presets/layouts';
 
 export function CreatePointPage() {
   const router = useRouter();
@@ -166,7 +175,7 @@ export function CreatePointPage() {
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+      <Box sx={CREATE_POINT_LOADING_SX}>
         <CircularProgress />
       </Box>
     );
@@ -181,25 +190,15 @@ export function CreatePointPage() {
   }
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 1440, mx: 'auto', px: { xs: 1, sm: 2 }, py: 2 }}>
+    <Box sx={CREATE_POINT_PAGE_SX}>
       {error ? (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert severity="error" sx={CREATE_POINT_ERROR_ALERT_SX} onClose={() => setError(null)}>
           {error}
         </Alert>
       ) : null}
 
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 1fr)' },
-          '@media (min-width:1021px)': {
-            gridTemplateColumns: 'minmax(250px, 0.75fr) minmax(0, 1.6fr)',
-          },
-          alignItems: 'start',
-          gap: { xs: 2, md: 3 },
-        }}
-      >
-        <Box sx={{ minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Box sx={CREATE_POINT_GRID_SX}>
+        <Box sx={CREATE_POINT_LIST_COLUMN_SX}>
           <PointList
             points={selectedDay.points}
             onEdit={(point) => router.push(`/points/edit/${point.id}`)}
@@ -209,15 +208,7 @@ export function CreatePointPage() {
           />
         </Box>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            minWidth: 0,
-          }}
-        >
+        <Box sx={CREATE_POINT_EDITOR_COLUMN_SX}>
           <PointLocationPicker
             latitude={pointLatitude}
             longitude={pointLongitude}
@@ -231,22 +222,7 @@ export function CreatePointPage() {
             }
           />
 
-          <Paper
-            variant="outlined"
-            sx={{
-              mt: 2.5,
-              p: { xs: 2, sm: '30px' },
-              width: '100%',
-              maxWidth: 600,
-              minWidth: 0,
-              boxSizing: 'border-box',
-              backgroundColor: '#eee7e79e',
-              border: '1px solid black',
-              borderRadius: 0,
-              boxShadow: '3px 2px 5px black',
-              '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
-            }}
-          >
+          <Card sx={POINT_FORM_PANEL_WITH_TOP_MARGIN_SX}>
             <PointForm
               tripGroupId={tripGroup.id}
               tripId={tripId}
@@ -262,7 +238,7 @@ export function CreatePointPage() {
               onBack={handleBack}
               onDone={() => void handlePointSaved()}
             />
-          </Paper>
+          </Card>
         </Box>
       </Box>
     </Box>

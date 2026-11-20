@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type CSSProperties, type ChangeEvent } from 'react';
+import { useRef, useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import {
   Box,
@@ -17,16 +17,27 @@ import {
 import type { PaginationRenderItemParams } from '@mui/material/Pagination';
 import { AppImage } from '@/components/images';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { FavoriteIcon, TripNextIcon, TripPreviousIcon } from '@/constants/icons';
+import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
+import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import {
-  BREAKPOINTS,
-  BUTTON_STYLES,
-  LIGHTBOX_SWIPE_THRESHOLD_PX,
-  cardStyle,
-  maxWidthQuery,
-} from '@/constants/ui';
+  TRIP_CARD_SX,
+  CARD_TEXT_INSET_SX,
+  TRIP_CARD_HEADER_SX,
+  TRIP_CARD_CONTAINER_SX,
+  getTripCardEmptyContainerSx,
+  TRIP_CARD_TITLE_SX,
+  getTripCardEmptyHeaderSx,
+  TRIP_CARD_IMAGE_FRAME_SX,
+  TRIP_CARD_SOCIAL_COUNTS_SX,
+  TRIP_CARD_STEPPER_SPACE_SX,
+  TRIP_CARD_CONTENT_SX,
+  TRIP_CARD_SOCIAL_ROW_SX,
+  TRIP_CARD_PAGINATION_SX,
+  TRIP_CARD_DESCRIPTION_SX,
+  TRIP_CARD_STEPPER_SX,
+} from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse } from '@/types';
 
@@ -34,76 +45,6 @@ interface TripCardProps {
   tripGroup: TripGroupResponse;
   prioritizeImage?: boolean;
 }
-
-const IMAGE_STYLE: CSSProperties = {
-  display: 'block',
-  width: '100%',
-  height: '200px',
-  objectFit: 'cover',
-};
-
-const CARD_HEIGHT = '540px';
-
-const HEAD_BLOCK_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  height: '105px',
-  minHeight: '105px',
-  boxSizing: 'border-box',
-  overflow: 'hidden',
-} as const;
-
-const IMAGE_FRAME_SX = {
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: '100%',
-  height: '200px',
-  minHeight: '200px',
-  overflow: 'hidden',
-  bgcolor: 'action.hover',
-} as const;
-
-const SOCIAL_COUNTS_SX = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  justifyContent: 'center',
-  gap: 0.5,
-  width: '100%',
-  height: '58px',
-  minHeight: '58px',
-  px: 2,
-  boxSizing: 'border-box',
-} as const;
-
-const STEPPER_SPACE_SX = {
-  height: '20px',
-  minHeight: '20px',
-  width: '100%',
-} as const;
-
-const CARD_CONTENT_SX = {
-  display: 'flex',
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  minHeight: 0,
-  py: 1,
-  '&:last-child': { pb: 1 },
-} as const;
-
-const DESCRIPTION_SX = {
-  display: '-webkit-box',
-  WebkitBoxOrient: 'vertical',
-  WebkitLineClamp: 2,
-  overflow: 'hidden',
-  textAlign: 'center',
-} as const;
 
 /**
  * One shared card serves the home, trips, my trips and favorites lists.
@@ -175,13 +116,13 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   // Keep the legacy empty-day state for pagination gaps.
   if (!selectedDay) {
     return (
-      <Card sx={[cardStyle, { height: isMobile ? 'fit-content' : 'auto', maxHeight: '500px' }]}>
-        <Box sx={{ ...HEAD_BLOCK_SX, height: isMobile ? 'auto' : '-webkit-fill-available' }}>
-          <Typography gutterBottom variant="h5" sx={{ padding: '0px 15px' }}>
+      <Card sx={[TRIP_CARD_SX, getTripCardEmptyContainerSx(isMobile)]}>
+        <Box sx={getTripCardEmptyHeaderSx(isMobile)}>
+          <Typography gutterBottom variant="h5" sx={CARD_TEXT_INSET_SX}>
             No trip on {dayNumber} day
           </Typography>
         </Box>
-        <CardContent sx={CARD_CONTENT_SX}>
+        <CardContent sx={TRIP_CARD_CONTENT_SX}>
           {days.length > 1 ? (
             <Pagination
               count={days.length}
@@ -190,7 +131,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
               page={Math.max(selectedPage, 1)}
               onChange={handleDayChange}
               renderItem={renderPaginationItem}
-              sx={{ marginTop: 2 }}
+              sx={TRIP_CARD_PAGINATION_SX}
             />
           ) : null}
         </CardContent>
@@ -199,33 +140,20 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   }
 
   return (
-    <Card
-      sx={[
-        cardStyle,
-        {
-          width: '352px',
-          maxWidth: 'calc(100vw - 40px)',
-          height: CARD_HEIGHT,
-          minHeight: CARD_HEIGHT,
-          maxHeight: CARD_HEIGHT,
-          boxSizing: 'border-box',
-          overflow: 'hidden',
-        },
-      ]}
-    >
-      <Box sx={HEAD_BLOCK_SX}>
-        <Typography gutterBottom variant="h5" sx={{ padding: '0px 15px', textAlign: 'center' }}>
+    <Card sx={[TRIP_CARD_SX, TRIP_CARD_CONTAINER_SX]}>
+      <Box sx={TRIP_CARD_HEADER_SX}>
+        <Typography gutterBottom variant="h5" sx={[CARD_TEXT_INSET_SX, TRIP_CARD_TITLE_SX]}>
           Title: {title}
         </Typography>
         {description ? (
-          <Typography variant="body2" sx={[DESCRIPTION_SX, { padding: '0px 15px' }]}>
+          <Typography variant="body2" sx={[TRIP_CARD_DESCRIPTION_SX, CARD_TEXT_INSET_SX]}>
             Description: {description}
           </Typography>
         ) : null}
       </Box>
 
       <Box
-        sx={IMAGE_FRAME_SX}
+        sx={TRIP_CARD_IMAGE_FRAME_SX}
         onTouchStart={(event) => {
           touchEndX.current = null;
           touchStartX.current = event.touches[0].clientX;
@@ -238,13 +166,12 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
         {images.length > 0 ? (
           <AppImage
             image={images[activeStep]}
+            preset="tripCard"
             useThumbnail
             loading={prioritizeImage ? 'eager' : undefined}
             fetchPriority={prioritizeImage ? 'high' : undefined}
             alt={title}
-            width={300}
-            height={200}
-            style={IMAGE_STYLE}
+            fill
           />
         ) : (
           <SocialObjectPlaceholder key={dayNumber} />
@@ -257,25 +184,26 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           steps={maxSteps}
           position="static"
           activeStep={activeStep}
-          sx={{ width: '-webkit-fill-available', flexGrow: 1, maxHeight: '20px' }}
+          sx={TRIP_CARD_STEPPER_SX}
           nextButton={
             <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
               Next
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+              {theme.direction === 'rtl' ? <TripPreviousIcon /> : <TripNextIcon />}
             </Button>
           }
           backButton={
             <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              {theme.direction === 'rtl' ? <TripNextIcon /> : <TripPreviousIcon />}
+              Back
             </Button>
           }
         />
       ) : (
-        <Box sx={STEPPER_SPACE_SX} />
+        <Box sx={TRIP_CARD_STEPPER_SPACE_SX} />
       )}
 
-      <Box aria-label="Trip and day likes" sx={SOCIAL_COUNTS_SX}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box aria-label="Trip and day likes" sx={TRIP_CARD_SOCIAL_COUNTS_SX}>
+        <Box sx={TRIP_CARD_SOCIAL_ROW_SX}>
           <Typography component="span" variant="body2">
             Trip:
           </Typography>
@@ -286,7 +214,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             </Typography>
           ) : null}
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={TRIP_CARD_SOCIAL_ROW_SX}>
           <Typography component="span" variant="body2">
             Day:
           </Typography>
@@ -299,12 +227,12 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
         </Box>
       </Box>
 
-      <CardContent sx={CARD_CONTENT_SX}>
+      <CardContent sx={TRIP_CARD_CONTENT_SX}>
         <Button
           component={Link}
           href={detailsHref}
           variant="contained"
-          sx={{ ...BUTTON_STYLES.containedHover, padding: '10px 50px' }}
+          sx={BUTTON_STYLES.navigationAction}
         >
           DETAILS
         </Button>
@@ -317,7 +245,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
             page={selectedPage}
             onChange={handleDayChange}
             renderItem={renderPaginationItem}
-            sx={{ marginTop: 2 }}
+            sx={TRIP_CARD_PAGINATION_SX}
           />
         ) : null}
       </CardContent>

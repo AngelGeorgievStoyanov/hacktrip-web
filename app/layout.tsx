@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { config } from '@/config';
-import { COLORS } from '@/constants/ui';
+import { UI_COLORS } from '@/constants/ui/colors';
 import { Providers } from './providers';
 import { SiteStructuredData } from '@/seo/SiteStructuredData';
 
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: COLORS.brand,
+  themeColor: UI_COLORS.brand.primary,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

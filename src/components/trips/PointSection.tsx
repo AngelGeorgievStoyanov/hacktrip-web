@@ -5,10 +5,22 @@ import { ImageGallery } from '@/components/images/ImageGallery';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
 import { PointActions } from '@/components/points/PointActions';
 import { CommentsToggle } from '@/components/comments/CommentsToggle';
+import { useAuth } from '@/hooks/useAuth';
+import { useSocialConfig } from '@/hooks/useSocialConfig';
+import { isSocialActionEnabled, isSocialOperationAllowed } from '@/lib/socialConfig';
 import { ExpandableText } from '@/components/common/ExpandableText';
-import { CARD_BORDER, CARD_SHADOW, COLORS } from '@/constants/ui';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
+import {
+  POINT_SECTION_CARD_SX,
+  POINT_SECTION_CONTENT_SX,
+  POINT_SECTION_EMPTY_IMAGE_FRAME_SX,
+  POINT_SECTION_DESCRIPTION_SX,
+  POINT_SECTION_ACTION_ROW_SX,
+  POINT_SECTION_NOTE_SX,
+  POINT_SECTION_TITLE_SX,
+} from '@/styles/presets/trip-details';
+import { POINT_SECTION_IMAGE_FRAME_SX } from '@/styles/presets/image-gallery';
 
 interface PointSectionProps {
   point: TripPoint;
@@ -16,29 +28,27 @@ interface PointSectionProps {
   togglePointComments: (target: CommentTarget) => void;
 }
 
-// Legacy `TripDetailsPointCard` skin: card with centered content, translucent
-// background, and the legacy border/shadow treatment.
-const POINT_CARD_STYLE = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  maxWidth: '500px',
-  margin: '20px auto',
-  padding: '25px 0px 0px 0px',
-  backgroundColor: COLORS.cardBackground,
-  boxShadow: CARD_SHADOW,
-  border: CARD_BORDER,
-  borderRadius: '0px',
-} as const;
-
 export function PointSection({
   point,
   pointCommentTarget,
   togglePointComments,
 }: PointSectionProps) {
+  const { status } = useAuth();
+  const socialConfig = useSocialConfig();
   if (!point) {
     return null;
   }
+
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', 'point');
+  const canCreateComment = isSocialOperationAllowed(
+    socialConfig.data,
+    'comment',
+    'point',
+    'create',
+  );
+  const canShowComments =
+    commentsEnabled &&
+    (point.social.comments.count > 0 || (status === 'authenticated' && canCreateComment));
 
   const pointTarget: CommentTarget = { type: 'point', pointId: point.id };
   const isPointOpen =
@@ -46,14 +56,14 @@ export function PointSection({
 
   return (
     <section aria-label="Trip points">
-      <Card sx={POINT_CARD_STYLE}>
-        <CardContent sx={{ width: '100%', boxSizing: 'border-box' }}>
-          <Typography variant="h5" component="div" sx={POINT_NAME_STYLE}>
+      <Card sx={POINT_SECTION_CARD_SX}>
+        <CardContent sx={POINT_SECTION_CONTENT_SX}>
+          <Typography variant="h5" component="div" sx={POINT_SECTION_TITLE_SX}>
             Point name: {point.name}
           </Typography>
 
           {point.images.length > 0 ? (
-            <Box sx={{ width: 'calc(100% + 32px)', mx: '-16px' }}>
+            <Box sx={POINT_SECTION_IMAGE_FRAME_SX}>
               <ImageGallery
                 images={point.images}
                 alt={point.name}
@@ -64,46 +74,36 @@ export function PointSection({
               />
             </Box>
           ) : (
-            <Box sx={{ width: 'calc(100% + 32px)', mx: '-16px', aspectRatio: '1 / 1' }}>
+            <Box sx={POINT_SECTION_EMPTY_IMAGE_FRAME_SX}>
               <SocialObjectPlaceholder />
             </Box>
           )}
 
           {point.lat === null || point.lng === null ? (
-            <Typography variant="body2" sx={POINT_NOTE_STYLE}>
+            <Typography variant="body2" sx={POINT_SECTION_NOTE_SX}>
               NO MAP MARKER ADDED
             </Typography>
           ) : null}
 
           {point.description ? (
-            <div style={{ padding: '0px 15px', marginTop: '10px' }}>
+            <Box sx={POINT_SECTION_DESCRIPTION_SX}>
               <ExpandableText text={point.description} />
-            </div>
+            </Box>
           ) : null}
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', mt: 1 }}>
+          <Box sx={POINT_SECTION_ACTION_ROW_SX}>
             <PointActions point={point} />
-            <CommentsToggle
-              count={point.social.comments.count}
-              open={isPointOpen}
-              onToggle={() => togglePointComments(pointTarget)}
-            />
+            {canShowComments ? (
+              <CommentsToggle
+                count={point.social.comments.count}
+                open={isPointOpen}
+                onToggle={() => togglePointComments(pointTarget)}
+                canCreate={status === 'authenticated' && canCreateComment}
+              />
+            ) : null}
           </Box>
         </CardContent>
       </Card>
     </section>
   );
 }
-
-const POINT_NAME_STYLE = {
-  margin: '0 0 0.35em',
-  padding: '0px 15px',
-  fontSize: '1.5rem',
-  fontWeight: 500,
-} as const;
-
-const POINT_NOTE_STYLE = {
-  margin: '0 0 0.35em',
-  padding: '0px 25px',
-  fontSize: '0.875rem',
-} as const;

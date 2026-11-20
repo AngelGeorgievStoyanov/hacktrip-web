@@ -1,15 +1,14 @@
 import type { Metadata } from 'next';
-import type { CSSProperties } from 'react';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/common/JsonLd';
+import { Box } from '@mui/material';
 import { TripDetailsView } from '@/components/trips/TripDetailsView';
-import { TripItineraryIndex } from '@/seo/modules/trip/TripItineraryIndex';
 import { buildTripJsonLd } from '@/seo/modules/trip/buildStructuredData';
 import { buildTripSeoContent } from '@/seo/modules/trip/buildContent';
 import { buildTripSeoMetadata } from '@/seo/modules/trip/buildMetadata';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { getTrip, isNotFoundError } from '@/lib/serverApi';
-import { pageBackgroundStyle } from '@/constants/ui';
+import { CENTERED_PAGE_MAIN_SX } from '@/styles/presets/layouts';
 import { positiveIdParam } from '@/validations';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
 
@@ -17,13 +16,6 @@ interface TripPageProps {
   params: Promise<{ id: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
-
-const MAIN_STYLE: CSSProperties = {
-  ...pageBackgroundStyle,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-};
 
 function parseId(value: string): number | null {
   const parsed = positiveIdParam.safeParse(value);
@@ -91,10 +83,9 @@ export default async function TripPage({ params, searchParams }: TripPageProps) 
   const image = tripRepresentativeImage(trip);
 
   return (
-    <main style={MAIN_STYLE}>
+    <Box component="main" sx={CENTERED_PAGE_MAIN_SX}>
       {/* One trip-group response; day switching uses the already-loaded group. */}
       <TripDetailsView trip={trip} initialDayNumber={day.dayNumber} />
-      <TripItineraryIndex itinerary={seoContent.itinerary} />
 
       <JsonLd
         data={buildTripJsonLd({
@@ -105,6 +96,6 @@ export default async function TripPage({ params, searchParams }: TripPageProps) 
           itinerary: seoContent.itinerary,
         })}
       />
-    </main>
+    </Box>
   );
 }

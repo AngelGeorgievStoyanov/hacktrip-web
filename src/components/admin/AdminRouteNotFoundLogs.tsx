@@ -19,8 +19,17 @@ import {
 } from '@mui/material';
 import { adminApi } from '@/api/admin';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
+import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import type { RouteNotFoundLogDto } from '@/types/admin';
+import {
+  ADMIN_DIAGNOSTIC_FIELD_SX,
+  ADMIN_DIAGNOSTIC_LABEL_SX,
+  ADMIN_DIAGNOSTIC_PRE_SX,
+  ADMIN_ROUTE_DETAILS_SX,
+  getAdminRouteExpandedCellSx,
+} from '@/styles/presets/admin';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -40,25 +49,11 @@ function formatDiagnosticValue(value: string | null): string {
 
 function DiagnosticField({ label, value }: { label: string; value: string | null }) {
   return (
-    <Box sx={{ minWidth: 0 }}>
-      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+    <Box sx={ADMIN_DIAGNOSTIC_FIELD_SX}>
+      <Typography variant="subtitle2" sx={ADMIN_DIAGNOSTIC_LABEL_SX}>
         {label}
       </Typography>
-      <Box
-        component="pre"
-        sx={{
-          m: 0,
-          p: 1,
-          maxWidth: '100%',
-          overflow: 'auto',
-          whiteSpace: 'pre-wrap',
-          overflowWrap: 'anywhere',
-          borderRadius: 1,
-          bgcolor: 'action.hover',
-          fontFamily: 'monospace',
-          fontSize: '0.8rem',
-        }}
-      >
+      <Box component="pre" sx={ADMIN_DIAGNOSTIC_PRE_SX}>
         {formatDiagnosticValue(value)}
       </Box>
     </Box>
@@ -67,7 +62,7 @@ function DiagnosticField({ label, value }: { label: string; value: string | null
 
 function RouteNotFoundLogDetails({ item }: { item: RouteNotFoundLogDto }) {
   return (
-    <Box sx={{ display: 'grid', gap: 2, p: 2 }}>
+    <Box sx={ADMIN_ROUTE_DETAILS_SX}>
       <DiagnosticField label="Request path" value={item.reqUrl} />
       <DiagnosticField label="Headers" value={item.reqHeaders} />
       <DiagnosticField label="Query" value={item.reqQuery} />
@@ -98,7 +93,7 @@ export function AdminRouteNotFoundLogs() {
       {error ? <Alert severity="error">{getGenericErrorMessage(error)}</Alert> : null}
       {isLoading ? <CircularProgress /> : null}
       {data ? (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} variant="outlined" sx={ADMIN_TABLE_CONTAINER_SX}>
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -134,10 +129,7 @@ export function AdminRouteNotFoundLogs() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        sx={{ p: 0, borderBottom: isExpanded ? undefined : 0 }}
-                      >
+                      <TableCell colSpan={6} sx={getAdminRouteExpandedCellSx(isExpanded)}>
                         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                           <Box id={`route-not-found-details-${item.id}`}>
                             <RouteNotFoundLogDetails item={item} />
@@ -153,14 +145,19 @@ export function AdminRouteNotFoundLogs() {
         </TableContainer>
       ) : null}
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
-        <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 1 }}>
-          <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+        <Box sx={ADMIN_PAGINATION_SX}>
+          <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Previous
           </Button>
           <Typography>
             Page {page} of {pagination.totalPages}
           </Typography>
           <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
             disabled={page >= (pagination.totalPages ?? 1)}
             onClick={() => setPage((p) => p + 1)}
           >

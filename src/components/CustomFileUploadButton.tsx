@@ -4,6 +4,11 @@ import { type ChangeEvent, type FC } from 'react';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import { UploadIcon } from '@/constants/icons';
 import { MAX_IMAGES_PER_ENTITY } from '@/constants/images';
+import {
+  CUSTOM_FILE_UPLOAD_BUTTON_CONTAINER_SX,
+  CUSTOM_FILE_UPLOAD_BUTTON_SX,
+  CUSTOM_FILE_UPLOAD_ICON_BUTTON_SX,
+} from '@/styles/presets/image-upload';
 
 interface CustomFileUploadButtonProps {
   handleFilesChange: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -37,6 +42,7 @@ const CustomFileUploadButton: FC<CustomFileUploadButtonProps> = ({
             disabled={isDisabled}
             aria-label="Upload images"
             component="label"
+            sx={CUSTOM_FILE_UPLOAD_ICON_BUTTON_SX}
           >
             <input
               hidden
@@ -54,8 +60,13 @@ const CustomFileUploadButton: FC<CustomFileUploadButtonProps> = ({
   }
 
   return (
-    <Box sx={{ width: '30ch' }}>
-      <Button variant="contained" component="label" disabled={isDisabled}>
+    <Box sx={CUSTOM_FILE_UPLOAD_BUTTON_CONTAINER_SX}>
+      <Button
+        variant="contained"
+        component="label"
+        disabled={isDisabled}
+        sx={CUSTOM_FILE_UPLOAD_BUTTON_SX}
+      >
         UPLOAD
         <input
           name="files"

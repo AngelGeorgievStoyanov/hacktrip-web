@@ -9,21 +9,18 @@ import { PointsSection } from '@/components/trips/PointsSection';
 import { DayImagesGallery } from '@/components/trips/DayImagesGallery';
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import { Box } from '@mui/material';
+import styles from './TripDetailsView.module.css';
 import { buildTripUrl } from '@/lib/tripUrl';
 import { tripRepresentativeImage } from '@/lib/images/representative';
 import { useTripGroup } from '@/hooks/useTripGroup';
 import { TripGroupSocialActions } from '@/components/social/TripGroupSocialActions';
-import { CARD_BORDER, CARD_SHADOW, COLORS, pageBackgroundStyle } from '@/constants/ui';
+import { getTripDetailsStickyHeaderSx } from '@/styles/presets/trip-details';
 import type { TripGroupResponse } from '@/types';
 
 interface TripDetailsViewProps {
   trip: TripGroupResponse;
   initialDayNumber: number;
 }
-
-const SHELL_PADDING =
-  typeof pageBackgroundStyle.padding === 'string' ? pageBackgroundStyle.padding : '30px';
-const SHELL_BLEED = `-${SHELL_PADDING}`;
 
 /**
  * Trip Details view owns the active day in client state.
@@ -108,59 +105,29 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
   return (
     <>
-      <Box
-        data-trip-sticky-header="true"
-        sx={{
-          position: 'sticky',
-          top: 0,
-          zIndex: 'appBar',
-          width: `calc(100% + ${SHELL_PADDING} + ${SHELL_PADDING})`,
-          marginLeft: SHELL_BLEED,
-          marginRight: SHELL_BLEED,
-          marginTop: SHELL_BLEED,
-          pb: 1,
-          backgroundColor: 'transparent',
-        }}
-      >
+      <Box data-trip-sticky-header="true" sx={getTripDetailsStickyHeaderSx()}>
         <TripDaysNav
           tripGroupId={group.id}
           days={group.days.map((current) => current.dayNumber)}
           selectedDay={day.dayNumber}
           onSelect={handleSelectDay}
         />
-        <Box
-          sx={{
-            display: 'inline-flex',
-            maxWidth: 'calc(100% - 32px)',
-            ml: { xs: 2, sm: 3 },
-            mt: 1,
-            px: 0.75,
-            py: 0.5,
-            border: CARD_BORDER,
-            borderRadius: 2.5,
-            backgroundColor: COLORS.cardBackground,
-            boxShadow: CARD_SHADOW,
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-          }}
-        >
-          <TripGroupSocialActions
-            tripGroupId={group.id}
-            social={group.social}
-            shareTitle={day.title ?? day.destination ?? 'Trip'}
-            shareText={day.description ?? undefined}
-            shareDayNumber={day.dayNumber}
-            open={tripGroupCommentsOpen}
-            onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
-          />
-        </Box>
+        <TripGroupSocialActions
+          tripGroupId={group.id}
+          social={group.social}
+          shareTitle={day.title ?? day.destination ?? 'Trip'}
+          shareText={day.description ?? undefined}
+          shareDayNumber={day.dayNumber}
+          open={tripGroupCommentsOpen}
+          onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
+        />
       </Box>
 
-      <Box className="trip-details-page-layout">
+      <Box className={styles.tripDetailsPageLayout}>
         {/* First row: trip information and images. Container queries stack all sections
             when the available content width cannot comfortably fit both rows. */}
-        <Box className="trip-details-primary-row">
-          <Box className="trip-details-info">
+        <Box className={styles.tripDetailsPrimaryRow}>
+          <Box className={styles.tripDetailsInfo}>
             <TripDetails
               tripGroup={group}
               day={day}
@@ -175,7 +142,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
             />
           </Box>
 
-          <Box className="trip-details-images">
+          <Box className={styles.tripDetailsImages}>
             <DayImagesGallery
               key={day.dayNumber}
               day={day}
@@ -188,7 +155,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
         {/* Trip Group and day/image comments stay after the first row. */}
         {tripGroupCommentsOpen ? (
-          <Box className="trip-details-trip-group-comments">
+          <Box className={styles.tripDetailsTripGroupComments}>
             <CommentsSection
               target={{ type: 'tripGroup', tripGroupId: group.id }}
               initialCommentsCount={group.social.comments.count}
@@ -198,7 +165,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
         ) : null}
 
         {tripCommentTarget ? (
-          <Box className="trip-details-day-comments">
+          <Box className={styles.tripDetailsDayComments}>
             <CommentsSection
               target={tripCommentTarget}
               initialCommentsCount={commentCountForTarget(tripCommentTarget)}
@@ -208,8 +175,8 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
         ) : null}
 
         {/* Second row: map and selected point details. */}
-        <Box className="trip-details-map-row">
-          <Box className="trip-details-map">
+        <Box className={styles.tripDetailsMapRow}>
+          <Box className={styles.tripDetailsMap}>
             <TripMapSection
               key={`day-map-${day.id}`}
               points={day.points}
@@ -225,7 +192,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           </Box>
 
           {day.points.length > 0 ? (
-            <Box className="trip-details-point-info">
+            <Box className={styles.tripDetailsPointInfo}>
               <PointsSection
                 points={day.points}
                 selectedPointIndex={selectedPointIndex}
@@ -238,7 +205,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
         {/* Point comments remain at the bottom, after the point information. */}
         {pointCommentTarget ? (
-          <Box className="trip-details-point-comments">
+          <Box className={styles.tripDetailsPointComments}>
             <CommentsSection
               target={pointCommentTarget}
               initialCommentsCount={commentCountForTarget(pointCommentTarget)}

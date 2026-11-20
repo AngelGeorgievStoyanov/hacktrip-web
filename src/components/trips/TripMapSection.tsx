@@ -1,14 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  MobileStepper,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Button, Card, MobileStepper, useMediaQuery, useTheme } from '@mui/material';
 import { GoogleMapView, type GoogleMapMarker } from '@/components/maps/GoogleMapView';
 import { toMapPosition, type MapPosition } from '@/lib/maps';
 import {
@@ -18,10 +11,13 @@ import {
   MAP_TRIP_OPTIONS,
   MAP_TRIP_WIDTH,
 } from '@/constants/maps';
-import { BREAKPOINTS, CARD_BORDER, CARD_SHADOW, maxWidthQuery, mediaDown } from '@/constants/ui';
+import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
 import type { TripPoint } from '@/types';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { TripNextIcon, TripPreviousIcon } from '@/constants/icons';
+import {
+  TRIP_MAP_SECTION_CARD_SX,
+  TRIP_MAP_SECTION_STEPPER_SX,
+} from '@/styles/presets/map-controls';
 
 interface TripMapSectionProps {
   points: TripPoint[];
@@ -42,8 +38,6 @@ export function TripMapSection({
   const selectedPoint = selectedPointIndex >= 0 ? points[selectedPointIndex] : undefined;
   const focusPointId = selectedPoint && toMapPosition(selectedPoint) ? selectedPoint.id : null;
   const stepperRef = useRef<HTMLDivElement | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
-  const [shouldLoadMap, setShouldLoadMap] = useState(false);
   const previousPointIndex = useRef(selectedPointIndex);
   const isSmallScreen = useMediaQuery(maxWidthQuery(BREAKPOINTS.tripDetails));
   const [selectedMarker, setSelectedMarker] = useState<GoogleMapMarker | null>(null);
@@ -75,29 +69,6 @@ export function TripMapSection({
     ? navigablePointIndexes.length > 0
     : currentNavigableIndex < navigablePointIndexes.length - 1;
   const hasPrev = !isOverview;
-
-  useEffect(() => {
-    const container = mapContainerRef.current;
-    if (!container) return;
-
-    if (!('IntersectionObserver' in window)) {
-      setShouldLoadMap(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoadMap(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '400px 0px' },
-    );
-
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (isOverview) setSelectedMarker(null);
@@ -133,22 +104,7 @@ export function TripMapSection({
   }, [isSmallScreen, selectedPointIndex]);
 
   return (
-    <Box
-      ref={mapContainerRef}
-      sx={{
-        boxSizing: 'content-box',
-        height: 'fit-content',
-        width: '100%',
-        maxWidth: 600,
-        border: CARD_BORDER,
-        boxShadow: CARD_SHADOW,
-        [mediaDown(BREAKPOINTS.smallPhone)]: {
-          display: 'flex',
-          flexDirection: 'column',
-          width: '94vw',
-        },
-      }}
-    >
+    <Card sx={TRIP_MAP_SECTION_CARD_SX}>
       {markers.length > 1 ? (
         <MobileStepper
           ref={stepperRef}
@@ -156,7 +112,7 @@ export function TripMapSection({
           steps={navigablePointIndexes.length + 1}
           position="static"
           activeStep={isOverview ? 0 : currentNavigableIndex + 1}
-          sx={{ maxWidth: 600, flexGrow: 1, maxHeight: '25px' }}
+          sx={TRIP_MAP_SECTION_STEPPER_SX}
           nextButton={
             <Button
               size="small"
@@ -167,9 +123,9 @@ export function TripMapSection({
             >
               Next
               {theme.direction === 'rtl' ? (
-                <KeyboardArrowLeftIcon fontSize="inherit" />
+                <TripPreviousIcon fontSize="inherit" />
               ) : (
-                <KeyboardArrowRightIcon fontSize="inherit" />
+                <TripNextIcon fontSize="inherit" />
               )}
             </Button>
           }
@@ -186,46 +142,31 @@ export function TripMapSection({
               disabled={!hasPrev}
             >
               {theme.direction === 'rtl' ? (
-                <KeyboardArrowRightIcon fontSize="inherit" />
+                <TripNextIcon fontSize="inherit" />
               ) : (
-                <KeyboardArrowLeftIcon fontSize="inherit" />
+                <TripPreviousIcon fontSize="inherit" />
               )}
               Back
             </Button>
           }
         />
       ) : null}
-      {shouldLoadMap ? (
-        <GoogleMapView
-          markers={mapMarkers}
-          path={showingPointMarkers ? path : []}
-          center={showingPointMarkers ? MAP_DEFAULT_CENTER : (dayPosition ?? MAP_DEFAULT_CENTER)}
-          height={MAP_TRIP_HEIGHT}
-          maxWidth={MAP_TRIP_WIDTH}
-          options={MAP_TRIP_OPTIONS as google.maps.MapOptions}
-          // Fit the full route only in overview mode. Fallback day/Sofia maps have no route.
-          fitBounds={showingPointMarkers && isOverview}
-          fitBoundsTrigger={isOverview ? 'overview' : selectedPointIndex}
-          focusMarkerId={showingPointMarkers ? focusPointId : null}
-          focusZoom={MAP_DEFAULT_ZOOM}
-          selectedMarkerId={showingPointMarkers ? (selectedMarker?.id ?? null) : null}
-          onMarkerSelect={showingPointMarkers ? handleMarkerSelect : undefined}
-          renderInfoWindow={showingPointMarkers ? (marker) => marker.title : undefined}
-        />
-      ) : (
-        <Box
-          sx={{
-            display: 'grid',
-            placeItems: 'center',
-            width: '100%',
-            maxWidth: MAP_TRIP_WIDTH,
-            height: MAP_TRIP_HEIGHT,
-          }}
-          aria-label="Map loading area"
-        >
-          <CircularProgress size={28} />
-        </Box>
-      )}
-    </Box>
+      <GoogleMapView
+        markers={mapMarkers}
+        path={showingPointMarkers ? path : []}
+        center={showingPointMarkers ? MAP_DEFAULT_CENTER : (dayPosition ?? MAP_DEFAULT_CENTER)}
+        height={MAP_TRIP_HEIGHT}
+        maxWidth={MAP_TRIP_WIDTH}
+        options={MAP_TRIP_OPTIONS as google.maps.MapOptions}
+        // Fit the full route only in overview mode. Fallback day/Sofia maps have no route.
+        fitBounds={showingPointMarkers && isOverview}
+        fitBoundsTrigger={isOverview ? 'overview' : selectedPointIndex}
+        focusMarkerId={showingPointMarkers ? focusPointId : null}
+        focusZoom={MAP_DEFAULT_ZOOM}
+        selectedMarkerId={showingPointMarkers ? (selectedMarker?.id ?? null) : null}
+        onMarkerSelect={showingPointMarkers ? handleMarkerSelect : undefined}
+        renderInfoWindow={showingPointMarkers ? (marker) => marker.title : undefined}
+      />
+    </Card>
   );
 }

@@ -19,6 +19,13 @@ import {
   type MapPosition,
 } from '@/lib/maps';
 import { getPointNameFromMapAddress } from '@/lib/pointName';
+import {
+  POINT_LOCATION_PICKER_STACK_SX,
+  POINT_LOCATION_ACTIONS_SX,
+  MAP_PICKER_SNACKBAR_SX,
+  POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE,
+} from '@/styles/presets/map-controls';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 interface PointLocationPickerProps {
   latitude: string;
@@ -105,7 +112,7 @@ export function PointLocationPicker({
   }
 
   return (
-    <Stack spacing={1} sx={{ width: '100%', maxWidth: 600, minWidth: 0, mx: 'auto' }}>
+    <Stack spacing={1} sx={POINT_LOCATION_PICKER_STACK_SX}>
       <GoogleMapView
         center={center}
         zoom={MAP_POINT_PICKER_ZOOM}
@@ -126,21 +133,7 @@ export function PointLocationPicker({
         direction={{ xs: 'column', sm: 'row' }}
         spacing={1}
         alignItems={{ xs: 'stretch', sm: 'center' }}
-        sx={{
-          width: '100%',
-          maxWidth: 600,
-          minWidth: 0,
-          mx: 'auto',
-          justifyContent: 'space-around',
-          boxSizing: 'border-box',
-          '& > .MuiButton-root': {
-            width: { xs: '100%', sm: 'auto' },
-            minHeight: 40,
-            maxWidth: { xs: 420, sm: 'none' },
-            alignSelf: { xs: 'center', sm: 'auto' },
-            boxSizing: 'border-box',
-          },
-        }}
+        sx={POINT_LOCATION_ACTIONS_SX}
       >
         <AddressAutocomplete
           value={address}
@@ -148,38 +141,16 @@ export function PointLocationPicker({
           onChange={setAddress}
           onLocationSelect={handleAddressSelected}
           label="Search field"
-          inputSx={{
-            backgroundColor: '#f2f1e58f',
-            borderRadius: '5px',
-            width: '100%',
-            minWidth: 0,
-          }}
+          variant="pointPicker"
           size="small"
           buttonVariant="contained"
           direction={{ xs: 'column', sm: 'row' }}
-          buttonSx={{
-            width: { xs: '100%', sm: 'auto' },
-            minHeight: 40,
-            m: 0,
-            '&:hover': { backgroundColor: '#4daf30' },
-          }}
-          containerSx={{
-            width: { xs: '100%', sm: 'auto' },
-            flex: { xs: '0 1 auto', sm: '1 1 190px' },
-            minWidth: 0,
-            maxWidth: { xs: 420, sm: 420 },
-            alignSelf: { xs: 'center', sm: 'stretch' },
-          }}
         />
         <Button
           type="button"
           variant="contained"
           onClick={handleClearLocation}
-          sx={{
-            backgroundColor: 'rgb(194, 194, 224)',
-            color: 'black',
-            '&:hover': { color: 'rgb(248 245 245)' },
-          }}
+          sx={BUTTON_STYLES.removeMarker}
         >
           Remove Marker
         </Button>
@@ -188,7 +159,11 @@ export function PointLocationPicker({
           variant="outlined"
           onClick={handleUseMyLocation}
           disabled={locating}
-          startIcon={locating ? <CircularProgress size={14} /> : undefined}
+          startIcon={
+            locating ? (
+              <CircularProgress size={POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE} />
+            ) : undefined
+          }
         >
           Gps position
         </Button>
@@ -198,7 +173,7 @@ export function PointLocationPicker({
         open={Boolean(notice)}
         autoHideDuration={10000}
         onClose={() => setNotice(null)}
-        sx={{ position: 'relative', left: 0, right: 0 }}
+        sx={MAP_PICKER_SNACKBAR_SX}
       >
         <Alert onClose={() => setNotice(null)} severity="error">
           {notice}

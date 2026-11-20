@@ -11,18 +11,8 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import type { TripGroupResponse } from '@/types';
 import { tripGroupKeys } from '@/hooks/useTripGroup';
 import { useNotification } from '@/components/common/NotificationProvider';
-
-const LEGACY_BUTTON_SX = {
-  ':hover': { background: '#4daf30' },
-  padding: '10px',
-  width: '100%',
-  minHeight: '48px',
-  boxSizing: 'border-box',
-};
-
-const ACTION_BUTTON_BOX_SX = {
-  display: 'contents',
-};
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { TRIP_ACTIONS_CONTENT_SX } from '@/styles/presets/layouts';
 
 /** Owner-only navigation and management actions for the selected trip group. */
 export function TripActions({
@@ -79,12 +69,12 @@ export function TripActions({
 
   if (section === 'navigation') {
     return (
-      <Box sx={ACTION_BUTTON_BOX_SX}>
+      <Box sx={TRIP_ACTIONS_CONTENT_SX}>
         <Button
           component={Link}
           href={`/trips/create?tripGroupId=${tripGroup.id}`}
           variant="contained"
-          sx={LEGACY_BUTTON_SX}
+          sx={BUTTON_STYLES.tripAdd}
         >
           ADD NEXT DAY TRIP
         </Button>
@@ -92,7 +82,7 @@ export function TripActions({
           component={Link}
           href={`/trips/create/points?tripGroupId=${tripGroup.id}&tripId=${tripId}`}
           variant="contained"
-          sx={LEGACY_BUTTON_SX}
+          sx={BUTTON_STYLES.tripManage}
         >
           ADD OR EDIT POINTS FOR YOUR TRIP
         </Button>
@@ -101,7 +91,7 @@ export function TripActions({
   }
 
   return (
-    <Box sx={ACTION_BUTTON_BOX_SX}>
+    <Box sx={TRIP_ACTIONS_CONTENT_SX}>
       {isOwner ? (
         <>
           {selectedDay ? (
@@ -109,7 +99,7 @@ export function TripActions({
               component={Link}
               href={`/trips/${tripGroup.id}/edit?dayId=${selectedDay.id}`}
               variant="contained"
-              sx={LEGACY_BUTTON_SX}
+              sx={BUTTON_STYLES.tripEdit}
             >
               EDIT DAY {selectedDay.dayNumber}
             </Button>
@@ -128,13 +118,7 @@ export function TripActions({
                 })
               }
               disabled={deleteDayMutation.isPending}
-              sx={{
-                ':hover': { background: '#ef0a0a' },
-                padding: '10px',
-                width: '100%',
-                minHeight: '48px',
-                boxSizing: 'border-box',
-              }}
+              sx={BUTTON_STYLES.tripDelete}
             >
               DELETE DAY {selectedDay?.dayNumber}
             </Button>
@@ -152,13 +136,7 @@ export function TripActions({
               })
             }
             disabled={deleteMutation.isPending}
-            sx={{
-              ':hover': { background: '#ef0a0a' },
-              padding: '10px',
-              width: '100%',
-              minHeight: '48px',
-              boxSizing: 'border-box',
-            }}
+            sx={BUTTON_STYLES.tripDelete}
           >
             DELETE TRIP
           </Button>

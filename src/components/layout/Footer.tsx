@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { COLORS } from '@/constants/ui';
+import styles from './Footer.module.css';
 
 const COPYRIGHT_START = 2022;
 
@@ -46,18 +46,8 @@ export function Footer() {
   }, []);
 
   return (
-    <footer
-      ref={footerRef}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        backgroundColor: COLORS.brand,
-        color: 'white',
-        padding: '0 20px',
-      }}
-    >
-      <h4 style={{ fontFamily: 'Space Mono, monospace', color: COLORS.textLight, opacity: 1 }}>
+    <footer ref={footerRef} className={styles.footer}>
+      <h4 className={styles.copyright}>
         {'Copyright © '} {COPYRIGHT_START} - {new Date().getFullYear()}{' '}
         {'"HACK-TRIP" by Angel Stoyanov.  All rights reserved.'}
       </h4>

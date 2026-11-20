@@ -26,10 +26,26 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { adminApi } from '@/api/admin';
+import { DialogCloseIcon } from '@/constants/icons';
+import { ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
+import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/ui';
+import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
+import {
+  ADMIN_IMAGES_PAGE_SX,
+  ADMIN_IMAGES_DESCRIPTION_SX,
+  ADMIN_IMAGES_ALERT_SX,
+  ADMIN_IMAGES_TOOLBAR_SX,
+  ADMIN_IMAGES_PAGINATION_ROW_SX,
+  ADMIN_IMAGES_PAGINATION_SX,
+  ADMIN_IMAGE_PREVIEW_TRIGGER_SX,
+  ADMIN_IMAGE_THUMBNAIL_SX,
+  ADMIN_IMAGE_URL_CELL_SX,
+  ADMIN_IMAGE_PREVIEW_CLOSE_SX,
+  ADMIN_IMAGE_PREVIEW_CONTENT_SX,
+  ADMIN_IMAGE_PREVIEW_SX,
+} from '@/styles/presets/admin';
 
 function stringList(items: string[], empty: string) {
   if (items.length === 0) {
@@ -61,12 +77,20 @@ function CloudImages() {
       {data ? (
         <Box>
           <List dense>{stringList(data.items, 'No cloud images.')}</List>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+          <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
               Previous
             </Button>
             <Typography>Page {page}</Typography>
-            <Button disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={!hasNext}
+              onClick={() => setPage((p) => p + 1)}
+            >
               Next
             </Button>
           </Box>
@@ -92,14 +116,19 @@ function DatabaseImages() {
         <Box>
           <List dense>{stringList(data.items, 'No database images.')}</List>
           {pagination && (pagination.totalPages ?? 0) > 1 ? (
-            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-              <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
+              <Button
+                sx={ADMIN_PAGINATION_BUTTON_SX}
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+              >
                 Previous
               </Button>
               <Typography>
                 Page {page} of {pagination.totalPages}
               </Typography>
               <Button
+                sx={ADMIN_PAGINATION_BUTTON_SX}
                 disabled={page >= (pagination.totalPages ?? 1)}
                 onClick={() => setPage((p) => p + 1)}
               >
@@ -131,12 +160,20 @@ function OrphanImages() {
           <List dense>{stringList(data.cloudOnly, 'None.')}</List>
           <Typography variant="h6">Database only ({data.databaseOnly.length})</Typography>
           <List dense>{stringList(data.databaseOnly, 'None.')}</List>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+          <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
               Previous
             </Button>
             <Typography>Page {page}</Typography>
-            <Button disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={!hasNext}
+              onClick={() => setPage((p) => p + 1)}
+            >
               Next
             </Button>
           </Box>
@@ -208,37 +245,37 @@ function MissingThumbnails() {
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box sx={ADMIN_IMAGES_PAGE_SX}>
       <Typography variant="h6" gutterBottom>
         Missing thumbnails
       </Typography>
-      <Typography color="text.secondary" variant="body2" sx={{ mb: 2 }}>
+      <Typography color="text.secondary" variant="body2" sx={ADMIN_IMAGES_DESCRIPTION_SX}>
         Only images with a database record and an existing original in Google Cloud Storage are
         listed. Select images to generate their thumbnails.
       </Typography>
 
       {error ? (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" sx={ADMIN_IMAGES_ALERT_SX}>
           {getGenericErrorMessage(error)}
         </Alert>
       ) : null}
       {resultMessage ? (
-        <Alert severity="success" sx={{ mb: 2 }}>
+        <Alert severity="success" sx={ADMIN_IMAGES_ALERT_SX}>
           {resultMessage}
         </Alert>
       ) : null}
       {selectionError ? (
-        <Alert severity="warning" sx={{ mb: 2 }}>
+        <Alert severity="warning" sx={ADMIN_IMAGES_ALERT_SX}>
           {selectionError}
         </Alert>
       ) : null}
       {mutation.error ? (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" sx={ADMIN_IMAGES_ALERT_SX}>
           {getGenericErrorMessage(mutation.error)}
         </Alert>
       ) : null}
 
-      <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mb: 2, flexWrap: 'wrap' }}>
+      <Box sx={ADMIN_IMAGES_TOOLBAR_SX}>
         <Button
           variant="contained"
           disabled={selectedIds.length === 0 || mutation.isPending}
@@ -262,7 +299,7 @@ function MissingThumbnails() {
       {isLoading ? <CircularProgress /> : null}
       {data ? (
         <>
-          <TableContainer component={Paper} variant="outlined">
+          <TableContainer component={Paper} variant="outlined" sx={ADMIN_TABLE_CONTAINER_SX}>
             <Table size="small">
               <TableHead>
                 <TableRow>
@@ -298,33 +335,19 @@ function MissingThumbnails() {
                         type="button"
                         onClick={() => setPreviewUrl(item.url)}
                         aria-label={`Open image ${item.id} preview`}
-                        sx={{
-                          display: 'block',
-                          p: 0,
-                          border: 0,
-                          background: 'transparent',
-                          cursor: 'zoom-in',
-                          lineHeight: 0,
-                        }}
+                        sx={ADMIN_IMAGE_PREVIEW_TRIGGER_SX}
                       >
                         <Box
                           component="img"
                           src={item.url}
                           alt={`Image ${item.id}`}
                           loading="lazy"
-                          sx={{
-                            width: 88,
-                            height: 66,
-                            objectFit: 'cover',
-                            borderRadius: 1,
-                            border: 1,
-                            borderColor: 'divider',
-                          }}
+                          sx={ADMIN_IMAGE_THUMBNAIL_SX}
                         />
                       </Box>
                     </TableCell>
                     <TableCell>{item.id}</TableCell>
-                    <TableCell sx={{ maxWidth: 280, overflowWrap: 'anywhere' }}>
+                    <TableCell sx={ADMIN_IMAGE_URL_CELL_SX}>
                       <Typography variant="body2" color="text.secondary">
                         {item.url}
                       </Typography>
@@ -341,8 +364,9 @@ function MissingThumbnails() {
               </TableBody>
             </Table>
           </TableContainer>
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', mt: 2 }}>
+          <Box sx={ADMIN_IMAGES_PAGINATION_SX}>
             <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
               disabled={page <= 1 || isFetching}
               onClick={() => setPage((value) => value - 1)}
             >
@@ -350,6 +374,7 @@ function MissingThumbnails() {
             </Button>
             <Typography>Page {page}</Typography>
             <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
               disabled={!data.pagination.hasNext || isFetching}
               onClick={() => setPage((value) => value + 1)}
             >
@@ -365,23 +390,18 @@ function MissingThumbnails() {
           <IconButton
             aria-label="Close preview"
             onClick={() => setPreviewUrl(null)}
-            sx={{ position: 'absolute', right: 8, top: 8 }}
+            sx={ADMIN_IMAGE_PREVIEW_CLOSE_SX}
           >
-            <CloseRoundedIcon />
+            <DialogCloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ p: 2 }}>
+        <DialogContent sx={ADMIN_IMAGE_PREVIEW_CONTENT_SX}>
           {previewUrl ? (
             <Box
               component="img"
               src={previewUrl}
               alt="Full-size original"
-              sx={{
-                display: 'block',
-                maxWidth: 'min(85vw, 1100px)',
-                maxHeight: '75vh',
-                objectFit: 'contain',
-              }}
+              sx={ADMIN_IMAGE_PREVIEW_SX}
             />
           ) : null}
         </DialogContent>

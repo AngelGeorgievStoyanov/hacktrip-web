@@ -7,6 +7,18 @@ import { useGoogleMapsLoader } from '@/hooks/useGoogleMapsLoader';
 import { useLiveTracking } from '@/hooks/useLiveTracking';
 import { MAP_CONTAINER_HEIGHT, MAP_DEFAULT_CENTER, MAP_TRACKING_ZOOM } from '@/constants/maps';
 import { formatDistance, formatDuration } from '@/lib/tracking';
+import {
+  getLiveTrackingMapFrameSx,
+  LIVE_TRACKING_MAP_CONTAINER_STYLE,
+  LIVE_TRACKING_POLYLINE_OPTIONS,
+  LIVE_TRACKING_MAP_LOADING_SX,
+  LIVE_TRACKING_ACTIONS_SX,
+  LIVE_TRACKING_STATUS_SX,
+  LIVE_TRACKING_BUTTON_STYLES,
+  LIVE_TRACKING_STATS_GRID_SX,
+  LIVE_TRACKING_STAT_SX,
+  LIVE_TRACKING_STAT_VALUE_SX,
+} from '@/styles/presets/tracking';
 
 export function LiveTracker() {
   const { isLoaded } = useGoogleMapsLoader();
@@ -45,18 +57,10 @@ export function LiveTracker() {
     <Stack spacing={2}>
       {error ? <Alert severity="warning">{error}</Alert> : null}
 
-      <Box
-        sx={{
-          width: '100%',
-          height: MAP_CONTAINER_HEIGHT,
-          border: '1px solid #e0e0e0',
-          borderRadius: 1,
-          overflow: 'hidden',
-        }}
-      >
+      <Box sx={getLiveTrackingMapFrameSx(MAP_CONTAINER_HEIGHT)}>
         {isLoaded ? (
           <GoogleMap
-            mapContainerStyle={{ width: '100%', height: '100%' }}
+            mapContainerStyle={LIVE_TRACKING_MAP_CONTAINER_STYLE}
             center={MAP_DEFAULT_CENTER}
             zoom={MAP_TRACKING_ZOOM}
             onLoad={(map) => {
@@ -68,32 +72,34 @@ export function LiveTracker() {
             onDrag={() => setFollow(false)}
           >
             {path.length > 1 ? (
-              <PolylineF
-                path={path}
-                options={{
-                  strokeColor: '#1976d2',
-                  strokeOpacity: 0.9,
-                  strokeWeight: 4,
-                  geodesic: true,
-                }}
-              />
+              <PolylineF path={path} options={LIVE_TRACKING_POLYLINE_OPTIONS} />
             ) : null}
             {current ? <MarkerF position={{ lat: current.lat, lng: current.lng }} /> : null}
           </GoogleMap>
         ) : (
-          <Box sx={{ display: 'grid', placeItems: 'center', width: '100%', height: '100%' }}>
+          <Box sx={LIVE_TRACKING_MAP_LOADING_SX}>
             <CircularProgress size={28} />
           </Box>
         )}
       </Box>
 
-      <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+      <Stack sx={LIVE_TRACKING_ACTIONS_SX}>
         {tracking ? (
-          <Button type="button" variant="contained" onClick={stop}>
+          <Button
+            type="button"
+            variant="contained"
+            sx={LIVE_TRACKING_BUTTON_STYLES.stop}
+            onClick={stop}
+          >
             Stop tracking
           </Button>
         ) : (
-          <Button type="button" variant="contained" onClick={start}>
+          <Button
+            type="button"
+            variant="contained"
+            sx={LIVE_TRACKING_BUTTON_STYLES.start}
+            onClick={start}
+          >
             Start tracking
           </Button>
         )}
@@ -103,30 +109,18 @@ export function LiveTracker() {
         <Button type="button" onClick={() => setFollow(true)} disabled={!current || follow}>
           Center on my location
         </Button>
-        <Typography role="status" variant="body2" sx={{ alignSelf: 'center' }}>
+        <Typography role="status" variant="body2" sx={LIVE_TRACKING_STATUS_SX}>
           {tracking ? 'Tracking active' : 'Tracking stopped'}
         </Typography>
       </Stack>
 
-      <Box
-        component="dl"
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(4, 1fr)' },
-          gap: 1,
-          m: 0,
-        }}
-      >
+      <Box component="dl" sx={LIVE_TRACKING_STATS_GRID_SX}>
         {stats.map((stat) => (
-          <Box
-            key={stat.label}
-            component="div"
-            sx={{ border: '1px solid #e0e0e0', borderRadius: 1, p: 1 }}
-          >
+          <Box key={stat.label} component="div" sx={LIVE_TRACKING_STAT_SX}>
             <Typography component="dt" variant="caption" color="text.secondary">
               {stat.label}
             </Typography>
-            <Typography component="dd" variant="body2" sx={{ m: 0 }}>
+            <Typography component="dd" variant="body2" sx={LIVE_TRACKING_STAT_VALUE_SX}>
               {stat.value}
             </Typography>
           </Box>

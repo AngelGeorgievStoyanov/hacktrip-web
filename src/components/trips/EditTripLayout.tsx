@@ -19,6 +19,7 @@ import { tripApi, type TripEditInput } from '@/api/trips';
 import { AppImage } from '@/components/images/AppImage';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
 import ImageUploadField from '@/components/images/ImageUploadField';
+import { getImageUploadSubmittingWrapperSx } from '@/styles/presets/image-upload';
 import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { TripSelectField } from './TripSelectField';
 import { SELECT_TYPE_KEYS } from '@/constants/config';
@@ -31,6 +32,29 @@ import { DAY_NUMBER_MAX } from '@/constants/trips';
 import { AddIcon, RemoveIcon, RemoveImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import type { TripGroupResponse } from '@/types';
+import {
+  EDIT_TRIP_PAGE_SX,
+  EDIT_TRIP_MAP_WRAPPER_SX,
+  EDIT_TRIP_FORM_SX,
+  EDIT_TRIP_TITLE_SX,
+  EDIT_TRIP_DAY_ROW_SX,
+  EDIT_TRIP_DAY_FIELD_SX,
+  EDIT_TRIP_PRICE_CURRENCY_ROW_SX,
+  EDIT_TRIP_PRICE_CURRENCY_ITEM_SX,
+  EDIT_TRIP_ACTIONS_SX,
+  EDIT_TRIP_IMAGES_SECTION_SX,
+  EDIT_TRIP_IMAGE_GRID_SX,
+  EDIT_TRIP_IMAGE_TILE_SX,
+  EDIT_TRIP_IMAGE_PLACEHOLDER_SX,
+  EDIT_TRIP_IMAGE_DELETE_SX,
+} from '@/styles/presets/forms';
+import { UI_SIZES } from '@/constants/ui/sizes';
+import {
+  BUTTON_STYLES,
+  EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX,
+  ICON_ACTION_STYLES,
+} from '@/styles/presets/buttons';
+import { BackButton } from '@/components/common/BackButton';
 
 interface EditTripLayoutProps {
   trip: TripGroupResponse;
@@ -218,31 +242,8 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
   }
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        maxWidth: 1440,
-        mx: 'auto',
-        px: { xs: 1, sm: 2 },
-        py: { xs: 2, sm: 2 },
-        display: 'grid',
-        gridTemplateColumns: { xs: 'minmax(0, 1fr)', lg: 'repeat(2, minmax(0, 1fr))' },
-        gridTemplateAreas: {
-          xs: '"images" "map" "form"',
-          lg: '"map map" "form images"',
-        },
-        alignItems: 'start',
-        gap: 2,
-      }}
-    >
-      <Box
-        sx={{
-          gridArea: 'map',
-          width: '100%',
-          maxWidth: 600,
-          mx: 'auto',
-        }}
-      >
+    <Box sx={EDIT_TRIP_PAGE_SX(UI_SIZES.contentMaxWidth)}>
+      <Box sx={EDIT_TRIP_MAP_WRAPPER_SX}>
         <TripLocationPicker
           latitude={latitude == null ? '' : String(latitude)}
           longitude={longitude == null ? '' : String(longitude)}
@@ -259,35 +260,8 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
         />
       </Box>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          gridArea: 'form',
-          boxSizing: 'border-box',
-          m: { xs: 0, sm: 2 },
-          p: { xs: 2, sm: '30px' },
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          gap: 1,
-          width: 'min(100%, 520px)',
-          flex: '0 1 520px',
-          minWidth: 0,
-          height: 'fit-content',
-          backgroundColor: '#eee7e79e',
-          boxShadow: '3px 2px 5px black',
-          border: '1px solid',
-          borderRadius: 0,
-          '& .MuiFormControl-root': { m: 0.5, width: 'calc(100% - 10px)' },
-          '& .MuiButton-root': { m: 1 },
-        }}
-      >
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{ m: '10px auto', textTransform: 'uppercase', textAlign: 'center' }}
-        >
+      <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={EDIT_TRIP_FORM_SX}>
+        <Typography component="h1" variant="h5" sx={EDIT_TRIP_TITLE_SX}>
           EDIT TRIP
         </Typography>
 
@@ -295,18 +269,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
 
         {selectedDay ? (
           <>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                '@media (max-width: 600px)': {
-                  flexDirection: 'column',
-                },
-              }}
-            >
+            <Box sx={EDIT_TRIP_DAY_ROW_SX}>
               <TextField
                 label="DAY"
                 value={dayNumber}
@@ -318,23 +281,13 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                     readOnly: true,
                     min: 1,
                     max: DAY_NUMBER_MAX,
-                    style: { textAlign: 'center' },
                   },
                 }}
-                sx={{ maxWidth: 90, pointerEvents: 'none' }}
+                sx={EDIT_TRIP_DAY_FIELD_SX}
               />
               <ButtonGroup
                 disabled={dayNumberLocked || submitting}
-                sx={{
-                  m: 1,
-                  '& .MuiButton-root': {
-                    m: 0,
-                    p: 0,
-                    maxWidth: 100,
-                    height: 36,
-                    width: 50,
-                  },
-                }}
+                sx={EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX}
               >
                 <Button
                   type="button"
@@ -360,6 +313,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                 variant="contained"
                 onClick={setSelectedDayNumber}
                 disabled={submitting || dayNumber === selectedDay.dayNumber}
+                sx={BUTTON_STYLES.edit}
               >
                 {dayNumberLocked ? 'CHANGE DAY' : 'SET DAY'}
               </Button>
@@ -371,8 +325,8 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               error={!!errors.title}
               helperText={errors.title?.message}
             />
-            <Box sx={{ display: 'flex', flexDirection: 'row', width: '100%', gap: 1 }}>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
+            <Box sx={EDIT_TRIP_PRICE_CURRENCY_ROW_SX}>
+              <Box sx={EDIT_TRIP_PRICE_CURRENCY_ITEM_SX}>
                 <TextField
                   label="PRICE"
                   type="number"
@@ -382,7 +336,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                   slotProps={{ htmlInput: { min: 0, max: 1000000, step: 'any' } }}
                 />
               </Box>
-              <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Box sx={EDIT_TRIP_PRICE_CURRENCY_ITEM_SX}>
                 <Controller
                   control={control}
                   name="currency"
@@ -449,9 +403,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               helperText={errors.destination?.message}
             />
 
-            <Box
-              sx={{ pointerEvents: submitting ? 'none' : 'auto', opacity: submitting ? 0.7 : 1 }}
-            >
+            <Box sx={getImageUploadSubmittingWrapperSx(submitting)}>
               <ImageUploadField
                 files={newImages}
                 setFiles={setNewImages}
@@ -472,72 +424,29 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
           <Typography>No trip days found.</Typography>
         )}
 
-        <Box
-          sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center' }}
-        >
+        <Box sx={EDIT_TRIP_ACTIONS_SX}>
           <Button
             type="submit"
             variant="contained"
             disabled={
               !selectedDay || submitting || !isValid || (!isDirty && newImages.length === 0)
             }
-            startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-            sx={{ ':hover': { background: '#4daf30' } }}
+            startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+            sx={BUTTON_STYLES.edit}
           >
             EDIT YOUR TRIP
           </Button>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={() => router.back()}
-            sx={{
-              background: 'rgb(194 194 224)',
-              color: 'black',
-              ':hover': { color: 'rgb(248 245 245)', background: 'rgb(194 194 224)' },
-            }}
-          >
+          <BackButton type="button" onClick={() => router.back()}>
             BACK
-          </Button>
+          </BackButton>
         </Box>
       </Box>
 
-      <Box
-        component="section"
-        sx={{
-          gridArea: 'images',
-          boxSizing: 'border-box',
-          width: 'min(100%, 520px)',
-          flex: '0 1 520px',
-          minWidth: 0,
-          m: { xs: 0, sm: 2 },
-          p: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <Box component="section" sx={EDIT_TRIP_IMAGES_SECTION_SX}>
         {existingImages.length > 0 ? (
-          <Box
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-              gap: 1,
-            }}
-          >
+          <Box sx={EDIT_TRIP_IMAGE_GRID_SX}>
             {existingImages.map((image) => (
-              <Box
-                key={image.id}
-                sx={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: '1 / 1',
-                  overflow: 'hidden',
-                  border: '1px solid rgba(0, 0, 0, 0.2)',
-                  p: 0.5,
-                }}
-              >
+              <Box key={image.id} sx={EDIT_TRIP_IMAGE_TILE_SX}>
                 <AppImage
                   image={image}
                   alt={selectedDay?.title ?? 'Trip image'}
@@ -552,16 +461,10 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                       color="error"
                       disabled={submitting || deletingImageId !== null}
                       onClick={() => void deleteExistingImage(image.id)}
-                      sx={{
-                        position: 'absolute',
-                        top: 4,
-                        right: 4,
-                        backgroundColor: 'rgba(255, 255, 255, 0.82)',
-                        '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.96)' },
-                      }}
+                      sx={[ICON_ACTION_STYLES.danger, EDIT_TRIP_IMAGE_DELETE_SX]}
                     >
                       {deletingImageId === image.id ? (
-                        <CircularProgress size={18} />
+                        <CircularProgress size={UI_SIZES.smallIndicator} />
                       ) : (
                         <RemoveImageIcon fontSize="small" />
                       )}
@@ -572,7 +475,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
             ))}
           </Box>
         ) : (
-          <Box sx={{ width: '50%', maxWidth: 280, aspectRatio: '1 / 1', mx: 'auto' }}>
+          <Box sx={EDIT_TRIP_IMAGE_PLACEHOLDER_SX}>
             <SocialObjectPlaceholder />
           </Box>
         )}

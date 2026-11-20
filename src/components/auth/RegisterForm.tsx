@@ -19,12 +19,15 @@ import type { RegisterInput } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { registerSchema } from '@/validations/auth';
-import { BUTTON_STYLES, FORM_PANEL_SX } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { UI_SIZES } from '@/constants/ui/sizes';
+import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { Captcha } from '@/components/auth/Captcha';
 import { PasswordField } from '@/components/common/PasswordField';
 import { PasswordRequirements } from '@/components/common/PasswordRequirements';
 import { useNotification } from '@/components/common/NotificationProvider';
+import styles from './RegisterForm.module.css';
 import {
   AUTH_SUCCESS_REDIRECT_DELAY_MS,
   REGISTRATION_SUCCESS_MESSAGE,
@@ -116,8 +119,6 @@ export function RegisterForm() {
     }
   }
 
-  const SECONDARY_BUTTON_SX = BUTTON_STYLES.secondary;
-
   return (
     <WelcomeHeading>
       <Box
@@ -125,19 +126,9 @@ export function RegisterForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 2,
-          ...FORM_PANEL_SX,
-          padding: '30px',
-          maxWidth: '700px',
-          width: '100%',
-          boxSizing: 'border-box',
-          marginX: 'auto',
-        }}
+        sx={AUTH_FORM_SX}
       >
-        <Typography variant="h5" component="div" sx={{ margin: '10px auto', textAlign: 'center' }}>
+        <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           REGISTER
         </Typography>
         <TextField
@@ -198,7 +189,7 @@ export function RegisterForm() {
           }
         />
         <FormControlLabel
-          sx={{ pointerEvents: isFormLocked ? 'none' : 'auto' }}
+          className={isFormLocked ? styles.locked : undefined}
           control={<Checkbox disabled={isFormLocked} {...register('acceptedTerms')} />}
           label={
             <>
@@ -224,18 +215,18 @@ export function RegisterForm() {
           type="submit"
           variant="contained"
           disabled={isFormLocked || !isValid || !captchaToken}
-          startIcon={submitting ? <CircularProgress size={18} /> : undefined}
-          sx={BUTTON_STYLES.containedHover}
+          startIcon={submitting ? <CircularProgress size={UI_SIZES.smallIndicator} /> : undefined}
+          sx={BUTTON_STYLES.create}
         >
           Register
         </Button>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center', mt: 1 }}>
+        <Box sx={AUTH_FORM_ACTIONS_SX}>
           <Button
             component={Link}
             href="/login"
             disabled={submitting}
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.navigationSecondary}
           >
             Already have an account? Login
           </Button>
@@ -244,7 +235,7 @@ export function RegisterForm() {
             href="/resend-verification"
             disabled={isFormLocked}
             variant="contained"
-            sx={SECONDARY_BUTTON_SX}
+            sx={BUTTON_STYLES.secondary}
           >
             Resend verification email
           </Button>

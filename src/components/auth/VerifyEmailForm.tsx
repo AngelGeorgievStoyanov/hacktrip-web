@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Button, Card, CircularProgress, Typography } from '@mui/material';
 import { authApi } from '@/api/auth';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { publishTabEvent } from '@/lib/tabSync';
@@ -12,7 +12,8 @@ import {
   AUTH_SUCCESS_REDIRECT_DELAY_MS,
   LOGIN_EMAIL_VERIFIED_MESSAGE,
 } from '@/constants/notifications';
-import { COLORS, CARD_SHADOW, CARD_BORDER } from '@/constants/ui';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
+import { EMAIL_VERIFICATION_CARD_SX, EMAIL_VERIFICATION_TITLE_SX } from '@/styles/presets/forms';
 
 export function VerifyEmailForm({ token }: { token?: string }) {
   const router = useRouter();
@@ -61,25 +62,8 @@ export function VerifyEmailForm({ token }: { token?: string }) {
 
   return (
     <WelcomeHeading>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 2,
-          width: '100%',
-          maxWidth: 560,
-          boxSizing: 'border-box',
-          mx: 'auto',
-          p: { xs: 3, sm: 4 },
-          backgroundColor: COLORS.formPanelBackground,
-          boxShadow: CARD_SHADOW,
-          border: CARD_BORDER,
-          color: 'text.primary',
-          textAlign: 'center',
-        }}
-      >
-        <Typography variant="h5" component="h1" sx={{ fontWeight: 700 }}>
+      <Card sx={EMAIL_VERIFICATION_CARD_SX}>
+        <Typography variant="h5" component="h1" sx={EMAIL_VERIFICATION_TITLE_SX}>
           Verify email
         </Typography>
 
@@ -89,13 +73,13 @@ export function VerifyEmailForm({ token }: { token?: string }) {
             <Button
               variant="contained"
               onClick={() => router.replace('/login')}
-              sx={{ ':hover': { backgroundColor: '#4daf30' } }}
+              sx={BUTTON_STYLES.navigationLink}
             >
               Go to login
             </Button>
           </>
         ) : null}
-      </Box>
+      </Card>
     </WelcomeHeading>
   );
 }

@@ -1,20 +1,30 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { AddCommentIcon, CloseIcon, CommentIcon } from '@/constants/icons';
+
 import { useState } from 'react';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
-import CommentIcon from '@mui/icons-material/Comment';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '@/hooks/useAuth';
 import { LikeButton } from './LikeButton';
 import { FavoriteButton } from './FavoriteButton';
 import { ReportButton } from './ReportButton';
 import { SocialConfigStatus } from './SocialConfigStatus';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
-import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
+import {
+  isSocialActionEnabled,
+  isSocialOperationAllowed,
+  socialConfigTargetKey,
+} from '@/lib/socialConfig';
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
+import {
+  SOCIAL_BADGE_COUNT_SX,
+  SOCIAL_ENGAGEMENT_INLINE_SX,
+  getSocialEngagementActionsSx,
+  getSocialOverlaySx,
+} from '@/styles/presets/social';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
@@ -71,6 +81,20 @@ export function EngagementBar({
     targetKey,
     social.reportedByMe ? 'delete' : 'create',
   );
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', targetKey);
+  const canCreateComment = isSocialOperationAllowed(
+    socialConfig.data,
+    'comment',
+    targetKey,
+    'create',
+  );
+  const showCommentToggle =
+    showComments &&
+    commentsEnabled &&
+    (social.comments.count > 0 || (status === 'authenticated' && canCreateComment));
+  const hasVisibleActions =
+    (status === 'authenticated' && (canLike || (showFavorite && canFavorite) || canReport)) ||
+    showCommentToggle;
   const externallyControlledComments = onToggleComments !== undefined;
   const isCommentsOpen = externallyControlledComments
     ? (commentsOpen ?? false)
@@ -89,6 +113,10 @@ export function EngagementBar({
       ? 'REPORT TRIP'
       : `REPORT ${targetType.toUpperCase()}`;
 
+  if (!hasVisibleActions) {
+    return null;
+  }
+
   return (
     <Box
       onClick={(event) => event.stopPropagation()}
@@ -96,46 +124,12 @@ export function EngagementBar({
       onTouchStart={(event) => event.stopPropagation()}
       onTouchMove={(event) => event.stopPropagation()}
       onTouchEnd={(event) => event.stopPropagation()}
-      sx={
-        presentation === 'overlay'
-          ? {
-              position: 'absolute',
-              top: 8,
-              right: 8,
-              zIndex: 2,
-              p: 0.35,
-              border: '1px solid rgba(255,255,255,0.22)',
-              borderRadius: 3,
-              backgroundColor: 'rgba(24, 31, 26, 0.82)',
-              boxShadow: '0 4px 14px rgba(0,0,0,0.3)',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-              '& .MuiIconButton-root': { color: 'common.white', p: size === 'small' ? 0.5 : 0.65 },
-              '& .MuiIconButton-root:hover': { backgroundColor: 'rgba(255,255,255,0.16)' },
-              '& .MuiBadge-badge': {
-                fontSize: size === 'small' ? '0.65rem' : undefined,
-                height: size === 'small' ? 14 : undefined,
-                minWidth: size === 'small' ? 14 : undefined,
-                padding: size === 'small' ? '0 3px' : undefined,
-                lineHeight: size === 'small' ? 1 : undefined,
-              },
-            }
-          : { display: 'flex', flexDirection: 'column', gap: '0.25rem', margin: '0.25rem 0' }
-      }
+      sx={presentation === 'overlay' ? getSocialOverlaySx(size) : SOCIAL_ENGAGEMENT_INLINE_SX}
     >
       {showConfigStatus ? (
         <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
       ) : null}
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 1,
-          alignItems: 'center',
-          flexWrap: 'nowrap',
-          justifyContent: actionsJustify,
-          width: '100%',
-        }}
-      >
+      <Box sx={getSocialEngagementActionsSx(actionsJustify)}>
         {status === 'authenticated' ? (
           <>
             {canLike ? (
@@ -167,7 +161,7 @@ export function EngagementBar({
             ) : null}
           </>
         ) : null}
-        {showComments ? (
+        {showCommentToggle ? (
           <Tooltip
             title={
               isCommentsOpen
@@ -179,6 +173,7 @@ export function EngagementBar({
             arrow
           >
             <IconButton
+              sx={ICON_ACTION_STYLES.disclosure}
               onClick={toggleComments}
               aria-label={
                 isCommentsOpen
@@ -198,18 +193,24 @@ export function EngagementBar({
                   badgeContent={social.comments.count}
                   max={Number.MAX_SAFE_INTEGER}
                   color="primary"
+                  sx={SOCIAL_BADGE_COUNT_SX}
                 >
                   <CommentIcon />
                 </Badge>
-              ) : (
+              ) : status === 'authenticated' && canCreateComment ? (
                 <AddCommentIcon />
-              )}
+              ) : null}
             </IconButton>
           </Tooltip>
         ) : null}
       </Box>
-      {!externallyControlledComments && showComments && isCommentsOpen ? (
-        <CommentsSection target={commentTarget} defaultFormOpen={social.comments.count === 0} />
+      {!externallyControlledComments && showCommentToggle && isCommentsOpen ? (
+        <CommentsSection
+          target={commentTarget}
+          defaultFormOpen={
+            status === 'authenticated' && canCreateComment && social.comments.count === 0
+          }
+        />
       ) : null}
     </Box>
   );

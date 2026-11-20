@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Box, Typography } from '@mui/material';
+import { NOT_FOUND_HOME_BUTTON_SX } from '@/styles/presets/buttons';
+import { NOT_FOUND_TITLE_SX, NOT_FOUND_SUBTITLE_SX } from '@/styles/presets/typography';
+import styles from './NotFound.module.css';
 
 const COUNTDOWN_START = 10;
 
@@ -41,41 +45,20 @@ export function NotFound() {
   }
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1619864066877-926b1c1d5a1a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80')",
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#fff',
-        textAlign: 'center',
-        gap: '0.5rem',
-      }}
-    >
-      <h3>PAGE NOT FOUND 404</h3>
-      <h4>WRONG WAY!</h4>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <h3>{count} SECONDS OR CLICK</h3>
-        <button
-          type="button"
-          onClick={goHome}
-          style={{
-            color: '#fff',
-            background: '#000',
-            padding: '10px 30px',
-            margin: '25px',
-            cursor: 'pointer',
-            border: 'none',
-          }}
-        >
+    <main className={styles.page}>
+      <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>
+        PAGE NOT FOUND 404
+      </Typography>
+      <Typography component="h4" variant="inherit" sx={NOT_FOUND_SUBTITLE_SX}>
+        WRONG WAY!
+      </Typography>
+      <div className={styles.content}>
+        <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>
+          {count} SECONDS OR CLICK
+        </Typography>
+        <Box component="button" type="button" onClick={goHome} sx={NOT_FOUND_HOME_BUTTON_SX}>
           HOME
-        </button>
+        </Box>
       </div>
     </main>
   );

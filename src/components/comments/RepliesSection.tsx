@@ -1,5 +1,8 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { CloseIcon, ConfirmIcon, EditIcon, DeleteActionIcon, ReplyIcon } from '@/constants/icons';
+
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -11,11 +14,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import CheckIcon from '@mui/icons-material/Check';
-import ReplyIcon from '@mui/icons-material/Reply';
 import { commentApi } from '@/api/comments';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
@@ -29,6 +27,14 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { CommentDto, SocialConfigTargetKey } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
+import {
+  REPLY_ITEM_SX,
+  REPLY_EDIT_FORM_SX,
+  REPLY_BODY_SX,
+  REPLY_SOCIAL_ACTIONS_SX,
+  REPLIES_SECTION_SX,
+  REPLY_CREATE_FORM_SX,
+} from '@/styles/presets/comments';
 
 interface RepliesSectionProps {
   commentId: number;
@@ -141,10 +147,7 @@ export function RepliesSection({
     const hasReplyActions = canLike || canFavorite || canReport || canEdit || canDelete;
 
     return (
-      <Box
-        key={item.id}
-        sx={{ borderLeft: '2px solid', borderColor: 'divider', pl: 2, py: 1, mt: 1 }}
-      >
+      <Box key={item.id} sx={REPLY_ITEM_SX}>
         <Typography variant="subtitle2">{item.author.name}</Typography>
         {authenticated && editingId === item.id && canEdit ? (
           <Box
@@ -155,7 +158,7 @@ export function RepliesSection({
                 updateMutation.mutate({ id: item.id, comment: editingReply });
               }
             }}
-            sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 1 }}
+            sx={REPLY_EDIT_FORM_SX}
           >
             <TextField
               size="small"
@@ -166,16 +169,18 @@ export function RepliesSection({
             <Tooltip title="Save reply" arrow>
               <span>
                 <IconButton
+                  sx={ICON_ACTION_STYLES.save}
                   type="submit"
                   aria-label="Save reply"
                   disabled={updateMutation.isPending}
                 >
-                  <CheckIcon />
+                  <ConfirmIcon />
                 </IconButton>
               </span>
             </Tooltip>
             <Tooltip title="Cancel edit" arrow>
               <IconButton
+                sx={ICON_ACTION_STYLES.cancel}
                 type="button"
                 aria-label="Cancel edit"
                 onClick={() => {
@@ -188,12 +193,10 @@ export function RepliesSection({
             </Tooltip>
           </Box>
         ) : (
-          <Typography sx={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>
-            {item.comment}
-          </Typography>
+          <Typography sx={REPLY_BODY_SX}>{item.comment}</Typography>
         )}
         {authenticated && hasReplyActions ? (
-          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap', mt: 1 }}>
+          <Box sx={REPLY_SOCIAL_ACTIONS_SX}>
             {canLike ? (
               <LikeButton
                 targetType="comment"
@@ -222,6 +225,7 @@ export function RepliesSection({
             {canEdit ? (
               <Tooltip title="Edit reply" arrow>
                 <IconButton
+                  sx={ICON_ACTION_STYLES.edit}
                   size="small"
                   aria-label="Edit reply"
                   onClick={() => {
@@ -229,15 +233,15 @@ export function RepliesSection({
                     setEditingReply(item.comment);
                   }}
                 >
-                  <EditOutlinedIcon />
+                  <EditIcon />
                 </IconButton>
               </Tooltip>
             ) : null}
             {canDelete ? (
               <Tooltip title="Delete reply" arrow>
                 <IconButton
+                  sx={ICON_ACTION_STYLES.delete}
                   size="small"
-                  color="error"
                   aria-label="Delete reply"
                   onClick={() =>
                     void confirm('Delete this reply?', 'Delete Confirmation').then((confirmed) => {
@@ -245,7 +249,7 @@ export function RepliesSection({
                     })
                   }
                 >
-                  <DeleteOutlineIcon />
+                  <DeleteActionIcon />
                 </IconButton>
               </Tooltip>
             ) : null}
@@ -259,7 +263,7 @@ export function RepliesSection({
     <Box
       component="section"
       aria-label={`Replies, ${data?.total ?? initialRepliesCount} total`}
-      sx={{ mt: 1, pl: 2 }}
+      sx={REPLIES_SECTION_SX}
     >
       <Typography variant="subtitle2">Replies</Typography>
       <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
@@ -273,7 +277,7 @@ export function RepliesSection({
             event.preventDefault();
             if (reply.trim()) createMutation.mutate(reply);
           }}
-          sx={{ display: 'flex', gap: 1, alignItems: 'flex-start', mt: 1 }}
+          sx={REPLY_CREATE_FORM_SX}
         >
           <TextField
             size="small"
@@ -286,6 +290,7 @@ export function RepliesSection({
           <Tooltip title="Reply" arrow>
             <span>
               <IconButton
+                sx={ICON_ACTION_STYLES.submit}
                 type="submit"
                 aria-label="Reply"
                 disabled={!reply.trim() || createMutation.isPending}
@@ -297,6 +302,7 @@ export function RepliesSection({
           </Tooltip>
           <Tooltip title="Cancel reply" arrow>
             <IconButton
+              sx={ICON_ACTION_STYLES.cancel}
               type="button"
               aria-label="Cancel reply"
               onClick={() => {
@@ -308,8 +314,6 @@ export function RepliesSection({
             </IconButton>
           </Tooltip>
         </Box>
-      ) : status === 'anonymous' ? (
-        <Typography variant="body2">Log in to reply.</Typography>
       ) : null}
     </Box>
   );

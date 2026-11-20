@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { NOINDEX } from '@/constants/seo';
+import { AUTH_LAYOUT_MAIN_SX, AUTH_LAYOUT_CONTENT_SX } from '@/styles/presets/layouts';
+import { Box } from '@mui/material';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { GuestOnly } from '@/components/auth/GuestOnly';
@@ -12,11 +14,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
-      <main style={{ display: 'flex', justifyContent: 'center', padding: '2rem', flex: 1 }}>
-        <div style={{ width: '100%', maxWidth: 480 }}>
+      <Box component="main" sx={AUTH_LAYOUT_MAIN_SX}>
+        <Box sx={AUTH_LAYOUT_CONTENT_SX}>
           <GuestOnly>{children}</GuestOnly>
-        </div>
-      </main>
+        </Box>
+      </Box>
       <Footer />
     </>
   );

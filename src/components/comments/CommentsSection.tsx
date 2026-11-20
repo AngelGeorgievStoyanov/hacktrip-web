@@ -1,5 +1,16 @@
 'use client';
 
+import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import {
+  AddCommentIcon,
+  CloseIcon,
+  ConfirmIcon,
+  DeleteActionIcon,
+  EditIcon,
+  ReplyIcon,
+  SendIcon,
+} from '@/constants/icons';
+
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -7,19 +18,13 @@ import {
   Avatar,
   Badge,
   Box,
+  Card,
   CircularProgress,
   IconButton,
   TextField,
   Tooltip,
   Typography,
 } from '@mui/material';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import ReplyIcon from '@mui/icons-material/Reply';
-import SendIcon from '@mui/icons-material/Send';
-import CheckIcon from '@mui/icons-material/Check';
 import { commentApi, type CommentCreateInput, type CommentTarget } from '@/api/comments';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
@@ -29,11 +34,32 @@ import { FavoriteButton } from '@/components/social/FavoriteButton';
 import { RepliesSection } from '@/components/comments/RepliesSection';
 import { SocialConfigStatus } from '@/components/social/SocialConfigStatus';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
+import {
+  isSocialActionEnabled,
+  isSocialOperationAllowed,
+  socialConfigTargetKey,
+} from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
-import { commentCardStyle, commentListStyle, commentsPanelStyle } from '@/constants/ui';
+import {
+  COMMENTS_PANEL_SX,
+  COMMENTS_TITLE_SX,
+  COMMENT_LIST_SX,
+  COMMENT_CARD_SX,
+  COMMENT_EDIT_FORM_SX,
+  COMMENT_EDIT_ACTIONS_SX,
+  COMMENT_AUTHOR_ROW_SX,
+  COMMENT_AUTHOR_AVATAR_SX,
+  COMMENT_AUTHOR_NAME_SX,
+  COMMENT_BODY_SX,
+  COMMENT_TIMESTAMP_SX,
+  COMMENT_SOCIAL_ACTIONS_SX,
+  COMMENT_CREATE_FORM_SX,
+  COMMENT_CREATE_ACTION_ROW_SX,
+  COMMENT_ANONYMOUS_HINT_SX,
+} from '@/styles/presets/comments';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { getSocialBadgeSx } from '@/styles/presets/social';
 
 function commentKey(target: CommentTarget, viewerCacheKey: string): unknown[] {
   switch (target.type) {
@@ -128,6 +154,7 @@ export function CommentsSection({
   // "not reported by me".
   const sessionResolved = status === 'anonymous' || status === 'authenticated';
   const targetKey = socialConfigTargetKey(target.type);
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', targetKey);
   const canCreateComment = isSocialOperationAllowed(
     socialConfig.data,
     'comment',
@@ -141,7 +168,7 @@ export function CommentsSection({
   const { data, isLoading, isError, error } = useQuery({
     queryKey,
     queryFn: () => commentApi.list(target),
-    enabled: open && sessionResolved,
+    enabled: open && commentsEnabled && sessionResolved,
   });
 
   const createMutation = useMutation({
@@ -178,17 +205,17 @@ export function CommentsSection({
 
   const total = data?.total ?? initialCommentsCount;
 
-  if (!open) {
+  if (!open || !commentsEnabled) {
     return null;
   }
 
   return (
-    <section aria-label="Comments" style={commentsPanelStyle}>
+    <Card component="section" aria-label="Comments" sx={COMMENTS_PANEL_SX}>
       <Typography
         variant="h5"
         component="h2"
         aria-label={`Comments, ${total} total`}
-        sx={{ marginBottom: '10px' }}
+        sx={COMMENTS_TITLE_SX}
       >
         Comments
       </Typography>
@@ -202,7 +229,7 @@ export function CommentsSection({
         </Typography>
       ) : null}
 
-      <ul style={commentListStyle}>
+      <Box component="ul" sx={COMMENT_LIST_SX}>
         {data?.items.map((commentItem) => {
           const createdAt = formatTimestamp(commentItem.createdAt);
           const updatedAt = formatTimestamp(commentItem.updatedAt);
@@ -231,9 +258,18 @@ export function CommentsSection({
             commentItem.permissions.canDelete &&
             isSocialOperationAllowed(socialConfig.data, 'comment', 'comment', 'delete');
           const hasCommentActions = canLike || canFavorite || canReport || canEdit || canDelete;
+          const canCreateReply = isSocialOperationAllowed(
+            socialConfig.data,
+            'replyComment',
+            'comment',
+            'create',
+            targetKey,
+          );
+          const canShowReplies =
+            commentItem.social.comments.count > 0 || (isAuthenticated && canCreateReply);
 
           return (
-            <li key={commentItem.id} style={commentCardStyle}>
+            <Card component="li" key={commentItem.id} sx={COMMENT_CARD_SX}>
               {isAuthenticated && editingId === commentItem.id && canEdit ? (
                 <Box
                   component="form"
@@ -243,7 +279,7 @@ export function CommentsSection({
                       updateMutation.mutate({ id: commentItem.id, comment: editingComment });
                     }
                   }}
-                  sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%' }}
+                  sx={COMMENT_EDIT_FORM_SX}
                 >
                   <TextField
                     label="Edit comment"
@@ -252,20 +288,22 @@ export function CommentsSection({
                     value={editingComment}
                     onChange={(e) => setEditingComment(e.target.value)}
                   />
-                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                  <Box sx={COMMENT_EDIT_ACTIONS_SX}>
                     <Tooltip title="Save comment" arrow>
                       <span>
                         <IconButton
+                          sx={ICON_ACTION_STYLES.save}
                           type="submit"
                           aria-label="Save comment"
                           disabled={updateMutation.isPending}
                         >
-                          <CheckIcon />
+                          <ConfirmIcon />
                         </IconButton>
                       </span>
                     </Tooltip>
                     <Tooltip title="Cancel edit" arrow>
                       <IconButton
+                        sx={ICON_ACTION_STYLES.cancel}
                         type="button"
                         aria-label="Cancel edit"
                         onClick={() => setEditingId(null)}
@@ -277,34 +315,21 @@ export function CommentsSection({
                 </Box>
               ) : (
                 <>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, marginBottom: '8px' }}>
-                    <Avatar
-                      alt={commentItem.author.name}
-                      sx={{ backgroundColor: 'primary.main', width: 40, height: 40 }}
-                    >
+                  <Box sx={COMMENT_AUTHOR_ROW_SX}>
+                    <Avatar alt={commentItem.author.name} sx={COMMENT_AUTHOR_AVATAR_SX}>
                       {initials(commentItem.author.name)}
                     </Avatar>
-                    <Typography variant="subtitle1" component="h3" sx={{ fontWeight: 500 }}>
+                    <Typography variant="subtitle1" component="h3" sx={COMMENT_AUTHOR_NAME_SX}>
                       Author name: {commentItem.author.name}
                     </Typography>
                   </Box>
 
-                  <Typography
-                    variant="body1"
-                    component="p"
-                    sx={{
-                      margin: 0,
-                      padding: '5px',
-                      whiteSpace: 'pre-wrap',
-                      overflowWrap: 'anywhere',
-                      wordBreak: 'break-word',
-                    }}
-                  >
+                  <Typography variant="body1" component="p" sx={COMMENT_BODY_SX}>
                     {commentItem.comment}
                   </Typography>
 
                   {createdAt ? (
-                    <Typography variant="caption" color="text.secondary" sx={{ marginTop: '8px' }}>
+                    <Typography variant="caption" color="text.secondary" sx={COMMENT_TIMESTAMP_SX}>
                       {updatedAt && updatedAt !== createdAt
                         ? `Edited on ${updatedAt}`
                         : `Posted on ${createdAt}`}
@@ -312,15 +337,7 @@ export function CommentsSection({
                   ) : null}
 
                   {isAuthenticated && hasCommentActions ? (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 1,
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        marginTop: '10px',
-                      }}
-                    >
+                    <Box sx={COMMENT_SOCIAL_ACTIONS_SX}>
                       {canLike ? (
                         <LikeButton
                           targetType="comment"
@@ -351,6 +368,7 @@ export function CommentsSection({
                       {canEdit ? (
                         <Tooltip title="Edit comment" arrow>
                           <IconButton
+                            sx={ICON_ACTION_STYLES.edit}
                             size="small"
                             aria-label="Edit comment"
                             onClick={() => {
@@ -358,15 +376,15 @@ export function CommentsSection({
                               setEditingComment(commentItem.comment);
                             }}
                           >
-                            <EditOutlinedIcon />
+                            <EditIcon />
                           </IconButton>
                         </Tooltip>
                       ) : null}
                       {canDelete ? (
                         <Tooltip title="Delete comment" arrow>
                           <IconButton
+                            sx={ICON_ACTION_STYLES.delete}
                             size="small"
-                            color="error"
                             aria-label="Delete comment"
                             onClick={() =>
                               void confirm(
@@ -379,7 +397,7 @@ export function CommentsSection({
                               })
                             }
                           >
-                            <DeleteOutlineIcon />
+                            <DeleteActionIcon />
                           </IconButton>
                         </Tooltip>
                       ) : null}
@@ -387,53 +405,59 @@ export function CommentsSection({
                   ) : null}
                 </>
               )}
-              <Tooltip
-                title={
-                  openRepliesId === commentItem.id
-                    ? 'Hide replies'
-                    : `Show ${commentItem.social.comments.count} replies`
-                }
-                arrow
-              >
-                <IconButton
-                  size="small"
-                  aria-label={
-                    openRepliesId === commentItem.id
-                      ? 'Hide replies'
-                      : `Show ${commentItem.social.comments.count} replies`
-                  }
-                  aria-expanded={openRepliesId === commentItem.id}
-                  onClick={() =>
-                    setOpenRepliesId((current) =>
-                      current === commentItem.id ? null : commentItem.id,
-                    )
-                  }
-                >
-                  {openRepliesId === commentItem.id ? (
-                    <CloseIcon />
-                  ) : (
-                    <Badge
-                      badgeContent={commentItem.social.comments.count}
-                      invisible={commentItem.social.comments.count === 0}
-                      max={Number.MAX_SAFE_INTEGER}
-                      color="primary"
+              {canShowReplies ? (
+                <>
+                  <Tooltip
+                    title={
+                      openRepliesId === commentItem.id
+                        ? 'Hide replies'
+                        : `Show ${commentItem.social.comments.count} replies`
+                    }
+                    arrow
+                  >
+                    <IconButton
+                      sx={ICON_ACTION_STYLES.disclosure}
+                      size="small"
+                      aria-label={
+                        openRepliesId === commentItem.id
+                          ? 'Hide replies'
+                          : `Show ${commentItem.social.comments.count} replies`
+                      }
+                      aria-expanded={openRepliesId === commentItem.id}
+                      onClick={() =>
+                        setOpenRepliesId((current) =>
+                          current === commentItem.id ? null : commentItem.id,
+                        )
+                      }
                     >
-                      <ReplyIcon />
-                    </Badge>
-                  )}
-                </IconButton>
-              </Tooltip>
-              {openRepliesId === commentItem.id ? (
-                <RepliesSection
-                  commentId={commentItem.id}
-                  initialRepliesCount={commentItem.social.comments.count}
-                  parentTargetType={targetKey}
-                />
+                      {openRepliesId === commentItem.id ? (
+                        <CloseIcon />
+                      ) : (
+                        <Badge
+                          badgeContent={commentItem.social.comments.count}
+                          invisible={commentItem.social.comments.count === 0}
+                          max={Number.MAX_SAFE_INTEGER}
+                          color="primary"
+                          sx={getSocialBadgeSx('medium')}
+                        >
+                          <ReplyIcon />
+                        </Badge>
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  {openRepliesId === commentItem.id ? (
+                    <RepliesSection
+                      commentId={commentItem.id}
+                      initialRepliesCount={commentItem.social.comments.count}
+                      parentTargetType={targetKey}
+                    />
+                  ) : null}
+                </>
               ) : null}
-            </li>
+            </Card>
           );
         })}
-      </ul>
+      </Box>
 
       {isAuthenticated && canCreateComment ? (
         <>
@@ -447,7 +471,7 @@ export function CommentsSection({
                   createMutation.mutate({ comment });
                 }
               }}
-              sx={{ display: 'flex', flexDirection: 'column', gap: 1, marginTop: '10px' }}
+              sx={COMMENT_CREATE_FORM_SX}
             >
               <TextField
                 label="Add a comment"
@@ -461,6 +485,7 @@ export function CommentsSection({
                 <Tooltip title="Post comment" arrow>
                   <span>
                     <IconButton
+                      sx={ICON_ACTION_STYLES.submit}
                       type="submit"
                       aria-label="Post comment"
                       color="primary"
@@ -474,9 +499,10 @@ export function CommentsSection({
             </Box>
           ) : null}
 
-          <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginTop: '10px' }}>
+          <Box sx={COMMENT_CREATE_ACTION_ROW_SX}>
             <Tooltip title={formOpen ? 'Close' : 'Add comment'} arrow>
               <IconButton
+                sx={ICON_ACTION_STYLES.disclosure}
                 onClick={() => setFormOpen((previous) => !previous)}
                 aria-label={formOpen ? 'Close' : 'Add comment'}
                 aria-expanded={formOpen}
@@ -488,10 +514,10 @@ export function CommentsSection({
           </Box>
         </>
       ) : status === 'anonymous' ? (
-        <Typography variant="body2" sx={{ marginTop: '10px' }}>
+        <Typography variant="body2" sx={COMMENT_ANONYMOUS_HINT_SX}>
           Log in to comment.
         </Typography>
       ) : null}
-    </section>
+    </Card>
   );
 }

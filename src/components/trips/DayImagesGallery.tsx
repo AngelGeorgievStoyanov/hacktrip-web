@@ -5,6 +5,7 @@ import { SocialObjectPlaceholder } from '@/components/placeholders';
 import { ImageGallery } from '@/components/images/ImageGallery';
 import type { CommentTarget } from '@/api/comments';
 import type { TripGroupDay } from '@/types';
+import { DAY_IMAGE_PLACEHOLDER_FRAME_SX } from '@/styles/presets/image-gallery';
 
 interface DayImagesGalleryProps {
   day: TripGroupDay;
@@ -34,7 +35,7 @@ export function DayImagesGallery({
       onToggleComments={toggleTripComments}
     />
   ) : (
-    <Box sx={{ width: '50%', maxWidth: 280, aspectRatio: '1 / 1', mx: 'auto' }}>
+    <Box sx={DAY_IMAGE_PLACEHOLDER_FRAME_SX}>
       <SocialObjectPlaceholder />
     </Box>
   );
