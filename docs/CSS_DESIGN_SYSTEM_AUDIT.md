@@ -8179,3 +8179,12 @@ The following source files were re-fetched from `feature/frontend-modernization`
 - Verification: source changes were committed to the existing feature branch. No build, TypeScript check, lint, tests, CI or browser visual QA was run. The audit policy prohibits running these checks without explicit user authorization.
 - Status: central ownership corrected for this heading group; visual/browser verification remains open. This is a focused correction, not a claim that the complete typography audit or design-system migration is finished.
 - Latest source commit before this documentation entry: `a5beb779089b30a0de60cd5196cd86217a109cd9`.
+
+
+## 11.149 — Shared display-font token reuse completed (2026-11-20)
+
+- Follow-up to Section 11.148: `ABOUT_EDITORIAL_TYPOGRAPHY.fontFamily` now references the same `DISPLAY_FONT_FAMILY` token rather than repeating the Space Mono font stack.
+- This keeps the branded Home/Scramble and About editorial font family under one token owner while preserving their separate semantic presets and sizing.
+- Source changed: `src/constants/ui/typography.ts`.
+- Source commit: `8447c2e2a418b8b9c5ee5b91a2010fd20032ec84`.
+- No build, TypeScript check, lint, tests, CI or browser visual QA was run; explicit authorization is still required by this audit's execution policy.
