@@ -105,13 +105,18 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
   return (
     <>
-      <Box data-trip-sticky-header="true" sx={getTripDetailsStickyHeaderSx()}>
-        <TripDaysNav
-          tripGroupId={group.id}
-          days={group.days.map((current) => current.dayNumber)}
-          selectedDay={day.dayNumber}
-          onSelect={handleSelectDay}
-        />
+      <Box
+        data-trip-sticky-header="true"
+        sx={{ ...getTripDetailsStickyHeaderSx(), pointerEvents: 'none' }}
+      >
+        <Box sx={{ pointerEvents: 'auto' }}>
+          <TripDaysNav
+            tripGroupId={group.id}
+            days={group.days.map((current) => current.dayNumber)}
+            selectedDay={day.dayNumber}
+            onSelect={handleSelectDay}
+          />
+        </Box>
         <TripGroupSocialActions
           tripGroupId={group.id}
           social={group.social}

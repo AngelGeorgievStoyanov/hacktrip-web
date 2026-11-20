@@ -40,7 +40,6 @@ export function TripMapSection({
   const stepperRef = useRef<HTMLDivElement | null>(null);
   const previousPointIndex = useRef(selectedPointIndex);
   const isSmallScreen = useMediaQuery(maxWidthQuery(BREAKPOINTS.tripDetails));
-  const [selectedMarker, setSelectedMarker] = useState<GoogleMapMarker | null>(null);
 
   const markers = useMemo<GoogleMapMarker[]>(
     () =>
@@ -70,17 +69,11 @@ export function TripMapSection({
     : currentNavigableIndex < navigablePointIndexes.length - 1;
   const hasPrev = !isOverview;
 
-  useEffect(() => {
-    if (isOverview) setSelectedMarker(null);
-  }, [isOverview]);
-
   const handleMarkerSelect = useCallback(
     (marker: GoogleMapMarker | null) => {
-      setSelectedMarker(marker);
-      if (marker) {
-        const index = points.findIndex((point) => point.id === Number(marker.id));
-        if (index >= 0) onPointChange(index);
-      }
+      if (!marker) return;
+      const index = points.findIndex((point) => point.id === Number(marker.id));
+      if (index >= 0) onPointChange(index);
     },
     [points, onPointChange],
   );
@@ -163,9 +156,7 @@ export function TripMapSection({
         fitBoundsTrigger={isOverview ? 'overview' : selectedPointIndex}
         focusMarkerId={showingPointMarkers ? focusPointId : null}
         focusZoom={MAP_DEFAULT_ZOOM}
-        selectedMarkerId={showingPointMarkers ? (selectedMarker?.id ?? null) : null}
         onMarkerSelect={showingPointMarkers ? handleMarkerSelect : undefined}
-        renderInfoWindow={showingPointMarkers ? (marker) => marker.title : undefined}
       />
     </Card>
   );

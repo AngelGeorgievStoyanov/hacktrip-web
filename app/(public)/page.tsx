@@ -9,12 +9,30 @@ import { CENTERED_PAGE_MAIN_SX } from '@/styles/presets/layouts';
 
 export const revalidate = 300;
 
-export const metadata: Metadata = buildSeoMetadata({
-  title: 'Discover Places, Share Experiences | HackTrip',
-  description:
-    'Discover destinations, interesting places and real experiences shared by travelers. Explore photos, find inspiration and share your own discoveries with HackTrip.',
-  canonicalPath: '/',
-});
+export const metadata: Metadata = {
+  ...buildSeoMetadata({
+    title: 'Travel Inspiration, Places & Trip Ideas',
+    description:
+      'Find travel inspiration, discover interesting places and explore real experiences shared by travelers. Browse trip ideas, photos and destinations, then create and share your own trips with HackTrip.',
+    canonicalPath: '/',
+  }),
+  keywords: [
+    'HackTrip',
+    'Hack Trip',
+    'Hack-Trip',
+    'travel inspiration',
+    'travel ideas',
+    'trip ideas',
+    'travel experiences',
+    'discover places',
+    'interesting places to visit',
+    'travel destinations',
+    'share trips',
+    'travel community',
+    'trip planning',
+    'travel photos',
+  ],
+};
 
 export default async function HomePage() {
   let topTrips: TripGroupResponse[] = [];

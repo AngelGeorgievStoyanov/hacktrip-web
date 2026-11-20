@@ -15,8 +15,9 @@ export function HomeHero({ children }: HomeHeroProps) {
   return (
     <WelcomeHeading>
       <Typography component="p" variant="inherit" sx={HOME_HERO_INTRO_SX}>
-        Discover places worth visiting, explore photos and experiences shared by others, and share
-        your own discoveries with the HackTrip community.
+        Explore destinations, discover places worth visiting, and find travel inspiration through real
+        photos and experiences. Get ideas for your next trip, then share your own routes and
+        discoveries with the HackTrip community.
       </Typography>
       {children}
     </WelcomeHeading>
