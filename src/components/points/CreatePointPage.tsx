@@ -1,7 +1,5 @@
 'use client';
 
-import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
-
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Alert, Box, Card, CircularProgress } from '@mui/material';
@@ -229,7 +227,7 @@ export function CreatePointPage() {
           />
 
           <Card
-            sx={[FEATURE_SURFACE_SX, POINT_FORM_PANEL_WITH_TOP_MARGIN_SX]}
+            sx={POINT_FORM_PANEL_WITH_TOP_MARGIN_SX}
           >
             <PointForm
               tripGroupId={tripGroup.id}
