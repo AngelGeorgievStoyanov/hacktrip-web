@@ -11,7 +11,7 @@ import { authApi } from '@/api/auth';
 import { zodResolver } from '@/lib/zodResolver';
 import { getTokenErrorMessage } from '@/lib/errors';
 import { resetPasswordSchema } from '@/validations/auth';
-import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_BACK_ACTION_SX, FEATURE_AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
@@ -80,7 +80,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   if (success) {
     return (
       <WelcomeHeading>
-        <Box component="section" sx={AUTH_FORM_SX}>
+        <Box component="section" sx={FEATURE_AUTH_FORM_SX}>
           <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
             RESET PASSWORD
           </Typography>
@@ -102,7 +102,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={AUTH_FORM_SX}
+        sx={FEATURE_AUTH_FORM_SX}
       >
         <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
           RESET PASSWORD
