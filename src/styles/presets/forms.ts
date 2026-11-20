@@ -1,7 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
-import { FEATURE_SURFACE_SX } from './surfaces';
 import { PANEL_SX } from './panels';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
@@ -57,11 +56,6 @@ export const AUTH_FORM_SX = (theme: Theme) => ({
 });
 
 /** Shared surface theme for Login, Register and password-recovery pages. */
-export const FEATURE_AUTH_FORM_SX = (theme: Theme) => ({
-  ...FEATURE_SURFACE_SX(theme),
-  ...AUTH_FORM_LAYOUT_SX,
-});
-
 /** Shared centered action row for auth forms with multiple navigation actions. */
 export const AUTH_FORM_ACTIONS_SX = {
   display: 'flex',
@@ -254,7 +248,7 @@ export const EDIT_TRIP_MAP_WRAPPER_SX = {
   mx: 'auto',
 } as const;
 export const EDIT_TRIP_FORM_SX = (theme: Theme) => ({
-  ...FEATURE_SURFACE_SX(theme),
+  ...PANEL_SX(theme),
   gridArea: 'form',
   boxSizing: 'border-box',
   m: { xs: 0, sm: 2 },
