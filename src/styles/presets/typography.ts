@@ -14,6 +14,9 @@ export const HEADING_TEXT_SX = {
 export const HOME_HEADING_SX: SxProps<Theme> = {
   m: '2px',
   textAlign: 'center',
+  fontSize: 'clamp(2rem, 5vw, 3.75rem)',
+  fontWeight: 700,
+  lineHeight: 1.15,
   ...HEADING_TEXT_SX,
 };
 
