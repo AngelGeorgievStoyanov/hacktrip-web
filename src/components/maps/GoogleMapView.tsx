@@ -167,7 +167,7 @@ export function GoogleMapView({
             position={selectedMarker.position}
             onCloseClick={() => onMarkerSelect?.(null)}
           >
-            {renderInfoWindow(selectedMarker)}
+            <Box>{renderInfoWindow(selectedMarker)}</Box>
           </InfoWindowF>
         ) : null}
       </GoogleMap>
