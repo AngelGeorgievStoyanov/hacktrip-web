@@ -1,12 +1,10 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { AddCommentIcon, CloseIcon, CommentIcon } from '@/constants/icons';
 
 import { useState } from 'react';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
-import CommentIcon from '@mui/icons-material/Comment';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import CloseIcon from '@mui/icons-material/Close';
 import { useAuth } from '@/hooks/useAuth';
 import { LikeButton } from './LikeButton';
 import { FavoriteButton } from './FavoriteButton';
