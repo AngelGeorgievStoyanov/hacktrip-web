@@ -75,9 +75,10 @@ export const SOCIAL_OVERLAY_SX = {
   '& .MuiIconButton-root:hover': { backgroundColor: UI_COLORS.surface.socialOverlayHover },
 } as const;
 
-/** Shared sticky social-action surface used below trip-day navigation. */
+/** Compact sticky social-action surface sized to its actual controls. */
 export const STICKY_SOCIAL_SX = {
   display: 'inline-flex',
+  width: 'fit-content',
   maxWidth: 'calc(100% - 32px)',
   ml: { xs: 2, sm: 3 },
   mt: 1,
@@ -90,6 +91,7 @@ export const STICKY_SOCIAL_SX = {
   boxShadow: 1,
   backdropFilter: 'blur(10px)',
   WebkitBackdropFilter: 'blur(10px)',
+  pointerEvents: 'auto',
 } as const;
 
 /** Inline social controls and their non-wrapping action row. */
