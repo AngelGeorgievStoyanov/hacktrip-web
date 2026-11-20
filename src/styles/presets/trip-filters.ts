@@ -1,6 +1,7 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { BREAKPOINTS, mediaDown } from '@/constants/ui/breakpoints';
 import { UI_SPACING } from '@/constants/ui/spacing';
+import { UI_SHAPE } from '@/constants/ui/shape';
 
 /** Responsive shell for the public trip filter toolbar. */
 export const TRIP_FILTERS_TOOLBAR_SX = {
@@ -42,7 +43,7 @@ export const TRIP_FILTER_SEARCH_BOX_SX = {
 /** Search surface and hover state, using the same translucent white values as before. */
 export const TRIP_FILTER_SEARCH_SURFACE_SX = {
   position: 'relative',
-  borderRadius: 1,
+  borderRadius: UI_SHAPE.sxRadius1,
   backgroundColor: 'rgba(255, 255, 255, 0.15)',
   '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.25)' },
   marginLeft: 0,
