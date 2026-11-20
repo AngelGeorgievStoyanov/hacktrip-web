@@ -1,6 +1,7 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { ReportContentIcon, UnreportContentIcon } from '@/constants/icons';
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,8 +10,6 @@ import { Alert, Box, Button, IconButton, Tooltip } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { SOCIAL_ERROR_TEXT_SX, REPORT_BUTTON_TOOLTIP_WRAPPER_SX, REPORT_BUTTON_REASON_FIELD_SX } from '@/styles/presets/social';
-import ReportIcon from '@mui/icons-material/Report';
-import ReportOffIcon from '@mui/icons-material/ReportOff';
 import type { ReportTargetTypeInput } from '@/types';
 
 interface ReportButtonProps {
@@ -96,7 +95,7 @@ export function ReportButton({
                 size={size}
                 sx={ICON_ACTION_STYLES.report}
               >
-                {done ? <ReportOffIcon /> : <ReportIcon />}
+                {done ? <UnreportContentIcon /> : <ReportContentIcon />}
               </IconButton>
             </Box>
           </Tooltip>
