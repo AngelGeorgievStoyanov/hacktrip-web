@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+
 import { useRef, useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import {
@@ -111,7 +113,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   // Keep the legacy empty-day state for pagination gaps.
   if (!selectedDay) {
     return (
-      <Card sx={[TRIP_CARD_SX, getTripCardEmptyContainerSx(isMobile)]}>
+      <Card sx={[FEATURE_SURFACE_SX, TRIP_CARD_SX, getTripCardEmptyContainerSx(isMobile)]}>
         <Box sx={getTripCardEmptyHeaderSx(isMobile)}>
           <Typography gutterBottom variant="h5" sx={CARD_TEXT_INSET_SX}>
             No trip on {dayNumber} day
@@ -136,7 +138,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
 
   return (
     <Card
-      sx={[TRIP_CARD_SX, TRIP_CARD_CONTAINER_SX]}
+      sx={[FEATURE_SURFACE_SX, TRIP_CARD_SX, TRIP_CARD_CONTAINER_SX]}
     >
       <Box sx={TRIP_CARD_HEADER_SX}>
         <Typography gutterBottom variant="h5" sx={[CARD_TEXT_INSET_SX, TRIP_CARD_TITLE_SX]}>
