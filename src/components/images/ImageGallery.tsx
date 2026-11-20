@@ -89,6 +89,7 @@ export function ImageGallery({
                           : preset
                     }
                     fill={variant === 'grid'}
+                    useThumbnail={images.length > 1}
                     priority={prioritizeFirstImage && position === 0}
                     loading={prioritizeFirstImage && position === 0 ? 'eager' : undefined}
                     fetchPriority={prioritizeFirstImage && position === 0 ? 'high' : undefined}
