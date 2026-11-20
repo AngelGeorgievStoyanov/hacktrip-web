@@ -2,6 +2,7 @@ import type { Theme } from '@mui/material/styles';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { COLUMN_STACK_SX } from './layouts';
 import { FEATURE_SURFACE_SX } from './surfaces';
+import { PANEL_SX } from './panels';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
@@ -40,15 +41,25 @@ export const AUTH_FORM_TITLE_SX = {
   textAlign: 'center',
 } as const;
 
-/** Shared layout and surface treatment for standalone authentication forms. */
-export const AUTH_FORM_SX = (theme: Theme) => ({
-  ...FEATURE_SURFACE_SX(theme),
+const AUTH_FORM_LAYOUT_SX = {
   ...COLUMN_STACK_SX,
   padding: '30px',
   maxWidth: '700px',
   width: '100%',
   boxSizing: 'border-box',
   marginX: 'auto',
+} as const;
+
+/** Shared authentication panel retained by auth pages outside the selected surface group. */
+export const AUTH_FORM_SX = (theme: Theme) => ({
+  ...PANEL_SX(theme),
+  ...AUTH_FORM_LAYOUT_SX,
+});
+
+/** Shared surface theme for Login, Register and password-recovery pages. */
+export const FEATURE_AUTH_FORM_SX = (theme: Theme) => ({
+  ...FEATURE_SURFACE_SX(theme),
+  ...AUTH_FORM_LAYOUT_SX,
 });
 
 /** Shared centered action row for auth forms with multiple navigation actions. */
