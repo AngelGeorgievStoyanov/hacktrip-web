@@ -56,10 +56,12 @@ export const updateProfileSchema = z
     firstName: trimmedString({
       min: 1,
       max: 45,
+      minMessage: 'First name is required.',
     }),
     lastName: trimmedString({
       min: 1,
       max: 45,
+      minMessage: 'Last name is required.',
     }),
   })
   .strict();
