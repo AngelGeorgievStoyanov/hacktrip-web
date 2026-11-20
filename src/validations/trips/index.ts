@@ -21,7 +21,10 @@ import {
 
 export const tripWriteSchema = z
   .object({
-    dayNumber: requiredInt({ min: 1, max: DAY_NUMBER_MAX }),
+    dayNumber: requiredInt(
+      { min: 1, max: DAY_NUMBER_MAX },
+      { required: 'Day number is required.', min: 'Day number must be at least 1.', max: `Day number must not exceed ${DAY_NUMBER_MAX}.` },
+    ),
     title: trimmedString({
       min: 1,
       max: TRIP_TITLE_MAX_LENGTH,
@@ -31,11 +34,17 @@ export const tripWriteSchema = z
       { max: TRIP_DESCRIPTION_MAX_LENGTH },
       { max: `Description max length is ${TRIP_DESCRIPTION_MAX_LENGTH} chars` },
     ),
-    price: requiredNumber({ min: 0, max: 1000000 }),
+    price: requiredNumber(
+      { min: 0, max: 1000000 },
+      { required: 'Price is required.', min: 'Price cannot be negative.', max: 'Price must not exceed 1,000,000.' },
+    ),
     transport: trimmedString({ min: 1, max: TRIP_TRANSPORT_MAX_LENGTH }),
-    countPeoples: requiredInt({ min: 1, max: 1000 }),
+    countPeoples: requiredInt(
+      { min: 1, max: 1000 },
+      { required: 'Number of people is required.', min: 'At least 1 person is required.', max: 'Number of people must not exceed 1,000.' },
+    ),
     typeOfPeople: trimmedString({ min: 1, max: TRIP_GROUP_MAX_LENGTH }),
-    currency: trimmedString({ min: 1, max: 3 }),
+    currency: trimmedString({ min: 1, max: 3, minMessage: 'Currency is required.' }),
     destination: trimmedString({ min: 1, max: TRIP_TITLE_MAX_LENGTH }).optional(),
     lat: z.union([z.number().min(-90).max(90), z.null()]).optional(),
     lng: z.union([z.number().min(-180).max(180), z.null()]).optional(),
