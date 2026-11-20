@@ -1,24 +1,27 @@
 import type { SxProps, Theme } from '@mui/material/styles';
 import { UI_COLORS } from '@/constants/ui/colors';
-import { TYPOGRAPHY } from '@/constants/ui/typography';
+import { DISPLAY_FONT_FAMILY } from '@/constants/ui/typography';
 
 /** Shared heading text treatment for MUI typography consumers. */
 export const HEADING_TEXT_SX = {
-  fontFamily: TYPOGRAPHY.fontFamily,
+  fontFamily: DISPLAY_FONT_FAMILY,
   color: UI_COLORS.text.inverse,
   opacity: 1,
   textShadow: `3px 3px 3px ${UI_COLORS.decorative.headingShadow}`,
 } as const;
 
-/** Shared centered home/public-trips heading composition. */
-export const HOME_HEADING_SX: SxProps<Theme> = {
+/** Legacy branded h1 treatment shared by the responsive welcome heading. */
+export const SCRAMBLE_HEADING_SX = {
   m: '2px',
   textAlign: 'center',
-  fontSize: 'clamp(2rem, 5vw, 3.75rem)',
+  fontSize: '2em',
   fontWeight: 700,
-  lineHeight: 1.15,
+  lineHeight: 'normal',
   ...HEADING_TEXT_SX,
-};
+} as const;
+
+/** Backward-compatible name for the shared Home heading preset. */
+export const HOME_HEADING_SX: SxProps<Theme> = SCRAMBLE_HEADING_SX;
 
 /** Shared introductory paragraph treatment; each page owns its content max-width. */
 export const HOME_INTRO_SX: SxProps<Theme> = {
