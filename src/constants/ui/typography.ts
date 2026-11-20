@@ -41,7 +41,7 @@ export const TYPOGRAPHY = {
  * Values are exposed to CSS Modules through theme-generated custom properties.
  */
 export const ABOUT_EDITORIAL_TYPOGRAPHY = {
-  fontFamily: "'Space Mono', monospace",
+  fontFamily: DISPLAY_FONT_FAMILY,
   fontWeight: 600,
   headingMargin: '8px 0',
   h1: 'clamp(1.7rem, 4vw, 2.5rem)',
