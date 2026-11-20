@@ -1,8 +1,10 @@
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { SOCIAL_ACTIONS_SX } from '@/styles/presets/social';
+import { UI_SHAPE } from '@/constants/ui/shape';
 
 /** Comments section and responsive list/card composition. */
 export const COMMENTS_PANEL_SX = {
+  borderRadius: UI_SHAPE.socialCardRadiusPx,
   display: 'flex',
   flexDirection: 'column',
   margin: '20px 0',
@@ -19,6 +21,7 @@ export const COMMENT_LIST_SX = {
   margin: 0,
 } as const;
 export const COMMENT_CARD_SX = {
+  borderRadius: UI_SHAPE.socialCardRadiusPx,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'flex-start',
