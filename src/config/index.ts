@@ -12,7 +12,7 @@ export interface RuntimeConfig {
   recaptchaV3SiteKey: string;
 }
 
-const DEFAULT_API_BASE_URL = 'https://www.api-hack-trip.com';
+const DEFAULT_API_BASE_URL = '';
 const DEFAULT_SITE_URL = 'https://www.hack-trip.com';
 
 // NEXT_PUBLIC_* values are referenced literally so Next.js can inline them into client
