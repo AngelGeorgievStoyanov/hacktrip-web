@@ -106,8 +106,11 @@ export function TripGroupSocialActions({
     }
   }
 
+  if (!hasVisibleActions) return null;
+
   return (
-    <Box sx={TRIP_GROUP_SOCIAL_ACTIONS_SX}>
+    <Box sx={STICKY_SOCIAL_SX}>
+      <Box sx={TRIP_GROUP_SOCIAL_ACTIONS_SX}>
       {socialConfig.error ? <SocialConfigStatus isLoading={false} error={socialConfig.error} /> : null}
       {isAuthenticated && canLike ? (
         <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
@@ -221,6 +224,7 @@ export function TripGroupSocialActions({
           {reportActions.error}
         </Box>
       ) : null}
+      </Box>
     </Box>
   );
 }
