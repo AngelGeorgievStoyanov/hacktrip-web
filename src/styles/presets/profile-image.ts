@@ -1,4 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
+import { UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
@@ -33,7 +34,7 @@ export const PROFILE_IMAGE_DELETE_TRIGGER_SX = {
 
 export const PROFILE_IMAGE_DELETE_ICON_SX = {
   backgroundColor: UI_COLORS.text.inverse,
-  borderRadius: '50%',
+  borderRadius: UI_SHAPE.circularRadius,
 } as const;
 
 export const PROFILE_IMAGE_VIEW_TRIGGER_SX = {
@@ -44,7 +45,7 @@ export const PROFILE_IMAGE_VIEW_TRIGGER_SX = {
   height: 'min(300px, 75vw)',
   p: 0,
   border: '1px solid',
-  borderRadius: '50%',
+  borderRadius: UI_SHAPE.circularRadius,
   overflow: 'hidden',
   boxShadow: UI_SHADOWS.profileImageControl,
   cursor: 'pointer',
