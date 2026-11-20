@@ -1,12 +1,11 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { LikeActiveIcon, LikeInactiveIcon } from '@/constants/icons';
 
 import { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Badge, IconButton, Tooltip } from '@mui/material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { socialApi } from '@/api/social';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { useLikeAnimation } from '@/components/social/LikeAnimation';
@@ -102,9 +101,9 @@ export function LikeButton({
               }
             >
               {liked ? (
-                <ThumbUpIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
+                <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               ) : (
-                <ThumbUpOffAltIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
+                <LikeInactiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
               )}
             </Badge>
           </IconButton>
