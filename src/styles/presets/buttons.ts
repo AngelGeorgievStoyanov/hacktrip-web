@@ -114,46 +114,7 @@ const dayNumberButton = {
   '&:hover': { backgroundColor: 'primary.dark' },
 } as const;
 
-/** Shared keyboard-focus and semantic tone contracts for icon-only actions. */
-const iconActionBase = {
-  borderRadius: '50%',
-  '&:focus-visible': {
-    outline: '2px solid',
-    outlineColor: 'primary.main',
-    outlineOffset: 3,
-  },
-} as const;
-
-const iconActionDanger = { ...iconActionBase, color: 'error.main' } as const;
-
-export const ICON_ACTION_STYLES = {
-  base: iconActionBase,
-  primary: { ...iconActionBase, color: 'primary.main' },
-  upload: { ...iconActionBase, color: 'primary.main' },
-  removeSelection: iconActionBase,
-  passwordVisibility: iconActionBase,
-  reorder: iconActionBase,
-  like: iconActionBase,
-  favorite: iconActionBase,
-  share: iconActionBase,
-  edit: iconActionBase,
-  save: iconActionBase,
-  cancel: iconActionBase,
-  disclosure: iconActionBase,
-  submit: iconActionBase,
-  delete: iconActionDanger,
-  danger: iconActionDanger,
-  report: {
-    ...iconActionBase,
-    '&:hover': { color: UI_COLORS.action.danger },
-  },
-  imageControl: {
-    ...iconActionBase,
-    color: UI_COLORS.text.inverse,
-    backgroundColor: UI_COLORS.surface.imageControl,
-    '&:hover': { backgroundColor: UI_COLORS.surface.imageControlHover },
-  },
-} as const;
+export { ICON_ACTION_STYLES } from './actions';
 
 export const BUTTON_STYLES = {
   primary,
