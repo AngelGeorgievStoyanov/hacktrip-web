@@ -29,8 +29,8 @@ export const UI_COLORS = {
     socialOverlayHover: 'rgba(255,255,255,0.16)',
     socialPlaceholder: '#e7f0f2',
     imageLightbox: 'rgba(17, 17, 17, 0.96)',
-    imageControl: 'rgba(0, 0, 0, 0.45)',
-    imageControlHover: 'rgba(0, 0, 0, 0.7)',
+    imageControl: 'rgba(0, 0, 0, 0.62)',
+    imageControlHover: 'rgba(0, 0, 0, 0.82)',
   },
   border: {
     /** MUI divider default, kept distinct from the stronger legacy panel border. */
