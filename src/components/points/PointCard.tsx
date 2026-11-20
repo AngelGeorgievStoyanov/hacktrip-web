@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+
 import { Box, Button, Card, IconButton, Typography } from '@mui/material';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import {
@@ -49,7 +51,7 @@ export function PointCard({
       </IconButton>
 
       <Card
-        sx={POINT_CARD_CONTAINER_SX}
+        sx={[FEATURE_SURFACE_SX, POINT_CARD_CONTAINER_SX]}
       >
         <Typography gutterBottom component="h6" sx={POINT_CARD_TEXT_INSET_SX}>
           Point N {point.pointNumber}
