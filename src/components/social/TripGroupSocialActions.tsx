@@ -17,7 +17,7 @@ import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { SOCIAL_ERROR_TEXT_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
-import { isSocialOperationAllowed } from '@/lib/socialConfig';
+import { isSocialActionEnabled, isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
 import { useLikeAnimation } from '@/components/social/LikeAnimation';
@@ -78,7 +78,8 @@ export function TripGroupSocialActions({
     'tripGroup',
     reported ? 'delete' : 'create',
   );
-  const canComment = isSocialOperationAllowed(socialConfig.data, 'comment', 'tripGroup', 'create');
+  const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', 'tripGroup');
+  const canCreateComment = isSocialOperationAllowed(socialConfig.data, 'comment', 'tripGroup', 'create');
 
   const isTripGroupCommentsOpen = open !== undefined ? open : internalTripGroupCommentsOpen;
 
@@ -185,11 +186,12 @@ export function TripGroupSocialActions({
           </span>
         </Tooltip>
       ) : null}
-      {isAuthenticated && canComment ? (
+      {commentsEnabled && (social.comments.count > 0 || (isAuthenticated && canCreateComment)) ? (
         <CommentsToggle
           count={social.comments.count}
           open={isTripGroupCommentsOpen}
           onToggle={handleToggleTripGroupComments}
+          canCreate={isAuthenticated && canCreateComment}
         />
       ) : null}
       <Tooltip title={shareCopied ? 'Link copied' : 'Share trip group'} arrow>
