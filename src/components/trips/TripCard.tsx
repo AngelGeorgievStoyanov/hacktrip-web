@@ -17,9 +17,7 @@ import {
 import type { PaginationRenderItemParams } from '@mui/material/Pagination';
 import { AppImage } from '@/components/images';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
+import { FavoriteIcon, TripNextIcon, TripPreviousIcon } from '@/constants/icons';
 import {
   BREAKPOINTS,
   maxWidthQuery,
@@ -185,12 +183,12 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           nextButton={
             <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
               Next
-              {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+              {theme.direction === 'rtl' ? <TripPreviousIcon /> : <TripNextIcon />}
             </Button>
           }
           backButton={
             <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
-              {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              {theme.direction === 'rtl' ? <TripNextIcon /> : <TripPreviousIcon />}
             </Button>
           }
         />
