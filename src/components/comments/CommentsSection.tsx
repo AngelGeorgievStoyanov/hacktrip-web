@@ -1,6 +1,7 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { AddCommentIcon, CloseIcon, ConfirmIcon, DeleteActionIcon, EditIcon, ReplyIcon, SendIcon } from '@/constants/icons';
 
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -16,13 +17,6 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import AddCommentIcon from '@mui/icons-material/AddComment';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import ReplyIcon from '@mui/icons-material/Reply';
-import SendIcon from '@mui/icons-material/Send';
-import CheckIcon from '@mui/icons-material/Check';
 import { commentApi, type CommentCreateInput, type CommentTarget } from '@/api/comments';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
@@ -281,7 +275,7 @@ export function CommentsSection({
                           aria-label="Save comment"
                           disabled={updateMutation.isPending}
                         >
-                          <CheckIcon />
+                          <ConfirmIcon />
                         </IconButton>
                       </span>
                     </Tooltip>
@@ -369,7 +363,7 @@ export function CommentsSection({
                               setEditingComment(commentItem.comment);
                             }}
                           >
-                            <EditOutlinedIcon />
+                            <EditIcon />
                           </IconButton>
                         </Tooltip>
                       ) : null}
@@ -390,7 +384,7 @@ export function CommentsSection({
                               })
                             }
                           >
-                            <DeleteOutlineIcon />
+                            <DeleteActionIcon />
                           </IconButton>
                         </Tooltip>
                       ) : null}
