@@ -21,7 +21,7 @@ import { getGenericErrorMessage } from '@/lib/errors';
 import { registerSchema } from '@/validations/auth';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { AUTH_FORM_ACTIONS_SX, FEATURE_AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { Captcha } from '@/components/auth/Captcha';
 import { PasswordField } from '@/components/common/PasswordField';
@@ -126,7 +126,7 @@ export function RegisterForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={FEATURE_AUTH_FORM_SX}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           REGISTER
