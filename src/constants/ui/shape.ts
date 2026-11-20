@@ -2,6 +2,8 @@
 export const UI_SHAPE = {
   /** MUI theme default, expressed in CSS pixels. */
   borderRadius: 4,
+  /** Shared outer surface radius for Trip, Point, authentication and profile panels. */
+  featureSurfaceRadius: 0,
   /** MUI sx borderRadius multipliers (theme.shape.borderRadius × multiplier). */
   sxRadius1: 1,
   sxRadius2: 2,
