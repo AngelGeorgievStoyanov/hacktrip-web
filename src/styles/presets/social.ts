@@ -2,13 +2,12 @@ import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SPACING } from '@/constants/ui/spacing';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
 import { UI_SHAPE } from '@/constants/ui/shape';
+import { ACTION_GROUP_SX } from '@/styles/presets/actions';
 
 /** Shared alignment for like, favorite, report and moderation action groups. */
 export const SOCIAL_ACTIONS_SX = {
-  display: 'flex',
+  ...ACTION_GROUP_SX,
   gap: UI_SPACING.xs,
-  alignItems: 'center',
-  flexWrap: 'wrap',
 } as const;
 
 /** Compact social-action alignment used by the point editor action row. */
@@ -93,10 +92,8 @@ export const getSocialEngagementActionsSx = (actionsJustify: 'flex-start' | 'spa
   width: '100%',
 } as const);
 export const TRIP_GROUP_SOCIAL_ACTIONS_SX = {
-  display: 'flex',
-  alignItems: 'center',
+  ...ACTION_GROUP_SX,
   gap: 0.25,
-  flexWrap: 'wrap',
 } as const;
 
 /** Dynamic like feedback animation remains supplied by the shared animation hook. */
