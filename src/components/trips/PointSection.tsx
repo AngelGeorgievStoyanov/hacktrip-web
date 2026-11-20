@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+
 import { Typography, Card, CardContent, Box } from '@mui/material';
 import { ImageGallery } from '@/components/images/ImageGallery';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
@@ -48,7 +50,7 @@ export function PointSection({
 
   return (
     <section aria-label="Trip points">
-      <Card sx={POINT_SECTION_CARD_SX}>
+      <Card sx={[FEATURE_SURFACE_SX, POINT_SECTION_CARD_SX]}>
         <CardContent sx={POINT_SECTION_CONTENT_SX}>
           <Typography variant="h5" component="div" sx={POINT_SECTION_TITLE_SX}>
             Point name: {point.name}
