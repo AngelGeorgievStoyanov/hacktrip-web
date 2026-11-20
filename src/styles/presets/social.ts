@@ -23,12 +23,26 @@ export const SOCIAL_CONFIG_STATUS_WRAPPER_SX = {
   p: 0.5,
 } as const;
 
-/** Compact count badge metrics shared by small social action buttons and image overlays. */
+/** Count badges display plain text without the default colored pill background. */
+export const SOCIAL_BADGE_COUNT_STYLE = {
+  backgroundColor: 'transparent',
+  color: 'inherit',
+  minWidth: 'auto',
+  height: 'auto',
+  padding: 0,
+  borderRadius: 0,
+  boxShadow: 'none',
+} as const;
+
+/** Shared count-only badge styling for all social counters. */
+export const SOCIAL_BADGE_COUNT_SX = {
+  '& .MuiBadge-badge': SOCIAL_BADGE_COUNT_STYLE,
+} as const;
+
+/** Compact count metrics shared by small social action buttons and image overlays. */
 export const SOCIAL_BADGE_COMPACT_STYLE = {
+  ...SOCIAL_BADGE_COUNT_STYLE,
   fontSize: '0.65rem',
-  height: 14,
-  minWidth: 14,
-  padding: '0 3px',
   lineHeight: 1,
 } as const;
 
@@ -38,9 +52,10 @@ export const SOCIAL_ERROR_TEXT_SX = {
   fontSize: '0.75rem',
 } as const;
 
-/** Compact badge styling shared by Like/Favorite controls in small overlay mode. */
-export const getSocialBadgeSx = (size: 'small' | 'medium') =>
-  size === 'small' ? { '& .MuiBadge-badge': SOCIAL_BADGE_COMPACT_STYLE } as const : undefined;
+/** Plain-number badge styling shared by Like/Favorite controls. */
+export const getSocialBadgeSx = (size: 'small' | 'medium') => ({
+  '& .MuiBadge-badge': size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : SOCIAL_BADGE_COUNT_STYLE,
+} as const);
 
 /** Shared visual treatment for social controls rendered over images or maps. */
 export const SOCIAL_OVERLAY_SX = {
