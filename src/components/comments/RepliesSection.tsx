@@ -316,8 +316,6 @@ export function RepliesSection({
             </IconButton>
           </Tooltip>
         </Box>
-      ) : status === 'anonymous' ? (
-        <Typography variant="body2">Log in to reply.</Typography>
       ) : null}
     </Box>
   );
