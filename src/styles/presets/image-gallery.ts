@@ -1,5 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
-import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 /** Shared gallery and fullscreen image-viewer presentation contracts. */
 export const POINT_SECTION_IMAGE_FRAME_SX = {
