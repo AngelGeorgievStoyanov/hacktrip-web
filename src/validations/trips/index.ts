@@ -23,7 +23,11 @@ export const tripWriteSchema = z
   .object({
     dayNumber: requiredInt(
       { min: 1, max: DAY_NUMBER_MAX },
-      { required: 'Day number is required.', min: 'Day number must be at least 1.', max: `Day number must not exceed ${DAY_NUMBER_MAX}.` },
+      {
+        required: 'Day number is required.',
+        min: 'Day number must be at least 1.',
+        max: `Day number must not exceed ${DAY_NUMBER_MAX}.`,
+      },
     ),
     title: trimmedString({
       min: 1,
@@ -36,12 +40,20 @@ export const tripWriteSchema = z
     ),
     price: requiredNumber(
       { min: 0, max: 1000000 },
-      { required: 'Price is required.', min: 'Price cannot be negative.', max: 'Price must not exceed 1,000,000.' },
+      {
+        required: 'Price is required.',
+        min: 'Price cannot be negative.',
+        max: 'Price must not exceed 1,000,000.',
+      },
     ),
     transport: trimmedString({ min: 1, max: TRIP_TRANSPORT_MAX_LENGTH }),
     countPeoples: requiredInt(
       { min: 1, max: 1000 },
-      { required: 'Number of people is required.', min: 'At least 1 person is required.', max: 'Number of people must not exceed 1,000.' },
+      {
+        required: 'Number of people is required.',
+        min: 'At least 1 person is required.',
+        max: 'Number of people must not exceed 1,000.',
+      },
     ),
     typeOfPeople: trimmedString({ min: 1, max: TRIP_GROUP_MAX_LENGTH }),
     currency: trimmedString({ min: 1, max: 3, minMessage: 'Currency is required.' }),
@@ -75,7 +87,11 @@ export const tripEditSchema = z
   .object({
     dayNumber: requiredInt(
       { min: 1, max: DAY_NUMBER_MAX },
-      { required: 'Day number is required.', min: 'Day number must be at least 1.', max: `Day number must not exceed ${DAY_NUMBER_MAX}.` },
+      {
+        required: 'Day number is required.',
+        min: 'Day number must be at least 1.',
+        max: `Day number must not exceed ${DAY_NUMBER_MAX}.`,
+      },
     ),
     title: trimmedString({
       min: 1,
@@ -88,12 +104,20 @@ export const tripEditSchema = z
     ),
     price: requiredNumber(
       { min: 0, max: 1000000 },
-      { required: 'Price is required.', min: 'Price cannot be negative.', max: 'Price must not exceed 1,000,000.' },
+      {
+        required: 'Price is required.',
+        min: 'Price cannot be negative.',
+        max: 'Price must not exceed 1,000,000.',
+      },
     ),
     transport: trimmedString({ min: 1, max: TRIP_TRANSPORT_MAX_LENGTH }),
     countPeoples: requiredInt(
       { min: 1, max: 1000 },
-      { required: 'Number of people is required.', min: 'At least 1 person is required.', max: 'Number of people must not exceed 1,000.' },
+      {
+        required: 'Number of people is required.',
+        min: 'At least 1 person is required.',
+        max: 'Number of people must not exceed 1,000.',
+      },
     ),
     typeOfPeople: trimmedString({ min: 1, max: TRIP_GROUP_MAX_LENGTH }),
     currency: trimmedString({ min: 1, max: 3, minMessage: 'Currency is required.' }),
@@ -114,9 +138,13 @@ export const dayReorderSchema = z
           .object({
             tripId: positiveId,
             dayNumber: requiredInt(
-      { min: 1, max: DAY_NUMBER_MAX },
-      { required: 'Day number is required.', min: 'Day number must be at least 1.', max: `Day number must not exceed ${DAY_NUMBER_MAX}.` },
-    ),
+              { min: 1, max: DAY_NUMBER_MAX },
+              {
+                required: 'Day number is required.',
+                min: 'Day number must be at least 1.',
+                max: `Day number must not exceed ${DAY_NUMBER_MAX}.`,
+              },
+            ),
           })
           .strict(),
       )

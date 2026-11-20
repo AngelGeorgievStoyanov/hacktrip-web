@@ -96,9 +96,7 @@ export function LikeButton({
               invisible={likes === 0}
               max={Number.MAX_SAFE_INTEGER}
               color="primary"
-              sx={
-                getSocialBadgeSx(size)
-              }
+              sx={getSocialBadgeSx(size)}
             >
               {liked ? (
                 <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />

@@ -5,11 +5,7 @@ import { Alert, Box, Button, Stack, Typography } from '@mui/material';
 import { AddressAutocomplete } from '@/components/maps/AddressAutocomplete';
 import { GoogleMapView } from '@/components/maps/GoogleMapView';
 import { useGoogleMapsLoader } from '@/hooks/useGoogleMapsLoader';
-import {
-  MAP_DEFAULT_CENTER,
-  MAP_GEOCODED_ZOOM,
-  MAP_POINT_PICKER_ZOOM,
-} from '@/constants/maps';
+import { MAP_DEFAULT_CENTER, MAP_GEOCODED_ZOOM, MAP_POINT_PICKER_ZOOM } from '@/constants/maps';
 import { formatCoordinate, type MapPosition } from '@/lib/maps';
 import {
   TRIP_LOCATION_MAP_FRAME_SX,
@@ -58,9 +54,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
 
   return (
     <Stack spacing={1}>
-      <Box
-        sx={TRIP_LOCATION_MAP_FRAME_SX}
-      >
+      <Box sx={TRIP_LOCATION_MAP_FRAME_SX}>
         <GoogleMapView
           center={center}
           zoom={MAP_POINT_PICKER_ZOOM}
@@ -88,10 +82,7 @@ export function TripLocationPicker({ latitude, longitude, onChange }: TripLocati
           onMarkerDragEnd={(nextPosition) => emitPosition(nextPosition)}
         />
         {!position ? (
-          <Typography
-            variant="caption"
-            sx={TRIP_LOCATION_HINT_SX}
-          >
+          <Typography variant="caption" sx={TRIP_LOCATION_HINT_SX}>
             Click the map to place a marker.
           </Typography>
         ) : null}

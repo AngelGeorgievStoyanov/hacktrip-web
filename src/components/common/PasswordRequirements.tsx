@@ -23,21 +23,16 @@ export function PasswordRequirements({
   const requirements = getPasswordRequirements(password, minLength, maxLength);
 
   return (
-    <Box
-      component="ul"
-      aria-label="Password requirements"
-      sx={PASSWORD_REQUIREMENTS_LIST_SX}
-    >
+    <Box component="ul" aria-label="Password requirements" sx={PASSWORD_REQUIREMENTS_LIST_SX}>
       {requirements.map((requirement) => (
-        <Box
-          component="li"
-          key={requirement.key}
-          sx={PASSWORD_REQUIREMENT_ITEM_SX}
-        >
+        <Box component="li" key={requirement.key} sx={PASSWORD_REQUIREMENT_ITEM_SX}>
           {requirement.valid ? (
             <PasswordRequirementMetIcon fontSize="small" color="success" />
           ) : (
-            <PasswordRequirementUnmetIcon fontSize="small" sx={PASSWORD_REQUIREMENT_INVALID_ICON_SX} />
+            <PasswordRequirementUnmetIcon
+              fontSize="small"
+              sx={PASSWORD_REQUIREMENT_INVALID_ICON_SX}
+            />
           )}
           <Typography
             variant="caption"

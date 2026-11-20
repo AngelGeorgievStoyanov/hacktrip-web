@@ -18,18 +18,25 @@ import type { PaginationRenderItemParams } from '@mui/material/Pagination';
 import { AppImage } from '@/components/images';
 import { SocialObjectPlaceholder } from '@/components/placeholders';
 import { FavoriteIcon, TripNextIcon, TripPreviousIcon } from '@/constants/icons';
-import {
-  BREAKPOINTS,
-  maxWidthQuery,
-} from '@/constants/ui';
+import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import {
-  TRIP_CARD_SX, CARD_TEXT_INSET_SX, TRIP_CARD_HEADER_SX, TRIP_CARD_CONTAINER_SX,
-  getTripCardEmptyContainerSx, TRIP_CARD_TITLE_SX,
-  getTripCardEmptyHeaderSx, TRIP_CARD_IMAGE_FRAME_SX, TRIP_CARD_SOCIAL_COUNTS_SX,
-  TRIP_CARD_STEPPER_SPACE_SX, TRIP_CARD_CONTENT_SX, TRIP_CARD_SOCIAL_ROW_SX,
-  TRIP_CARD_PAGINATION_SX, TRIP_CARD_DESCRIPTION_SX, TRIP_CARD_STEPPER_SX,
+  TRIP_CARD_SX,
+  CARD_TEXT_INSET_SX,
+  TRIP_CARD_HEADER_SX,
+  TRIP_CARD_CONTAINER_SX,
+  getTripCardEmptyContainerSx,
+  TRIP_CARD_TITLE_SX,
+  getTripCardEmptyHeaderSx,
+  TRIP_CARD_IMAGE_FRAME_SX,
+  TRIP_CARD_SOCIAL_COUNTS_SX,
+  TRIP_CARD_STEPPER_SPACE_SX,
+  TRIP_CARD_CONTENT_SX,
+  TRIP_CARD_SOCIAL_ROW_SX,
+  TRIP_CARD_PAGINATION_SX,
+  TRIP_CARD_DESCRIPTION_SX,
+  TRIP_CARD_STEPPER_SX,
 } from '@/styles/presets/cards';
 import { buildTripUrl } from '@/lib/tripUrl';
 import type { TripGroupResponse } from '@/types';
@@ -133,9 +140,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
   }
 
   return (
-    <Card
-      sx={[TRIP_CARD_SX, TRIP_CARD_CONTAINER_SX]}
-    >
+    <Card sx={[TRIP_CARD_SX, TRIP_CARD_CONTAINER_SX]}>
       <Box sx={TRIP_CARD_HEADER_SX}>
         <Typography gutterBottom variant="h5" sx={[CARD_TEXT_INSET_SX, TRIP_CARD_TITLE_SX]}>
           Title: {title}

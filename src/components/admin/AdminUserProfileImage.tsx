@@ -97,7 +97,11 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
               });
             }}
           >
-            {deleteMutation.isPending ? <CircularProgress size={UI_SIZES.smallIndicator} /> : 'Delete image'}
+            {deleteMutation.isPending ? (
+              <CircularProgress size={UI_SIZES.smallIndicator} />
+            ) : (
+              'Delete image'
+            )}
           </Button>
         </Stack>
       ) : !imageQuery.isLoading && !imageQuery.error ? (

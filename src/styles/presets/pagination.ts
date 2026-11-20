@@ -18,7 +18,6 @@ export const TRIP_DAY_PAGE_ITEM_SX = {
   },
 } as const;
 
-
 /** Structural sx contracts for the sticky trip-day navigation strip. */
 export const TRIP_DAYS_NAV_APP_BAR_SX = {
   width: '100%',

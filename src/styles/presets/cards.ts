@@ -34,31 +34,72 @@ export const getTripCardEmptyContainerSx = (isMobile: boolean) => ({
 });
 export const TRIP_CARD_TITLE_SX = { textAlign: 'center' } as const;
 export const TRIP_CARD_HEADER_SX = {
-  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-  width: '100%', height: '105px', minHeight: '105px', boxSizing: 'border-box', overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '105px',
+  minHeight: '105px',
+  boxSizing: 'border-box',
+  overflow: 'hidden',
 } as const;
 export const getTripCardEmptyHeaderSx = (isMobile: boolean) => ({
-  ...TRIP_CARD_HEADER_SX, height: isMobile ? 'auto' : '-webkit-fill-available',
+  ...TRIP_CARD_HEADER_SX,
+  height: isMobile ? 'auto' : '-webkit-fill-available',
 });
 export const TRIP_CARD_IMAGE_FRAME_SX = {
-  position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center',
-  width: '100%', height: '200px', minHeight: '200px', overflow: 'hidden', bgcolor: 'action.hover',
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '200px',
+  minHeight: '200px',
+  overflow: 'hidden',
+  bgcolor: 'action.hover',
 } as const;
 export const TRIP_CARD_SOCIAL_COUNTS_SX = {
-  display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
-  gap: 0.5, width: '100%', height: '58px', minHeight: '58px', px: 2, boxSizing: 'border-box',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
+  gap: 0.5,
+  width: '100%',
+  height: '58px',
+  minHeight: '58px',
+  px: 2,
+  boxSizing: 'border-box',
 } as const;
-export const TRIP_CARD_STEPPER_SPACE_SX = { height: '20px', minHeight: '20px', width: '100%' } as const;
+export const TRIP_CARD_STEPPER_SPACE_SX = {
+  height: '20px',
+  minHeight: '20px',
+  width: '100%',
+} as const;
 export const TRIP_CARD_CONTENT_SX = {
-  display: 'flex', flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-  minHeight: 0, py: 1, '&:last-child': { pb: 1 },
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  minHeight: 0,
+  py: 1,
+  '&:last-child': { pb: 1 },
 } as const;
 export const TRIP_CARD_SOCIAL_ROW_SX = { display: 'flex', alignItems: 'center', gap: 1 } as const;
 export const TRIP_CARD_PAGINATION_SX = { marginTop: 2 } as const;
 export const TRIP_CARD_DESCRIPTION_SX = {
-  display: '-webkit-box', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2, overflow: 'hidden', textAlign: 'center',
+  display: '-webkit-box',
+  WebkitBoxOrient: 'vertical',
+  WebkitLineClamp: 2,
+  overflow: 'hidden',
+  textAlign: 'center',
 } as const;
-export const TRIP_CARD_STEPPER_SX = { width: '-webkit-fill-available', flexGrow: 1, maxHeight: '20px' } as const;
+export const TRIP_CARD_STEPPER_SX = {
+  width: '-webkit-fill-available',
+  flexGrow: 1,
+  maxHeight: '20px',
+} as const;
 
 /** Shared top inset for content inside trip and point cards. */
 export const CARD_CONTENT_TOP_PADDING = { paddingTop: '25px' } as const;
@@ -86,7 +127,6 @@ export const CARD_HEADING_TEXT_STYLE = {
   fontWeight: 500,
 } as const;
 
-
 /** PointCard structure and action geometry; its surface skin remains MUI theme-owned. */
 export const POINT_CARD_WRAPPER_SX = {
   display: 'flex',
@@ -105,11 +145,12 @@ export const POINT_CARD_CONTAINER_SX = {
   p: '15px 0',
 } as const;
 
-export const getPointCardMoveButtonSx = (visible: boolean) => ({
-  ...ICON_ACTION_STYLES.reorder,
-  visibility: visible ? 'visible' : 'hidden',
-  p: 0.25,
-} as const);
+export const getPointCardMoveButtonSx = (visible: boolean) =>
+  ({
+    ...ICON_ACTION_STYLES.reorder,
+    visibility: visible ? 'visible' : 'hidden',
+    p: 0.25,
+  }) as const;
 
 export const POINT_CARD_ACTION_ROW_SX = {
   display: 'flex',

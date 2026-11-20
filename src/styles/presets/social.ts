@@ -53,9 +53,10 @@ export const SOCIAL_ERROR_TEXT_SX = {
 } as const;
 
 /** Plain-number badge styling shared by Like/Favorite controls. */
-export const getSocialBadgeSx = (size: 'small' | 'medium') => ({
-  '& .MuiBadge-badge': size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : SOCIAL_BADGE_COUNT_STYLE,
-} as const);
+export const getSocialBadgeSx = (size: 'small' | 'medium') =>
+  ({
+    '& .MuiBadge-badge': size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : SOCIAL_BADGE_COUNT_STYLE,
+  }) as const;
 
 /** Shared visual treatment for social controls rendered over images or maps. */
 export const SOCIAL_OVERLAY_SX = {
@@ -98,32 +99,34 @@ export const SOCIAL_ENGAGEMENT_INLINE_SX = {
   gap: '0.25rem',
   margin: '0.25rem 0',
 } as const;
-export const getSocialEngagementActionsSx = (actionsJustify: 'flex-start' | 'space-around') => ({
-  display: 'flex',
-  gap: 1,
-  alignItems: 'center',
-  flexWrap: 'nowrap',
-  justifyContent: actionsJustify,
-  width: '100%',
-} as const);
+export const getSocialEngagementActionsSx = (actionsJustify: 'flex-start' | 'space-around') =>
+  ({
+    display: 'flex',
+    gap: 1,
+    alignItems: 'center',
+    flexWrap: 'nowrap',
+    justifyContent: actionsJustify,
+    width: '100%',
+  }) as const;
 export const TRIP_GROUP_SOCIAL_ACTIONS_SX = {
   ...ACTION_GROUP_SX,
   gap: 0.25,
 } as const;
 
 /** Dynamic like feedback animation remains supplied by the shared animation hook. */
-export const getSocialLikeAnimationSx = (animation: string | undefined) => ({ animation } as const);
+export const getSocialLikeAnimationSx = (animation: string | undefined) => ({ animation }) as const;
 
 /** Runtime size variant for social controls rendered over an image. */
-export const getSocialOverlaySx = (size: 'small' | 'medium') => [
-  SOCIAL_OVERLAY_SX,
-  {
-    '& .MuiIconButton-root': { p: size === 'small' ? 0.5 : 0.65 },
-    '& .MuiBadge-badge': {
-      ...(size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : {}),
+export const getSocialOverlaySx = (size: 'small' | 'medium') =>
+  [
+    SOCIAL_OVERLAY_SX,
+    {
+      '& .MuiIconButton-root': { p: size === 'small' ? 0.5 : 0.65 },
+      '& .MuiBadge-badge': {
+        ...(size === 'small' ? SOCIAL_BADGE_COMPACT_STYLE : {}),
+      },
     },
-  },
-] as const;
+  ] as const;
 
 /** Report dialog and tooltip-wrapper layout contracts. */
 export const REPORT_BUTTON_TOOLTIP_WRAPPER_SX = { display: 'inline-flex' } as const;

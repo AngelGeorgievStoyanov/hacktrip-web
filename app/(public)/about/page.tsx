@@ -14,7 +14,6 @@ export const metadata: Metadata = buildSeoMetadata({
   canonicalPath: '/about',
 });
 
-
 export default function AboutPage() {
   return (
     <main className={styles.aboutPage}>

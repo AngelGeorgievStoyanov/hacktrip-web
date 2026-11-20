@@ -17,8 +17,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { isModeratorUser } from '@/constants/roles';
 import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
 import {
-  HEADER_ROOT_SX, HEADER_WELCOME_SX, HEADER_MENU_ICON_SX, HEADER_DRAWER_PAPER_SX,
-  HEADER_DRAWER_NAV_SX, HEADER_DRAWER_NAV_BUTTON_SX, HEADER_TOOLBAR_SX,
+  HEADER_ROOT_SX,
+  HEADER_WELCOME_SX,
+  HEADER_MENU_ICON_SX,
+  HEADER_DRAWER_PAPER_SX,
+  HEADER_DRAWER_NAV_SX,
+  HEADER_DRAWER_NAV_BUTTON_SX,
+  HEADER_TOOLBAR_SX,
 } from '@/styles/presets/header';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { CloseIcon, MenuIcon } from '@/constants/icons';
@@ -77,11 +82,7 @@ export function Header() {
 
   function renderWelcome() {
     return (
-      <Typography
-        variant="h6"
-        component="div"
-        sx={HEADER_WELCOME_SX}
-      >
+      <Typography variant="h6" component="div" sx={HEADER_WELCOME_SX}>
         <Button component={Link} href="/profile" color="inherit" sx={BUTTON_STYLES.navigation}>
           Welcome{'   '}
           {user?.email}
@@ -137,13 +138,22 @@ export function Header() {
           >
             {links.map((link) => (
               <Fragment key={`${link.href}-${link.label}`}>
-                <Button component={Link} href={link.href} color="inherit" sx={HEADER_DRAWER_NAV_BUTTON_SX}>
+                <Button
+                  component={Link}
+                  href={link.href}
+                  color="inherit"
+                  sx={HEADER_DRAWER_NAV_BUTTON_SX}
+                >
                   {link.label}
                 </Button>
                 <Divider />
               </Fragment>
             ))}
-            <Button onClick={() => void handleLogout()} color="inherit" sx={HEADER_DRAWER_NAV_BUTTON_SX}>
+            <Button
+              onClick={() => void handleLogout()}
+              color="inherit"
+              sx={HEADER_DRAWER_NAV_BUTTON_SX}
+            >
               LOGOUT
             </Button>
           </Box>
@@ -157,9 +167,7 @@ export function Header() {
     // space that pushes the footer to the bottom of `.app-shell` on short pages.
     <Box sx={HEADER_ROOT_SX}>
       <AppBar position="static">
-        <Toolbar
-          sx={HEADER_TOOLBAR_SX}
-        >
+        <Toolbar sx={HEADER_TOOLBAR_SX}>
           {isAuthenticated ? (
             <>
               {renderWelcome()}

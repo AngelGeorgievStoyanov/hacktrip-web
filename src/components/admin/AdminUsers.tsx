@@ -22,7 +22,15 @@ import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
-import { ADMIN_USERS_TITLE_SX, ADMIN_USERS_GRID_SX, ADMIN_USER_CARD_SX, ADMIN_USER_CARD_CONTENT_SX, ADMIN_USER_CARD_IDENTITY_SX, ADMIN_USER_CARD_ACTIONS_SX, ADMIN_USERS_PAGINATION_SX } from '@/styles/presets/admin';
+import {
+  ADMIN_USERS_TITLE_SX,
+  ADMIN_USERS_GRID_SX,
+  ADMIN_USER_CARD_SX,
+  ADMIN_USER_CARD_CONTENT_SX,
+  ADMIN_USER_CARD_IDENTITY_SX,
+  ADMIN_USER_CARD_ACTIONS_SX,
+  ADMIN_USERS_PAGINATION_SX,
+} from '@/styles/presets/admin';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { hasRole } from '@/constants/roles';
 import { ImageLightbox } from '@/components/images/ImageLightbox';
@@ -86,13 +94,8 @@ export function AdminUsers() {
             {visibleUsers.map((u) => {
               const canManage = isAdmin || (isManager && u.role === 'user');
               return (
-                <Card
-                  key={u.id}
-                  sx={ADMIN_USER_CARD_SX}
-                >
-                  <CardContent
-                    sx={ADMIN_USER_CARD_CONTENT_SX}
-                  >
+                <Card key={u.id} sx={ADMIN_USER_CARD_SX}>
+                  <CardContent sx={ADMIN_USER_CARD_CONTENT_SX}>
                     <Stack direction="row" spacing={1.5} alignItems="center">
                       <Avatar
                         alt={`${u.firstName} ${u.lastName}`.trim() || 'User profile'}
@@ -156,9 +159,19 @@ export function AdminUsers() {
                     </Typography>
                   </CardContent>
                   <Divider />
-                  <Stack direction="row" spacing={1} justifyContent="center" sx={ADMIN_USER_CARD_ACTIONS_SX}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="center"
+                    sx={ADMIN_USER_CARD_ACTIONS_SX}
+                  >
                     {canManage ? (
-                      <Button component={Link} href={`/admin/users/${u.id}`} variant="contained" sx={BUTTON_STYLES.edit}>
+                      <Button
+                        component={Link}
+                        href={`/admin/users/${u.id}`}
+                        variant="contained"
+                        sx={BUTTON_STYLES.edit}
+                      >
                         Edit user
                       </Button>
                     ) : null}
@@ -195,7 +208,11 @@ export function AdminUsers() {
       />
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
         <Box sx={ADMIN_USERS_PAGINATION_SX}>
-          <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+          <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Previous
           </Button>
           <Typography>

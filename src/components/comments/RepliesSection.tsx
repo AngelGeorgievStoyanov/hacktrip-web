@@ -27,7 +27,14 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import type { CommentDto, SocialConfigTargetKey } from '@/types';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { REPLY_ITEM_SX, REPLY_EDIT_FORM_SX, REPLY_BODY_SX, REPLY_SOCIAL_ACTIONS_SX, REPLIES_SECTION_SX, REPLY_CREATE_FORM_SX } from '@/styles/presets/comments';
+import {
+  REPLY_ITEM_SX,
+  REPLY_EDIT_FORM_SX,
+  REPLY_BODY_SX,
+  REPLY_SOCIAL_ACTIONS_SX,
+  REPLIES_SECTION_SX,
+  REPLY_CREATE_FORM_SX,
+} from '@/styles/presets/comments';
 
 interface RepliesSectionProps {
   commentId: number;
@@ -140,10 +147,7 @@ export function RepliesSection({
     const hasReplyActions = canLike || canFavorite || canReport || canEdit || canDelete;
 
     return (
-      <Box
-        key={item.id}
-        sx={REPLY_ITEM_SX}
-      >
+      <Box key={item.id} sx={REPLY_ITEM_SX}>
         <Typography variant="subtitle2">{item.author.name}</Typography>
         {authenticated && editingId === item.id && canEdit ? (
           <Box
@@ -165,7 +169,7 @@ export function RepliesSection({
             <Tooltip title="Save reply" arrow>
               <span>
                 <IconButton
-            sx={ICON_ACTION_STYLES.save}
+                  sx={ICON_ACTION_STYLES.save}
                   type="submit"
                   aria-label="Save reply"
                   disabled={updateMutation.isPending}
@@ -176,7 +180,7 @@ export function RepliesSection({
             </Tooltip>
             <Tooltip title="Cancel edit" arrow>
               <IconButton
-            sx={ICON_ACTION_STYLES.cancel}
+                sx={ICON_ACTION_STYLES.cancel}
                 type="button"
                 aria-label="Cancel edit"
                 onClick={() => {
@@ -189,9 +193,7 @@ export function RepliesSection({
             </Tooltip>
           </Box>
         ) : (
-          <Typography sx={REPLY_BODY_SX}>
-            {item.comment}
-          </Typography>
+          <Typography sx={REPLY_BODY_SX}>{item.comment}</Typography>
         )}
         {authenticated && hasReplyActions ? (
           <Box sx={REPLY_SOCIAL_ACTIONS_SX}>
@@ -223,7 +225,7 @@ export function RepliesSection({
             {canEdit ? (
               <Tooltip title="Edit reply" arrow>
                 <IconButton
-            sx={ICON_ACTION_STYLES.edit}
+                  sx={ICON_ACTION_STYLES.edit}
                   size="small"
                   aria-label="Edit reply"
                   onClick={() => {
@@ -238,7 +240,7 @@ export function RepliesSection({
             {canDelete ? (
               <Tooltip title="Delete reply" arrow>
                 <IconButton
-            sx={ICON_ACTION_STYLES.delete}
+                  sx={ICON_ACTION_STYLES.delete}
                   size="small"
                   aria-label="Delete reply"
                   onClick={() =>
@@ -288,7 +290,7 @@ export function RepliesSection({
           <Tooltip title="Reply" arrow>
             <span>
               <IconButton
-            sx={ICON_ACTION_STYLES.submit}
+                sx={ICON_ACTION_STYLES.submit}
                 type="submit"
                 aria-label="Reply"
                 disabled={!reply.trim() || createMutation.isPending}
@@ -300,7 +302,7 @@ export function RepliesSection({
           </Tooltip>
           <Tooltip title="Cancel reply" arrow>
             <IconButton
-            sx={ICON_ACTION_STYLES.cancel}
+              sx={ICON_ACTION_STYLES.cancel}
               type="button"
               aria-label="Cancel reply"
               onClick={() => {

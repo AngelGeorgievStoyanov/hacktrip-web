@@ -8,14 +8,22 @@ import { BUTTON_STYLES } from '@/styles/presets/buttons';
 export const ADDRESS_AUTOCOMPLETE_ROOT_SX = { width: '100%', minWidth: 0 } as const;
 export const ADDRESS_AUTOCOMPLETE_ROW_SX = { width: '100%', minWidth: 0 } as const;
 export const ADDRESS_AUTOCOMPLETE_FIELD_WRAP_SX = {
-  flex: '1 1 0', width: '100%', minWidth: 0,
+  flex: '1 1 0',
+  width: '100%',
+  minWidth: 0,
   '& .MuiFormControl-root': { width: '100%' },
 } as const;
 export const ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX = {
-  flex: '0 1 auto', width: { xs: '100%', sm: 'auto' }, minWidth: 0, whiteSpace: 'nowrap',
+  flex: '0 1 auto',
+  width: { xs: '100%', sm: 'auto' },
+  minWidth: 0,
+  whiteSpace: 'nowrap',
 } as const;
 export const ADDRESS_AUTOCOMPLETE_EXTRA_ACTION_SX = {
-  flex: '1 1 0', width: '100%', minWidth: 0, display: 'flex',
+  flex: '1 1 0',
+  width: '100%',
+  minWidth: 0,
+  display: 'flex',
   '& > *': { width: '100%' },
 } as const;
 
@@ -37,30 +45,32 @@ export const MAP_ADDRESS_INPUT_SX = {
   },
 } as const;
 
-
 /** Shared renderer frame; each feature supplies its own map dimensions. */
-export const getGoogleMapFrameSx = (maxWidth: number | string, height: number | string) => ({
-  display: 'flex',
-  width: '100%',
-  maxWidth,
-  minWidth: 0,
-  height,
-} as const);
+export const getGoogleMapFrameSx = (maxWidth: number | string, height: number | string) =>
+  ({
+    display: 'flex',
+    width: '100%',
+    maxWidth,
+    minWidth: 0,
+    height,
+  }) as const;
 
 /** Loading placeholder mirrors the exact dimensions of the map it replaces. */
-export const getGoogleMapLoadingSx = (maxWidth: number | string, height: number | string) => ({
-  display: 'grid',
-  placeItems: 'center',
-  width: '100%',
-  maxWidth,
-  height,
-} as const);
+export const getGoogleMapLoadingSx = (maxWidth: number | string, height: number | string) =>
+  ({
+    display: 'grid',
+    placeItems: 'center',
+    width: '100%',
+    maxWidth,
+    height,
+  }) as const;
 
 /** Google Maps SDK mapContainerStyle config; this is not a React style prop. */
-export const getGoogleMapContainerStyle = (height: number | string) => ({
-  width: '100%',
-  height: typeof height === 'number' ? `${height}px` : height,
-} as const);
+export const getGoogleMapContainerStyle = (height: number | string) =>
+  ({
+    width: '100%',
+    height: typeof height === 'number' ? `${height}px` : height,
+  }) as const;
 
 /** Shared loading indicator size for the map renderer. */
 export const GOOGLE_MAP_LOADING_INDICATOR_SIZE = 28;
@@ -134,7 +144,6 @@ export const TRIP_MAP_SECTION_STEPPER_SX = {
   maxHeight: '25px',
 } as const;
 
-
 /** Feature-specific presentation is selected semantically; callers cannot inject sx objects. */
 export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
   form: { container: {}, input: {}, button: {} },
@@ -142,7 +151,8 @@ export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
     container: {
       width: { xs: '100%', sm: 'auto' },
       flex: { xs: '0 1 auto', sm: '1 1 190px' },
-      minWidth: 0, maxWidth: { xs: 420, sm: 420 },
+      minWidth: 0,
+      maxWidth: { xs: 420, sm: 420 },
       alignSelf: { xs: 'center', sm: 'stretch' },
     },
     input: { ...MAP_ADDRESS_INPUT_SX, width: '100%', minWidth: 0 },
@@ -152,9 +162,13 @@ export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
     container: { width: '100%' },
     input: { ...MAP_ADDRESS_INPUT_SX, m: 0 },
     button: {
-      m: 0, minHeight: 56, backgroundColor: 'primary.main',
+      m: 0,
+      minHeight: 56,
+      backgroundColor: 'primary.main',
       '&.Mui-disabled': {
-        backgroundColor: 'primary.main', color: UI_COLORS.text.inverse, opacity: 1,
+        backgroundColor: 'primary.main',
+        color: UI_COLORS.text.inverse,
+        opacity: 1,
       },
       ...BUTTON_STYLES.primary,
     },
@@ -162,20 +176,17 @@ export const ADDRESS_AUTOCOMPLETE_VARIANTS = {
 } as const;
 
 export const TRIP_LOCATION_REMOVE_MARKER_BUTTON_SX = {
-  ...BUTTON_STYLES.removeMarker, minHeight: 56, whiteSpace: 'nowrap',
+  ...BUTTON_STYLES.removeMarker,
+  minHeight: 56,
+  whiteSpace: 'nowrap',
 } as const;
 
-
 /** Compose the shared root frame with the selected feature layout. */
-export const getAddressAutocompleteRootSx = (variant: keyof typeof ADDRESS_AUTOCOMPLETE_VARIANTS) => [
-  ADDRESS_AUTOCOMPLETE_ROOT_SX,
-  ADDRESS_AUTOCOMPLETE_VARIANTS[variant].container,
-] as const;
+export const getAddressAutocompleteRootSx = (variant: keyof typeof ADDRESS_AUTOCOMPLETE_VARIANTS) =>
+  [ADDRESS_AUTOCOMPLETE_ROOT_SX, ADDRESS_AUTOCOMPLETE_VARIANTS[variant].container] as const;
 
 /** Compose the shared search action with the selected feature layout. */
 export const getAddressAutocompleteSearchButtonSx = (
   variant: keyof typeof ADDRESS_AUTOCOMPLETE_VARIANTS,
-) => [
-  ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX,
-  ADDRESS_AUTOCOMPLETE_VARIANTS[variant].button,
-] as const;
+) =>
+  [ADDRESS_AUTOCOMPLETE_SEARCH_BUTTON_SX, ADDRESS_AUTOCOMPLETE_VARIANTS[variant].button] as const;

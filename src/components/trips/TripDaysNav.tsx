@@ -42,11 +42,7 @@ export function TripDaysNav({ tripGroupId, days, selectedDay, onSelect }: TripDa
   const selectedPage = days.indexOf(selectedDay) + 1;
 
   return (
-    <AppBar
-      position="static"
-      data-trip-days-nav="true"
-      sx={TRIP_DAYS_NAV_APP_BAR_SX}
-    >
+    <AppBar position="static" data-trip-days-nav="true" sx={TRIP_DAYS_NAV_APP_BAR_SX}>
       <Box sx={TRIP_DAYS_NAV_CONTENT_SX}>
         <Pagination
           count={days.length}
@@ -65,7 +61,11 @@ export function TripDaysNav({ tripGroupId, days, selectedDay, onSelect }: TripDa
           }}
           renderItem={(item: PaginationRenderItemParams) =>
             item.type === 'page' ? (
-              <PaginationItem {...item} page={days[(item.page ?? 1) - 1]} sx={TRIP_DAY_PAGE_ITEM_SX} />
+              <PaginationItem
+                {...item}
+                page={days[(item.page ?? 1) - 1]}
+                sx={TRIP_DAY_PAGE_ITEM_SX}
+              />
             ) : (
               <PaginationItem {...item} sx={TRIP_DAY_PAGE_ITEM_SX} />
             )

@@ -77,9 +77,7 @@ export function FavoriteButton({
               invisible={count === 0}
               max={Number.MAX_SAFE_INTEGER}
               color="error"
-              sx={
-                getSocialBadgeSx(size)
-              }
+              sx={getSocialBadgeSx(size)}
             >
               {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
             </Badge>

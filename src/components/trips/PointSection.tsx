@@ -12,8 +12,12 @@ import { ExpandableText } from '@/components/common/ExpandableText';
 import type { CommentTarget } from '@/api/comments';
 import type { TripPoint } from '@/types';
 import {
-  POINT_SECTION_CARD_SX, POINT_SECTION_CONTENT_SX, POINT_SECTION_EMPTY_IMAGE_FRAME_SX,
-  POINT_SECTION_DESCRIPTION_SX, POINT_SECTION_ACTION_ROW_SX, POINT_SECTION_NOTE_SX,
+  POINT_SECTION_CARD_SX,
+  POINT_SECTION_CONTENT_SX,
+  POINT_SECTION_EMPTY_IMAGE_FRAME_SX,
+  POINT_SECTION_DESCRIPTION_SX,
+  POINT_SECTION_ACTION_ROW_SX,
+  POINT_SECTION_NOTE_SX,
   POINT_SECTION_TITLE_SX,
 } from '@/styles/presets/trip-details';
 import { POINT_SECTION_IMAGE_FRAME_SX } from '@/styles/presets/image-gallery';
@@ -36,10 +40,15 @@ export function PointSection({
   }
 
   const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', 'point');
-  const canCreateComment = isSocialOperationAllowed(socialConfig.data, 'comment', 'point', 'create');
-  const canShowComments = commentsEnabled && (
-    point.social.comments.count > 0 || (status === 'authenticated' && canCreateComment)
+  const canCreateComment = isSocialOperationAllowed(
+    socialConfig.data,
+    'comment',
+    'point',
+    'create',
   );
+  const canShowComments =
+    commentsEnabled &&
+    (point.social.comments.count > 0 || (status === 'authenticated' && canCreateComment));
 
   const pointTarget: CommentTarget = { type: 'point', pointId: point.id };
   const isPointOpen =

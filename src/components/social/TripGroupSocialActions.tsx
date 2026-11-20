@@ -3,14 +3,28 @@
 import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 import { useState } from 'react';
-import { FavoriteAddIcon, FavoriteRemoveIcon, LikeActiveIcon, LikeInactiveIcon, ReportContentIcon, ShareIcon, UnreportContentIcon } from '@/constants/icons';
+import {
+  FavoriteAddIcon,
+  FavoriteRemoveIcon,
+  LikeActiveIcon,
+  LikeInactiveIcon,
+  ReportContentIcon,
+  ShareIcon,
+  UnreportContentIcon,
+} from '@/constants/icons';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
 import { absoluteUrl } from '@/config';
 import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { SOCIAL_BADGE_COUNT_SX, SOCIAL_ERROR_TEXT_SX, STICKY_SOCIAL_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
+import {
+  SOCIAL_BADGE_COUNT_SX,
+  SOCIAL_ERROR_TEXT_SX,
+  STICKY_SOCIAL_SX,
+  TRIP_GROUP_SOCIAL_ACTIONS_SX,
+  getSocialLikeAnimationSx,
+} from '@/styles/presets/social';
 import { isSocialActionEnabled, isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
@@ -73,7 +87,12 @@ export function TripGroupSocialActions({
     reported ? 'delete' : 'create',
   );
   const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', 'tripGroup');
-  const canCreateComment = isSocialOperationAllowed(socialConfig.data, 'comment', 'tripGroup', 'create');
+  const canCreateComment = isSocialOperationAllowed(
+    socialConfig.data,
+    'comment',
+    'tripGroup',
+    'create',
+  );
 
   const isTripGroupCommentsOpen = open !== undefined ? open : internalTripGroupCommentsOpen;
 
@@ -87,9 +106,15 @@ export function TripGroupSocialActions({
 
   const hasVisibleActions = Boolean(
     socialConfig.error ||
-    (isAuthenticated && (canLike || canFavorite || canReport || likeMutation.error || favoriteMutation.error || reportActions.error)) ||
+    (isAuthenticated &&
+      (canLike ||
+        canFavorite ||
+        canReport ||
+        likeMutation.error ||
+        favoriteMutation.error ||
+        reportActions.error)) ||
     (commentsEnabled && (social.comments.count > 0 || (isAuthenticated && canCreateComment))) ||
-    isAuthenticated
+    isAuthenticated,
   );
 
   async function handleShare(): Promise<void> {
@@ -111,120 +136,128 @@ export function TripGroupSocialActions({
   return (
     <Box sx={STICKY_SOCIAL_SX}>
       <Box sx={TRIP_GROUP_SOCIAL_ACTIONS_SX}>
-      {socialConfig.error ? <SocialConfigStatus isLoading={false} error={socialConfig.error} /> : null}
-      {isAuthenticated && canLike ? (
-        <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
-          <span>
-            <IconButton
-              sx={ICON_ACTION_STYLES.like}
-              onClick={() => {
-                likeAnimation.requestPlay();
-                likeMutation.mutate();
-              }}
-              disabled={likeMutation.isPending}
-              aria-label={
-                liked ? `Unlike trip group (${likes} likes)` : `Like trip group (${likes} likes)`
-              }
-              aria-pressed={liked}
-              color={liked ? 'primary' : 'default'}
-            >
-              <Badge badgeContent={likes} invisible={likes === 0} max={BADGE_MAX} color="primary" sx={SOCIAL_BADGE_COUNT_SX}>
-                {liked ? (
-                  <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
-                ) : (
-                  <LikeInactiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
-                )}
-              </Badge>
-            </IconButton>
-          </span>
-        </Tooltip>
-      ) : null}
-      {isAuthenticated && canFavorite ? (
-        <Tooltip
-          title={favorited ? 'Remove trip group from favorites' : 'Add trip group to favorites'}
-          arrow
-        >
-          <span>
-            <IconButton
-              sx={ICON_ACTION_STYLES.favorite}
-              onClick={() => favoriteMutation.mutate()}
-              disabled={favoriteMutation.isPending}
-              aria-label={
-                favorited ? 'Remove trip group from favorites' : 'Add trip group to favorites'
-              }
-              aria-pressed={favorited}
-              color="primary"
-            >
-              <Badge
-                badgeContent={social.favorites ?? 0}
-                invisible={(social.favorites ?? 0) === 0}
-                max={BADGE_MAX}
-                color="primary"
-                sx={SOCIAL_BADGE_COUNT_SX}
-              >
-                {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
-              </Badge>
-            </IconButton>
-          </span>
-        </Tooltip>
-      ) : null}
-      {isAuthenticated && canReport ? (
-        <Tooltip title={reported ? 'Withdraw trip group report' : 'Report trip group'} arrow>
-          <span>
-            <IconButton
-              sx={ICON_ACTION_STYLES.report}
-              onClick={() => {
-                if (reported) {
-                  reportActions.unreport();
-                } else {
-                  reportActions.clearError();
-                  reportActions.report();
+        {socialConfig.error ? (
+          <SocialConfigStatus isLoading={false} error={socialConfig.error} />
+        ) : null}
+        {isAuthenticated && canLike ? (
+          <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
+            <span>
+              <IconButton
+                sx={ICON_ACTION_STYLES.like}
+                onClick={() => {
+                  likeAnimation.requestPlay();
+                  likeMutation.mutate();
+                }}
+                disabled={likeMutation.isPending}
+                aria-label={
+                  liked ? `Unlike trip group (${likes} likes)` : `Like trip group (${likes} likes)`
                 }
-              }}
-              disabled={reportActions.pending}
-              aria-label={reported ? 'Withdraw trip group report' : 'Report trip group'}
-              aria-pressed={reported}
-              color={reported ? 'error' : 'default'}
+                aria-pressed={liked}
+                color={liked ? 'primary' : 'default'}
+              >
+                <Badge
+                  badgeContent={likes}
+                  invisible={likes === 0}
+                  max={BADGE_MAX}
+                  color="primary"
+                  sx={SOCIAL_BADGE_COUNT_SX}
+                >
+                  {liked ? (
+                    <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
+                  ) : (
+                    <LikeInactiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
+                  )}
+                </Badge>
+              </IconButton>
+            </span>
+          </Tooltip>
+        ) : null}
+        {isAuthenticated && canFavorite ? (
+          <Tooltip
+            title={favorited ? 'Remove trip group from favorites' : 'Add trip group to favorites'}
+            arrow
+          >
+            <span>
+              <IconButton
+                sx={ICON_ACTION_STYLES.favorite}
+                onClick={() => favoriteMutation.mutate()}
+                disabled={favoriteMutation.isPending}
+                aria-label={
+                  favorited ? 'Remove trip group from favorites' : 'Add trip group to favorites'
+                }
+                aria-pressed={favorited}
+                color="primary"
+              >
+                <Badge
+                  badgeContent={social.favorites ?? 0}
+                  invisible={(social.favorites ?? 0) === 0}
+                  max={BADGE_MAX}
+                  color="primary"
+                  sx={SOCIAL_BADGE_COUNT_SX}
+                >
+                  {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
+                </Badge>
+              </IconButton>
+            </span>
+          </Tooltip>
+        ) : null}
+        {isAuthenticated && canReport ? (
+          <Tooltip title={reported ? 'Withdraw trip group report' : 'Report trip group'} arrow>
+            <span>
+              <IconButton
+                sx={ICON_ACTION_STYLES.report}
+                onClick={() => {
+                  if (reported) {
+                    reportActions.unreport();
+                  } else {
+                    reportActions.clearError();
+                    reportActions.report();
+                  }
+                }}
+                disabled={reportActions.pending}
+                aria-label={reported ? 'Withdraw trip group report' : 'Report trip group'}
+                aria-pressed={reported}
+                color={reported ? 'error' : 'default'}
+              >
+                {reported ? <UnreportContentIcon /> : <ReportContentIcon />}
+              </IconButton>
+            </span>
+          </Tooltip>
+        ) : null}
+        {commentsEnabled && (social.comments.count > 0 || (isAuthenticated && canCreateComment)) ? (
+          <CommentsToggle
+            count={social.comments.count}
+            open={isTripGroupCommentsOpen}
+            onToggle={handleToggleTripGroupComments}
+            canCreate={isAuthenticated && canCreateComment}
+          />
+        ) : null}
+        {isAuthenticated ? (
+          <Tooltip title={shareCopied ? 'Link copied' : 'Share trip group'} arrow>
+            <IconButton
+              sx={ICON_ACTION_STYLES.share}
+              onClick={() => void handleShare()}
+              aria-label={shareCopied ? 'Link copied' : 'Share trip group'}
             >
-              {reported ? <UnreportContentIcon /> : <ReportContentIcon />}
+              <ShareIcon />
             </IconButton>
-          </span>
-        </Tooltip>
-      ) : null}
-      {commentsEnabled && (social.comments.count > 0 || (isAuthenticated && canCreateComment)) ? (
-        <CommentsToggle
-          count={social.comments.count}
-          open={isTripGroupCommentsOpen}
-          onToggle={handleToggleTripGroupComments}
-          canCreate={isAuthenticated && canCreateComment}
-        />
-      ) : null}
-      {isAuthenticated ? (
-      <Tooltip title={shareCopied ? 'Link copied' : 'Share trip group'} arrow>
-        <IconButton
-          sx={ICON_ACTION_STYLES.share}
-          onClick={() => void handleShare()}
-          aria-label={shareCopied ? 'Link copied' : 'Share trip group'}
-        >
-          <ShareIcon />
-        </IconButton>
-      </Tooltip>
-      ) : null}
-      {isAuthenticated && likeMutation.error ? (
-        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
-          {getGenericErrorMessage(likeMutation.error)}
-        </Box>
-      ) : null}
-      {isAuthenticated && favoriteMutation.error ? (
-        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
-          {getGenericErrorMessage(favoriteMutation.error)}
-        </Box>
-      ) : null}
-      {isAuthenticated && reportActions.error ? (
-        <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
-          {reportActions.error}
-        </Box>
-      ) : null}
+          </Tooltip>
+        ) : null}
+        {isAuthenticated && likeMutation.error ? (
+          <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
+            {getGenericErrorMessage(likeMutation.error)}
+          </Box>
+        ) : null}
+        {isAuthenticated && favoriteMutation.error ? (
+          <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
+            {getGenericErrorMessage(favoriteMutation.error)}
+          </Box>
+        ) : null}
+        {isAuthenticated && reportActions.error ? (
+          <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
+            {reportActions.error}
+          </Box>
+        ) : null}
       </Box>
     </Box>
   );

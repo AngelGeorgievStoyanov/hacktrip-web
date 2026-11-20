@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type Ref,
-} from 'react';
+import { useCallback, useEffect, useImperativeHandle, useRef, useState, type Ref } from 'react';
 import { Box } from '@mui/material';
 import { SCRAMBLE_HEADING_SX } from '@/styles/presets/typography';
 
@@ -77,12 +70,7 @@ export function ScrambleHeading({ text, ref }: ScrambleHeadingProps) {
   useImperativeHandle(ref, () => ({ scramble }), [scramble]);
 
   return (
-    <Box
-      component="h1"
-      aria-label={text}
-      onMouseOver={scramble}
-      sx={SCRAMBLE_HEADING_SX}
-    >
+    <Box component="h1" aria-label={text} onMouseOver={scramble} sx={SCRAMBLE_HEADING_SX}>
       <span aria-hidden="true">{display}</span>
     </Box>
   );

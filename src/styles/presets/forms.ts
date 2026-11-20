@@ -73,7 +73,6 @@ export const AUTH_FORM_BACK_ACTION_SX = {
   mt: UI_SPACING.xs,
 } as const;
 
-
 /** Point form panel variant used below the map in the Create Point editor. */
 export const POINT_FORM_PANEL_WITH_TOP_MARGIN_SX = {
   ...POINT_FORM_PANEL_SX,
@@ -442,13 +441,14 @@ export const EDIT_POINT_IMAGES_SECTION_SX = {
   mt: { xs: 0, lg: 1 },
   '@media (max-width:1020px)': { order: 0 },
 } as const;
-export const getEditPointImageGridSx = (imageCount: number) => ({
-  width: '100%',
-  display: 'grid',
-  gridTemplateColumns: `repeat(${Math.min(imageCount, 3)}, minmax(0, 1fr))`,
-  gap: 1,
-  alignItems: 'start',
-} as const);
+export const getEditPointImageGridSx = (imageCount: number) =>
+  ({
+    width: '100%',
+    display: 'grid',
+    gridTemplateColumns: `repeat(${Math.min(imageCount, 3)}, minmax(0, 1fr))`,
+    gap: 1,
+    alignItems: 'start',
+  }) as const;
 export const EDIT_POINT_IMAGE_TILE_SX = {
   position: 'relative',
   width: '100%',
@@ -473,21 +473,20 @@ export const EDIT_POINT_IMAGE_PLACEHOLDER_SX = {
   mx: 'auto',
 } as const;
 
-
 /** Runtime wrapper state for the third-party CAPTCHA widget. */
-export const getCaptchaContainerSx = (disabled: boolean) => ({
-  display: 'flex',
-  justifyContent: 'center',
-  minHeight: 78,
-  pointerEvents: disabled ? 'none' : 'auto',
-  opacity: disabled ? 0.6 : 1,
-} as const);
+export const getCaptchaContainerSx = (disabled: boolean) =>
+  ({
+    display: 'flex',
+    justifyContent: 'center',
+    minHeight: 78,
+    pointerEvents: disabled ? 'none' : 'auto',
+    opacity: disabled ? 0.6 : 1,
+  }) as const;
 
 /** Invalid password-requirement icon uses the shared disabled-text color. */
 export const PASSWORD_REQUIREMENT_INVALID_ICON_SX = {
   color: 'text.disabled',
 } as const;
-
 
 /** Full-width error/success alerts used inside stacked forms. */
 export const FORM_FULL_WIDTH_ALERT_SX = {

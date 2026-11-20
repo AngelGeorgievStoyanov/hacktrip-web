@@ -105,10 +105,7 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
 
   return (
     <>
-      <Box
-        data-trip-sticky-header="true"
-        sx={getTripDetailsStickyHeaderSx()}
-      >
+      <Box data-trip-sticky-header="true" sx={getTripDetailsStickyHeaderSx()}>
         <TripDaysNav
           tripGroupId={group.id}
           days={group.days.map((current) => current.dayNumber)}
@@ -116,14 +113,14 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           onSelect={handleSelectDay}
         />
         <TripGroupSocialActions
-            tripGroupId={group.id}
-            social={group.social}
-            shareTitle={day.title ?? day.destination ?? 'Trip'}
-            shareText={day.description ?? undefined}
-            shareDayNumber={day.dayNumber}
-            open={tripGroupCommentsOpen}
-            onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
-          />
+          tripGroupId={group.id}
+          social={group.social}
+          shareTitle={day.title ?? day.destination ?? 'Trip'}
+          shareText={day.description ?? undefined}
+          shareDayNumber={day.dayNumber}
+          open={tripGroupCommentsOpen}
+          onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
+        />
       </Box>
 
       <Box className={styles.tripDetailsPageLayout}>

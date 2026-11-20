@@ -113,7 +113,11 @@ export function AdminReports() {
       ) : null}
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
         <Box sx={ADMIN_PAGINATION_SX}>
-          <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+          <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Previous
           </Button>
           <Typography>

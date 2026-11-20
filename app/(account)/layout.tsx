@@ -14,7 +14,9 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   return (
     <RequireAuth>
       <Header />
-      <Box component="main" sx={ACCOUNT_LAYOUT_MAIN_SX}>{children}</Box>
+      <Box component="main" sx={ACCOUNT_LAYOUT_MAIN_SX}>
+        {children}
+      </Box>
       <Footer />
     </RequireAuth>
   );

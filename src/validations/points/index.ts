@@ -29,11 +29,19 @@ export const pointCreateSchema = z
     ),
     lat: requiredNumber(
       { min: LATITUDE_MIN, max: LATITUDE_MAX },
-      { required: 'Latitude is required.', min: 'Latitude must be at least -90.', max: 'Latitude must not exceed 90.' },
+      {
+        required: 'Latitude is required.',
+        min: 'Latitude must be at least -90.',
+        max: 'Latitude must not exceed 90.',
+      },
     ),
     lng: requiredNumber(
       { min: LONGITUDE_MIN, max: LONGITUDE_MAX },
-      { required: 'Longitude is required.', min: 'Longitude must be at least -180.', max: 'Longitude must not exceed 180.' },
+      {
+        required: 'Longitude is required.',
+        min: 'Longitude must be at least -180.',
+        max: 'Longitude must not exceed 180.',
+      },
     ),
   })
   .strict();
@@ -57,10 +65,18 @@ export const pointUpdateSchema = z
 export const pointFormSchema = pointCreateSchema.omit({ tripId: true }).extend({
   lat: requiredNumberInput(
     { min: LATITUDE_MIN, max: LATITUDE_MAX },
-    { required: 'Latitude is required.', min: 'Latitude must be at least -90.', max: 'Latitude must not exceed 90.' },
+    {
+      required: 'Latitude is required.',
+      min: 'Latitude must be at least -90.',
+      max: 'Latitude must not exceed 90.',
+    },
   ),
   lng: requiredNumberInput(
     { min: LONGITUDE_MIN, max: LONGITUDE_MAX },
-    { required: 'Longitude is required.', min: 'Longitude must be at least -180.', max: 'Longitude must not exceed 180.' },
+    {
+      required: 'Longitude is required.',
+      min: 'Longitude must be at least -180.',
+      max: 'Longitude must not exceed 180.',
+    },
   ),
 });

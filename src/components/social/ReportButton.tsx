@@ -9,7 +9,11 @@ import { useReportActions } from '@/hooks/useReportActions';
 import { Alert, Box, Button, IconButton, Tooltip } from '@mui/material';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { SOCIAL_ERROR_TEXT_SX, REPORT_BUTTON_TOOLTIP_WRAPPER_SX, REPORT_BUTTON_REASON_FIELD_SX } from '@/styles/presets/social';
+import {
+  SOCIAL_ERROR_TEXT_SX,
+  REPORT_BUTTON_TOOLTIP_WRAPPER_SX,
+  REPORT_BUTTON_REASON_FIELD_SX,
+} from '@/styles/presets/social';
 import type { ReportTargetTypeInput } from '@/types';
 
 interface ReportButtonProps {

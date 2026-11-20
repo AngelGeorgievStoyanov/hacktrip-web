@@ -110,7 +110,6 @@ export const COLUMN_STACK_SX = {
   gap: UI_SPACING.md,
 } as const;
 
-
 /** Vertical point-card collection used by the Create Point flow. */
 export const POINT_LIST_SX = {
   display: 'flex',
@@ -118,7 +117,6 @@ export const POINT_LIST_SX = {
   alignItems: 'center',
   minWidth: 0,
 } as const;
-
 
 /** Create Point route composition; responsive columns remain feature-specific. */
 export const CREATE_POINT_PAGE_SX = {
@@ -172,15 +170,16 @@ export const ACCOUNT_PROFILE_PAGE_SX = {
   minHeight: 'calc(100vh - 64px)',
   py: { xs: 2, sm: 3 },
 } as const;
-export const ACCOUNT_PROFILE_PANEL_SX = (theme: Theme) => ({
-  ...PANEL_SX(theme),
-  boxSizing: 'border-box',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  gap: 2,
-  width: '100%',
-  maxWidth: 600,
-  height: 'fit-content',
-  p: { xs: 2, sm: '30px' },
-} as const);
+export const ACCOUNT_PROFILE_PANEL_SX = (theme: Theme) =>
+  ({
+    ...PANEL_SX(theme),
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 2,
+    width: '100%',
+    maxWidth: 600,
+    height: 'fit-content',
+    p: { xs: 2, sm: '30px' },
+  }) as const;

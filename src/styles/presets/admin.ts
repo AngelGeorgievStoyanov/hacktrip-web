@@ -57,10 +57,11 @@ export const ADMIN_ROUTE_DETAILS_SX = {
   gap: 2,
   p: 2,
 } as const;
-export const getAdminRouteExpandedCellSx = (isExpanded: boolean) => ({
-  p: 0,
-  borderBottom: isExpanded ? undefined : 0,
-} as const);
+export const getAdminRouteExpandedCellSx = (isExpanded: boolean) =>
+  ({
+    p: 0,
+    borderBottom: isExpanded ? undefined : 0,
+  }) as const;
 
 /** Missing-thumbnail review and preview contracts. */
 export const ADMIN_IMAGES_PAGE_SX = { mt: 2 } as const;
@@ -128,7 +129,11 @@ export const ADMIN_USER_FORM_BACK_SX = {
 } as const;
 
 /** Password-field disclosure stack in the admin user editor. */
-export const ADMIN_USER_PASSWORD_FIELDS_SX = { display: 'flex', flexDirection: 'column', gap: 1 } as const;
+export const ADMIN_USER_PASSWORD_FIELDS_SX = {
+  display: 'flex',
+  flexDirection: 'column',
+  gap: 1,
+} as const;
 
 /** Admin section navigation layout; active/inactive button states remain MUI variants. */
 export const ADMIN_NAVIGATION_SX = {

@@ -57,9 +57,7 @@ export function LiveTracker() {
     <Stack spacing={2}>
       {error ? <Alert severity="warning">{error}</Alert> : null}
 
-      <Box
-        sx={getLiveTrackingMapFrameSx(MAP_CONTAINER_HEIGHT)}
-      >
+      <Box sx={getLiveTrackingMapFrameSx(MAP_CONTAINER_HEIGHT)}>
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={LIVE_TRACKING_MAP_CONTAINER_STYLE}
@@ -74,10 +72,7 @@ export function LiveTracker() {
             onDrag={() => setFollow(false)}
           >
             {path.length > 1 ? (
-              <PolylineF
-                path={path}
-                options={LIVE_TRACKING_POLYLINE_OPTIONS}
-              />
+              <PolylineF path={path} options={LIVE_TRACKING_POLYLINE_OPTIONS} />
             ) : null}
             {current ? <MarkerF position={{ lat: current.lat, lng: current.lng }} /> : null}
           </GoogleMap>
@@ -90,11 +85,21 @@ export function LiveTracker() {
 
       <Stack sx={LIVE_TRACKING_ACTIONS_SX}>
         {tracking ? (
-          <Button type="button" variant="contained" sx={LIVE_TRACKING_BUTTON_STYLES.stop} onClick={stop}>
+          <Button
+            type="button"
+            variant="contained"
+            sx={LIVE_TRACKING_BUTTON_STYLES.stop}
+            onClick={stop}
+          >
             Stop tracking
           </Button>
         ) : (
-          <Button type="button" variant="contained" sx={LIVE_TRACKING_BUTTON_STYLES.start} onClick={start}>
+          <Button
+            type="button"
+            variant="contained"
+            sx={LIVE_TRACKING_BUTTON_STYLES.start}
+            onClick={start}
+          >
             Start tracking
           </Button>
         )}
@@ -109,16 +114,9 @@ export function LiveTracker() {
         </Typography>
       </Stack>
 
-      <Box
-        component="dl"
-        sx={LIVE_TRACKING_STATS_GRID_SX}
-      >
+      <Box component="dl" sx={LIVE_TRACKING_STATS_GRID_SX}>
         {stats.map((stat) => (
-          <Box
-            key={stat.label}
-            component="div"
-            sx={LIVE_TRACKING_STAT_SX}
-          >
+          <Box key={stat.label} component="div" sx={LIVE_TRACKING_STAT_SX}>
             <Typography component="dt" variant="caption" color="text.secondary">
               {stat.label}
             </Typography>

@@ -4,14 +4,15 @@ import { ROUTE_CONTENT_PADDING } from '@/constants/ui/spacing';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 /** Live tracking map frame and Google Maps SDK configuration. */
-export const getLiveTrackingMapFrameSx = (height: number) => ({
-  width: '100%',
-  height,
-  border: 1,
-  borderColor: 'divider',
-  borderRadius: UI_SHAPE.sxRadius1,
-  overflow: 'hidden',
-} as const);
+export const getLiveTrackingMapFrameSx = (height: number) =>
+  ({
+    width: '100%',
+    height,
+    border: 1,
+    borderColor: 'divider',
+    borderRadius: UI_SHAPE.sxRadius1,
+    overflow: 'hidden',
+  }) as const;
 
 /** Google Maps API configuration object, not a React style prop. */
 export const LIVE_TRACKING_MAP_CONTAINER_STYLE = {

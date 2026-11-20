@@ -31,7 +31,6 @@ export const HOME_INTRO_SX: SxProps<Theme> = {
   lineHeight: 1.6,
 };
 
-
 /** Empty TripList state typography; preserves the former module's dimensions. */
 export const TRIP_LIST_EMPTY_TITLE_SX = {
   m: '2px',
@@ -45,7 +44,6 @@ export const TRIP_LIST_EMPTY_TEXT_SX = {
   fontSize: '1rem',
   ...HEADING_TEXT_SX,
 } as const;
-
 
 /** Empty PointList prompt. */
 export const POINT_LIST_EMPTY_SX = {
@@ -64,7 +62,6 @@ export const EXPANDABLE_TEXT_COLLAPSED_SX = {
   overflow: 'hidden',
 } as const;
 
-
 /** Admin route h1: explicit semantic heading role matching the existing browser h1 scale. */
 export const ADMIN_PAGE_TITLE_SX = {
   fontSize: '2em',
@@ -72,7 +69,6 @@ export const ADMIN_PAGE_TITLE_SX = {
   marginBlockStart: '0.67em',
   marginBlockEnd: '0.67em',
 } as const;
-
 
 /** Not Found page h3/h4 roles preserve the existing browser heading scale. */
 export const NOT_FOUND_TITLE_SX = {

@@ -1,11 +1,8 @@
-"use client";
+'use client';
 
 import { Box } from '@mui/material';
 import { ProfileForm } from '@/components/auth/ProfileForm';
-import {
-  ACCOUNT_PROFILE_PAGE_SX,
-  ACCOUNT_PROFILE_PANEL_SX,
-} from '@/styles/presets/layouts';
+import { ACCOUNT_PROFILE_PAGE_SX, ACCOUNT_PROFILE_PANEL_SX } from '@/styles/presets/layouts';
 
 /**
  * Client boundary for the profile page's theme-aware MUI sx preset.

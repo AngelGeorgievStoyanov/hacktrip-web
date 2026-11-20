@@ -23,10 +23,17 @@ import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
 import type { TripGroupDay, TripGroupResponse } from '@/types';
 import {
-  TRIP_DETAILS_CARD_SX, TRIP_DETAILS_HEADER_SX, TRIP_DETAILS_TITLE_SX,
-  TRIP_DETAILS_PRICE_ROW_SX, TRIP_DETAILS_PRICE_LABEL_SX, TRIP_DETAILS_PRICE_VALUE_SX,
-  TRIP_DETAILS_METADATA_SX, TRIP_DETAILS_DESCRIPTION_SX, getTripDetailsDescriptionToggleSx,
-  TRIP_DETAILS_ACTIONS_COLUMN_SX, TRIP_DETAILS_SOCIAL_ROW_SX,
+  TRIP_DETAILS_CARD_SX,
+  TRIP_DETAILS_HEADER_SX,
+  TRIP_DETAILS_TITLE_SX,
+  TRIP_DETAILS_PRICE_ROW_SX,
+  TRIP_DETAILS_PRICE_LABEL_SX,
+  TRIP_DETAILS_PRICE_VALUE_SX,
+  TRIP_DETAILS_METADATA_SX,
+  TRIP_DETAILS_DESCRIPTION_SX,
+  getTripDetailsDescriptionToggleSx,
+  TRIP_DETAILS_ACTIONS_COLUMN_SX,
+  TRIP_DETAILS_SOCIAL_ROW_SX,
 } from '@/styles/presets/trip-details';
 import { TRIP_ACTION_BUTTON_LAYOUT_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 
@@ -81,12 +88,8 @@ export function TripDetails({
   const handleExpandClick = () => setExpanded(!expanded);
 
   return (
-    <Card
-      sx={TRIP_DETAILS_CARD_SX}
-    >
-      <Box
-        sx={TRIP_DETAILS_HEADER_SX}
-      >
+    <Card sx={TRIP_DETAILS_CARD_SX}>
+      <Box sx={TRIP_DETAILS_HEADER_SX}>
         <Typography variant="h5" component="div" sx={TRIP_DETAILS_TITLE_SX}>
           TRIP NAME : {day.title ?? tripGroup.days[0]?.title ?? 'Trip'}
         </Typography>
@@ -141,20 +144,12 @@ export function TripDetails({
       {day.description ? (
         <>
           {day.description.length < 150 ? (
-            <Typography
-              variant="subtitle1"
-              component="div"
-              sx={TRIP_DETAILS_DESCRIPTION_SX}
-            >
+            <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_DESCRIPTION_SX}>
               Description: {day.description}
             </Typography>
           ) : (
             <>
-              <Typography
-                variant="subtitle1"
-                component="div"
-                sx={TRIP_DETAILS_DESCRIPTION_SX}
-              >
+              <Typography variant="subtitle1" component="div" sx={TRIP_DETAILS_DESCRIPTION_SX}>
                 Description: {day.description.slice(0, 150)}...
               </Typography>
               <CardActions disableSpacing>
@@ -183,9 +178,7 @@ export function TripDetails({
           : 'FOR THIS TRIP DONT HAVE POINTS'}
       </Typography>
 
-      <Box
-        sx={TRIP_DETAILS_ACTIONS_COLUMN_SX}
-      >
+      <Box sx={TRIP_DETAILS_ACTIONS_COLUMN_SX}>
         <TripActions tripGroup={tripGroup} tripId={day.id} section="navigation" />
         <TripActions
           tripGroup={tripGroup}
@@ -193,11 +186,7 @@ export function TripDetails({
           section="management"
           onDayDeleted={onDayDeleted}
         />
-        <BackButton
-          component={Link}
-          href="/trips"
-          sx={TRIP_ACTION_BUTTON_LAYOUT_SX}
-        >
+        <BackButton component={Link} href="/trips" sx={TRIP_ACTION_BUTTON_LAYOUT_SX}>
           BACK
         </BackButton>
       </Box>

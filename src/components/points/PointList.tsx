@@ -20,7 +20,11 @@ export function PointList({ points, onEdit, onDelete, onMove, disabled = false }
   );
 
   if (sortedPoints.length === 0) {
-    return <Typography variant="h5" sx={POINT_LIST_EMPTY_SX}>ADD YOUR FIRST POINT</Typography>;
+    return (
+      <Typography variant="h5" sx={POINT_LIST_EMPTY_SX}>
+        ADD YOUR FIRST POINT
+      </Typography>
+    );
   }
 
   return (

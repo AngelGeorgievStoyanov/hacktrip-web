@@ -35,7 +35,9 @@ export function isSocialActionEnabled(
   targetKey: SocialConfigTargetKey,
 ): boolean {
   const actionConfig = config?.social.find((item) => item.key === action);
-  return Boolean(actionConfig?.isActive && actionConfig.targets.some((item) => item.key === targetKey));
+  return Boolean(
+    actionConfig?.isActive && actionConfig.targets.some((item) => item.key === targetKey),
+  );
 }
 
 export function isSocialOperationAllowed(

@@ -11,11 +11,20 @@ import { FavoriteButton } from './FavoriteButton';
 import { ReportButton } from './ReportButton';
 import { SocialConfigStatus } from './SocialConfigStatus';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
-import { isSocialActionEnabled, isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
+import {
+  isSocialActionEnabled,
+  isSocialOperationAllowed,
+  socialConfigTargetKey,
+} from '@/lib/socialConfig';
 import { CommentsSection } from '@/components/comments/CommentsSection';
 import type { CommentTarget } from '@/api/comments';
 import type { SocialState, SocialTargetTypeInput } from '@/types';
-import { SOCIAL_BADGE_COUNT_SX, SOCIAL_ENGAGEMENT_INLINE_SX, getSocialEngagementActionsSx, getSocialOverlaySx } from '@/styles/presets/social';
+import {
+  SOCIAL_BADGE_COUNT_SX,
+  SOCIAL_ENGAGEMENT_INLINE_SX,
+  getSocialEngagementActionsSx,
+  getSocialOverlaySx,
+} from '@/styles/presets/social';
 
 interface EngagementBarProps {
   targetType: SocialTargetTypeInput;
@@ -73,9 +82,15 @@ export function EngagementBar({
     social.reportedByMe ? 'delete' : 'create',
   );
   const commentsEnabled = isSocialActionEnabled(socialConfig.data, 'comment', targetKey);
-  const canCreateComment = isSocialOperationAllowed(socialConfig.data, 'comment', targetKey, 'create');
+  const canCreateComment = isSocialOperationAllowed(
+    socialConfig.data,
+    'comment',
+    targetKey,
+    'create',
+  );
   const showCommentToggle =
-    showComments && commentsEnabled &&
+    showComments &&
+    commentsEnabled &&
     (social.comments.count > 0 || (status === 'authenticated' && canCreateComment));
   const hasVisibleActions =
     (status === 'authenticated' && (canLike || (showFavorite && canFavorite) || canReport)) ||
@@ -114,9 +129,7 @@ export function EngagementBar({
       {showConfigStatus ? (
         <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
       ) : null}
-      <Box
-        sx={getSocialEngagementActionsSx(actionsJustify)}
-      >
+      <Box sx={getSocialEngagementActionsSx(actionsJustify)}>
         {status === 'authenticated' ? (
           <>
             {canLike ? (
@@ -160,7 +173,7 @@ export function EngagementBar({
             arrow
           >
             <IconButton
-            sx={ICON_ACTION_STYLES.disclosure}
+              sx={ICON_ACTION_STYLES.disclosure}
               onClick={toggleComments}
               aria-label={
                 isCommentsOpen
@@ -192,7 +205,12 @@ export function EngagementBar({
         ) : null}
       </Box>
       {!externallyControlledComments && showCommentToggle && isCommentsOpen ? (
-        <CommentsSection target={commentTarget} defaultFormOpen={status === 'authenticated' && canCreateComment && social.comments.count === 0} />
+        <CommentsSection
+          target={commentTarget}
+          defaultFormOpen={
+            status === 'authenticated' && canCreateComment && social.comments.count === 0
+          }
+        />
       ) : null}
     </Box>
   );

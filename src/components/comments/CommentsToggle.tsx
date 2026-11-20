@@ -25,7 +25,13 @@ interface CommentsToggleProps {
  * The toggle lives in the trip information card while the list itself is rendered in a
  * separate section, so both can evolve independently (for example with comment sorting).
  */
-export function CommentsToggle({ count, open, onToggle, canCreate, emptyLabel }: CommentsToggleProps) {
+export function CommentsToggle({
+  count,
+  open,
+  onToggle,
+  canCreate,
+  emptyLabel,
+}: CommentsToggleProps) {
   return (
     <Box sx={COMMENTS_TOGGLE_ROW_SX}>
       {!open && count === 0 && emptyLabel ? (
@@ -38,7 +44,7 @@ export function CommentsToggle({ count, open, onToggle, canCreate, emptyLabel }:
         arrow
       >
         <IconButton
-            sx={ICON_ACTION_STYLES.disclosure}
+          sx={ICON_ACTION_STYLES.disclosure}
           onClick={onToggle}
           aria-label={open ? 'Hide comments' : count > 0 ? `Show ${count} comments` : 'Add comment'}
           aria-expanded={open}
@@ -47,7 +53,12 @@ export function CommentsToggle({ count, open, onToggle, canCreate, emptyLabel }:
           {open ? (
             <CloseIcon />
           ) : count > 0 ? (
-            <Badge badgeContent={count} max={Number.MAX_SAFE_INTEGER} color="primary" sx={SOCIAL_BADGE_COUNT_SX}>
+            <Badge
+              badgeContent={count}
+              max={Number.MAX_SAFE_INTEGER}
+              color="primary"
+              sx={SOCIAL_BADGE_COUNT_SX}
+            >
               <CommentIcon />
             </Badge>
           ) : canCreate ? (

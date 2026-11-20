@@ -2,7 +2,11 @@ import { createTheme } from '@mui/material/styles';
 import { UI_COLORS } from '@/constants/ui/colors';
 import { ABOUT_EDITORIAL_TYPOGRAPHY, TYPOGRAPHY } from '@/constants/ui/typography';
 import { MUI_BREAKPOINTS } from '@/constants/ui/breakpoints';
-import { ABOUT_PAGE_MOBILE_PADDING, PAGE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
+import {
+  ABOUT_PAGE_MOBILE_PADDING,
+  PAGE_CONTENT_PADDING,
+  UI_SPACING,
+} from '@/constants/ui/spacing';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { UI_Z_INDEX } from '@/constants/ui/z-index';
 import { UI_SHAPE } from '@/constants/ui/shape';

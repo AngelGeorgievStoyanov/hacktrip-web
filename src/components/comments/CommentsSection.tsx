@@ -1,7 +1,15 @@
 'use client';
 
 import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
-import { AddCommentIcon, CloseIcon, ConfirmIcon, DeleteActionIcon, EditIcon, ReplyIcon, SendIcon } from '@/constants/icons';
+import {
+  AddCommentIcon,
+  CloseIcon,
+  ConfirmIcon,
+  DeleteActionIcon,
+  EditIcon,
+  ReplyIcon,
+  SendIcon,
+} from '@/constants/icons';
 
 import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -26,19 +34,32 @@ import { FavoriteButton } from '@/components/social/FavoriteButton';
 import { RepliesSection } from '@/components/comments/RepliesSection';
 import { SocialConfigStatus } from '@/components/social/SocialConfigStatus';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { isSocialActionEnabled, isSocialOperationAllowed, socialConfigTargetKey } from '@/lib/socialConfig';
+import {
+  isSocialActionEnabled,
+  isSocialOperationAllowed,
+  socialConfigTargetKey,
+} from '@/lib/socialConfig';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { invalidateSocialQueries } from '@/lib/socialQuerySync';
 import {
-  COMMENTS_PANEL_SX, COMMENTS_TITLE_SX, COMMENT_LIST_SX, COMMENT_CARD_SX,
-  COMMENT_EDIT_FORM_SX, COMMENT_EDIT_ACTIONS_SX, COMMENT_AUTHOR_ROW_SX,
-  COMMENT_AUTHOR_AVATAR_SX, COMMENT_AUTHOR_NAME_SX, COMMENT_BODY_SX,
-  COMMENT_TIMESTAMP_SX, COMMENT_SOCIAL_ACTIONS_SX, COMMENT_CREATE_FORM_SX,
-  COMMENT_CREATE_ACTION_ROW_SX, COMMENT_ANONYMOUS_HINT_SX,
+  COMMENTS_PANEL_SX,
+  COMMENTS_TITLE_SX,
+  COMMENT_LIST_SX,
+  COMMENT_CARD_SX,
+  COMMENT_EDIT_FORM_SX,
+  COMMENT_EDIT_ACTIONS_SX,
+  COMMENT_AUTHOR_ROW_SX,
+  COMMENT_AUTHOR_AVATAR_SX,
+  COMMENT_AUTHOR_NAME_SX,
+  COMMENT_BODY_SX,
+  COMMENT_TIMESTAMP_SX,
+  COMMENT_SOCIAL_ACTIONS_SX,
+  COMMENT_CREATE_FORM_SX,
+  COMMENT_CREATE_ACTION_ROW_SX,
+  COMMENT_ANONYMOUS_HINT_SX,
 } from '@/styles/presets/comments';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { getSocialBadgeSx } from '@/styles/presets/social';
-
 
 function commentKey(target: CommentTarget, viewerCacheKey: string): unknown[] {
   switch (target.type) {
@@ -271,7 +292,7 @@ export function CommentsSection({
                     <Tooltip title="Save comment" arrow>
                       <span>
                         <IconButton
-            sx={ICON_ACTION_STYLES.save}
+                          sx={ICON_ACTION_STYLES.save}
                           type="submit"
                           aria-label="Save comment"
                           disabled={updateMutation.isPending}
@@ -282,7 +303,7 @@ export function CommentsSection({
                     </Tooltip>
                     <Tooltip title="Cancel edit" arrow>
                       <IconButton
-            sx={ICON_ACTION_STYLES.cancel}
+                        sx={ICON_ACTION_STYLES.cancel}
                         type="button"
                         aria-label="Cancel edit"
                         onClick={() => setEditingId(null)}
@@ -295,10 +316,7 @@ export function CommentsSection({
               ) : (
                 <>
                   <Box sx={COMMENT_AUTHOR_ROW_SX}>
-                    <Avatar
-                      alt={commentItem.author.name}
-                      sx={COMMENT_AUTHOR_AVATAR_SX}
-                    >
+                    <Avatar alt={commentItem.author.name} sx={COMMENT_AUTHOR_AVATAR_SX}>
                       {initials(commentItem.author.name)}
                     </Avatar>
                     <Typography variant="subtitle1" component="h3" sx={COMMENT_AUTHOR_NAME_SX}>
@@ -306,11 +324,7 @@ export function CommentsSection({
                     </Typography>
                   </Box>
 
-                  <Typography
-                    variant="body1"
-                    component="p"
-                    sx={COMMENT_BODY_SX}
-                  >
+                  <Typography variant="body1" component="p" sx={COMMENT_BODY_SX}>
                     {commentItem.comment}
                   </Typography>
 
@@ -323,9 +337,7 @@ export function CommentsSection({
                   ) : null}
 
                   {isAuthenticated && hasCommentActions ? (
-                    <Box
-                      sx={COMMENT_SOCIAL_ACTIONS_SX}
-                    >
+                    <Box sx={COMMENT_SOCIAL_ACTIONS_SX}>
                       {canLike ? (
                         <LikeButton
                           targetType="comment"
@@ -356,7 +368,7 @@ export function CommentsSection({
                       {canEdit ? (
                         <Tooltip title="Edit comment" arrow>
                           <IconButton
-            sx={ICON_ACTION_STYLES.edit}
+                            sx={ICON_ACTION_STYLES.edit}
                             size="small"
                             aria-label="Edit comment"
                             onClick={() => {
@@ -395,51 +407,51 @@ export function CommentsSection({
               )}
               {canShowReplies ? (
                 <>
-                <Tooltip
-                  title={
-                    openRepliesId === commentItem.id
-                      ? 'Hide replies'
-                      : `Show ${commentItem.social.comments.count} replies`
-                  }
-                  arrow
-                >
-                  <IconButton
-              sx={ICON_ACTION_STYLES.disclosure}
-                    size="small"
-                    aria-label={
+                  <Tooltip
+                    title={
                       openRepliesId === commentItem.id
                         ? 'Hide replies'
                         : `Show ${commentItem.social.comments.count} replies`
                     }
-                    aria-expanded={openRepliesId === commentItem.id}
-                    onClick={() =>
-                      setOpenRepliesId((current) =>
-                        current === commentItem.id ? null : commentItem.id,
-                      )
-                    }
+                    arrow
                   >
-                    {openRepliesId === commentItem.id ? (
-                      <CloseIcon />
-                    ) : (
-                      <Badge
-                        badgeContent={commentItem.social.comments.count}
-                        invisible={commentItem.social.comments.count === 0}
-                        max={Number.MAX_SAFE_INTEGER}
-                        color="primary"
-                        sx={getSocialBadgeSx('medium')}
-                      >
-                        <ReplyIcon />
-                      </Badge>
-                    )}
-                  </IconButton>
-                </Tooltip>
-                {openRepliesId === commentItem.id ? (
-                  <RepliesSection
-                    commentId={commentItem.id}
-                    initialRepliesCount={commentItem.social.comments.count}
-                    parentTargetType={targetKey}
-                  />
-                ) : null}
+                    <IconButton
+                      sx={ICON_ACTION_STYLES.disclosure}
+                      size="small"
+                      aria-label={
+                        openRepliesId === commentItem.id
+                          ? 'Hide replies'
+                          : `Show ${commentItem.social.comments.count} replies`
+                      }
+                      aria-expanded={openRepliesId === commentItem.id}
+                      onClick={() =>
+                        setOpenRepliesId((current) =>
+                          current === commentItem.id ? null : commentItem.id,
+                        )
+                      }
+                    >
+                      {openRepliesId === commentItem.id ? (
+                        <CloseIcon />
+                      ) : (
+                        <Badge
+                          badgeContent={commentItem.social.comments.count}
+                          invisible={commentItem.social.comments.count === 0}
+                          max={Number.MAX_SAFE_INTEGER}
+                          color="primary"
+                          sx={getSocialBadgeSx('medium')}
+                        >
+                          <ReplyIcon />
+                        </Badge>
+                      )}
+                    </IconButton>
+                  </Tooltip>
+                  {openRepliesId === commentItem.id ? (
+                    <RepliesSection
+                      commentId={commentItem.id}
+                      initialRepliesCount={commentItem.social.comments.count}
+                      parentTargetType={targetKey}
+                    />
+                  ) : null}
                 </>
               ) : null}
             </Card>
@@ -473,7 +485,7 @@ export function CommentsSection({
                 <Tooltip title="Post comment" arrow>
                   <span>
                     <IconButton
-            sx={ICON_ACTION_STYLES.submit}
+                      sx={ICON_ACTION_STYLES.submit}
                       type="submit"
                       aria-label="Post comment"
                       color="primary"
@@ -490,7 +502,7 @@ export function CommentsSection({
           <Box sx={COMMENT_CREATE_ACTION_ROW_SX}>
             <Tooltip title={formOpen ? 'Close' : 'Add comment'} arrow>
               <IconButton
-            sx={ICON_ACTION_STYLES.disclosure}
+                sx={ICON_ACTION_STYLES.disclosure}
                 onClick={() => setFormOpen((previous) => !previous)}
                 aria-label={formOpen ? 'Close' : 'Add comment'}
                 aria-expanded={formOpen}

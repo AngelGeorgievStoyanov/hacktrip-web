@@ -108,9 +108,7 @@ export function EditPointPage() {
   if (!point) return <Alert severity="error">The point could not be loaded.</Alert>;
 
   return (
-    <Box
-      sx={EDIT_POINT_PAGE_SX}
-    >
+    <Box sx={EDIT_POINT_PAGE_SX}>
       {error ? (
         <Alert severity="error" sx={EDIT_POINT_ERROR_SX}>
           {error}
@@ -131,9 +129,7 @@ export function EditPointPage() {
         />
       </Box>
       <Box sx={EDIT_POINT_CONTENT_ROW_SX}>
-        <Card
-          sx={EDIT_POINT_FORM_CARD_SX}
-        >
+        <Card sx={EDIT_POINT_FORM_CARD_SX}>
           <PointForm
             key={point.id}
             tripGroupId={0}
@@ -156,14 +152,9 @@ export function EditPointPage() {
 
         <Box sx={EDIT_POINT_IMAGES_SECTION_SX}>
           {existingImages.length > 0 ? (
-            <Box
-              sx={getEditPointImageGridSx(existingImages.length)}
-            >
+            <Box sx={getEditPointImageGridSx(existingImages.length)}>
               {existingImages.map((image) => (
-                <Box
-                  key={image.id}
-                  sx={EDIT_POINT_IMAGE_TILE_SX}
-                >
+                <Box key={image.id} sx={EDIT_POINT_IMAGE_TILE_SX}>
                   <AppImage
                     image={image}
                     alt={point.name}

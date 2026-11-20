@@ -22,11 +22,19 @@ import { DeleteAllImagesIcon, RemoveImageIcon } from '@/constants/icons';
 import { MAX_IMAGES_PER_ENTITY, MAX_UPLOAD_BYTES } from '@/constants/images';
 import CustomFileUploadButton from '@/components/CustomFileUploadButton';
 import {
-  IMAGE_UPLOAD_FIELD_ROOT_SX, IMAGE_UPLOAD_FIELD_HEADER_SX, IMAGE_UPLOAD_FIELD_STATUS_ROW_SX,
-  IMAGE_UPLOAD_FIELD_COUNT_SX, IMAGE_UPLOAD_FIELD_LIMIT_MESSAGE_SX, IMAGE_UPLOAD_PROCESSING_INDICATOR_SIZE,
-  IMAGE_UPLOAD_PREVIEW_LIST_SX, IMAGE_UPLOAD_PREVIEW_ROW_SX, IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX,
-  IMAGE_UPLOAD_PREVIEW_FILENAME_SX, IMAGE_UPLOAD_REMOVE_BUTTON_SX,
-  IMAGE_UPLOAD_REMOVE_ALL_ICON_SX, IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX,
+  IMAGE_UPLOAD_FIELD_ROOT_SX,
+  IMAGE_UPLOAD_FIELD_HEADER_SX,
+  IMAGE_UPLOAD_FIELD_STATUS_ROW_SX,
+  IMAGE_UPLOAD_FIELD_COUNT_SX,
+  IMAGE_UPLOAD_FIELD_LIMIT_MESSAGE_SX,
+  IMAGE_UPLOAD_PROCESSING_INDICATOR_SIZE,
+  IMAGE_UPLOAD_PREVIEW_LIST_SX,
+  IMAGE_UPLOAD_PREVIEW_ROW_SX,
+  IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX,
+  IMAGE_UPLOAD_PREVIEW_FILENAME_SX,
+  IMAGE_UPLOAD_REMOVE_BUTTON_SX,
+  IMAGE_UPLOAD_REMOVE_ALL_ICON_SX,
+  IMAGE_UPLOAD_REMOVE_ALL_BUTTON_SX,
 } from '@/styles/presets/image-upload';
 
 const MAX_COMPRESSED_FILE_SIZE = 2 * 1024 * 1024;
@@ -201,9 +209,7 @@ export default function ImageUploadField({
 
   return (
     <Box sx={IMAGE_UPLOAD_FIELD_ROOT_SX}>
-      <Box
-        sx={IMAGE_UPLOAD_FIELD_HEADER_SX}
-      >
+      <Box sx={IMAGE_UPLOAD_FIELD_HEADER_SX}>
         <CustomFileUploadButton
           handleFilesChange={handleFilesChange}
           images={[]}
@@ -213,7 +219,12 @@ export default function ImageUploadField({
           disabled={processing}
         />
         <Box sx={IMAGE_UPLOAD_FIELD_STATUS_ROW_SX}>
-          {processing ? <CircularProgress size={IMAGE_UPLOAD_PROCESSING_INDICATOR_SIZE} aria-label="Processing images" /> : null}
+          {processing ? (
+            <CircularProgress
+              size={IMAGE_UPLOAD_PROCESSING_INDICATOR_SIZE}
+              aria-label="Processing images"
+            />
+          ) : null}
           <Typography variant="body2" sx={IMAGE_UPLOAD_FIELD_COUNT_SX}>
             {existingCount + files.length}/{maxImages} uploaded images
           </Typography>
@@ -232,9 +243,7 @@ export default function ImageUploadField({
       ) : null}
 
       {previews.length > 0 ? (
-        <Box
-          sx={IMAGE_UPLOAD_PREVIEW_LIST_SX}
-        >
+        <Box sx={IMAGE_UPLOAD_PREVIEW_LIST_SX}>
           {previews.map(({ file, url }, index) => (
             <Box
               key={`${file.name}-${file.lastModified}-${index}`}
@@ -246,11 +255,7 @@ export default function ImageUploadField({
                 alt={file.name}
                 sx={IMAGE_UPLOAD_PREVIEW_THUMBNAIL_SX}
               />
-              <Typography
-                variant="body2"
-                title={file.name}
-                sx={IMAGE_UPLOAD_PREVIEW_FILENAME_SX}
-              >
+              <Typography variant="body2" title={file.name} sx={IMAGE_UPLOAD_PREVIEW_FILENAME_SX}>
                 {file.name}
               </Typography>
               <Tooltip title="Remove image" arrow>

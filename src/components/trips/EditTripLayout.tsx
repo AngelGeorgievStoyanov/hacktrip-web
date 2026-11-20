@@ -49,7 +49,11 @@ import {
   EDIT_TRIP_IMAGE_DELETE_SX,
 } from '@/styles/presets/forms';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { BUTTON_STYLES, EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import {
+  BUTTON_STYLES,
+  EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX,
+  ICON_ACTION_STYLES,
+} from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
 
 interface EditTripLayoutProps {
@@ -238,9 +242,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
   }
 
   return (
-    <Box
-      sx={EDIT_TRIP_PAGE_SX(UI_SIZES.contentMaxWidth)}
-    >
+    <Box sx={EDIT_TRIP_PAGE_SX(UI_SIZES.contentMaxWidth)}>
       <Box sx={EDIT_TRIP_MAP_WRAPPER_SX}>
         <TripLocationPicker
           latitude={latitude == null ? '' : String(latitude)}
@@ -258,16 +260,8 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
         />
       </Box>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit(onSubmit)}
-        sx={EDIT_TRIP_FORM_SX}
-      >
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={EDIT_TRIP_TITLE_SX}
-        >
+      <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={EDIT_TRIP_FORM_SX}>
+        <Typography component="h1" variant="h5" sx={EDIT_TRIP_TITLE_SX}>
           EDIT TRIP
         </Typography>
 
@@ -275,9 +269,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
 
         {selectedDay ? (
           <>
-            <Box
-              sx={EDIT_TRIP_DAY_ROW_SX}
-            >
+            <Box sx={EDIT_TRIP_DAY_ROW_SX}>
               <TextField
                 label="DAY"
                 value={dayNumber}
@@ -432,9 +424,7 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
           <Typography>No trip days found.</Typography>
         )}
 
-        <Box
-          sx={EDIT_TRIP_ACTIONS_SX}
-        >
+        <Box sx={EDIT_TRIP_ACTIONS_SX}>
           <Button
             type="submit"
             variant="contained"
@@ -454,14 +444,9 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
 
       <Box component="section" sx={EDIT_TRIP_IMAGES_SECTION_SX}>
         {existingImages.length > 0 ? (
-          <Box
-            sx={EDIT_TRIP_IMAGE_GRID_SX}
-          >
+          <Box sx={EDIT_TRIP_IMAGE_GRID_SX}>
             {existingImages.map((image) => (
-              <Box
-                key={image.id}
-                sx={EDIT_TRIP_IMAGE_TILE_SX}
-              >
+              <Box key={image.id} sx={EDIT_TRIP_IMAGE_TILE_SX}>
                 <AppImage
                   image={image}
                   alt={selectedDay?.title ?? 'Trip image'}

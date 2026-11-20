@@ -87,7 +87,11 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
           <Typography variant="body1" textAlign="center">
             Your password has been reset. You can now log in.
           </Typography>
-          <Button onClick={() => router.replace('/login')} variant="contained" sx={BUTTON_STYLES.navigationLink}>
+          <Button
+            onClick={() => router.replace('/login')}
+            variant="contained"
+            sx={BUTTON_STYLES.navigationLink}
+          >
             Go to login
           </Button>
         </Box>

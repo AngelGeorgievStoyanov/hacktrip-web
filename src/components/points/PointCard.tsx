@@ -16,7 +16,6 @@ import { GoogleMapView } from '@/components/maps/GoogleMapView';
 import { ArrowCircleDownIcon, ArrowCircleUpIcon } from '@/constants/icons';
 import type { TripPoint } from '@/types';
 
-
 interface PointCardProps {
   point: TripPoint;
   length: number;
@@ -48,16 +47,22 @@ export function PointCard({
         <ArrowCircleUpIcon />
       </IconButton>
 
-      <Card
-        sx={POINT_CARD_CONTAINER_SX}
-      >
+      <Card sx={POINT_CARD_CONTAINER_SX}>
         <Typography gutterBottom component="h6" sx={POINT_CARD_TEXT_INSET_SX}>
           Point N {point.pointNumber}
         </Typography>
-        <Typography gutterBottom component="h1" sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}>
+        <Typography
+          gutterBottom
+          component="h1"
+          sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}
+        >
           NAME: {point.name}
         </Typography>
-        <Typography gutterBottom component="p" sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}>
+        <Typography
+          gutterBottom
+          component="p"
+          sx={[POINT_CARD_TEXT_INSET_SX, POINT_CARD_TEXT_WRAP_SX]}
+        >
           DESCRIPTION : {point.description ?? ''}
         </Typography>
 

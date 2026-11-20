@@ -159,7 +159,11 @@ export function PointLocationPicker({
           variant="outlined"
           onClick={handleUseMyLocation}
           disabled={locating}
-          startIcon={locating ? <CircularProgress size={POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE} /> : undefined}
+          startIcon={
+            locating ? (
+              <CircularProgress size={POINT_LOCATION_GPS_LOADING_INDICATOR_SIZE} />
+            ) : undefined
+          }
         >
           Gps position
         </Button>

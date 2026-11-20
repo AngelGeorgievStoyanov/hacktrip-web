@@ -41,7 +41,11 @@ export function TripPagination({
         {pages.map((pageNumber) => (
           <li key={pageNumber}>
             {pageNumber === page ? (
-              <span className={styles.current} aria-current="page" aria-label={'Page ' + pageNumber}>
+              <span
+                className={styles.current}
+                aria-current="page"
+                aria-label={'Page ' + pageNumber}
+              >
                 {pageNumber}
               </span>
             ) : (

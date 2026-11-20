@@ -1,13 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Button,
-  Card,
-  MobileStepper,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import { Button, Card, MobileStepper, useMediaQuery, useTheme } from '@mui/material';
 import { GoogleMapView, type GoogleMapMarker } from '@/components/maps/GoogleMapView';
 import { toMapPosition, type MapPosition } from '@/lib/maps';
 import {
@@ -20,7 +14,10 @@ import {
 import { BREAKPOINTS, maxWidthQuery } from '@/constants/ui';
 import type { TripPoint } from '@/types';
 import { TripNextIcon, TripPreviousIcon } from '@/constants/icons';
-import { TRIP_MAP_SECTION_CARD_SX, TRIP_MAP_SECTION_STEPPER_SX } from '@/styles/presets/map-controls';
+import {
+  TRIP_MAP_SECTION_CARD_SX,
+  TRIP_MAP_SECTION_STEPPER_SX,
+} from '@/styles/presets/map-controls';
 
 interface TripMapSectionProps {
   points: TripPoint[];
@@ -107,9 +104,7 @@ export function TripMapSection({
   }, [isSmallScreen, selectedPointIndex]);
 
   return (
-    <Card
-      sx={TRIP_MAP_SECTION_CARD_SX}
-    >
+    <Card sx={TRIP_MAP_SECTION_CARD_SX}>
       {markers.length > 1 ? (
         <MobileStepper
           ref={stepperRef}

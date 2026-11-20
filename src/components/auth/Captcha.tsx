@@ -76,9 +76,7 @@ export function Captcha({ onTokenChange, disabled = false, resetKey = 0 }: Captc
         strategy="afterInteractive"
         onReady={() => setLoaded(true)}
       />
-      <Box
-        sx={getCaptchaContainerSx(disabled)}
-      >
+      <Box sx={getCaptchaContainerSx(disabled)}>
         <Box ref={containerRef} />
       </Box>
     </>

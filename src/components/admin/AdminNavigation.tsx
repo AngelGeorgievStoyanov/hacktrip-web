@@ -17,11 +17,7 @@ export function AdminNavigation() {
   const pathname = usePathname();
 
   return (
-    <Box
-      component="nav"
-      aria-label="Admin navigation"
-      sx={ADMIN_NAVIGATION_SX}
-    >
+    <Box component="nav" aria-label="Admin navigation" sx={ADMIN_NAVIGATION_SX}>
       {sections.map((section) => {
         const active = pathname === section.href || pathname.startsWith(section.href + '/');
 

@@ -6,8 +6,6 @@ import { ScrambleHeading, type ScrambleHeadingHandle } from '@/components/common
 import { BREAKPOINTS, minWidthQuery } from '@/constants/ui';
 import { SCRAMBLE_HEADING_SX } from '@/styles/presets/typography';
 
-
-
 interface WelcomeHeadingProps {
   /**
    * Content rendered below the heading. It shares the legacy page-wide touch area, so a
@@ -45,7 +43,9 @@ export function WelcomeHeading({ children }: WelcomeHeadingProps) {
           <ScrambleHeading ref={headingRef} text="Welcome in Hack Trip!" />
         ) : (
           <>
-            <Box component="h1" sx={SCRAMBLE_HEADING_SX}>Welcome in</Box>
+            <Box component="h1" sx={SCRAMBLE_HEADING_SX}>
+              Welcome in
+            </Box>
             <ScrambleHeading ref={headingRef} text="Hack Trip!" />
           </>
         )}

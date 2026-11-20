@@ -2,7 +2,16 @@
 
 import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { AppBar, Box, FormControl, InputBase, InputLabel, MenuItem, Select, Toolbar } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  FormControl,
+  InputBase,
+  InputLabel,
+  MenuItem,
+  Select,
+  Toolbar,
+} from '@mui/material';
 import type { SelectChangeEvent } from '@mui/material/Select';
 import { SearchIcon } from '@/constants/icons';
 import { SELECT_TYPE_KEYS } from '@/constants/config';

@@ -12,7 +12,9 @@ export const metadata: Metadata = {
 export default function AdminReportsPage() {
   return (
     <section>
-      <Typography component="h1" variant="inherit" sx={ADMIN_PAGE_TITLE_SX}>Reports</Typography>
+      <Typography component="h1" variant="inherit" sx={ADMIN_PAGE_TITLE_SX}>
+        Reports
+      </Typography>
       <AdminReports />
     </section>
   );

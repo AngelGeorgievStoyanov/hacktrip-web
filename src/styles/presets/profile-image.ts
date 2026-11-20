@@ -104,7 +104,6 @@ export const ADMIN_PROFILE_AVATAR_LIST_INTERACTIVE_SX = {
   bgcolor: 'action.selected',
 } as const;
 
-
 /** Upload/replace action alignment for the admin profile-image editor. */
 export const ADMIN_PROFILE_IMAGE_UPLOAD_BUTTON_SX = {
   ...BUTTON_STYLES.upload,

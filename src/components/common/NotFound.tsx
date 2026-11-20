@@ -46,10 +46,16 @@ export function NotFound() {
 
   return (
     <main className={styles.page}>
-      <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>PAGE NOT FOUND 404</Typography>
-      <Typography component="h4" variant="inherit" sx={NOT_FOUND_SUBTITLE_SX}>WRONG WAY!</Typography>
+      <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>
+        PAGE NOT FOUND 404
+      </Typography>
+      <Typography component="h4" variant="inherit" sx={NOT_FOUND_SUBTITLE_SX}>
+        WRONG WAY!
+      </Typography>
       <div className={styles.content}>
-        <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>{count} SECONDS OR CLICK</Typography>
+        <Typography component="h3" variant="inherit" sx={NOT_FOUND_TITLE_SX}>
+          {count} SECONDS OR CLICK
+        </Typography>
         <Box component="button" type="button" onClick={goHome} sx={NOT_FOUND_HOME_BUTTON_SX}>
           HOME
         </Box>

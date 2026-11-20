@@ -52,7 +52,6 @@ interface PointFormValues {
 
 const formSchema = pointFormSchema;
 
-
 export function PointForm({
   tripGroupId,
   tripId,
@@ -231,11 +230,7 @@ export function PointForm({
   }
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      sx={POINT_FORM_SX}
-    >
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={POINT_FORM_SX}>
       <Typography gutterBottom variant="h5" sx={POINT_FORM_TITLE_SX}>
         {isEdit ? 'EDIT POINT' : 'ADD POINT'}
       </Typography>
@@ -270,7 +265,11 @@ export function PointForm({
           variant="outlined"
           onClick={() => void handleFindInMap()}
           disabled={findingLocation || !isLoaded || !watch('name').trim()}
-          startIcon={findingLocation ? <CircularProgress size={FORM_ACTION_LOADING_INDICATOR_SIZE} /> : undefined}
+          startIcon={
+            findingLocation ? (
+              <CircularProgress size={FORM_ACTION_LOADING_INDICATOR_SIZE} />
+            ) : undefined
+          }
           sx={POINT_FORM_FIND_MAP_BUTTON_SX}
         >
           FIND IN MAP
@@ -313,7 +312,9 @@ export function PointForm({
             (isEdit ? (!isDirty || !isValid) && files.length === 0 : !isDirty || !isValid) ||
             existingImages.length + uploadedImageCount + files.length > MAX_IMAGES_PER_ENTITY
           }
-          startIcon={submitting ? <CircularProgress size={FORM_ACTION_LOADING_INDICATOR_SIZE} /> : undefined}
+          startIcon={
+            submitting ? <CircularProgress size={FORM_ACTION_LOADING_INDICATOR_SIZE} /> : undefined
+          }
           sx={[isEdit ? BUTTON_STYLES.edit : BUTTON_STYLES.create, POINT_FORM_ACTION_BUTTON_SX]}
         >
           {isEdit ? 'EDIT POINT' : createdPointId ? 'RETRY IMAGE UPLOAD' : 'ADD POINT'}

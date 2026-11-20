@@ -1,5 +1,9 @@
 import { z } from 'zod';
-import { ADMIN_PAGE_DEFAULT, ADMIN_PAGE_SIZE_DEFAULT, ADMIN_PAGE_SIZE_MAX } from '@/constants/admin';
+import {
+  ADMIN_PAGE_DEFAULT,
+  ADMIN_PAGE_SIZE_DEFAULT,
+  ADMIN_PAGE_SIZE_MAX,
+} from '@/constants/admin';
 import { PAGE_MAX } from '@/constants/pagination';
 import { emailString, idList, optionalInt, passwordString, trimmedString } from '../shared';
 

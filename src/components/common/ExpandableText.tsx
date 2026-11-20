@@ -9,7 +9,6 @@ interface ExpandableTextProps {
   variant?: 'body1' | 'body2';
 }
 
-
 /** Clamps long descriptions; the full text stays in the DOM so public pages keep their SEO content. */
 export function ExpandableText({ text, variant = 'body1' }: ExpandableTextProps) {
   const [expanded, setExpanded] = useState(false);

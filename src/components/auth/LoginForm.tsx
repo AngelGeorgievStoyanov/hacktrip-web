@@ -77,12 +77,7 @@ export function LoginForm() {
 
   return (
     <WelcomeHeading>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-        sx={AUTH_FORM_SX}
-      >
+      <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={AUTH_FORM_SX}>
         <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           LOGIN
         </Typography>
@@ -138,7 +133,12 @@ export function LoginForm() {
           Login
         </Button>
         <Box sx={AUTH_FORM_ACTIONS_SX}>
-          <Button component={Link} href="/register" variant="contained" sx={BUTTON_STYLES.navigationSecondary}>
+          <Button
+            component={Link}
+            href="/register"
+            variant="contained"
+            sx={BUTTON_STYLES.navigationSecondary}
+          >
             Register
           </Button>
           <Button

@@ -1,4 +1,9 @@
-import { CARD_CONTENT_TOP_PADDING, CARD_HEADING_TEXT_STYLE, CARD_TEXT_BLOCK_STYLE, CARD_TEXT_INSET_SX } from '@/styles/presets/cards';
+import {
+  CARD_CONTENT_TOP_PADDING,
+  CARD_HEADING_TEXT_STYLE,
+  CARD_TEXT_BLOCK_STYLE,
+  CARD_TEXT_INSET_SX,
+} from '@/styles/presets/cards';
 import { POINT_SECTION_IMAGE_FRAME_SX } from '@/styles/presets/image-gallery';
 import { PAGE_CONTENT_PADDING } from '@/constants/ui/spacing';
 
@@ -33,11 +38,12 @@ export const TRIP_DETAILS_DESCRIPTION_SX = {
   ...CARD_TEXT_INSET_SX,
   mt: '10px',
 } as const;
-export const getTripDetailsDescriptionToggleSx = (expanded: boolean) => ({
-  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-  transition: 'transform 150ms',
-  ml: 'auto',
-} as const);
+export const getTripDetailsDescriptionToggleSx = (expanded: boolean) =>
+  ({
+    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: 'transform 150ms',
+    ml: 'auto',
+  }) as const;
 export const TRIP_DETAILS_ACTIONS_COLUMN_SX = {
   display: 'flex',
   flexDirection: 'column',
@@ -54,17 +60,18 @@ export const TRIP_DETAILS_SOCIAL_ROW_SX = {
 } as const;
 
 /** Sticky day-navigation shell; the CSS Module continues to own the page grid. */
-export const getTripDetailsStickyHeaderSx = () => ({
-  position: 'sticky',
-  top: 0,
-  zIndex: 'appBar',
-  width: `calc(100% + ${PAGE_CONTENT_PADDING} + ${PAGE_CONTENT_PADDING})`,
-  marginLeft: `-${PAGE_CONTENT_PADDING}`,
-  marginRight: `-${PAGE_CONTENT_PADDING}`,
-  marginTop: `-${PAGE_CONTENT_PADDING}`, 
-  pb: 1,
-  backgroundColor: 'transparent',
-} as const);
+export const getTripDetailsStickyHeaderSx = () =>
+  ({
+    position: 'sticky',
+    top: 0,
+    zIndex: 'appBar',
+    width: `calc(100% + ${PAGE_CONTENT_PADDING} + ${PAGE_CONTENT_PADDING})`,
+    marginLeft: `-${PAGE_CONTENT_PADDING}`,
+    marginRight: `-${PAGE_CONTENT_PADDING}`,
+    marginTop: `-${PAGE_CONTENT_PADDING}`,
+    pb: 1,
+    backgroundColor: 'transparent',
+  }) as const;
 
 /** Point section frame/content contracts; parent frame owns its geometry. */
 export const POINT_SECTION_CARD_SX = {
@@ -95,4 +102,7 @@ export const POINT_SECTION_NOTE_SX = {
   ...CARD_TEXT_BLOCK_STYLE,
   padding: '0px 25px',
 } as const;
-export const POINT_SECTION_TITLE_SX = { ...CARD_TEXT_INSET_SX, ...CARD_HEADING_TEXT_STYLE } as const;
+export const POINT_SECTION_TITLE_SX = {
+  ...CARD_TEXT_INSET_SX,
+  ...CARD_HEADING_TEXT_STYLE,
+} as const;

@@ -62,9 +62,7 @@ export function VerifyEmailForm({ token }: { token?: string }) {
 
   return (
     <WelcomeHeading>
-      <Card
-        sx={EMAIL_VERIFICATION_CARD_SX}
-      >
+      <Card sx={EMAIL_VERIFICATION_CARD_SX}>
         <Typography variant="h5" component="h1" sx={EMAIL_VERIFICATION_TITLE_SX}>
           Verify email
         </Typography>

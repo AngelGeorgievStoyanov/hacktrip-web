@@ -2459,7 +2459,6 @@ The existing token/theme foundation has now been completed in code without chang
 - AdminFailedLogs and AdminReports reuse the existing admin pagination preset. NotificationProvider and Captcha have isolated control sizing/positioning; no cross-feature style pattern was established in this pass.
 - `app/error.tsx` uses a standalone error-boundary layout with 32px padding and 16px gap. It is not the same as the 30px page gutter or the account/admin route content wrapper contract.
 
-
 ### Declaration-level review — navigation, cards, comments, images and tracking
 
 The next targeted source pass re-opened the style declarations in `AdminNavigation`, `AdminUsers`, `CommentsSection`, `RepliesSection`, `ExpandableText`, `ScrambleHeading`, `WelcomeHeading`, `HomeHero`, `HomeTrips`, `ImageLightbox`, `Footer`, `Header`, `PointCard`, `LiveTracker`, `PointSection`, `TripCard` and `TripDaysNav`.
@@ -2477,7 +2476,6 @@ The next targeted source pass re-opened the style declarations in `AdminNavigati
 - `HomeHero`/home headings continue to match the previously identified heading/intro candidates. `Footer` consumes the shared typography and color tokens; no additional typography token is needed for its copyright line.
 - No new cross-feature preset was justified by this pass beyond the already recorded account-profile fields, Point/EditTrip field inset, trip-action sizing, image cover-fill and heading/intro candidates.
 
-
 ### Declaration-level review — Auth, Admin, Maps, uploads and social controls
 
 The follow-up pass checked the remaining component-level styling entry points in the Admin lists/logs, Auth forms, image upload/gallery, Maps, Point pages/actions, and Social controls.
@@ -2492,7 +2490,6 @@ The follow-up pass checked the remaining component-level styling entry points in
 - PointActions' compact gap and SocialConfigStatus placement differ from TripGroupSocialActions' horizontal group. Existing social badge, action and error-text presets are the actual shared pieces; report tooltip wrappers, animation styles and feature-level action spacing remain local.
 - `CustomFileUploadButton` has a single 30ch wrapper and no repeated cross-feature contract. PasswordRequirements' checklist spacing and icon treatment are component-specific.
 - No additional global preset was justified by this pass. Existing map, auth, admin pagination and social presets have the expected consumers; keep local upload/gallery/diagnostic and responsive composition in their owning features.
-
 
 ### Declaration-level review — App Router pages and route composition
 
@@ -2533,17 +2530,17 @@ Stage 1 is complete as an audit and architecture-definition phase. The source in
 
 #### Ownership rules established
 
-| Style concern | Owner | Rule |
-|---|---|---|
-| Brand and semantic colors | `src/constants/ui/colors.ts` | Components consume semantic roles; preserve the current blue/white values until the separate brand redesign. |
-| Shared typeface and typography scales | `src/constants/ui/typography.ts` and `src/theme/typography.ts` | Shared typography belongs to tokens/theme; page-specific editorial typography remains local when intentional. |
-| Shared spacing and dimensions | `src/constants/ui/spacing.ts`, `sizes.ts`, `breakpoints.ts` | Promote only established cross-feature values; preserve legacy thresholds and distinguish 30px, 32px and component-specific gutters. |
-| Shape, elevation and layering | `shape.ts`, `shadows.ts`, `z-index.ts`, `src/theme/` | MUI surface defaults are theme-owned; special overlays and feature-specific geometry remain distinct. |
-| Repeated composed UI patterns | `src/styles/presets/` | Presets own repeated combinations, not every isolated style object or feature-specific composition. |
-| MUI component defaults | `src/theme/components/` | Theme owns shared MUI component defaults/surfaces; caller `sx` owns feature layout and semantic variants. |
-| Local layout and responsive composition | Component styles and CSS Modules | Keep grids, image geometry, sticky layouts, map dimensions, feature-specific breakpoints and interaction positioning local. |
-| Dynamic sizing and pass-through props | Component API | Caller-provided values such as map `maxWidth`/`height` and forwarded image `className`/`style` are APIs, not duplicate tokens. |
-| Legacy styles awaiting visual comparison | Existing legacy constants/presets | Keep until all consumers are migrated and visual parity is verified. |
+| Style concern                            | Owner                                                          | Rule                                                                                                                                 |
+| ---------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Brand and semantic colors                | `src/constants/ui/colors.ts`                                   | Components consume semantic roles; preserve the current blue/white values until the separate brand redesign.                         |
+| Shared typeface and typography scales    | `src/constants/ui/typography.ts` and `src/theme/typography.ts` | Shared typography belongs to tokens/theme; page-specific editorial typography remains local when intentional.                        |
+| Shared spacing and dimensions            | `src/constants/ui/spacing.ts`, `sizes.ts`, `breakpoints.ts`    | Promote only established cross-feature values; preserve legacy thresholds and distinguish 30px, 32px and component-specific gutters. |
+| Shape, elevation and layering            | `shape.ts`, `shadows.ts`, `z-index.ts`, `src/theme/`           | MUI surface defaults are theme-owned; special overlays and feature-specific geometry remain distinct.                                |
+| Repeated composed UI patterns            | `src/styles/presets/`                                          | Presets own repeated combinations, not every isolated style object or feature-specific composition.                                  |
+| MUI component defaults                   | `src/theme/components/`                                        | Theme owns shared MUI component defaults/surfaces; caller `sx` owns feature layout and semantic variants.                            |
+| Local layout and responsive composition  | Component styles and CSS Modules                               | Keep grids, image geometry, sticky layouts, map dimensions, feature-specific breakpoints and interaction positioning local.          |
+| Dynamic sizing and pass-through props    | Component API                                                  | Caller-provided values such as map `maxWidth`/`height` and forwarded image `className`/`style` are APIs, not duplicate tokens.       |
+| Legacy styles awaiting visual comparison | Existing legacy constants/presets                              | Keep until all consumers are migrated and visual parity is verified.                                                                 |
 
 #### Confirmed shared patterns and remaining consumers
 
@@ -2570,6 +2567,7 @@ The emitted variables used by current plain CSS/CSS Module consumers are the but
 **Exit criterion met:** every inventoried style surface has an explicit ownership rule or a named migration/visual-verification exception. No current visual values were changed during this audit.
 
 The next safe migration is to continue from the verified shared-pattern inventory above. Do not remove legacy styles, change visual tokens or redesign the blue/white identity as part of this migration.
+
 ## 11.4 Reusable UI patterns
 
 Extract shared components or patterns when multiple call sites have the same semantics and behavior. Prefer small, composable building blocks for repeated form fields/actions, cards and content surfaces, dialogs and confirmation flows, icon buttons/action groups, and loading/empty/error states.
@@ -2583,7 +2581,6 @@ The current central registry is `src/constants/icons.ts`, imported through `@/co
 Components must not import icons directly from `@mui/icons-material/*`. Add new icon exports to the registry using stable semantic names and keep icon-library implementation details inside that file.
 
 The directory-style path `src/constants/icons/index.ts` is not the current repository structure. Do not move the registry without updating all consumers and the agent instructions in the same change.
-
 
 ## Stage 3 implementation progress — shared component defaults
 
@@ -2602,13 +2599,11 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - Check other MUI surface types and variants only where their semantics require the shared surface contract; do not apply card styling indiscriminately to every `Paper`.
 - Stage 3 is in progress. Build/typecheck/lint and final visual/regression checks remain deferred to Stage 6.
 
-
 ### Additional Stage 3 migration — shared panel surface
 
 - The profile page and trip-edit form previously spread `LEGACY_PANEL_SX`, which carried its own background, black shadow, border and square radius. Both now consume `PANEL_SX(theme)` and therefore share the same theme-owned surface contract as MUI Cards and Dialog paper.
 - The obsolete `LEGACY_PANEL_SX` preset and its local token imports have been removed. The profile form and trip-edit form retain their own padding, spacing, width and responsive layout; only the visual surface is shared.
 - `UI_SHADOWS.profileImageControl` is a special-purpose circular image-control shadow, not a Card/panel surface token.
-
 
 ### Additional Stage 3 migration — shared form-control inset
 
@@ -2616,12 +2611,10 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - Reused it in `POINT_FORM_PANEL_SX`, `PointForm` and `EditTripLayout`, removing three copies of the same nested control spacing/width rule without coupling the forms' outer layout.
 - Stage 3 remains in progress; component/preset coverage and remaining legacy values still need systematic review before closure.
 
-
 ### Additional Stage 3 migration — admin form surface
 
 - `AdminUserForm` previously defined its own border, divider color, radius, paper background and elevation. It now composes `PANEL_SX(theme)`, matching the profile panel, trip-edit panel, authentication form surfaces, MUI Cards and Dialog paper.
 - Its content stack, width, padding and centering remain local layout concerns. The shared surface contract owns only the visual shell.
-
 
 ### Additional Stage 3 review — Card surface consistency
 
@@ -2632,7 +2625,6 @@ The Stage 2 local validation commands (`npm run check` and `npm run build`) are 
 - No global `MuiPaper` override was added: Paper can represent menus, popovers and other semantic surfaces, so applying the Card contract indiscriminately would create unintended coupling.
 
 Stage 3 remains in progress. The next work is the remaining repeated presets and feature-specific surface exceptions, followed by a complete migration pass in Stage 5. Validation remains deferred to Stage 6.
-
 
 ## Stage 3 closure — MUI components and reusable presets
 
@@ -2647,7 +2639,6 @@ The remaining validation and visual/regression checks are intentionally part of 
 - Migrated Trip Details responsive layout gaps to the shared spacing variables; migrated the About page desktop gutter to the shared page-padding token; migrated Image Gallery and Legal page control radii to the shared theme shape variable.
 - CSS Modules continue to own local geometry, responsive composition, editorial typography and specialized component styling. No second token store was introduced.
 - Stage 4 remains in progress. The remaining CSS Module values need a focused pass to distinguish genuine shared design tokens from intentionally local geometry before Stage 4 closure. Validation remains deferred to Stage 6.
-
 
 ## Stage 4 closure — Global CSS and CSS Modules
 
@@ -2664,7 +2655,6 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Map location pickers already consume the shared map-address and button presets; no duplicate map-input visual rules were introduced during this pass.
 - Stage 5 began with a feature-by-feature pass through account/auth, trips/points/maps, images/social/comments and admin/public pages. The completed migrations and the explicit feature-owned exceptions are recorded below. Preserve behavior and responsive geometry; only shared visual ownership is centralized.
 
-
 ### Additional Stage 5 migration — auth/profile and layout styling
 
 - Migrated Footer presentation from a React inline style object to `Footer.module.css`. Its background/text colors use the existing theme-generated CSS variables, while the legacy iOS landscape scroll behavior and content remain unchanged.
@@ -2672,13 +2662,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Confirmed that ProfileForm and ChangePasswordForm already share `ACCOUNT_FORM_FIELDS_SX`, standalone auth forms use `AUTH_FORM_SX`, and the map location pickers consume `MAP_ADDRESS_INPUT_SX` plus shared button presets.
 - This was an early targeted migration in Stage 5; later passes below complete the remaining shared-pattern candidates. No functional behavior or API contract was changed.
 
-
 ### Additional Stage 5 migration — social overlay preset
 
 - Extracted the image/map social-control overlay shell into `SOCIAL_OVERLAY_SX` in `src/styles/presets/social.ts`. The preset owns its positioning, translucent surface, border, radius, shadow, blur and hover treatment.
 - `EngagementBar` now composes that shared preset with only its size-dependent icon padding and compact badge metrics. Social behavior, event handling and inline presentation are unchanged.
 - The circular ProfileImage control remains a specialized circular control, not a Card surface; its unique geometry and overlay behavior are intentionally not forced into the shared Card contract.
-
 
 ### Additional Stage 5 migration — trip details social surface
 
@@ -2686,13 +2674,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - `TripDetailsView` now consumes the preset rather than declaring those visual rules inline. Sticky header bleed/width geometry remains local to the page layout, and social action behavior is unchanged.
 - Reviewed TripForm, EditTripLayout, PointForm, PointCard and PointSection. TripForm and PointSection use MUI Card surfaces; local styles are layout/content-only. EditTripLayout and PointForm use shared panel/form presets. PointCard uses the shared button presets and MUI Card defaults. No further safe shared-surface extraction was needed in these files.
 
-
 ### Additional Stage 5 migration — admin data-table surfaces
 
 - Added `ADMIN_TABLE_CONTAINER_SX` to the shared layout presets. It centralizes the common full-width table container and theme-based corner radius without owning table columns, overflow-specific content behavior or pagination layout.
 - Applied the preset and the outlined Paper variant consistently to AdminReports, AdminFailedLogs, AdminRouteNotFoundLogs and the AdminImages missing-thumbnail table. This removes the prior mismatch where only the image inventory table explicitly used an outlined Paper surface.
 - Existing table contents, pagination, selection and mutation behavior are unchanged. The map and image components reviewed in this pass already use semantic map/image tokens or feature-owned geometry; no forced abstraction was added there.
-
 
 ### Additional Stage 5 migration — trip action buttons
 
@@ -2701,13 +2687,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - Existing 10px padding, full-width sizing, 48px minimum height, box sizing, primary/danger variants, labels, routing, ownership checks and mutation behavior are unchanged.
 - This extraction is intentionally limited to the repeated trip-action pattern; the PointForm buttons retain their distinct 32ch/mobile-stacked layout.
 
-
 ### Additional Stage 5 refinement — shared trip action dimensions
 
 - Split the common full-width action dimensions into `TRIP_ACTION_BUTTON_LAYOUT_SX`, then composed the primary and destructive trip-action presets from that single layout contract.
 - The Trip Details Back action now consumes the same layout preset, aligning its 10px padding, full-width sizing, 48px minimum height and box sizing with the adjacent Add/Edit/Delete actions while retaining the BackButton's own secondary visual treatment.
 - Navigation targets, action labels, ownership checks and mutation behavior remain unchanged.
-
 
 ### Additional Stage 5 migration — trip-card image rendering
 
@@ -2715,13 +2699,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - The shared `tripCard` image preset now owns the `cover` fit used by TripCard. The component keeps its own frame dimensions and responsive layout; it no longer duplicates the image-fit rule.
 - Existing thumbnail fallback, loading priority, dimensions, image alt text and interaction behavior remain unchanged. The preset's responsive `sizes` hint is now also used by TripCard.
 
-
 ### Additional Stage 5 migration — shared profile-image cover rendering
 
 - The `profile` image preset now owns the shared `objectFit: cover` default.
 - AdminUsers, AdminUserProfileImage and ProfileImage now consume that preset instead of repeating the same cover-fit style inline. Their own rendered dimensions, avatar/circular clipping, click behavior and loading/fallback behavior remain caller-owned.
 - Explicit AppImage `style` values continue to override preset defaults, so the full-screen profile image retains its distinct `contain` behavior and is not forced into the thumbnail preset.
-
 
 ### Additional Stage 5 migration — shared home/public-trips typography
 
@@ -2730,13 +2712,11 @@ The new Footer module increases the CSS Module count from the original Stage 1 i
 - HomeHero and the public Trips page now use the shared intro preset while retaining their distinct 850px and 900px content max-widths.
 - Scramble timing, responsive heading split, touch/hover triggers, copy and page layout remain unchanged.
 
-
 ### Additional Stage 5 migration — authenticated and tracking route gutters
 
 - Added the semantic `ROUTE_CONTENT_PADDING` token (`2rem`) to the shared UI spacing constants. It is intentionally distinct from the existing `PAGE_CONTENT_PADDING` value (`30px`).
 - Account, Admin, Auth and Live Tracking route shells now consume the shared 32px gutter token rather than repeating the literal.
 - Auth's centered 480px content column, Admin navigation placement, route flex behavior and Live Tracking's feature-specific body remain unchanged. The standalone error boundary and public page gutter were intentionally not folded into this token.
-
 
 ## Stage 5 status correction — migration reopened by mandatory styling contract
 
@@ -2774,7 +2754,6 @@ Stage 5 is complete for the shared styling patterns identified by the Stage 1 in
 No API contracts, data flow, validation rules, social behavior, routing, image upload behavior or business logic were changed in this stage. Feature-specific geometry and semantic exceptions were intentionally kept local rather than abstracted solely because values look similar.
 
 **Stage 5 exit criterion met:** all shared candidates identified in the architecture inventory have been migrated or explicitly retained as feature-owned exceptions. **Stage 6 remains pending:** run the deferred local TypeScript/build/lint checks and perform final visual/regression review. Those checks have not been run in this pass, consistent with the earlier instruction to defer them.
-
 
 ## Design System — mandatory styling ownership rules
 
@@ -2837,6 +2816,7 @@ Image rendering behavior belongs to named `IMAGE_PRESETS` consumed by `AppImage`
 ### Migration and review gate
 
 A styling migration is not complete merely because a token or preset exists. It is complete only when:
+
 - all equivalent consumers use the same semantic contract;
 - no competing local declarations remain;
 - the override chain is understood and documented;
@@ -2844,7 +2824,6 @@ A styling migration is not complete merely because a token or preset exists. It 
 - source searches confirm old declarations/classes are no longer used.
 
 Do not mark a styling stage complete while equivalent controls have divergent visual owners or a global rule is silently overridden by feature-local styling.
-
 
 ---
 
@@ -2885,14 +2864,14 @@ A token or preset existing is not enough. **Definition of done is consumer migra
 
 ## 12.2 Approved six-stage plan (the existing plan; not a replacement plan)
 
-| Stage | Scope | Exit condition | Current status |
-|---|---|---|---|
-| 1. Full inventory and audit | Enumerate files; inspect styling architecture; scan local styles, tokens, variants, image rules, CSS and consumers; record findings | A versioned file manifest and actionable findings exist | **Partially documented; exhaustive file-by-file audit remains open** |
-| 2. Design Tokens and MUI Theme | Centralize semantic tokens and map them into MUI theme/CSS variables | One authoritative source for every shared raw design value | **Foundation exists; completeness and consumers require verification** |
-| 3. MUI overrides and reusable presets | Central component defaults, semantic variants and reusable presets | Shared component roles have explicit owners and predictable states | **Foundation exists; semantic coverage requires verification** |
-| 4. Global CSS and CSS Modules | Minimize global CSS; migrate shared values to tokens/CSS variables; retain only justified structural module rules | No duplicate visual systems or unowned shared values remain | **Partially migrated; full audit remains open** |
-| 5. Systematic component migration | Migrate all consumers in the agreed feature order and compare equivalent roles | Every in-scope file is checked; all shared patterns migrated or documented as exceptions | **OPEN — historical closure statements are superseded** |
-| 6. Final audit and validation | Repeat source scans, verify consumer coverage and review visual/regression behavior; run checks only when authorized | Clean audit register, no unexplained exceptions, validation results recorded | **PENDING** |
+| Stage                                 | Scope                                                                                                                               | Exit condition                                                                           | Current status                                                         |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 1. Full inventory and audit           | Enumerate files; inspect styling architecture; scan local styles, tokens, variants, image rules, CSS and consumers; record findings | A versioned file manifest and actionable findings exist                                  | **Partially documented; exhaustive file-by-file audit remains open**   |
+| 2. Design Tokens and MUI Theme        | Centralize semantic tokens and map them into MUI theme/CSS variables                                                                | One authoritative source for every shared raw design value                               | **Foundation exists; completeness and consumers require verification** |
+| 3. MUI overrides and reusable presets | Central component defaults, semantic variants and reusable presets                                                                  | Shared component roles have explicit owners and predictable states                       | **Foundation exists; semantic coverage requires verification**         |
+| 4. Global CSS and CSS Modules         | Minimize global CSS; migrate shared values to tokens/CSS variables; retain only justified structural module rules                   | No duplicate visual systems or unowned shared values remain                              | **Partially migrated; full audit remains open**                        |
+| 5. Systematic component migration     | Migrate all consumers in the agreed feature order and compare equivalent roles                                                      | Every in-scope file is checked; all shared patterns migrated or documented as exceptions | **OPEN — historical closure statements are superseded**                |
+| 6. Final audit and validation         | Repeat source scans, verify consumer coverage and review visual/regression behavior; run checks only when authorized                | Clean audit register, no unexplained exceptions, validation results recorded             | **PENDING**                                                            |
 
 ### Stage 5 migration order
 
@@ -2912,16 +2891,16 @@ For each group: **inventory → inspect source and consumers → record findings
 
 ## 12.3 Architecture ownership map
 
-| Concern | Authoritative owner | Consumer rule |
-|---|---|---|
-| Raw UI values | `src/constants/ui/` and domain-specific token registries | Components must not duplicate values |
-| MUI palette/theme/variants/defaults | `src/theme/` | MUI components inherit central defaults |
-| Reusable semantic visual patterns | `src/styles/presets/` | Feature components import named presets |
-| Enforced application-wide UI roles | Shared components under `src/components/common/` or the relevant shared component area | Callers cannot bypass the role's visual contract |
-| Image rendering contracts | `src/constants/images/presets.ts` and `AppImage` | Callers select a named preset; no arbitrary presentation overrides |
-| Global document/app-shell rules | `app/globals.css` | Keep minimal; use theme-generated CSS variables |
-| Unique structural/responsive composition | CSS Modules | Shared visual values must use CSS variables/tokens |
-| Feature-specific content and behavior | Feature components | May compose layout and select semantic roles; may not redefine shared appearance |
+| Concern                                  | Authoritative owner                                                                    | Consumer rule                                                                    |
+| ---------------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Raw UI values                            | `src/constants/ui/` and domain-specific token registries                               | Components must not duplicate values                                             |
+| MUI palette/theme/variants/defaults      | `src/theme/`                                                                           | MUI components inherit central defaults                                          |
+| Reusable semantic visual patterns        | `src/styles/presets/`                                                                  | Feature components import named presets                                          |
+| Enforced application-wide UI roles       | Shared components under `src/components/common/` or the relevant shared component area | Callers cannot bypass the role's visual contract                                 |
+| Image rendering contracts                | `src/constants/images/presets.ts` and `AppImage`                                       | Callers select a named preset; no arbitrary presentation overrides               |
+| Global document/app-shell rules          | `app/globals.css`                                                                      | Keep minimal; use theme-generated CSS variables                                  |
+| Unique structural/responsive composition | CSS Modules                                                                            | Shared visual values must use CSS variables/tokens                               |
+| Feature-specific content and behavior    | Feature components                                                                     | May compose layout and select semantic roles; may not redefine shared appearance |
 
 Do not create extra abstraction layers merely to move a few lines. Extend an existing token/preset/component when it is the natural owner. Create a new named variant only when there is a real semantic distinction and more than one consumer or a clear reusable contract.
 
@@ -3542,17 +3521,17 @@ The following manifest was generated from the recursive Git tree of the current 
 
 The following work is recorded as previously committed on this branch. It must not be repeated blindly; first compare the current file and its consumers with the intended result.
 
-| Area | Files / change | Current audit status |
-|---|---|---|
-| Image presets | `src/constants/images/presets.ts`: editor/gallery/lightbox/profile/trip-card image roles centralized | PARTIAL — inspect current preset definitions and all consumers |
-| AppImage contract | `src/components/images/AppImage.tsx`: arbitrary caller `style` API removed; named presets own image rendering | PARTIAL — inspect API and exhaustively verify all call sites |
-| Point editor | `src/components/points/EditPointPage.tsx`: local object-fit removed | PARTIAL |
-| Day controls | `src/styles/presets/buttons.ts`, `src/styles/presets/forms.ts`, `src/components/trips/TripForm.tsx`: increment/decrement and field presets | PARTIAL — compare all day controls |
-| Admin user form | `src/components/admin/AdminUserForm.tsx`: Save/Delete semantic presets | PARTIAL — compare other admin actions |
-| PointCard | `src/constants/ui/sizes.ts`, `src/styles/presets/cards.ts`, `src/components/points/PointCard.tsx`: inset/action/text-wrap presets | PARTIAL |
-| Image consumers | `ImageGallery.tsx`, `ImageLightbox.tsx`, `ProfileImage.tsx`, `AdminUsers.tsx`, `AdminUserProfileImage.tsx`, `TripCard.tsx` | PARTIAL — verify dimensions, fit, clipping and fallback behavior |
-| CSS Module tokens | About mobile gutter and Legal TOC radius moved to shared tokens/theme CSS variables | PARTIAL — inspect all module declarations and remaining raw values |
-| Documentation | This architecture document contains the approved design-system rules and historical migration notes | UPDATED — this operational register supersedes older completion claims |
+| Area              | Files / change                                                                                                                             | Current audit status                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------- |
+| Image presets     | `src/constants/images/presets.ts`: editor/gallery/lightbox/profile/trip-card image roles centralized                                       | PARTIAL — inspect current preset definitions and all consumers         |
+| AppImage contract | `src/components/images/AppImage.tsx`: arbitrary caller `style` API removed; named presets own image rendering                              | PARTIAL — inspect API and exhaustively verify all call sites           |
+| Point editor      | `src/components/points/EditPointPage.tsx`: local object-fit removed                                                                        | PARTIAL                                                                |
+| Day controls      | `src/styles/presets/buttons.ts`, `src/styles/presets/forms.ts`, `src/components/trips/TripForm.tsx`: increment/decrement and field presets | PARTIAL — compare all day controls                                     |
+| Admin user form   | `src/components/admin/AdminUserForm.tsx`: Save/Delete semantic presets                                                                     | PARTIAL — compare other admin actions                                  |
+| PointCard         | `src/constants/ui/sizes.ts`, `src/styles/presets/cards.ts`, `src/components/points/PointCard.tsx`: inset/action/text-wrap presets          | PARTIAL                                                                |
+| Image consumers   | `ImageGallery.tsx`, `ImageLightbox.tsx`, `ProfileImage.tsx`, `AdminUsers.tsx`, `AdminUserProfileImage.tsx`, `TripCard.tsx`                 | PARTIAL — verify dimensions, fit, clipping and fallback behavior       |
+| CSS Module tokens | About mobile gutter and Legal TOC radius moved to shared tokens/theme CSS variables                                                        | PARTIAL — inspect all module declarations and remaining raw values     |
+| Documentation     | This architecture document contains the approved design-system rules and historical migration notes                                        | UPDATED — this operational register supersedes older completion claims |
 
 Previously recorded commits (historical; verify against current branch history before relying on them): `99020cef123f3eece3e3ce49c116371432f7ff42` and `d86dc34bd8595bce4f6b3b36f6673e3dadbcb064`.
 
@@ -3570,6 +3549,7 @@ Previously recorded commits (historical; verify against current branch history b
 ## 12.9.1 CSS and styling audit checkpoint — 2026-11-17
 
 **Scope inspected in this batch:** all nine tracked stylesheet files in the current manifest:
+
 - `app/globals.css`
 - `app/(public)/about/AboutPage.module.css`
 - `app/(public)/privacy-policy/LegalPage.module.css`
@@ -3581,6 +3561,7 @@ Previously recorded commits (historical; verify against current branch history b
 - `src/components/trips/TripPagination.module.css`
 
 Central styling foundations inspected alongside those stylesheets:
+
 - `src/theme/index.ts`, `src/theme/palette.ts`, `src/theme/shape.ts`, `src/theme/shadows.ts`, `src/theme/typography.ts`
 - `src/theme/components/button.ts`, `card.ts`, `dialog.ts`, `surface.ts`, `text-field.ts`
 - `src/constants/ui/colors.ts`, `spacing.ts`, `sizes.ts`, `shadows.ts`, `shape.ts`
@@ -3603,7 +3584,6 @@ Central styling foundations inspected alongside those stylesheets:
 5. **Semantic button roles are not complete.** `BUTTON_STYLES.back` aliases `secondary`; this does not prove Back actions are consistent across MUI buttons, anchors and plain HTML controls. `.ht-button` is another styling path.
 6. **Token duplication / inconsistency needs a dedicated pass.** Spacing values appear as scale multipliers and literal pixel/rem values, and semantic values are exposed through CSS variables while other CSS still embeds literals. Do not consolidate until all consumers and intended exceptions are mapped.
 
-
 ### Additional foundation findings from the same checkpoint
 
 - `src/constants/ui/colors.ts` contains a broad semantic map, but some values are role-ambiguous or visually inconsistent (for example the primary hover token is green while the primary main token is blue). Preserve the current brand until a deliberate redesign is approved; do not normalize values by guessing.
@@ -3618,10 +3598,10 @@ Central styling foundations inspected alongside those stylesheets:
 
 These are confirmed observations from the inspected files, not a completed dependency audit. The associated files remain PARTIAL until their imports, call sites and visual states have been checked.
 
-
 ### First component-consumer sample — action and social controls
 
 Inspected these call sites/components after the stylesheet/theme pass:
+
 - `src/components/common/BackButton.tsx`
 - `src/components/trips/TripActions.tsx`
 - `src/components/points/PointActions.tsx`
@@ -3630,6 +3610,7 @@ Inspected these call sites/components after the stylesheet/theme pass:
 - `src/components/social/FavoriteButton.tsx`
 
 Confirmed findings:
+
 - `BackButtonProps` still exposes the full MUI `ButtonProps` surface except `variant`/`color`; caller `sx` is accepted and merged. The shared Back visual contract is therefore not enforced at the component API boundary.
 - `TripActions` consumes semantic `tripAction` / `tripActionDanger` presets, but the exact same action roles across other feature areas have not yet been compared.
 - `PointActions` contains an inline layout `sx` object; this needs to be compared with the shared social action layout preset before deciding whether to reuse or extend it.
@@ -3653,6 +3634,7 @@ Component files in this sample are PARTIAL, not VERIFIED. No source changes were
 Continue Stage 1 from the exact current branch HEAD: perform exhaustive selector/token/preset consumer searches, then audit the complete theme and preset dependency graph. Only after the ownership map is complete should migrations begin. Keep Stage 5 open until every feature group has been migrated and re-audited.
 
 ---
+
 ## 12.10 Append-only audit log and mandatory update protocol
 
 **Append a new dated entry here after every completed audit batch, migration batch, meaningful discovery or checkpoint.** Keep older entries as history; correct them with a newer entry rather than silently rewriting history.
@@ -3681,7 +3663,6 @@ Each entry must contain:
 - Consolidated the project objective, six approved stages, ownership boundaries, semantic consistency rules, file-level checklist, incremental audit procedure and handoff instructions.
 - No application source files were modified in this documentation batch. No build, tests, lint or CI were run.
 - Next task: continue Stage 1 using the manifest, audit central styling foundations first, then proceed file-by-file and by dependency group. Do not re-scan unchanged files on each turn; use the Git diff from the latest checkpoint and targeted consumer searches.
-
 
 #### 2026-11-17 — CSS foundation and stylesheet inspection checkpoint
 

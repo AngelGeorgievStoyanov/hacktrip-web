@@ -32,7 +32,20 @@ import { ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import { getGenericErrorMessage } from '@/lib/errors';
 import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
-import { ADMIN_IMAGES_PAGE_SX, ADMIN_IMAGES_DESCRIPTION_SX, ADMIN_IMAGES_ALERT_SX, ADMIN_IMAGES_TOOLBAR_SX, ADMIN_IMAGES_PAGINATION_ROW_SX, ADMIN_IMAGES_PAGINATION_SX, ADMIN_IMAGE_PREVIEW_TRIGGER_SX, ADMIN_IMAGE_THUMBNAIL_SX, ADMIN_IMAGE_URL_CELL_SX, ADMIN_IMAGE_PREVIEW_CLOSE_SX, ADMIN_IMAGE_PREVIEW_CONTENT_SX, ADMIN_IMAGE_PREVIEW_SX } from '@/styles/presets/admin';
+import {
+  ADMIN_IMAGES_PAGE_SX,
+  ADMIN_IMAGES_DESCRIPTION_SX,
+  ADMIN_IMAGES_ALERT_SX,
+  ADMIN_IMAGES_TOOLBAR_SX,
+  ADMIN_IMAGES_PAGINATION_ROW_SX,
+  ADMIN_IMAGES_PAGINATION_SX,
+  ADMIN_IMAGE_PREVIEW_TRIGGER_SX,
+  ADMIN_IMAGE_THUMBNAIL_SX,
+  ADMIN_IMAGE_URL_CELL_SX,
+  ADMIN_IMAGE_PREVIEW_CLOSE_SX,
+  ADMIN_IMAGE_PREVIEW_CONTENT_SX,
+  ADMIN_IMAGE_PREVIEW_SX,
+} from '@/styles/presets/admin';
 
 function stringList(items: string[], empty: string) {
   if (items.length === 0) {
@@ -65,11 +78,19 @@ function CloudImages() {
         <Box>
           <List dense>{stringList(data.items, 'No cloud images.')}</List>
           <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
-            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
               Previous
             </Button>
             <Typography>Page {page}</Typography>
-            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={!hasNext}
+              onClick={() => setPage((p) => p + 1)}
+            >
               Next
             </Button>
           </Box>
@@ -96,7 +117,11 @@ function DatabaseImages() {
           <List dense>{stringList(data.items, 'No database images.')}</List>
           {pagination && (pagination.totalPages ?? 0) > 1 ? (
             <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
-              <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+              <Button
+                sx={ADMIN_PAGINATION_BUTTON_SX}
+                disabled={page <= 1}
+                onClick={() => setPage((p) => p - 1)}
+              >
                 Previous
               </Button>
               <Typography>
@@ -136,11 +161,19 @@ function OrphanImages() {
           <Typography variant="h6">Database only ({data.databaseOnly.length})</Typography>
           <List dense>{stringList(data.databaseOnly, 'None.')}</List>
           <Box sx={ADMIN_IMAGES_PAGINATION_ROW_SX}>
-            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={page <= 1}
+              onClick={() => setPage((p) => p - 1)}
+            >
               Previous
             </Button>
             <Typography>Page {page}</Typography>
-            <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={!hasNext} onClick={() => setPage((p) => p + 1)}>
+            <Button
+              sx={ADMIN_PAGINATION_BUTTON_SX}
+              disabled={!hasNext}
+              onClick={() => setPage((p) => p + 1)}
+            >
               Next
             </Button>
           </Box>

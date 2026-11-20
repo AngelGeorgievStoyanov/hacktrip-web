@@ -23,7 +23,13 @@ import { ADMIN_PAGE_SIZE_DEFAULT } from '@/constants/admin';
 import { ADMIN_PAGINATION_SX, ADMIN_TABLE_CONTAINER_SX } from '@/styles/presets/layouts';
 import { ADMIN_PAGINATION_BUTTON_SX } from '@/styles/presets/pagination';
 import type { RouteNotFoundLogDto } from '@/types/admin';
-import { ADMIN_DIAGNOSTIC_FIELD_SX, ADMIN_DIAGNOSTIC_LABEL_SX, ADMIN_DIAGNOSTIC_PRE_SX, ADMIN_ROUTE_DETAILS_SX, getAdminRouteExpandedCellSx } from '@/styles/presets/admin';
+import {
+  ADMIN_DIAGNOSTIC_FIELD_SX,
+  ADMIN_DIAGNOSTIC_LABEL_SX,
+  ADMIN_DIAGNOSTIC_PRE_SX,
+  ADMIN_ROUTE_DETAILS_SX,
+  getAdminRouteExpandedCellSx,
+} from '@/styles/presets/admin';
 
 function formatDate(value: string | null): string {
   if (!value) return '—';
@@ -47,10 +53,7 @@ function DiagnosticField({ label, value }: { label: string; value: string | null
       <Typography variant="subtitle2" sx={ADMIN_DIAGNOSTIC_LABEL_SX}>
         {label}
       </Typography>
-      <Box
-        component="pre"
-        sx={ADMIN_DIAGNOSTIC_PRE_SX}
-      >
+      <Box component="pre" sx={ADMIN_DIAGNOSTIC_PRE_SX}>
         {formatDiagnosticValue(value)}
       </Box>
     </Box>
@@ -126,10 +129,7 @@ export function AdminRouteNotFoundLogs() {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell
-                        colSpan={6}
-                        sx={getAdminRouteExpandedCellSx(isExpanded)}
-                      >
+                      <TableCell colSpan={6} sx={getAdminRouteExpandedCellSx(isExpanded)}>
                         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                           <Box id={`route-not-found-details-${item.id}`}>
                             <RouteNotFoundLogDetails item={item} />
@@ -146,7 +146,11 @@ export function AdminRouteNotFoundLogs() {
       ) : null}
       {pagination && (pagination.totalPages ?? 0) > 1 ? (
         <Box sx={ADMIN_PAGINATION_SX}>
-          <Button sx={ADMIN_PAGINATION_BUTTON_SX} disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>
+          <Button
+            sx={ADMIN_PAGINATION_BUTTON_SX}
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
             Previous
           </Button>
           <Typography>

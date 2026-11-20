@@ -23,10 +23,7 @@ export function trimmedString({
   maxMessage?: string;
 }): z.ZodString {
   const base = z.string().trim();
-  const withMin =
-    min !== undefined
-      ? base.min(min, minMessage ?? 'This field is required.')
-      : base;
+  const withMin = min !== undefined ? base.min(min, minMessage ?? 'This field is required.') : base;
   const withMax = maxMessage ? withMin.max(max, maxMessage) : withMin.max(max);
   if (pattern) {
     return patternMessage ? withMax.regex(pattern, patternMessage) : withMax.regex(pattern);
@@ -164,10 +161,7 @@ function numericMessages({ min, max }: NumericBounds, messages?: NumericValidati
 }
 
 /** Required JSON number: strings are rejected, matching the backend body contract. */
-export const requiredNumber = (
-  bounds: NumericBounds,
-  messages?: NumericValidationMessages,
-) => {
+export const requiredNumber = (bounds: NumericBounds, messages?: NumericValidationMessages) => {
   const wording = numericMessages(bounds, messages);
   return z
     .number({ error: wording.required })
@@ -217,10 +211,7 @@ export const positiveId = z.number().int().min(1).max(MAX_RESOURCE_ID);
 export const positiveIdQuery = z.coerce.number().int().min(1).max(MAX_RESOURCE_ID);
 
 /** Required JSON integer: strings are rejected, matching the backend body contract. */
-export const requiredInt = (
-  bounds: NumericBounds,
-  messages?: NumericValidationMessages,
-) => {
+export const requiredInt = (bounds: NumericBounds, messages?: NumericValidationMessages) => {
   const wording = numericMessages(bounds, messages);
   return z
     .number({ error: wording.required })

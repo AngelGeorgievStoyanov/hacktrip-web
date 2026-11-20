@@ -197,9 +197,7 @@ export function CreatePointPage() {
         </Alert>
       ) : null}
 
-      <Box
-        sx={CREATE_POINT_GRID_SX}
-      >
+      <Box sx={CREATE_POINT_GRID_SX}>
         <Box sx={CREATE_POINT_LIST_COLUMN_SX}>
           <PointList
             points={selectedDay.points}
@@ -210,9 +208,7 @@ export function CreatePointPage() {
           />
         </Box>
 
-        <Box
-          sx={CREATE_POINT_EDITOR_COLUMN_SX}
-        >
+        <Box sx={CREATE_POINT_EDITOR_COLUMN_SX}>
           <PointLocationPicker
             latitude={pointLatitude}
             longitude={pointLongitude}
@@ -226,9 +222,7 @@ export function CreatePointPage() {
             }
           />
 
-          <Card
-            sx={POINT_FORM_PANEL_WITH_TOP_MARGIN_SX}
-          >
+          <Card sx={POINT_FORM_PANEL_WITH_TOP_MARGIN_SX}>
             <PointForm
               tripGroupId={tripGroup.id}
               tripId={tripId}
