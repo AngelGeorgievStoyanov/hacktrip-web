@@ -1,7 +1,5 @@
 'use client';
 
-import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
-
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
@@ -111,7 +109,7 @@ export function TripMapSection({
 
   return (
     <Card
-      sx={[FEATURE_SURFACE_SX, TRIP_MAP_SECTION_CARD_SX]}
+      sx={TRIP_MAP_SECTION_CARD_SX}
     >
       {markers.length > 1 ? (
         <MobileStepper
