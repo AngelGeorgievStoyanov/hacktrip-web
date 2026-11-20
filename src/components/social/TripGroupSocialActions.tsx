@@ -194,6 +194,7 @@ export function TripGroupSocialActions({
           canCreate={isAuthenticated && canCreateComment}
         />
       ) : null}
+      {isAuthenticated ? (
       <Tooltip title={shareCopied ? 'Link copied' : 'Share trip group'} arrow>
         <IconButton
           sx={ICON_ACTION_STYLES.share}
@@ -203,6 +204,7 @@ export function TripGroupSocialActions({
           <ShareIcon />
         </IconButton>
       </Tooltip>
+      ) : null}
       {isAuthenticated && likeMutation.error ? (
         <Box component="span" role="alert" sx={SOCIAL_ERROR_TEXT_SX}>
           {getGenericErrorMessage(likeMutation.error)}
