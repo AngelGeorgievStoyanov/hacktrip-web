@@ -3,14 +3,8 @@
 import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 import { useState } from 'react';
+import { FavoriteAddIcon, FavoriteRemoveIcon, LikeActiveIcon, LikeInactiveIcon, ReportContentIcon, ShareIcon, UnreportContentIcon } from '@/constants/icons';
 import { Badge, Box, IconButton, Tooltip } from '@mui/material';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
-import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
-import ReportIcon from '@mui/icons-material/Report';
-import ReportOffIcon from '@mui/icons-material/ReportOff';
-import ShareIcon from '@mui/icons-material/Share';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 import { absoluteUrl } from '@/config';
 import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
@@ -126,9 +120,9 @@ export function TripGroupSocialActions({
             >
               <Badge badgeContent={likes} invisible={likes === 0} max={BADGE_MAX} color="primary">
                 {liked ? (
-                  <ThumbUpIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
+                  <LikeActiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
                 ) : (
-                  <ThumbUpOffAltIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
+                  <LikeInactiveIcon sx={getSocialLikeAnimationSx(likeAnimation.animation)} />
                 )}
               </Badge>
             </IconButton>
@@ -157,7 +151,7 @@ export function TripGroupSocialActions({
                 max={BADGE_MAX}
                 color="primary"
               >
-                {favorited ? <BookmarkRemoveIcon /> : <BookmarkAddIcon />}
+                {favorited ? <FavoriteRemoveIcon /> : <FavoriteAddIcon />}
               </Badge>
             </IconButton>
           </span>
@@ -181,7 +175,7 @@ export function TripGroupSocialActions({
               aria-pressed={reported}
               color={reported ? 'error' : 'default'}
             >
-              {reported ? <ReportOffIcon /> : <ReportIcon />}
+              {reported ? <UnreportContentIcon /> : <ReportContentIcon />}
             </IconButton>
           </span>
         </Tooltip>
