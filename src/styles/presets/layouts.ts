@@ -1,6 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 import { PAGE_CONTENT_PADDING, ROUTE_CONTENT_PADDING, UI_SPACING } from '@/constants/ui/spacing';
-import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+import { PANEL_SX } from '@/styles/presets/panels';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { HEADING_TEXT_SX } from '@/styles/presets/typography';
 
@@ -173,7 +173,7 @@ export const ACCOUNT_PROFILE_PAGE_SX = {
   py: { xs: 2, sm: 3 },
 } as const;
 export const ACCOUNT_PROFILE_PANEL_SX = (theme: Theme) => ({
-  ...FEATURE_SURFACE_SX(theme),
+  ...PANEL_SX(theme),
   boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
