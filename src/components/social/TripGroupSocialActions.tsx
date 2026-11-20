@@ -101,7 +101,7 @@ export function TripGroupSocialActions({
 
   return (
     <Box sx={TRIP_GROUP_SOCIAL_ACTIONS_SX}>
-      <SocialConfigStatus isLoading={socialConfig.isLoading} error={socialConfig.error} />
+      {socialConfig.error ? <SocialConfigStatus isLoading={false} error={socialConfig.error} /> : null}
       {isAuthenticated && canLike ? (
         <Tooltip title={liked ? 'Unlike trip group' : 'Like trip group'} arrow>
           <span>
