@@ -243,7 +243,7 @@ export const EDIT_TRIP_MAP_WRAPPER_SX = {
   mx: 'auto',
 } as const;
 export const EDIT_TRIP_FORM_SX = (theme: Theme) => ({
-  ...PANEL_SX(theme),
+  ...FEATURE_SURFACE_SX(theme),
   gridArea: 'form',
   boxSizing: 'border-box',
   m: { xs: 0, sm: 2 },
