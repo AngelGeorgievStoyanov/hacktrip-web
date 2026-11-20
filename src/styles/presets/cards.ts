@@ -1,5 +1,5 @@
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 /**
  * Layout preset for trip cards.
