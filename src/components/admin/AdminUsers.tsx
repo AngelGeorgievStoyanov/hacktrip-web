@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import PersonOutlineRoundedIcon from '@mui/icons-material/PersonOutlineRounded';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import {
@@ -17,6 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { adminApi } from '@/api/admin';
+import { UserOutlineIcon } from '@/constants/icons';
 import { useAuth } from '@/hooks/useAuth';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import { getGenericErrorMessage } from '@/lib/errors';
@@ -120,7 +120,7 @@ export function AdminUsers() {
                             sizes="88px"
                           />
                         ) : (
-                          <PersonOutlineRoundedIcon fontSize="large" />
+                          <UserOutlineIcon fontSize="large" />
                         )}
                       </Avatar>
                       <Box sx={ADMIN_USER_CARD_IDENTITY_SX}>
