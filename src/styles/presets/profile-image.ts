@@ -1,7 +1,8 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SHAPE } from '@/constants/ui/shape';
 import { UI_SHADOWS } from '@/constants/ui/shadows';
-import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
+import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
 /** Shared profile-image display, action and fullscreen-view contracts. */
 export const PROFILE_IMAGE_LOADING_SX = {
