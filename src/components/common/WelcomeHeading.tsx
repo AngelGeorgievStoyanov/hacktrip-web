@@ -1,11 +1,18 @@
 'use client';
 
-import { useRef, type ReactNode } from 'react';
-import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useRef, type CSSProperties, type ReactNode } from 'react';
+import { Box, useMediaQuery } from '@mui/material';
 import { ScrambleHeading, type ScrambleHeadingHandle } from '@/components/common/ScrambleHeading';
 import { BREAKPOINTS, minWidthQuery } from '@/constants/ui';
-import { HOME_HEADING_SX } from '@/styles/presets/typography';
-import styles from './WelcomeHeading.module.css';
+
+const HEADING_STYLE: CSSProperties = {
+  margin: '2px',
+  textAlign: 'center',
+  fontFamily: 'Space Mono, monospace',
+  color: '#fff',
+  opacity: 1,
+  textShadow: '3px 3px 3px rgb(10 10 10)',
+};
 
 interface WelcomeHeadingProps {
   /**
@@ -28,17 +35,23 @@ export function WelcomeHeading({ children }: WelcomeHeadingProps) {
 
   return (
     <Box
-      className={styles.root}
       onTouchStart={() => headingRef.current?.scramble()}
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
     >
-      <Box className={styles.headingGroup}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          padding: '0 25px',
+          marginBottom: '16px',
+        }}
+      >
         {singleLineHeading ? (
           <ScrambleHeading ref={headingRef} text="Welcome in Hack Trip!" />
         ) : (
           <>
-            <Typography component="h1" variant="inherit" sx={HOME_HEADING_SX}>
-              Welcome in
-            </Typography>
+            <h1 style={HEADING_STYLE}>Welcome in</h1>
             <ScrambleHeading ref={headingRef} text="Hack Trip!" />
           </>
         )}
