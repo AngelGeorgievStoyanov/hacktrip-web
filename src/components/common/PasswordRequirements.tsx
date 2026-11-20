@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-import { CheckCircleOutline, RadioButtonUnchecked } from '@mui/icons-material';
+import { PasswordRequirementMetIcon, PasswordRequirementUnmetIcon } from '@/constants/icons';
 import { getPasswordRequirements } from '@/validations/shared';
 import {
   PASSWORD_REQUIREMENTS_LIST_SX,
@@ -35,9 +35,9 @@ export function PasswordRequirements({
           sx={PASSWORD_REQUIREMENT_ITEM_SX}
         >
           {requirement.valid ? (
-            <CheckCircleOutline fontSize="small" color="success" />
+            <PasswordRequirementMetIcon fontSize="small" color="success" />
           ) : (
-            <RadioButtonUnchecked fontSize="small" sx={PASSWORD_REQUIREMENT_INVALID_ICON_SX} />
+            <PasswordRequirementUnmetIcon fontSize="small" sx={PASSWORD_REQUIREMENT_INVALID_ICON_SX} />
           )}
           <Typography
             variant="caption"
