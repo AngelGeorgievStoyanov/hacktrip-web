@@ -7,6 +7,7 @@ import {
   SEO_BRAND,
 } from '@/constants/seo';
 import { ImageResponse } from 'next/og';
+import { UI_SHAPE } from '@/constants/ui/shape';
 
 function detectImageType(bytes: Uint8Array): string | null {
   if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return 'image/jpeg';
@@ -132,7 +133,7 @@ export async function renderTripOgImage({
             width: 58,
             height: 58,
             border: '2px solid ' + SEO_BRAND.antiqueGold,
-            borderRadius: 14,
+            borderRadius: UI_SHAPE.ogBrandMarkRadius,
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: 'Georgia, serif',
