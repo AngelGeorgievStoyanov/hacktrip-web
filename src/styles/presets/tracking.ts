@@ -1,4 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
+import { UI_SHAPE } from '@/constants/ui/shape';
 import { ROUTE_CONTENT_PADDING } from '@/constants/ui/spacing';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 
@@ -8,7 +9,7 @@ export const getLiveTrackingMapFrameSx = (height: number) => ({
   height,
   border: 1,
   borderColor: 'divider',
-  borderRadius: 1,
+  borderRadius: UI_SHAPE.sxRadius1,
   overflow: 'hidden',
 } as const);
 
@@ -59,7 +60,7 @@ export const LIVE_TRACKING_STATS_GRID_SX = {
 export const LIVE_TRACKING_STAT_SX = {
   border: 1,
   borderColor: 'divider',
-  borderRadius: 1,
+  borderRadius: UI_SHAPE.sxRadius1,
   p: 1,
 } as const;
 export const LIVE_TRACKING_STAT_VALUE_SX = { m: 0 } as const;
