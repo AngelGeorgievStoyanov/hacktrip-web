@@ -37,6 +37,7 @@ import {
   COMMENT_CREATE_ACTION_ROW_SX, COMMENT_ANONYMOUS_HINT_SX,
 } from '@/styles/presets/comments';
 import { useNotification } from '@/components/common/NotificationProvider';
+import { getSocialBadgeSx } from '@/styles/presets/social';
 
 
 function commentKey(target: CommentTarget, viewerCacheKey: string): unknown[] {
@@ -425,6 +426,7 @@ export function CommentsSection({
                         invisible={commentItem.social.comments.count === 0}
                         max={Number.MAX_SAFE_INTEGER}
                         color="primary"
+                        sx={getSocialBadgeSx('medium')}
                       >
                         <ReplyIcon />
                       </Badge>
