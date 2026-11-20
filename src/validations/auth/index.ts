@@ -8,7 +8,7 @@ const captchaTokenSchema = z
   .refine((value) => !/\s/.test(value));
 const opaqueTokenSchema = z
   .string()
-  .min(1)
+  .min(1, 'This token is required.')
   .max(200)
   .refine((value) => !/\s/.test(value));
 
@@ -19,10 +19,12 @@ export const registerSchema = z
     firstName: trimmedString({
       min: 1,
       max: 45,
+      minMessage: 'First name is required.',
     }),
     lastName: trimmedString({
       min: 1,
       max: 45,
+      minMessage: 'Last name is required.',
     }),
     captchaToken: captchaTokenSchema,
   })
@@ -31,7 +33,7 @@ export const registerSchema = z
 export const loginSchema = z
   .object({
     email: emailString(),
-    password: z.string().min(1).max(200),
+    password: z.string().min(1, 'Password is required.').max(200),
     captchaToken: captchaTokenSchema,
   })
   .strict();
