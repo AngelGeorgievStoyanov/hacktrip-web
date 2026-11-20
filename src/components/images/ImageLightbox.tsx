@@ -3,9 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { Box, Dialog, IconButton, Typography } from '@mui/material';
 import { AppImage } from './AppImage';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CloseIcon from '@mui/icons-material/Close';
+import { CloseIcon, ImageNextIcon, ImagePreviousIcon } from '@/constants/icons';
 import { LIGHTBOX_SWIPE_THRESHOLD_PX } from '@/constants/images';
 import type { ImageDto } from '@/types';
 import {
@@ -93,14 +91,14 @@ export function ImageLightbox({ images, index, alt, onIndexChange, onClose }: Im
                   onClick={() => onIndexChange((index - 1 + count) % count)}
                   sx={IMAGE_LIGHTBOX_PREVIOUS_CONTROL_SX}
                 >
-                  <ChevronLeftIcon />
+                  <ImagePreviousIcon />
                 </IconButton>
                 <IconButton
                   aria-label="Next image"
                   onClick={() => onIndexChange((index + 1) % count)}
                   sx={IMAGE_LIGHTBOX_NEXT_CONTROL_SX}
                 >
-                  <ChevronRightIcon />
+                  <ImageNextIcon />
                 </IconButton>
               </>
             ) : null}
