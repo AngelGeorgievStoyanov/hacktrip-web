@@ -1,3 +1,6 @@
+/** Display face retained for legacy branded headings and editorial treatments. */
+export const DISPLAY_FONT_FAMILY = 'Space Mono, monospace' as const;
+
 /**
  * Shared application typography tokens.
  * Variant values match the existing MUI defaults so centralization does not
