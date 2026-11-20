@@ -17,7 +17,6 @@ export const TRIP_CARD_SX = {
   pt: '25px',
 } as const;
 
-/** Fixed geometry and internal layout contracts for the shared TripCard. */
 export const TRIP_CARD_HEIGHT = '540px';
 export const TRIP_CARD_CONTAINER_SX = {
   width: '352px',
