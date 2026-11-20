@@ -1,5 +1,7 @@
 'use client';
 
+import { FEATURE_SURFACE_SX } from '@/styles/presets/surfaces';
+
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Alert, Box, Card, CircularProgress, IconButton, Tooltip } from '@mui/material';
@@ -132,7 +134,7 @@ export function EditPointPage() {
       </Box>
       <Box sx={EDIT_POINT_CONTENT_ROW_SX}>
         <Card
-          sx={EDIT_POINT_FORM_CARD_SX}
+          sx={[FEATURE_SURFACE_SX, EDIT_POINT_FORM_CARD_SX]}
         >
           <PointForm
             key={point.id}
