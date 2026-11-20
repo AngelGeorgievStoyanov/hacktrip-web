@@ -79,6 +79,9 @@ export function EngagementBar({
   const showCommentToggle =
     showComments && commentsEnabled &&
     (social.comments.count > 0 || (status === 'authenticated' && canCreateComment));
+  const hasVisibleActions =
+    (status === 'authenticated' && (canLike || (showFavorite && canFavorite) || canReport)) ||
+    showCommentToggle;
   const externallyControlledComments = onToggleComments !== undefined;
   const isCommentsOpen = externallyControlledComments
     ? (commentsOpen ?? false)
@@ -96,6 +99,10 @@ export function EngagementBar({
     targetType === 'day' || targetType === 'trip'
       ? 'REPORT TRIP'
       : `REPORT ${targetType.toUpperCase()}`;
+
+  if (!hasVisibleActions) {
+    return null;
+  }
 
   return (
     <Box
