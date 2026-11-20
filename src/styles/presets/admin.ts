@@ -1,6 +1,6 @@
 import type { Theme } from '@mui/material/styles';
 import { UI_SHAPE } from '@/constants/ui/shape';
-import { ACTION_IMAGE_OVERLAY_SX, ICON_ACTION_STYLES } from '@/styles/presets/actions';
+import { ACTION_IMAGE_OVERLAY_SX } from '@/styles/presets/actions';
 import { ADMIN_PAGINATION_SX } from '@/styles/presets/layouts';
 import { COLUMN_STACK_SX } from '@/styles/presets/layouts';
 import { PANEL_SX } from '@/styles/presets/panels';
