@@ -1,6 +1,5 @@
 import { UI_COLORS } from '@/constants/ui/colors';
 import { UI_SPACING } from '@/constants/ui/spacing';
-import { UI_SIZES } from '@/constants/ui/sizes';
 
 /**
  * Reusable MUI sx fragments for recurring button treatments.
@@ -97,21 +96,32 @@ const tripActionDanger = {
   ...TRIP_ACTION_BUTTON_LAYOUT_SX,
 } as const;
 
-/** Shared day-number stepper layout and semantic button contracts. */
-export const DAY_NUMBER_BUTTON_GROUP_SX = {
+/** Create Trip day stepper: preserve the original 40×36 controls beside the day field. */
+export const TRIP_FORM_DAY_NUMBER_BUTTON_GROUP_SX = {
   ml: 0.5,
   mr: 0,
   my: 0,
   alignSelf: 'center',
+  '& .MuiButton-root': {
+    minWidth: 40,
+    width: 40,
+    height: 36,
+    p: 0,
+    m: 0,
+    '&:hover': { backgroundColor: 'primary.dark' },
+  },
 } as const;
 
-const dayNumberButton = {
-  minWidth: 40,
-  width: 40,
-  height: UI_SIZES.compactControlHeight,
-  padding: 0,
-  margin: 0,
-  '&:hover': { backgroundColor: 'primary.dark' },
+/** Edit Trip day stepper: preserve the original margin and 50×36 controls. */
+export const EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX = {
+  m: 1,
+  '& .MuiButton-root': {
+    m: 0,
+    p: 0,
+    maxWidth: 100,
+    height: 36,
+    width: 50,
+  },
 } as const;
 
 export { ICON_ACTION_STYLES } from './actions';
@@ -149,7 +159,5 @@ export const BUTTON_STYLES = {
   tripEdit: tripAction,
   tripManage: tripAction,
   tripDelete: tripActionDanger,
-  dayIncrement: dayNumberButton,
-  dayDecrement: dayNumberButton,
   navigation,
 } as const;
