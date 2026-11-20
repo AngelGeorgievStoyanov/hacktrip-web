@@ -5,6 +5,7 @@ import { AddCommentIcon, CloseIcon, CommentIcon } from '@/constants/icons';
 
 import { Badge, Box, IconButton, Tooltip, Typography } from '@mui/material';
 import { COMMENTS_TOGGLE_ROW_SX, COMMENTS_TOGGLE_EMPTY_LABEL_SX } from '@/styles/presets/comments';
+import { SOCIAL_BADGE_COUNT_SX } from '@/styles/presets/social';
 
 interface CommentsToggleProps {
   /** Number of comments for the target, taken from the API response. */
@@ -46,7 +47,7 @@ export function CommentsToggle({ count, open, onToggle, canCreate, emptyLabel }:
           {open ? (
             <CloseIcon />
           ) : count > 0 ? (
-            <Badge badgeContent={count} max={Number.MAX_SAFE_INTEGER} color="primary">
+            <Badge badgeContent={count} max={Number.MAX_SAFE_INTEGER} color="primary" sx={SOCIAL_BADGE_COUNT_SX}>
               <CommentIcon />
             </Badge>
           ) : canCreate ? (
