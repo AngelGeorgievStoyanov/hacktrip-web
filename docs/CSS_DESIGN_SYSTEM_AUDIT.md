@@ -8163,3 +8163,19 @@ The following source files were re-fetched from `feature/frontend-modernization`
 ### Change boundary
 - Documentation-only final consistency entry.
 - No application source, style preset, token, CSS selector or visual value was changed.
+
+
+## 11.148 — Branded heading typography ownership correction (2026-11-20)
+
+- Branch: `feature/frontend-modernization`.
+- Scope: Home welcome/Scramble heading and shared Home/Trips heading text treatment.
+- Confirmed defect: `ScrambleHeading.tsx` and `WelcomeHeading.tsx` duplicated the Space Mono font, inverse text color and heading shadow locally. The shared `HEADING_TEXT_SX` preset instead referenced the Roboto application font, so Home intro and Trips empty-state text no longer matched the legacy branded typography.
+- Central owner added: `DISPLAY_FONT_FAMILY` in `src/constants/ui/typography.ts`.
+- Central preset corrected: `HEADING_TEXT_SX` now consumes the display-font token; `SCRAMBLE_HEADING_SX` owns the shared legacy h1 dimensions and text treatment; `HOME_HEADING_SX` remains a compatibility alias to that preset.
+- Consumers updated: `src/components/common/ScrambleHeading.tsx` and `src/components/common/WelcomeHeading.tsx` now consume the shared preset. Their local React style object / duplicated typography declarations were removed. Existing HomeHero and TripList consumers already use the shared `HEADING_TEXT_SX`-based presets, so they inherit the corrected typography without local component edits.
+- Mandatory prevention rule added to `AGENTS.md`: inspect and reuse the central owner, never duplicate shared visual values locally, update the owner before consumers, search for duplicates and verify all affected consumers.
+- Source files changed: `src/constants/ui/typography.ts`, `src/styles/presets/typography.ts`, `src/components/common/ScrambleHeading.tsx`, `src/components/common/WelcomeHeading.tsx`.
+- Documentation changed: `AGENTS.md`, this audit log.
+- Verification: source changes were committed to the existing feature branch. No build, TypeScript check, lint, tests, CI or browser visual QA was run. The audit policy prohibits running these checks without explicit user authorization.
+- Status: central ownership corrected for this heading group; visual/browser verification remains open. This is a focused correction, not a claim that the complete typography audit or design-system migration is finished.
+- Latest source commit before this documentation entry: `a5beb779089b30a0de60cd5196cd86217a109cd9`.
