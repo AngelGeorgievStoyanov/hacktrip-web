@@ -14,6 +14,8 @@ interface CommentsToggleProps {
   /** Whether the comment list is currently expanded. */
   open: boolean;
   onToggle: () => void;
+  /** Whether the current viewer can create a comment. */
+  canCreate: boolean;
   /** Optional note shown above the toggle when there are no comments yet. */
   emptyLabel?: string;
 }
@@ -24,7 +26,7 @@ interface CommentsToggleProps {
  * The toggle lives in the trip information card while the list itself is rendered in a
  * separate section, so both can evolve independently (for example with comment sorting).
  */
-export function CommentsToggle({ count, open, onToggle, emptyLabel }: CommentsToggleProps) {
+export function CommentsToggle({ count, open, onToggle, canCreate, emptyLabel }: CommentsToggleProps) {
   return (
     <Box sx={COMMENTS_TOGGLE_ROW_SX}>
       {!open && count === 0 && emptyLabel ? (
@@ -49,9 +51,9 @@ export function CommentsToggle({ count, open, onToggle, emptyLabel }: CommentsTo
             <Badge badgeContent={count} max={Number.MAX_SAFE_INTEGER} color="primary">
               <CommentIcon />
             </Badge>
-          ) : (
+          ) : canCreate ? (
             <AddCommentIcon />
-          )}
+          ) : null}
         </IconButton>
       </Tooltip>
     </Box>
