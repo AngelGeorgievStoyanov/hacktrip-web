@@ -26,7 +26,7 @@ import { TripLocationPicker } from '@/components/maps/TripLocationPicker';
 import { MAX_CONCURRENT_IMAGE_UPLOADS } from '@/constants/images';
 import { UI_SIZES } from '@/constants/ui/sizes';
 import { useNotification } from '@/components/common/NotificationProvider';
-import { BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX } from '@/styles/presets/buttons';
+import { BUTTON_STYLES, TRIP_FORM_DAY_NUMBER_BUTTON_GROUP_SX } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
 import {
   DAY_NUMBER_FIELD_SX,
@@ -390,13 +390,12 @@ export function TripForm() {
           <ButtonGroup
             size="small"
             aria-label="Change day number"
-            sx={DAY_NUMBER_BUTTON_GROUP_SX}
+            sx={TRIP_FORM_DAY_NUMBER_BUTTON_GROUP_SX}
           >
             <Button
               type="button"
               aria-label="Decrease day number"
               disabled={watch('dayNumber') <= 1}
-              sx={BUTTON_STYLES.dayDecrement}
               onClick={() => changeDayNumber(-1)}
             >
               <RemoveIcon fontSize="small" />
@@ -405,7 +404,6 @@ export function TripForm() {
               type="button"
               aria-label="Increase day number"
               disabled={watch('dayNumber') >= DAY_NUMBER_MAX}
-              sx={BUTTON_STYLES.dayIncrement}
               onClick={() => changeDayNumber(1)}
             >
               <AddIcon fontSize="small" />
