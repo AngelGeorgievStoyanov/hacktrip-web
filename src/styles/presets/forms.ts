@@ -8,7 +8,7 @@ import { ICON_ACTION_STYLES } from '@/styles/presets/actions';
 
 /** Compact day-number field: dimensions and non-editable numeric display. */
 export const DAY_NUMBER_FIELD_SX = {
-  width: '76px',
+  width: '76px !important',
   '& input': { textAlign: 'center' },
   '& .MuiInputBase-root': { pointerEvents: 'none' },
 } as const;
