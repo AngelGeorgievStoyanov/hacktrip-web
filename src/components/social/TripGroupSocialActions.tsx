@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTripGroupSocial } from '@/hooks/useTripGroup';
 import { useSocialConfig } from '@/hooks/useSocialConfig';
 import { getGenericErrorMessage } from '@/lib/errors';
-import { SOCIAL_ERROR_TEXT_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
+import { SOCIAL_ERROR_TEXT_SX, STICKY_SOCIAL_SX, TRIP_GROUP_SOCIAL_ACTIONS_SX, getSocialLikeAnimationSx } from '@/styles/presets/social';
 import { isSocialActionEnabled, isSocialOperationAllowed } from '@/lib/socialConfig';
 import { shareWithFallback } from '@/lib/share';
 import { SocialConfigStatus } from './SocialConfigStatus';
@@ -84,6 +84,13 @@ export function TripGroupSocialActions({
     }
     setInternalTripGroupCommentsOpen((previous) => !previous);
   };
+
+  const hasVisibleActions = Boolean(
+    socialConfig.error ||
+    (isAuthenticated && (canLike || canFavorite || canReport || likeMutation.error || favoriteMutation.error || reportActions.error)) ||
+    (commentsEnabled && (social.comments.count > 0 || (isAuthenticated && canCreateComment))) ||
+    isAuthenticated
+  );
 
   async function handleShare(): Promise<void> {
     const title = shareTitle ?? 'Trip';
