@@ -112,16 +112,16 @@ export function TripDetailsView({ trip, initialDayNumber }: TripDetailsViewProps
           selectedDay={day.dayNumber}
           onSelect={handleSelectDay}
         />
-        <TripGroupSocialActions
-          tripGroupId={group.id}
-          social={group.social}
-          shareTitle={day.title ?? day.destination ?? 'Trip'}
-          shareText={day.description ?? undefined}
-          shareDayNumber={day.dayNumber}
-          open={tripGroupCommentsOpen}
-          onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
-        />
       </Box>
+      <TripGroupSocialActions
+        tripGroupId={group.id}
+        social={group.social}
+        shareTitle={day.title ?? day.destination ?? 'Trip'}
+        shareText={day.description ?? undefined}
+        shareDayNumber={day.dayNumber}
+        open={tripGroupCommentsOpen}
+        onToggle={() => setTripGroupCommentsOpen((previous) => !previous)}
+      />
 
       <Box className={styles.tripDetailsPageLayout}>
         {/* First row: trip information and images. Container queries stack all sections
