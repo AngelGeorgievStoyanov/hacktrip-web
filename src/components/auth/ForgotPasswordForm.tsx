@@ -14,7 +14,7 @@ import { Captcha } from '@/components/auth/Captcha';
 import { FORGOT_PASSWORD_SUCCESS_MESSAGE } from '@/constants/notifications';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_BACK_BUTTON_SX, FEATURE_AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_BACK_ACTION_SX, AUTH_FORM_BACK_BUTTON_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { BackButton } from '@/components/common/BackButton';
 
@@ -56,7 +56,7 @@ export function ForgotPasswordForm() {
         noValidate
         aria-busy={submitting}
         onSubmit={handleSubmit(onSubmit)}
-        sx={FEATURE_AUTH_FORM_SX}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="h1" sx={AUTH_FORM_TITLE_SX}>
           FORGOT PASSWORD
