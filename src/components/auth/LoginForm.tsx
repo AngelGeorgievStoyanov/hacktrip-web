@@ -21,7 +21,7 @@ import { loginSchema } from '@/validations/auth';
 import type { LoginInput } from '@/api/auth';
 import { BUTTON_STYLES, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { AUTH_FORM_ACTIONS_SX, FEATURE_AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
+import { AUTH_FORM_ACTIONS_SX, AUTH_FORM_SX, AUTH_FORM_TITLE_SX } from '@/styles/presets/forms';
 import { WelcomeHeading } from '@/components/common/WelcomeHeading';
 import { useNotification } from '@/components/common/NotificationProvider';
 import { Captcha } from '@/components/auth/Captcha';
@@ -81,7 +81,7 @@ export function LoginForm() {
         component="form"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
-        sx={FEATURE_AUTH_FORM_SX}
+        sx={AUTH_FORM_SX}
       >
         <Typography variant="h5" component="div" sx={AUTH_FORM_TITLE_SX}>
           LOGIN
