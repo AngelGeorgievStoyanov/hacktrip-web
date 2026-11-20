@@ -21,8 +21,7 @@ import {
   HEADER_DRAWER_NAV_SX, HEADER_DRAWER_NAV_BUTTON_SX, HEADER_TOOLBAR_SX,
 } from '@/styles/presets/header';
 import { BUTTON_STYLES } from '@/styles/presets/buttons';
-import CloseIcon from '@mui/icons-material/Close';
-import MenuIcon from '@mui/icons-material/Menu';
+import { CloseIcon, MenuIcon } from '@/constants/icons';
 
 interface NavLink {
   href: string;
