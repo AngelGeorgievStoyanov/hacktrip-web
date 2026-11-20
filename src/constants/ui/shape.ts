@@ -8,6 +8,9 @@ export const UI_SHAPE = {
   sxRadius2_5: 2.5,
   sxRadius3: 3,
   /** Explicit CSS-pixel radii used outside MUI sx. */
+  socialStickyRadiusPx: 10,
+  socialOverlayRadiusPx: 12,
+  socialCardRadiusPx: 4,
   mapAddressInputRadius: 5,
   uploadPreviewListRadius: 5,
   legalTocRadius: 6,
