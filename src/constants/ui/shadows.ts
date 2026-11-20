@@ -9,8 +9,10 @@ export const UI_ELEVATION = {
   overlay: 8,
 } as const;
 
-/** Special-purpose CSS shadows retained for controls that are not MUI surfaces. */
+/** Shared CSS shadows for application surfaces and non-MUI controls. */
 export const UI_SHADOWS = {
+  /** Legacy shared panel shadow used by Trip, Point, auth and account panels. */
+  panel: '3px 2px 5px black',
   profileImageControl: '3px 2px 5px black',
   socialOverlay: '0 4px 14px rgba(0,0,0,0.3)',
 } as const;
