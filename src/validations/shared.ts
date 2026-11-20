@@ -24,7 +24,9 @@ export function trimmedString({
 }): z.ZodString {
   const base = z.string().trim();
   const withMin =
-    min !== undefined ? (minMessage ? base.min(min, minMessage) : base.min(min)) : base;
+    min !== undefined
+      ? base.min(min, minMessage ?? 'This field is required.')
+      : base;
   const withMax = maxMessage ? withMin.max(max, maxMessage) : withMin.max(max);
   if (pattern) {
     return patternMessage ? withMax.regex(pattern, patternMessage) : withMax.regex(pattern);
@@ -145,12 +147,52 @@ export const optionalText = ({ max, min }: LengthOptions, messages?: { max?: str
     .transform((value) => (value === undefined || value === null || value === '' ? null : value));
 
 /** Required JSON number: strings are rejected, matching the backend body contract. */
-export const requiredNumber = ({ min, max }: { min: number; max: number }) =>
-  z.number().min(min).max(max);
+export interface NumericValidationMessages {
+  required?: string;
+  min?: string;
+  max?: string;
+}
+
+type NumericBounds = { min: number; max: number };
+
+function numericMessages({ min, max }: NumericBounds, messages?: NumericValidationMessages) {
+  return {
+    required: messages?.required ?? 'Please enter a valid number.',
+    min: messages?.min ?? `Value must be at least ${min}.`,
+    max: messages?.max ?? `Value must not exceed ${max}.`,
+  };
+}
+
+/** Required JSON number: strings are rejected, matching the backend body contract. */
+export const requiredNumber = (
+  bounds: NumericBounds,
+  messages?: NumericValidationMessages,
+) => {
+  const wording = numericMessages(bounds, messages);
+  return z
+    .number({ error: wording.required })
+    .min(bounds.min, wording.min)
+    .max(bounds.max, wording.max);
+};
 
 /** Form adapter for numeric text inputs; output is still a bounded JSON number. */
-export const requiredNumberInput = ({ min, max }: { min: number; max: number }) =>
-  z.union([z.number(), z.string().min(1).transform(Number)]).pipe(z.number().min(min).max(max));
+export const requiredNumberInput = (
+  bounds: NumericBounds,
+  messages?: NumericValidationMessages,
+) => {
+  const wording = numericMessages(bounds, messages);
+  return z
+    .union([
+      z.number({ error: wording.required }),
+      z.string().min(1, wording.required).transform(Number),
+    ])
+    .pipe(
+      z
+        .number({ error: wording.required })
+        .min(bounds.min, wording.min)
+        .max(bounds.max, wording.max),
+    );
+};
 
 /** Optional integer: `''`/`null` -> `undefined`, then coerce int min/max. */
 export const optionalInt = ({ min, max }: { min: number; max: number }) =>
@@ -175,8 +217,17 @@ export const positiveId = z.number().int().min(1).max(MAX_RESOURCE_ID);
 export const positiveIdQuery = z.coerce.number().int().min(1).max(MAX_RESOURCE_ID);
 
 /** Required JSON integer: strings are rejected, matching the backend body contract. */
-export const requiredInt = ({ min, max }: { min: number; max: number }) =>
-  z.number().int().min(min).max(max);
+export const requiredInt = (
+  bounds: NumericBounds,
+  messages?: NumericValidationMessages,
+) => {
+  const wording = numericMessages(bounds, messages);
+  return z
+    .number({ error: wording.required })
+    .int('Please enter a whole number.')
+    .min(bounds.min, wording.min)
+    .max(bounds.max, wording.max);
+};
 
 /** Like target type input: trimmed, lowercased, then enumerated. */
 export const targetTypeInput = z
