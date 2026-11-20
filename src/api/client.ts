@@ -44,7 +44,10 @@ export const authToken = {
 };
 
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: typeof window === 'undefined' ? config.siteUrl : config.apiBaseUrl,
+  baseURL:
+    typeof window === 'undefined' && process.env.NODE_ENV === 'production'
+      ? config.siteUrl
+      : config.apiBaseUrl,
   withCredentials: true,
 });
 
