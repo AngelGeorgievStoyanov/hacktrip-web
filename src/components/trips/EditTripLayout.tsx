@@ -49,7 +49,7 @@ import {
   EDIT_TRIP_IMAGE_DELETE_SX,
 } from '@/styles/presets/forms';
 import { UI_SIZES } from '@/constants/ui/sizes';
-import { BUTTON_STYLES, DAY_NUMBER_BUTTON_GROUP_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
+import { BUTTON_STYLES, EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX, ICON_ACTION_STYLES } from '@/styles/presets/buttons';
 import { BackButton } from '@/components/common/BackButton';
 
 interface EditTripLayoutProps {
@@ -295,14 +295,13 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
               />
               <ButtonGroup
                 disabled={dayNumberLocked || submitting}
-                sx={DAY_NUMBER_BUTTON_GROUP_SX}
+                sx={EDIT_TRIP_DAY_NUMBER_BUTTON_GROUP_SX}
               >
                 <Button
                   type="button"
                   variant="contained"
                   aria-label="Decrease day number"
                   disabled={dayNumberLocked || submitting || dayNumber <= 1}
-                  sx={BUTTON_STYLES.dayDecrement}
                   onClick={() => changeDayNumber(-1)}
                 >
                   <RemoveIcon fontSize="small" />
@@ -312,7 +311,6 @@ export function EditTripLayout({ trip, selectedDayId }: EditTripLayoutProps) {
                   variant="contained"
                   aria-label="Increase day number"
                   disabled={dayNumberLocked || submitting || dayNumber >= DAY_NUMBER_MAX}
-                  sx={BUTTON_STYLES.dayIncrement}
                   onClick={() => changeDayNumber(1)}
                 >
                   <AddIcon fontSize="small" />
