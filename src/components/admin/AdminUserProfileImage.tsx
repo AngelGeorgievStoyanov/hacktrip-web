@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Avatar, Box, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import { adminApi } from '@/api/admin';
+import { DeleteUserImageIcon } from '@/constants/icons';
 import { useConfirm } from '@/components/common/ConfirmDialog';
 import ImageUploadField from '@/components/images/ImageUploadField';
 import { AppImage } from '@/components/images/AppImage';
@@ -89,7 +89,7 @@ export function AdminUserProfileImage({ userId }: { userId: string }) {
             color="error"
             variant="outlined"
             sx={BUTTON_STYLES.deleteText}
-            startIcon={<DeleteOutlineRoundedIcon />}
+            startIcon={<DeleteUserImageIcon />}
             disabled={deleteMutation.isPending || uploadMutation.isPending}
             onClick={() => {
               void confirm('Delete this user profile image?', 'Delete profile image').then((ok) => {
