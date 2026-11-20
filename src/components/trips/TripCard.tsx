@@ -189,6 +189,7 @@ export function TripCard({ tripGroup, prioritizeImage = false }: TripCardProps) 
           backButton={
             <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
               {theme.direction === 'rtl' ? <TripNextIcon /> : <TripPreviousIcon />}
+              Back
             </Button>
           }
         />
