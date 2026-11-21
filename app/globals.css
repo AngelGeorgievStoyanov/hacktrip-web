@@ -11,6 +11,8 @@ body {
    * in a fixed layer at z-index -1. An opaque body background would cover it.
    */
   background-color: transparent;
+  /* Keep the negative-z-index global background above the body canvas. */
+  isolation: isolate;
 }
 
 body {
