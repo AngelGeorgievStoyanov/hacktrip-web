@@ -1,10 +1,16 @@
-html,
+html {
+  /* Paint the iOS status-bar and home-indicator safe areas blue. */
+  background-color: var(--ht-color-primary, #1976d2);
+}
+
 body {
   margin: 0;
   padding: 0;
-  /* Paint iOS safe areas with the same blue used by the navigation and footer. */
-  background-color: #1976d2;
-  background-color: var(--ht-color-primary, #1976d2);
+  /*
+   * Keep the body transparent: BackgroundProvider renders the site-wide image
+   * in a fixed layer at z-index -1. An opaque body background would cover it.
+   */
+  background-color: transparent;
 }
 
 body {

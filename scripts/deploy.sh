@@ -23,21 +23,49 @@ command -v pm2 >/dev/null 2>&1 || fail "PM2 is not installed."
 command -v curl >/dev/null 2>&1 || fail "curl is not installed."
 
 CURRENT_BRANCH="$(git branch --show-current)"
-[[ "$CURRENT_BRANCH" == "$EXPECTED_BRANCH" ]] || fail "Deployment is allowed only from '$EXPECTED_BRANCH' (current: '$CURRENT_BRANCH')."
+[[ "$CURRENT_BRANCH" == "$EXPECTED_BRANCH" ]] || fail "Deployment is allowed only from '$EXPECTED_BRANCH' (current: $CURRENT_BRANCH)."
 
 if [[ -n "$(git status --porcelain)" ]]; then
   git status --short
   fail "Working tree is not clean. Commit or discard local changes before deployment."
 fi
 
+PRE_PULL_COMMIT="$(git rev-parse HEAD)"
+
 log "Pulling the latest origin/$EXPECTED_BRANCH..."
 git pull --ff-only origin "$EXPECTED_BRANCH"
 
+INSTALL_REQUIRED=0
+
 if [[ "${INSTALL_DEPS:-0}" == "1" ]]; then
+  INSTALL_REQUIRED=1
+  log "Dependency installation explicitly requested."
+elif ! git diff --quiet "$PRE_PULL_COMMIT" HEAD -- package-lock.json; then
+  INSTALL_REQUIRED=1
+  log "package-lock.json changed; dependencies must be installed."
+elif ! git show "$PRE_PULL_COMMIT:package.json" | node -e '
+  let oldData = "";
+  process.stdin.setEncoding("utf8");
+  process.stdin.on("data", chunk => oldData += chunk);
+  process.stdin.on("end", () => {
+    const oldPkg = JSON.parse(oldData);
+    const newPkg = JSON.parse(require("node:fs").readFileSync("package.json", "utf8"));
+    const sections = ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies", "overrides"];
+    const changed = sections.some(section =>
+      JSON.stringify(oldPkg[section] ?? {}) !== JSON.stringify(newPkg[section] ?? {})
+    );
+    process.exit(changed ? 1 : 0);
+  });
+'; then
+  INSTALL_REQUIRED=1
+  log "Dependency declarations in package.json changed."
+fi
+
+if [[ "$INSTALL_REQUIRED" == "1" ]]; then
   log "Installing exact dependencies from package-lock.json..."
   npm ci --include=dev
 else
-  log "Skipping dependency installation (use npm run deploy:install when dependencies change)."
+  log "Skipping dependency installation; dependency declarations and package-lock.json are unchanged."
 fi
 
 log "Building the production application..."
