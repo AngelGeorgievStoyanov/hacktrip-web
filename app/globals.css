@@ -2,6 +2,9 @@ html,
 body {
   margin: 0;
   padding: 0;
+  /* Paint iOS safe areas with the same blue used by the navigation and footer. */
+  background-color: #1976d2;
+  background-color: var(--ht-color-primary, #1976d2);
 }
 
 body {
@@ -21,6 +24,9 @@ body {
   min-height: 100vh;
   /* Dynamic-viewport fallback for browsers without dvh support. */
   min-height: 100dvh;
+  /* Keep app content clear of the iPhone status bar and home indicator. */
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 code {
