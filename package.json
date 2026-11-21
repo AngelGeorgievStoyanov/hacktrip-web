@@ -26,6 +26,7 @@
     "build": "next build",
     "start": "next start",
     "deploy": "bash scripts/deploy.sh",
+    "deploy:install": "INSTALL_DEPS=1 bash scripts/deploy.sh",
     "lint": "eslint src app",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   },
   description: 'Discover, plan and share trips with HackTrip.',
   applicationName: 'HackTrip',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'HackTrip',
+  },
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -28,6 +33,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: UI_COLORS.brand.primary,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

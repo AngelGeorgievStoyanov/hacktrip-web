@@ -33,8 +33,12 @@ fi
 log "Pulling the latest origin/$EXPECTED_BRANCH..."
 git pull --ff-only origin "$EXPECTED_BRANCH"
 
-log "Installing exact dependencies from package-lock.json..."
-npm ci --include=dev
+if [[ "${INSTALL_DEPS:-0}" == "1" ]]; then
+  log "Installing exact dependencies from package-lock.json..."
+  npm ci --include=dev
+else
+  log "Skipping dependency installation (use npm run deploy:install when dependencies change)."
+fi
 
 log "Building the production application..."
 npm run build
