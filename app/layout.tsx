@@ -40,6 +40,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
+        {/* Safari 26+ samples fixed edge elements for browser chrome tinting. */}
+        <div aria-hidden="true" className="safari-edge-color safari-edge-color--top" />
+        <div aria-hidden="true" className="safari-edge-color safari-edge-color--bottom" />
         <div className="app-shell">
           <SiteStructuredData />
           <Providers>{children}</Providers>
